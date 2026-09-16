@@ -1,0 +1,134 @@
+.panel {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.track {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.1875rem var(--space-2);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-sunken);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.stepDone {
+  border-color: var(--state-accepted-line);
+  background-color: var(--state-accepted-surface);
+  color: var(--state-accepted-ink);
+}
+
+.stepCurrent {
+  border-color: var(--state-asking-line);
+  background-color: var(--state-asking-surface);
+  color: var(--state-asking-ink);
+  font-weight: var(--weight-semibold);
+  animation: readback-pulse-ring 1800ms var(--ease-out-quart) infinite;
+}
+
+.stepFailed {
+  border-color: var(--state-escalated-line);
+  background-color: var(--state-escalated-surface);
+  color: var(--state-escalated-ink);
+  font-weight: var(--weight-semibold);
+}
+
+.arrow {
+  color: var(--text-muted);
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+}
+
+.status {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--text-primary);
+}
+
+.exchange {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.said {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-sunken);
+}
+
+.saidWho {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+}
+
+.saidText {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  max-width: var(--measure-prose);
+}
+
+.spell {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.spellTokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.token {
+  display: grid;
+  gap: 1px;
+  padding: 0.125rem var(--space-2);
+  border: 1px solid var(--select-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--select-surface);
+  text-align: center;
+}
+
+.tokenSource {
+  font-family: var(--font-data);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--select-ink);
+  line-height: 1.1;
+}
+
+.tokenSpoken {
+  font-size: var(--text-2xs);
+  color: var(--text-secondary);
+}
+
+.attempts {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepCurrent {
+    animation: none;
+    box-shadow: 0 0 0 2px var(--state-asking-line);
+  }
+}

@@ -1,0 +1,42 @@
+.meter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 3rem;
+  width: 100%;
+  max-width: 18rem;
+}
+
+.bar {
+  display: block;
+  flex: 1 1 0;
+  min-width: 3px;
+  max-width: 4px;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transform-origin: center;
+  scale: 1 0.22;
+  transition:
+    scale var(--dur-instant) var(--ease-out-quart),
+    background-color var(--dur-base) var(--ease-out-quart);
+}
+
+.live .bar {
+  background-color: var(--mic-level-lit);
+}
+
+.quiet .bar {
+  background-color: var(--mic-level-rest);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: background-color var(--dur-fast) linear;
+    scale: 1 0.3 !important;
+  }
+
+  .live .bar {
+    scale: 1 0.6 !important;
+  }
+}

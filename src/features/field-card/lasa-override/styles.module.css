@@ -1,0 +1,45 @@
+.override {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--state-lasa-surface);
+  border-bottom: 1px solid var(--state-lasa-line);
+  animation: readback-flag var(--dur-deliberate) var(--ease-out-expo) both;
+}
+
+.overrideHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--state-lasa-ink);
+}
+
+.overrideBody {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.altLabel {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.source {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}

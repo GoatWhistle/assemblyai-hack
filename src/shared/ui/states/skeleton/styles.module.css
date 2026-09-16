@@ -1,0 +1,26 @@
+.stack {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.line {
+  height: 0.75rem;
+  border-radius: var(--radius-xs);
+  background-color: var(--meter-track);
+  background-image: linear-gradient(
+    90deg,
+    var(--meter-track) 0%,
+    var(--ink-a8) 45%,
+    var(--meter-track) 90%
+  );
+  background-size: 220% 100%;
+  animation: readback-shimmer 1400ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    animation: none;
+    background-image: none;
+  }
+}

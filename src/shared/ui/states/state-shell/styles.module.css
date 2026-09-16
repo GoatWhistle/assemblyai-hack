@@ -1,0 +1,51 @@
+.state {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  padding: var(--space-6) var(--space-5);
+  max-width: var(--measure-narrow);
+}
+
+.centered {
+  justify-items: center;
+  text-align: center;
+  justify-self: center;
+}
+
+.glyph {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-sunken);
+  font-family: var(--font-data);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+}
+
+.alarmed {
+  border-color: var(--state-escalated-line);
+  background-color: var(--state-escalated-surface);
+  color: var(--state-escalated-ink);
+}
+
+.title {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--text-primary);
+}
+
+.body {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

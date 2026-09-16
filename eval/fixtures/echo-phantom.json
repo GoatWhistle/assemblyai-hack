@@ -1,0 +1,198 @@
+{
+  "name": "echo-phantom",
+  "description": "the agent's own re-ask leaks back through the microphone and arrives as an STT turn during playback; it must be discarded because it matches the last transcript.agent line, or the drug name enters provenance without the human ever saying it",
+  "recordedAt": "2026-09-15T12:00:00.000Z",
+  "sessionId": "fixture-echo-phantom",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Begin",
+        "id": "fixture-echo-phantom",
+        "expires_at": 1789000000
+      }
+    },
+    {
+      "atMs": 10,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.created"
+      }
+    },
+    {
+      "atMs": 1500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Bisoprolol",
+        "turn_order": 1
+      }
+    },
+    {
+      "atMs": 1600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Bisoprolol",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Bisoprolol",
+            "start": 1500,
+            "end": 2070,
+            "confidence": 1,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 2400,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 2440,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "I heard Bisoprolol. That name is on the published confused-drug-names list together with lisinopril. To be certain: did you say Bisoprolol or lisinopril?"
+      }
+    },
+    {
+      "atMs": 3100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 2,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "did you say Bisoprolol or lisinopril",
+        "end_of_turn_confidence": 0.88,
+        "words": [
+          {
+            "text": "did",
+            "start": 3100,
+            "end": 3355,
+            "confidence": 0.9,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "you",
+            "start": 3425,
+            "end": 3680,
+            "confidence": 0.91,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "say",
+            "start": 3750,
+            "end": 4005,
+            "confidence": 0.9,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "Bisoprolol",
+            "start": 4075,
+            "end": 4645,
+            "confidence": 0.93,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "or",
+            "start": 4715,
+            "end": 4925,
+            "confidence": 0.9,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "lisinopril",
+            "start": 4995,
+            "end": 5565,
+            "confidence": 0.92,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 5200,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 6000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Lisinopril",
+        "turn_order": 3
+      }
+    },
+    {
+      "atMs": 6100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 3,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Lisinopril",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Lisinopril",
+            "start": 6000,
+            "end": 6570,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 7500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.ended"
+      }
+    },
+    {
+      "atMs": 7520,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 8,
+        "session_duration_seconds": 10
+      }
+    }
+  ]
+}

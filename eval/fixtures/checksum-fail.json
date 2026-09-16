@@ -1,0 +1,304 @@
+{
+  "name": "checksum-fail",
+  "description": "an NPI whose Luhn check digit does not match, so the gate goes straight to spell-out rather than spending a voice repeat",
+  "recordedAt": "2026-09-15T12:00:00.000Z",
+  "sessionId": "fixture-checksum-fail",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Begin",
+        "id": "fixture-checksum-fail",
+        "expires_at": 1789000000
+      }
+    },
+    {
+      "atMs": 10,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.created"
+      }
+    },
+    {
+      "atMs": 1500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "The prescriber NPI is one two three four five six seven eight nine zero",
+        "turn_order": 1
+      }
+    },
+    {
+      "atMs": 1600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "one two three four five six seven eight nine zero",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "one",
+            "start": 1500,
+            "end": 1755,
+            "confidence": 0.96,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "two",
+            "start": 1825,
+            "end": 2080,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "three",
+            "start": 2150,
+            "end": 2495,
+            "confidence": 0.96,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "four",
+            "start": 2565,
+            "end": 2865,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "five",
+            "start": 2935,
+            "end": 3235,
+            "confidence": 0.95,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "six",
+            "start": 3305,
+            "end": 3560,
+            "confidence": 0.96,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "seven",
+            "start": 3630,
+            "end": 3975,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "eight",
+            "start": 4045,
+            "end": 4390,
+            "confidence": 0.96,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "nine",
+            "start": 4460,
+            "end": 4760,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "zero",
+            "start": 4830,
+            "end": 5130,
+            "confidence": 0.96,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 3000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 3040,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "The prescriber NPI I have, one two three four five six seven eight nine zero, does not pass its check, so one character is off. Please read it back to me one character at a time."
+      }
+    },
+    {
+      "atMs": 3900,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 7000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "one two four five three one nine five nine nine",
+        "turn_order": 2
+      }
+    },
+    {
+      "atMs": 7100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 2,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "one two four five three one nine five nine nine",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "one",
+            "start": 7000,
+            "end": 7255,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "two",
+            "start": 7325,
+            "end": 7580,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "four",
+            "start": 7650,
+            "end": 7950,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "five",
+            "start": 8020,
+            "end": 8320,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "three",
+            "start": 8390,
+            "end": 8735,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "one",
+            "start": 8805,
+            "end": 9060,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "nine",
+            "start": 9130,
+            "end": 9430,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "five",
+            "start": 9500,
+            "end": 9800,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "nine",
+            "start": 9870,
+            "end": 10170,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "nine",
+            "start": 10240,
+            "end": 10540,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 9000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 9040,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Got it, the prescriber NPI is 1245319599."
+      }
+    },
+    {
+      "atMs": 9900,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 10500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.ended"
+      }
+    },
+    {
+      "atMs": 10520,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 11,
+        "session_duration_seconds": 13
+      }
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "name": "lasa-lisinopril",
+  "description": "Synthesised, not recorded: the caller says Lisinopril and the recognizer returns Bisoprolol at high certainty. Used to develop the browser against SessionFixture before Agent A's recorded fixtures land.",
+  "recordedAt": "2026-09-15T09:00:00.000Z",
+  "sessionId": "fixture-lasa-001",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": { "type": "Begin", "id": "fixture-lasa-001", "expires_at": 1789000000 }
+    },
+    {
+      "atMs": 120,
+      "socket": "agent",
+      "direction": "in",
+      "message": { "type": "session.created" }
+    },
+    {
+      "atMs": 400,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Readback intake. Who is the patient?"
+      }
+    },
+    {
+      "atMs": 2600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 0,
+        "turn_is_formatted": true,
+        "end_of_turn": true,
+        "transcript": "Patient is Jane Doe.",
+        "end_of_turn_confidence": 0.97,
+        "words": [
+          {
+            "text": "Patient",
+            "start": 1200,
+            "end": 1560,
+            "confidence": 0.98,
+            "word_is_final": true
+          },
+          {
+            "text": "is",
+            "start": 1570,
+            "end": 1660,
+            "confidence": 0.99,
+            "word_is_final": true
+          },
+          {
+            "text": "Jane",
+            "start": 1680,
+            "end": 2040,
+            "confidence": 0.94,
+            "word_is_final": true
+          },
+          {
+            "text": "Doe",
+            "start": 2060,
+            "end": 2380,
+            "confidence": 0.92,
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 3200,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Confirming patient name: Jane Doe. Correct?"
+      }
+    },
+    {
+      "atMs": 5100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": true,
+        "end_of_turn": true,
+        "transcript": "Yes, that is right.",
+        "end_of_turn_confidence": 0.99,
+        "words": [
+          {
+            "text": "Yes",
+            "start": 4200,
+            "end": 4460,
+            "confidence": 0.99,
+            "word_is_final": true
+          },
+          {
+            "text": "that",
+            "start": 4480,
+            "end": 4640,
+            "confidence": 0.98,
+            "word_is_final": true
+          },
+          {
+            "text": "is",
+            "start": 4650,
+            "end": 4740,
+            "confidence": 0.99,
+            "word_is_final": true
+          },
+          {
+            "text": "right",
+            "start": 4760,
+            "end": 5020,
+            "confidence": 0.97,
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 8400,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 2,
+        "turn_is_formatted": true,
+        "end_of_turn": true,
+        "transcript": "Bisoprolol ten milligrams, thirty tablets.",
+        "end_of_turn_confidence": 0.99,
+        "words": [
+          {
+            "text": "Bisoprolol",
+            "start": 6800,
+            "end": 7620,
+            "confidence": 0.99,
+            "word_is_final": true
+          },
+          {
+            "text": "ten",
+            "start": 7640,
+            "end": 7860,
+            "confidence": 0.98,
+            "word_is_final": true
+          },
+          {
+            "text": "milligrams",
+            "start": 7880,
+            "end": 8320,
+            "confidence": 0.97,
+            "word_is_final": true
+          },
+          {
+            "text": "thirty",
+            "start": 8340,
+            "end": 8640,
+            "confidence": 0.96,
+            "word_is_final": true
+          },
+          {
+            "text": "tablets",
+            "start": 8660,
+            "end": 9080,
+            "confidence": 0.98,
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 9100,
+      "socket": "agent",
+      "direction": "in",
+      "message": { "type": "reply.started" }
+    },
+    {
+      "atMs": 9600,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "I heard Bisoprolol. That name is on the published confused-drug-names list together with Lisinopril. To be certain: did you say Bisoprolol or Lisinopril?"
+      }
+    },
+    {
+      "atMs": 12800,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 3,
+        "turn_is_formatted": true,
+        "end_of_turn": true,
+        "transcript": "I heard Bisoprolol. That name is on the published confused drug names list.",
+        "end_of_turn_confidence": 0.88,
+        "words": [
+          {
+            "text": "I",
+            "start": 11400,
+            "end": 11480,
+            "confidence": 0.91,
+            "word_is_final": true
+          },
+          {
+            "text": "heard",
+            "start": 11500,
+            "end": 11720,
+            "confidence": 0.9,
+            "word_is_final": true
+          },
+          {
+            "text": "Bisoprolol",
+            "start": 11740,
+            "end": 12440,
+            "confidence": 0.89,
+            "word_is_final": true
+          },
+          {
+            "text": "That",
+            "start": 12460,
+            "end": 12600,
+            "confidence": 0.88,
+            "word_is_final": true
+          },
+          {
+            "text": "name",
+            "start": 12620,
+            "end": 12780,
+            "confidence": 0.9,
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 13400,
+      "socket": "agent",
+      "direction": "in",
+      "message": { "type": "reply.done" }
+    },
+    {
+      "atMs": 16200,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 4,
+        "turn_is_formatted": true,
+        "end_of_turn": true,
+        "transcript": "No, Lisinopril. Lima India Sierra.",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "No",
+            "start": 14600,
+            "end": 14820,
+            "confidence": 0.97,
+            "word_is_final": true
+          },
+          {
+            "text": "Lisinopril",
+            "start": 14840,
+            "end": 15640,
+            "confidence": 0.93,
+            "word_is_final": true
+          },
+          {
+            "text": "Lima",
+            "start": 15660,
+            "end": 15880,
+            "confidence": 0.96,
+            "word_is_final": true
+          },
+          {
+            "text": "India",
+            "start": 15900,
+            "end": 16100,
+            "confidence": 0.95,
+            "word_is_final": true
+          },
+          {
+            "text": "Sierra",
+            "start": 16120,
+            "end": 16400,
+            "confidence": 0.94,
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 17000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Lisinopril, ten milligrams, tablet, oral. Thirty tablets. Recorded."
+      }
+    },
+    {
+      "atMs": 18400,
+      "socket": "agent",
+      "direction": "in",
+      "message": { "type": "session.ended" }
+    },
+    {
+      "atMs": 18600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 18,
+        "session_duration_seconds": 19
+      }
+    }
+  ]
+}

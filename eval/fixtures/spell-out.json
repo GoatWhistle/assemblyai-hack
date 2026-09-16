@@ -1,0 +1,264 @@
+{
+  "name": "spell-out",
+  "description": "a DEA number read back with the NATO alphabet after two ordinary repeats failed to settle it",
+  "recordedAt": "2026-09-15T12:00:00.000Z",
+  "sessionId": "fixture-spell-out",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Begin",
+        "id": "fixture-spell-out",
+        "expires_at": 1789000000
+      }
+    },
+    {
+      "atMs": 10,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.created"
+      }
+    },
+    {
+      "atMs": 1500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "DEA number AB one two three four five six three",
+        "turn_order": 1
+      }
+    },
+    {
+      "atMs": 1600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "DEA number AB one two three",
+        "end_of_turn_confidence": 0.7,
+        "words": [
+          {
+            "text": "DEA",
+            "start": 1500,
+            "end": 1755,
+            "confidence": 0.96,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "number",
+            "start": 1825,
+            "end": 2215,
+            "confidence": 0.95,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "AB",
+            "start": 2285,
+            "end": 2495,
+            "confidence": 0.61,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "one",
+            "start": 2565,
+            "end": 2820,
+            "confidence": 0.94,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "two",
+            "start": 2890,
+            "end": 3145,
+            "confidence": 0.93,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "three",
+            "start": 3215,
+            "end": 3560,
+            "confidence": 0.94,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 3200,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 3240,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "I am still not certain about the prescriber DEA number. Could you give it to me letter by letter, using words for the letters - like Alfa for A?"
+      }
+    },
+    {
+      "atMs": 4100,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 7000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Alfa Bravo one two three four five six three",
+        "turn_order": 2
+      }
+    },
+    {
+      "atMs": 7100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 2,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Alfa Bravo one two three four five six three",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Alfa",
+            "start": 7000,
+            "end": 7300,
+            "confidence": 0.99,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "Bravo",
+            "start": 7370,
+            "end": 7715,
+            "confidence": 0.99,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "one",
+            "start": 7785,
+            "end": 8040,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "two",
+            "start": 8110,
+            "end": 8365,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "three",
+            "start": 8435,
+            "end": 8780,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "four",
+            "start": 8850,
+            "end": 9150,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "five",
+            "start": 9220,
+            "end": 9520,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "six",
+            "start": 9590,
+            "end": 9845,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "three",
+            "start": 9915,
+            "end": 10260,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 9500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 9540,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Reading it back: Alfa Bravo one two three four five six three. Is that right?"
+      }
+    },
+    {
+      "atMs": 10400,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 11500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.ended"
+      }
+    },
+    {
+      "atMs": 11520,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 12,
+        "session_duration_seconds": 14
+      }
+    }
+  ]
+}

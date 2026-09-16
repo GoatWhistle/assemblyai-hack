@@ -1,0 +1,107 @@
+import { render, screen } from "@testing-library/react"
+import { describe, expect, it } from "vitest"
+import { FieldName, SpellOutStyle } from "@/domain"
+import { initialContext, ReadBackState } from "@/features/read-back/read-back-machine"
+import { ReadBackPanel } from "@/features/read-back/read-back-panel"
+
+describe("ReadBackPanel", () => {
+  it("has a designed empty state when nothing is in flight", () => {
+    render(<ReadBackPanel context={initialContext()} />)
+    expect(screen.getByText("No read-back in flight")).toBeDefined()
+  })
+
+  it("shows the phrase the agent said while awaiting an answer", () => {
+    render(
+      <ReadBackPanel
+        context={initialContext({
+          state: ReadBackState.AwaitingConfirmation,
+          field: FieldName.Quantity,
+          utterance: "Confirming quantity: 30. Correct?",
+          attempts: 1,
+        })}
+      />,
+    )
+    expect(screen.getByText("Confirming quantity: 30. Correct?")).toBeDefined()
+    expect(screen.getByRole("status").textContent).toContain("Quantity")
+  })
+
+  it("shows both sides of the exchange once the caller has answered", () => {
+    render(
+      <ReadBackPanel
+        context={initialContext({
+          state: ReadBackState.Matched,
+          field: FieldName.Quantity,
+          utterance: "Confirming quantity: 30. Correct?",
+          heard: "Yes, thirty.",
+          attempts: 1,
+        })}
+      />,
+    )
+    expect(screen.getByText("Yes, thirty.")).toBeDefined()
+    expect(screen.getByText("The caller answered")).toBeDefined()
+  })
+
+  it("renders the NATO spelling when spell-out is entered for a letter field", () => {
+    render(
+      <ReadBackPanel
+        context={initialContext({
+          state: ReadBackState.SpellOut,
+          field: FieldName.PrescriberDea,
+          expectedValue: "AB1",
+          utterance: "Please read it back one character at a time.",
+          spellOutStyle: SpellOutStyle.Nato,
+          attempts: 3,
+        })}
+      />,
+    )
+    expect(screen.getByText("Alfa")).toBeDefined()
+    expect(screen.getByText("Bravo")).toBeDefined()
+    expect(screen.getByText("one")).toBeDefined()
+  })
+
+  it("renders digit-by-digit spelling for a numeric field", () => {
+    render(
+      <ReadBackPanel
+        context={initialContext({
+          state: ReadBackState.SpellOut,
+          field: FieldName.PrescriberNpi,
+          expectedValue: "124",
+          utterance: "One digit at a time, please.",
+          spellOutStyle: SpellOutStyle.Digits,
+          attempts: 2,
+        })}
+      />,
+    )
+    expect(screen.getByText("two")).toBeDefined()
+    expect(screen.getByText(/digit by digit/i)).toBeDefined()
+  })
+
+  it("shows the escalated state as its own terminal outcome", () => {
+    render(
+      <ReadBackPanel
+        context={initialContext({
+          state: ReadBackState.Escalated,
+          field: FieldName.DrugName,
+          utterance: "I am bringing a pharmacist onto the line.",
+          attempts: 4,
+        })}
+      />,
+    )
+    expect(screen.getByRole("status").textContent).toContain("Handed to a pharmacist")
+  })
+
+  it("reports the attempt count against the budget", () => {
+    render(
+      <ReadBackPanel
+        context={initialContext({
+          state: ReadBackState.AwaitingConfirmation,
+          field: FieldName.DrugName,
+          utterance: "x",
+          attempts: 2,
+          maxAttempts: 3,
+        })}
+      />,
+    )
+    expect(screen.getByText(/attempt 2 of 3/i)).toBeDefined()
+  })
+})

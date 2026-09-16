@@ -1,0 +1,95 @@
+.banner {
+  --banner-ink: var(--text-primary);
+  --banner-surface: var(--surface-panel);
+  --banner-line: var(--line-divider);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--banner-line);
+  border-radius: var(--radius-lg);
+  background-color: var(--banner-surface);
+}
+
+.accepted {
+  --banner-surface: var(--state-accepted-surface);
+  --banner-line: var(--state-accepted-line);
+  --banner-ink: var(--state-accepted-ink);
+}
+
+.asking {
+  --banner-surface: var(--state-asking-surface);
+  --banner-line: var(--state-asking-line);
+  --banner-ink: var(--state-asking-ink);
+}
+
+.lasa {
+  --banner-surface: var(--state-lasa-surface);
+  --banner-line: var(--state-lasa-line);
+  --banner-ink: var(--state-lasa-ink);
+  border-width: 2px;
+}
+
+.escalated {
+  --banner-surface: var(--state-escalated-surface);
+  --banner-line: var(--state-escalated-line);
+  --banner-ink: var(--state-escalated-ink);
+  border-width: 2px;
+}
+
+.aborted {
+  --banner-surface: var(--state-aborted-surface);
+  --banner-line: var(--state-aborted-line);
+  --banner-ink: var(--state-aborted-ink);
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.headline {
+  flex: 1 1 18rem;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--banner-ink);
+  line-height: var(--leading-snug);
+}
+
+.because {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.utterance {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--banner-line);
+  background-color: var(--surface-panel);
+  border-radius: var(--radius-sm);
+}
+
+.utteranceLabel {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+}
+
+.utteranceText {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  max-width: var(--measure-prose);
+}
+
+.idle {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  max-width: var(--measure-prose);
+}

@@ -1,0 +1,16 @@
+.env
+.env.local
+.env*.local
+node_modules/
+.next/
+out/
+coverage/
+test-results/
+playwright-report/
+.playwright-mcp/
+data/*.json
+data/*.csv
+data/*.zip
+screenshots/
+*.tsbuildinfo
+.vercel

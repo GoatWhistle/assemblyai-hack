@@ -1,0 +1,198 @@
+.demo {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.lede {
+  display: grid;
+  gap: var(--space-3);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.title {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+}
+
+.body {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-panel);
+}
+
+.progress {
+  display: grid;
+  gap: var(--space-1);
+  flex: 1 1 12rem;
+  min-width: 10rem;
+}
+
+.progressTrack {
+  height: 0.375rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--meter-track);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background-color: var(--action-rest);
+  transition: transform var(--dur-fast) linear;
+}
+
+.progressLabel {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.arm {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-panel);
+}
+
+.armGated {
+  border-color: var(--state-lasa-line);
+  border-width: 2px;
+}
+
+.armUngated {
+  border-color: var(--state-escalated-line);
+  border-width: 2px;
+  background-color: var(--surface-page);
+}
+
+.armHead {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.armTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+}
+
+.armNote {
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.outcome {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-sunken);
+}
+
+.outcomeGated {
+  border-color: var(--state-lasa-line);
+  background-color: var(--state-lasa-surface);
+}
+
+.outcomeUngated {
+  border-color: var(--state-escalated-line);
+  background-color: var(--state-escalated-surface);
+}
+
+.outcomeLabel {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+}
+
+.outcomeValue {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  line-height: var(--leading-tight);
+}
+
+.outcomeGated .outcomeValue {
+  color: var(--state-lasa-ink);
+}
+
+.outcomeUngated .outcomeValue {
+  color: var(--state-escalated-ink);
+}
+
+.outcomeBody {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+.said {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-panel);
+}
+
+.saidWho {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+}
+
+.saidText {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+.truth {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+  box-shadow: var(--hairline);
+  border-left: 2px solid var(--action-rest);
+  max-width: var(--measure-prose);
+}
+
+.truthLabel {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+.truthText {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  text-wrap: pretty;
+}

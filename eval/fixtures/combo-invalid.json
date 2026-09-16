@@ -1,0 +1,208 @@
+{
+  "name": "combo-invalid",
+  "description": "a strength that does not exist for the drug, form and route already collected, so the gate asks which part to change",
+  "recordedAt": "2026-09-15T12:00:00.000Z",
+  "sessionId": "fixture-combo-invalid",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Begin",
+        "id": "fixture-combo-invalid",
+        "expires_at": 1789000000
+      }
+    },
+    {
+      "atMs": 10,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.created"
+      }
+    },
+    {
+      "atMs": 1500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Lisinopril eighty milligrams tablet",
+        "turn_order": 1
+      }
+    },
+    {
+      "atMs": 1600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Lisinopril eighty milligrams tablet",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Lisinopril",
+            "start": 1500,
+            "end": 2070,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "eighty",
+            "start": 2140,
+            "end": 2530,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "milligrams",
+            "start": 2600,
+            "end": 3170,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "tablet",
+            "start": 3240,
+            "end": 3630,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 3000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 3040,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "I have lisinopril 80 mg TABLET ORAL, but that combination does not exist in the directory. Which part should I change?"
+      }
+    },
+    {
+      "atMs": 3900,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 6000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Make it twenty milligrams",
+        "turn_order": 2
+      }
+    },
+    {
+      "atMs": 6100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 2,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Make it twenty milligrams",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Make",
+            "start": 6000,
+            "end": 6300,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "it",
+            "start": 6370,
+            "end": 6580,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "twenty",
+            "start": 6650,
+            "end": 7040,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "milligrams",
+            "start": 7110,
+            "end": 7680,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 7400,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 7440,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Confirming the strength: 20 mg. Correct?"
+      }
+    },
+    {
+      "atMs": 8300,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 9000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.ended"
+      }
+    },
+    {
+      "atMs": 9020,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 9,
+        "session_duration_seconds": 11
+      }
+    }
+  ]
+}

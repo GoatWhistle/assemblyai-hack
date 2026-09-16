@@ -1,0 +1,89 @@
+{
+  "name": "socket-3007",
+  "description": "an audio chunk outside the 50-1000 ms window closes the STT socket with 3007; the error frame carries the real reason, not the truncated close reason",
+  "recordedAt": "2026-09-15T12:00:00.000Z",
+  "sessionId": "fixture-socket-3007",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Begin",
+        "id": "fixture-socket-3007",
+        "expires_at": 1789000000
+      }
+    },
+    {
+      "atMs": 10,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.created"
+      }
+    },
+    {
+      "atMs": 1500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Lisinopril",
+        "turn_order": 1
+      }
+    },
+    {
+      "atMs": 1600,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Lisinopril",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Lisinopril",
+            "start": 1500,
+            "end": 2070,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 2500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "error",
+        "error": {
+          "code": "3007",
+          "message": "audio chunk duration outside the accepted 50-1000 ms window; the socket is closing"
+        }
+      }
+    },
+    {
+      "atMs": 2600,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.ended"
+      }
+    },
+    {
+      "atMs": 2620,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 3,
+        "session_duration_seconds": 5
+      }
+    }
+  ]
+}

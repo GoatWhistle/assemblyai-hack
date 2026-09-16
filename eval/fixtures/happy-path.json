@@ -1,0 +1,283 @@
+{
+  "name": "happy-path",
+  "description": "a clean dictation where every field passes its validator and the mandatory read-backs are confirmed",
+  "recordedAt": "2026-09-15T12:00:00.000Z",
+  "sessionId": "fixture-happy-path",
+  "frames": [
+    {
+      "atMs": 0,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Begin",
+        "id": "fixture-happy-path",
+        "expires_at": 1789000000
+      }
+    },
+    {
+      "atMs": 10,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.created"
+      }
+    },
+    {
+      "atMs": 200,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 240,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Pharmacy intake, this line is recorded for verification. Go ahead with the prescription."
+      }
+    },
+    {
+      "atMs": 1100,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 2000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Lisinopril ten milligrams tablet by mouth",
+        "turn_order": 1
+      }
+    },
+    {
+      "atMs": 2100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 1,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Lisinopril ten milligrams tablet by mouth",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Lisinopril",
+            "start": 2000,
+            "end": 2570,
+            "confidence": 0.97,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "ten",
+            "start": 2640,
+            "end": 2895,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "milligrams",
+            "start": 2965,
+            "end": 3535,
+            "confidence": 0.99,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "tablet",
+            "start": 3605,
+            "end": 3995,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "by",
+            "start": 4065,
+            "end": 4275,
+            "confidence": 0.99,
+            "speaker": "A",
+            "word_is_final": true
+          },
+          {
+            "text": "mouth",
+            "start": 4345,
+            "end": 4690,
+            "confidence": 0.98,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 3200,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 3240,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Confirming the drug name: lisinopril. Correct?"
+      }
+    },
+    {
+      "atMs": 4100,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 5000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Correct",
+        "turn_order": 2
+      }
+    },
+    {
+      "atMs": 5100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 2,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Correct",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Correct",
+            "start": 5000,
+            "end": 5435,
+            "confidence": 0.99,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 5600,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 5640,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "Confirming the quantity: 30. Correct?"
+      }
+    },
+    {
+      "atMs": 6500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 7000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.user",
+        "text": "Yes",
+        "turn_order": 3
+      }
+    },
+    {
+      "atMs": 7100,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Turn",
+        "turn_order": 3,
+        "turn_is_formatted": false,
+        "end_of_turn": true,
+        "transcript": "Yes",
+        "end_of_turn_confidence": 0.95,
+        "words": [
+          {
+            "text": "Yes",
+            "start": 7000,
+            "end": 7255,
+            "confidence": 0.99,
+            "speaker": "A",
+            "word_is_final": true
+          }
+        ]
+      }
+    },
+    {
+      "atMs": 7600,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.started"
+      }
+    },
+    {
+      "atMs": 7640,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "transcript.agent",
+        "text": "One moment, placing the order."
+      }
+    },
+    {
+      "atMs": 8500,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "reply.done"
+      }
+    },
+    {
+      "atMs": 9000,
+      "socket": "agent",
+      "direction": "in",
+      "message": {
+        "type": "session.ended"
+      }
+    },
+    {
+      "atMs": 9020,
+      "socket": "stt",
+      "direction": "in",
+      "message": {
+        "type": "Termination",
+        "audio_duration_seconds": 9,
+        "session_duration_seconds": 11
+      }
+    }
+  ]
+}

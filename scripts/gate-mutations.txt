@@ -1,0 +1,11 @@
+lasa_hit_ignored|if (policy.lasaChecked && c.lasa.hit) {|if (false) {|lasa hit asks even at perfect confidence
+lasa_gated_by_confidence|if (policy.lasaChecked && c.lasa.hit) {|if (policy.lasaChecked && c.lasa.hit && c.provenance.minConfidence < 0.9) {|lasa hit asks even at perfect confidence
+confidence_threshold_disabled|if (c.provenance.minConfidence < policy.autoAcceptThreshold) {|if (false) {|low confidence asks
+checksum_failure_accepted|case VerdictOutcome.FailedChecksum:|case "__never__":|checksum failure asks spell out
+catalog_miss_accepted|case VerdictOutcome.NotInCatalog:|case "__never__":|catalog miss asks confirm
+combo_inconsistency_accepted|case VerdictOutcome.InconsistentCombo:|case "__never__":|inconsistent combo asks which part
+missing_validator_accepted|case VerdictOutcome.NotApplicable:|case "__never__":|field without validator asks confirm
+read_back_always_skipped|if (policy.readBackAlways) {|if (false) {|read back always asks
+normalization_failure_accepted|if (c.normalizedValue === null) {|if (false) {|normalization failure asks
+spellout_ceiling_removed|if (c.attempt >= policy.maxAttemptsBeforeSpellout) {|if (false) {|low confidence at the spellout ceiling asks spell out
+escalation_ceiling_removed|if (c.attempt >= policy.maxAttemptsBeforeEscalation) {|if (false) {|gate always terminates
