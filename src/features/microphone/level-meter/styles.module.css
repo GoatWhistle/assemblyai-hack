@@ -16,7 +16,7 @@
   height: 100%;
   border-radius: var(--radius-pill);
   transform-origin: center;
-  scale: 1 0.22;
+  scale: 1 var(--bar-level, 0.22);
   transition:
     scale var(--dur-instant) var(--ease-out-quart),
     background-color var(--dur-base) var(--ease-out-quart);
@@ -26,17 +26,33 @@
   background-color: var(--mic-level-lit);
 }
 
+.quiet {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    var(--paper) 14%,
+    var(--paper) 86%,
+    transparent
+  );
+}
+
 .quiet .bar {
   background-color: var(--mic-level-rest);
+  scale: 1 0.14;
+  opacity: 0.7;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bar {
+  .meter .bar {
+    scale: 1 0.3;
     transition: background-color var(--dur-fast) linear;
-    scale: 1 0.3 !important;
   }
 
-  .live .bar {
-    scale: 1 0.6 !important;
+  .meter.live .bar {
+    scale: 1 0.6;
+  }
+
+  .meter.quiet .bar {
+    scale: 1 0.12;
   }
 }

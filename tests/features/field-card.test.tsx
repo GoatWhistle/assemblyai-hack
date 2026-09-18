@@ -3,7 +3,11 @@ import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
 import { GateAction, policyFor, ReasonCode, VerdictOutcome } from "@/domain"
 import { FieldCard } from "@/features/field-card"
-import { isConfidenceOverruled, stanceOf } from "@/features/field-card/field-status"
+import {
+  isConfidenceOverruled,
+  STANCE_LABEL,
+  stanceOf,
+} from "@/features/field-card/field-status"
 import {
   LASA_CANDIDATE,
   LASA_DECISION,
@@ -21,13 +25,22 @@ describe("the LASA hit at high confidence", () => {
     )
     expect(LASA_DECISION.action).toBe(GateAction.AskDisambiguate)
     render(<FieldCard candidate={LASA_CANDIDATE} decision={LASA_DECISION} />)
-    expect(screen.getByText(/Mandatory re-ask: look-alike pair/i)).toBeDefined()
+    expect(
+      screen.getByText(STANCE_LABEL.lasa),
+      "the chip names the action asked of the caller, and the re-ask still fires above the threshold",
+    ).toBeDefined()
   })
 
-  it("states in words that confidence does not decide this field", () => {
+  it("states in words that certainty does not settle which name was spoken", () => {
     render(<FieldCard candidate={LASA_CANDIDATE} decision={LASA_DECISION} />)
-    expect(screen.getByText(/Confidence does not decide this field/i)).toBeDefined()
-    expect(screen.getByText(/that changes nothing here/i)).toBeDefined()
+    expect(
+      screen.getByText(/Needs confirming, whatever the certainty says/i),
+      "the heading has to name the ask; a heading about confidence alone reads as an argument with the recognizer",
+    ).toBeDefined()
+    expect(
+      screen.getByText(/does not settle which name was spoken/i),
+      "the reason is that no number distinguishes two members of a pair, which is a statement about the signal rather than about the caller",
+    ).toBeDefined()
   })
 
   it("marks the certainty reading as outranked rather than contradicting it", () => {
@@ -40,14 +53,25 @@ describe("the LASA hit at high confidence", () => {
 
   it("names both alternatives from the published list", () => {
     render(<FieldCard candidate={LASA_CANDIDATE} decision={LASA_DECISION} />)
-    expect(screen.getAllByText("Bisoprolol").length).toBeGreaterThan(0)
-    expect(screen.getByText("Lisinopril")).toBeDefined()
+    expect(screen.getAllByText(String(LASA_CANDIDATE.lasa.matchedTerm)).length).toBeGreaterThan(
+      0,
+    )
+    for (const partner of LASA_CANDIDATE.lasa.confusableWith) {
+      expect(screen.getByText(partner)).toBeDefined()
+    }
     expect(screen.getByText("confusable with")).toBeDefined()
   })
 
   it("cites the source row rather than merely asserting the pair", () => {
     render(<FieldCard candidate={LASA_CANDIDATE} decision={LASA_DECISION} />)
-    expect(screen.getByText(/ISMP confused drug names, 2023 list/i)).toBeDefined()
+    const row = String(LASA_CANDIDATE.lasa.sourceRow)
+    expect(
+      screen.getByText((_, node) => node?.textContent?.includes(row) === true, {
+        selector: "p",
+      }),
+      "the row on screen must be the row the curated table carries, not prose about it",
+    ).toBeDefined()
+    expect(row).toContain("ISMP")
   })
 
   it("puts proof above certainty in the reading order it states", () => {

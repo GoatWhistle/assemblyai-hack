@@ -1,19 +1,25 @@
-import Link from "next/link"
+import type { Metadata } from "next"
 import { JudgeDemo } from "@/features/judge-demo"
+import { SiteHeader } from "@/shared/ui/primitives/site-header"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
-import styles from "./demo-page.module.css"
+import styles from "./styles.module.css"
 
 const MAIN_ID = "main"
 
+export const metadata: Metadata = {
+  title: "Demonstration",
+  description:
+    "One recorded session replayed through the whole pipeline, with the gate on and off side by side. No microphone and no second person needed.",
+}
+
 export default function DemoPage() {
   return (
-    <main className={styles.page} id={MAIN_ID}>
-      <nav className={styles.nav} aria-label="Other views">
-        <Link href="/">Intake</Link>
-        <Link href="/metrics">Measurements</Link>
-      </nav>
-      <JudgeDemo />
-      <Disclaimer />
-    </main>
+    <div className={styles.shell}>
+      <SiteHeader current="demo" />
+      <main className={styles.page} id={MAIN_ID}>
+        <JudgeDemo />
+        <Disclaimer />
+      </main>
+    </div>
   )
 }

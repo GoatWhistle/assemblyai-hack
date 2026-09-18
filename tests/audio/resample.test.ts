@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import {
   AGENT_SAMPLE_RATE,
@@ -91,5 +92,13 @@ describe("base64", () => {
     const restored = decodeBase64(encodeBase64(bytes))
     expect(restored.byteLength).toBe(bytes.byteLength)
     expect(Array.from(restored.subarray(0, 16))).toEqual(Array.from(bytes.subarray(0, 16)))
+  })
+
+  it("never references the Node Buffer global, which webpack would polyfill into every client bundle", () => {
+    const source = readFileSync("src/audio/resample.ts", "utf8")
+    expect(
+      source,
+      "this file ships to the browser; btoa/atob cover every runtime it actually runs in, so a Buffer fallback only adds a ~22 kB polyfill chunk that never executes",
+    ).not.toMatch(/\bBuffer\b/)
   })
 })

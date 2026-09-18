@@ -6,7 +6,7 @@ import { comboExists, combosFor } from "./query"
 import { buildIndex, type CatalogIndex, isCatalogFile } from "./store"
 import type { CatalogFile } from "./types"
 
-export const CATALOG_PATH = "data/catalog.json"
+const CATALOG_PATH = "data/catalog.json"
 
 let cached: CatalogIndex | null = null
 
@@ -39,10 +39,6 @@ export function loadCatalog(): CatalogIndex {
     cached = loadCatalogFrom(CATALOG_PATH)
   }
   return cached
-}
-
-export function setCatalog(index: CatalogIndex | null): void {
-  cached = index
 }
 
 export function catalogFromFile(file: CatalogFile): CatalogIndex {

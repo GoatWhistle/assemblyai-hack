@@ -3,8 +3,8 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react"
 import styles from "./styles.module.css"
 
-export type ButtonTone = "neutral" | "primary" | "danger" | "quiet"
-export type ButtonSize = "small" | "medium" | "large"
+type ButtonTone = "neutral" | "primary" | "danger" | "quiet"
+type ButtonSize = "small" | "medium" | "large"
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> & {
   readonly tone?: ButtonTone

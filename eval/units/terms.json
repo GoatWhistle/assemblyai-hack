@@ -1,0 +1,92 @@
+{
+  "builtAt": "2026-09-16T15:10:04.904Z",
+  "method": "every combination of four amounts and three unit classes spoken in a fixed carrier phrase, scored against the same normaliser the product uses",
+  "purpose": "milligrams against micrograms is a thousandfold dose error and it has no published pair list and no checksum, so neither of the product's two strong mechanisms covers it; this measures the class rather than asserting it",
+  "caveat": "Synthetic speech. The rate is a property of the recognizer against a synthesizer, not against a prescriber on a phone.",
+  "amounts": [
+    "15",
+    "50",
+    "100",
+    "500"
+  ],
+  "units": [
+    "milligrams",
+    "micrograms",
+    "milliliters"
+  ],
+  "count": 12,
+  "items": [
+    {
+      "amount": "15",
+      "spokenUnit": "milligrams",
+      "expected": "15 mg",
+      "phrase": "The strength is 15 milligrams."
+    },
+    {
+      "amount": "15",
+      "spokenUnit": "micrograms",
+      "expected": "15 mcg",
+      "phrase": "The strength is 15 micrograms."
+    },
+    {
+      "amount": "15",
+      "spokenUnit": "milliliters",
+      "expected": "15 mL",
+      "phrase": "The strength is 15 milliliters."
+    },
+    {
+      "amount": "50",
+      "spokenUnit": "milligrams",
+      "expected": "50 mg",
+      "phrase": "The strength is 50 milligrams."
+    },
+    {
+      "amount": "50",
+      "spokenUnit": "micrograms",
+      "expected": "50 mcg",
+      "phrase": "The strength is 50 micrograms."
+    },
+    {
+      "amount": "50",
+      "spokenUnit": "milliliters",
+      "expected": "50 mL",
+      "phrase": "The strength is 50 milliliters."
+    },
+    {
+      "amount": "100",
+      "spokenUnit": "milligrams",
+      "expected": "100 mg",
+      "phrase": "The strength is 100 milligrams."
+    },
+    {
+      "amount": "100",
+      "spokenUnit": "micrograms",
+      "expected": "100 mcg",
+      "phrase": "The strength is 100 micrograms."
+    },
+    {
+      "amount": "100",
+      "spokenUnit": "milliliters",
+      "expected": "100 mL",
+      "phrase": "The strength is 100 milliliters."
+    },
+    {
+      "amount": "500",
+      "spokenUnit": "milligrams",
+      "expected": "500 mg",
+      "phrase": "The strength is 500 milligrams."
+    },
+    {
+      "amount": "500",
+      "spokenUnit": "micrograms",
+      "expected": "500 mcg",
+      "phrase": "The strength is 500 micrograms."
+    },
+    {
+      "amount": "500",
+      "spokenUnit": "milliliters",
+      "expected": "500 mL",
+      "phrase": "The strength is 500 milliliters."
+    }
+  ]
+}

@@ -11,7 +11,9 @@ export type ValidatorName =
   | "ndc_catalog"
   | "combo_consistency"
   | "sig_abbrev"
+  | "spoken_support"
   | "range_check"
+  | "schedule_refills"
   | "none"
 
 export type ValidatorVerdict = {
@@ -30,7 +32,11 @@ export const RULE_CITATIONS: Readonly<Record<ValidatorName, string>> = Object.fr
   ndc_catalog: "product.txt lookup: proprietary_name or nonproprietary_name exact match",
   combo_consistency: "product.txt: (drug x strength x dosage_form x route) tuple must exist",
   sig_abbrev: "ISMP Error-Prone Abbreviations 2024-04: abbreviation is on the do-not-use list",
+  spoken_support:
+    "every token of a proposed value must be accounted for by the recognized words of the turn its provenance points at",
   range_check: "field range policy: integer within the documented bounds",
+  schedule_refills:
+    "21 CFR 1306.12(a): the refilling of a prescription for a controlled substance listed in Schedule II is prohibited",
   none: "no independent validator exists for this field",
 })
 

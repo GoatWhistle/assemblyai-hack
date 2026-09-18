@@ -46,3 +46,15 @@ export const TOOL_RESPONSE_LIMIT = 8 * 1024
 export function responseBytes(body: unknown): number {
   return Buffer.byteLength(JSON.stringify(body), "utf8")
 }
+
+export function refusalText(body: unknown): string {
+  const payload = body as {
+    error?: unknown
+    rejected_arguments?: readonly { argument?: unknown; problem?: unknown }[]
+  }
+  const parts = [String(payload.error ?? "")]
+  for (const issue of payload.rejected_arguments ?? []) {
+    parts.push(String(issue.argument ?? ""), String(issue.problem ?? ""))
+  }
+  return parts.join(" ")
+}

@@ -7,7 +7,7 @@ export type TurnRecord = {
   readonly words: readonly WordSpan[]
 }
 
-export const SEARCH_TURN_WINDOW = 3
+const SEARCH_TURN_WINDOW = 3
 
 function normalizeToken(token: string): string {
   return token.toLowerCase().replace(/[^a-z0-9]/g, "")
@@ -41,6 +41,7 @@ function findSpan(turn: TurnRecord, hint: readonly string[]): readonly WordSpan[
 export type ProvenanceMatch = {
   readonly provenance: Provenance
   readonly turnOrder: number
+  readonly quotedSpan: string
 }
 
 export function matchProvenance(input: {
@@ -69,6 +70,7 @@ export function matchProvenance(input: {
           sttTurnIsFormatted: turn.isFormatted,
         }),
         turnOrder: turn.turnOrder,
+        quotedSpan: span.map((w) => w.text).join(" "),
       }
     }
   }
@@ -76,13 +78,39 @@ export function matchProvenance(input: {
   return null
 }
 
+function recentTurns(
+  turns: readonly TurnRecord[],
+  window = SEARCH_TURN_WINDOW,
+): readonly TurnRecord[] {
+  return [...turns]
+    .sort((a, b) => b.turnOrder - a.turnOrder)
+    .slice(0, window)
+    .sort((a, b) => a.turnOrder - b.turnOrder)
+}
+
 export function searchedTurns(
   turns: readonly TurnRecord[],
   window = SEARCH_TURN_WINDOW,
 ): readonly number[] {
-  return [...turns]
-    .sort((a, b) => b.turnOrder - a.turnOrder)
-    .slice(0, window)
-    .map((t) => t.turnOrder)
-    .sort((a, b) => a - b)
+  return recentTurns(turns, window).map((t) => t.turnOrder)
+}
+
+const MAX_SEARCHED_TEXT_CHARS = 320
+
+export function searchedTurnText(
+  turns: readonly TurnRecord[],
+  window = SEARCH_TURN_WINDOW,
+): string {
+  const joined = recentTurns(turns, window)
+    .map((t) => {
+      const spoken = t.words
+        .map((w) => w.text)
+        .join(" ")
+        .trim()
+      return `[${t.turnOrder}] ${spoken.length > 0 ? spoken : t.transcript}`
+    })
+    .join(" | ")
+  return joined.length <= MAX_SEARCHED_TEXT_CHARS
+    ? joined
+    : `${joined.slice(0, MAX_SEARCHED_TEXT_CHARS)}...`
 }

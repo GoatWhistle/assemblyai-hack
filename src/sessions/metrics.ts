@@ -1,5 +1,4 @@
-import type { SessionSummary } from "@/domain"
-import { type GateDecision, ReasonCode } from "@/domain"
+import type { GateDecision, SessionSummary } from "@/domain"
 
 export type ReasonBreakdown = { readonly reasonCode: string; readonly count: number }
 
@@ -19,7 +18,7 @@ export type MetricsReport = {
 export const FALSE_ASK_NOTE =
   "false-ask rate is undefined in live mode because ground truth is unknown; it is computed only over eval runs"
 
-export const METRICS_METHOD =
+const METRICS_METHOD =
   "counts over stored gate decisions; ask = action != accept; run make eval for held-out numbers"
 
 export function reasonBreakdown(
@@ -53,8 +52,4 @@ export function buildReport(
     falseAskNote: FALSE_ASK_NOTE,
     method: METRICS_METHOD,
   }
-}
-
-export function lasaCatches(decisions: readonly GateDecision[]): readonly GateDecision[] {
-  return decisions.filter((d) => d.reasonCode === ReasonCode.LasaHit)
 }

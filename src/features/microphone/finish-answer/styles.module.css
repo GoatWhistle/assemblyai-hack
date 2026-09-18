@@ -1,0 +1,70 @@
+.wrap {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.button {
+  min-height: var(--target-touch);
+  min-width: 44px;
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-panel);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--track-tight);
+  cursor: pointer;
+}
+
+.animated {
+  transition:
+    background-color var(--dur-fast) var(--ease-out-quart),
+    border-color var(--dur-fast) var(--ease-out-quart),
+    color var(--dur-fast) var(--ease-out-quart),
+    scale var(--dur-instant) var(--ease-out-quart);
+}
+
+.still {
+  transition: none;
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--action-ink);
+  color: var(--action-ink);
+  background-color: var(--action-quiet);
+}
+
+.animated:active:not(:disabled) {
+  scale: 0.97;
+}
+
+.still:active:not(:disabled) {
+  background-color: var(--state-pending-surface);
+  border-color: var(--state-pending-line);
+}
+
+.button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.button:disabled {
+  border-style: dashed;
+  border-color: var(--line-hairline);
+  background-color: var(--action-disabled-surface);
+  color: var(--action-disabled-ink);
+  cursor: not-allowed;
+}
+
+.note {
+  margin: 0;
+  max-width: var(--measure-narrow);
+  font-size: var(--text-2xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-faint);
+  text-align: center;
+  text-wrap: pretty;
+}

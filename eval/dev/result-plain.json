@@ -1,0 +1,368 @@
+{
+  "measuredAt": "2026-09-16T13:55:47.287Z",
+  "setPath": "eval/dev",
+  "keyterms": 0,
+  "entityErrorRate": 0,
+  "scored": [
+    {
+      "spoken": "lisinopril",
+      "heard": "lisinopril",
+      "correct": true,
+      "minConfidence": 0.995602,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 4650
+    },
+    {
+      "spoken": "bisoprolol",
+      "heard": "bisoprolol",
+      "correct": true,
+      "minConfidence": 0.99311,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5087
+    },
+    {
+      "spoken": "hydralazine",
+      "heard": "hydralazine",
+      "correct": true,
+      "minConfidence": 0.988812,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 4146
+    },
+    {
+      "spoken": "hydroxyzine",
+      "heard": "hydroxyzine",
+      "correct": true,
+      "minConfidence": 0.985505,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5256
+    },
+    {
+      "spoken": "clonidine",
+      "heard": "clonidine",
+      "correct": true,
+      "minConfidence": 0.990837,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5121
+    },
+    {
+      "spoken": "klonopin",
+      "heard": "klonopin",
+      "correct": true,
+      "minConfidence": 0.93567,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5099
+    },
+    {
+      "spoken": "metformin",
+      "heard": "metformin",
+      "correct": true,
+      "minConfidence": 0.927731,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 7029
+    },
+    {
+      "spoken": "metronidazole",
+      "heard": "metronidazole",
+      "correct": true,
+      "minConfidence": 0.992908,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5530
+    },
+    {
+      "spoken": "tramadol",
+      "heard": "tramadol",
+      "correct": true,
+      "minConfidence": 0.979573,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 4269
+    },
+    {
+      "spoken": "trazodone",
+      "heard": "trazodone",
+      "correct": true,
+      "minConfidence": 0.993164,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5580
+    },
+    {
+      "spoken": "vinblastine",
+      "heard": "vinblastine",
+      "correct": true,
+      "minConfidence": 0.953273,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5119
+    },
+    {
+      "spoken": "vincristine",
+      "heard": "vincristine",
+      "correct": true,
+      "minConfidence": 0.994261,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5128
+    },
+    {
+      "spoken": "cycloserine",
+      "heard": "cycloserine",
+      "correct": true,
+      "minConfidence": 0.978884,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 4210
+    },
+    {
+      "spoken": "cyclosporine",
+      "heard": "cyclosporine",
+      "correct": true,
+      "minConfidence": 0.9855,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 4130
+    },
+    {
+      "spoken": "chlorpromazine",
+      "heard": "chlorpromazine",
+      "correct": true,
+      "minConfidence": 0.989592,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5101
+    },
+    {
+      "spoken": "chlorpropamide",
+      "heard": "chlorpropamide",
+      "correct": true,
+      "minConfidence": 0.988063,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5067
+    },
+    {
+      "spoken": "glipizide",
+      "heard": "glipizide",
+      "correct": true,
+      "minConfidence": 0.993922,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5090
+    },
+    {
+      "spoken": "glyburide",
+      "heard": "glyburide",
+      "correct": true,
+      "minConfidence": 0.993041,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5125
+    },
+    {
+      "spoken": "sulfadiazine",
+      "heard": "sulfadiazine",
+      "correct": true,
+      "minConfidence": 0.993324,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5103
+    },
+    {
+      "spoken": "sulfasalazine",
+      "heard": "sulfasalazine",
+      "correct": true,
+      "minConfidence": 0.993009,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5123
+    },
+    {
+      "spoken": "hydromorphone",
+      "heard": "hydromorphone",
+      "correct": true,
+      "minConfidence": 0.991397,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5058
+    },
+    {
+      "spoken": "morphine",
+      "heard": "morphine",
+      "correct": true,
+      "minConfidence": 0.938865,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5469
+    },
+    {
+      "spoken": "oxycodone",
+      "heard": "oxycodone",
+      "correct": true,
+      "minConfidence": 0.986536,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5195
+    },
+    {
+      "spoken": "oxycontin",
+      "heard": "oxycontin",
+      "correct": true,
+      "minConfidence": 0.989714,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5751
+    },
+    {
+      "spoken": "prednisone",
+      "heard": "prednisone",
+      "correct": true,
+      "minConfidence": 0.989978,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5102
+    },
+    {
+      "spoken": "prednisolone",
+      "heard": "prednisolone",
+      "correct": true,
+      "minConfidence": 0.993853,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5064
+    },
+    {
+      "spoken": "clobazam",
+      "heard": "clobazam",
+      "correct": true,
+      "minConfidence": 0.980073,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5099
+    },
+    {
+      "spoken": "clonazepam",
+      "heard": "clonazepam",
+      "correct": true,
+      "minConfidence": 0.989072,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 4135
+    },
+    {
+      "spoken": "lamotrigine",
+      "heard": "lamotrigine",
+      "correct": true,
+      "minConfidence": 0.977462,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5050
+    },
+    {
+      "spoken": "lamivudine",
+      "heard": "lamivudine",
+      "correct": true,
+      "minConfidence": 0.977911,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5410
+    },
+    {
+      "spoken": "carboplatin",
+      "heard": "carboplatin",
+      "correct": true,
+      "minConfidence": 0.992883,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5338
+    },
+    {
+      "spoken": "cisplatin",
+      "heard": "cisplatin",
+      "correct": true,
+      "minConfidence": 0.992629,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5437
+    },
+    {
+      "spoken": "azathioprine",
+      "heard": "azathioprine",
+      "correct": true,
+      "minConfidence": 0.997078,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5082
+    },
+    {
+      "spoken": "azithromycin",
+      "heard": "azithromycin",
+      "correct": true,
+      "minConfidence": 0.994692,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5430
+    },
+    {
+      "spoken": "dobutamine",
+      "heard": "dobutamine",
+      "correct": true,
+      "minConfidence": 0.986115,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5092
+    },
+    {
+      "spoken": "dopamine",
+      "heard": "dopamine",
+      "correct": true,
+      "minConfidence": 0.960261,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5064
+    },
+    {
+      "spoken": "nifedipine",
+      "heard": "nifedipine",
+      "correct": true,
+      "minConfidence": 0.994599,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5110
+    },
+    {
+      "spoken": "nimodipine",
+      "heard": "nimodipine",
+      "correct": true,
+      "minConfidence": 0.988491,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5141
+    },
+    {
+      "spoken": "cefazolin",
+      "heard": "cefazolin",
+      "correct": true,
+      "minConfidence": 0.94921,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6004
+    },
+    {
+      "spoken": "cefotaxime",
+      "heard": "cefotaxime",
+      "correct": true,
+      "minConfidence": 0.971226,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 4194
+    }
+  ]
+}

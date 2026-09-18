@@ -69,6 +69,7 @@ select,
 textarea {
   font: inherit;
   color: inherit;
+  accent-color: var(--action-rest);
 }
 
 a {
@@ -123,4 +124,33 @@ a:hover {
 
 .skip-link:focus-visible {
   transform: none;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: var(--radius-pill);
+  background-clip: content-box;
+  background-color: var(--line-strong);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-faint);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }

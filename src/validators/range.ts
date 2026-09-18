@@ -2,7 +2,7 @@ import { FieldName, makeVerdict, type ValidatorVerdict, VerdictOutcome } from "@
 
 export type IntegerBounds = { readonly min: number; readonly max: number }
 
-export const RANGE_BOUNDS: ReadonlyMap<FieldName, IntegerBounds> = new Map([
+const RANGE_BOUNDS: ReadonlyMap<FieldName, IntegerBounds> = new Map([
   [FieldName.Quantity, { min: 1, max: 360 }],
   [FieldName.Refills, { min: 0, max: 11 }],
   [FieldName.DaysSupply, { min: 1, max: 90 }],

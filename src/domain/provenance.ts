@@ -1,4 +1,4 @@
-import { EmptyProvenanceError } from "./errors"
+import { EmptyProvenanceError, InvalidWordSpanError } from "./errors"
 import type { WordSpan } from "./word-span"
 
 export type Provenance = {
@@ -31,6 +31,14 @@ export function makeProvenance(input: {
     )
   }
   const confidences = words.map((w) => w.confidence)
+  const unscored = words.findIndex(
+    (w) => !Number.isFinite(w.confidence) || w.confidence < 0 || w.confidence > 1,
+  )
+  if (unscored !== -1) {
+    throw new InvalidWordSpanError(
+      `word "${words[unscored]?.text}" in turn ${input.turnOrder} carries no usable confidence (${String(words[unscored]?.confidence)}); a word the recognizer did not score cannot be read as a scored one`,
+    )
+  }
   return Object.freeze({
     words: Object.freeze([...words]),
     turnOrder: input.turnOrder,

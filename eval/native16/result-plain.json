@@ -1,0 +1,2531 @@
+{
+  "measuredAt": "2026-09-16T15:03:26.637Z",
+  "setPath": "eval/native16",
+  "spacingMs": 24000,
+  "keyterms": 0,
+  "entityErrorRate": 0.25,
+  "results": [
+    {
+      "item": {
+        "file": "eval/native16/audio/000-nelarabine.wav",
+        "spoken": "nelarabine",
+        "carrier": "The drug name is nelarabine.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is nelarabine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 228,
+          "text": "The",
+          "confidence": 0.994625,
+          "word_is_final": true
+        },
+        {
+          "start": 243,
+          "end": 547,
+          "text": "drug",
+          "confidence": 0.999963,
+          "word_is_final": true
+        },
+        {
+          "start": 562,
+          "end": 866,
+          "text": "name",
+          "confidence": 0.999948,
+          "word_is_final": true
+        },
+        {
+          "start": 881,
+          "end": 1033,
+          "text": "is",
+          "confidence": 0.99996,
+          "word_is_final": true
+        },
+        {
+          "start": 1048,
+          "end": 1885,
+          "text": "nelarabine.",
+          "confidence": 0.926797,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5098,
+      "audioSeconds": 2.425,
+      "openMs": 413,
+      "firstPartialMs": 1510,
+      "finalizationMs": 77,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/001-melphalan.wav",
+        "spoken": "melphalan",
+        "carrier": "The drug name is melphalan.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is melphalan.",
+      "words": [
+        {
+          "start": 0,
+          "end": 237,
+          "text": "The",
+          "confidence": 0.990723,
+          "word_is_final": true
+        },
+        {
+          "start": 252,
+          "end": 569,
+          "text": "drug",
+          "confidence": 0.999803,
+          "word_is_final": true
+        },
+        {
+          "start": 584,
+          "end": 901,
+          "text": "name",
+          "confidence": 0.999966,
+          "word_is_final": true
+        },
+        {
+          "start": 916,
+          "end": 1074,
+          "text": "is",
+          "confidence": 0.999985,
+          "word_is_final": true
+        },
+        {
+          "start": 1089,
+          "end": 1882,
+          "text": "melphalan.",
+          "confidence": 0.91535,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 4617,
+      "audioSeconds": 2.41,
+      "openMs": 791,
+      "firstPartialMs": 2054,
+      "finalizationMs": 59,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/002-moxidectin.wav",
+        "spoken": "moxidectin",
+        "carrier": "The drug name is moxidectin.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is moxidectin.",
+      "words": [
+        {
+          "start": 0,
+          "end": 251,
+          "text": "The",
+          "confidence": 0.99024,
+          "word_is_final": true
+        },
+        {
+          "start": 267,
+          "end": 602,
+          "text": "drug",
+          "confidence": 0.999879,
+          "word_is_final": true
+        },
+        {
+          "start": 618,
+          "end": 953,
+          "text": "name",
+          "confidence": 0.999961,
+          "word_is_final": true
+        },
+        {
+          "start": 969,
+          "end": 1136,
+          "text": "is",
+          "confidence": 0.999977,
+          "word_is_final": true
+        },
+        {
+          "start": 1152,
+          "end": 2074,
+          "text": "moxidectin.",
+          "confidence": 0.972009,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6638,
+      "audioSeconds": 2.625,
+      "openMs": 1970,
+      "firstPartialMs": 3120,
+      "finalizationMs": 60,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/003-sirolimus.wav",
+        "spoken": "sirolimus",
+        "carrier": "The drug name is sirolimus.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is sirolimus.",
+      "words": [
+        {
+          "start": 0,
+          "end": 237,
+          "text": "The",
+          "confidence": 0.997719,
+          "word_is_final": true
+        },
+        {
+          "start": 252,
+          "end": 569,
+          "text": "drug",
+          "confidence": 0.999677,
+          "word_is_final": true
+        },
+        {
+          "start": 584,
+          "end": 901,
+          "text": "name",
+          "confidence": 0.999975,
+          "word_is_final": true
+        },
+        {
+          "start": 916,
+          "end": 1074,
+          "text": "is",
+          "confidence": 0.999975,
+          "word_is_final": true
+        },
+        {
+          "start": 1089,
+          "end": 1882,
+          "text": "sirolimus.",
+          "confidence": 0.992004,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5158,
+      "audioSeconds": 2.425,
+      "openMs": 493,
+      "firstPartialMs": 1556,
+      "finalizationMs": 85,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/004-vinorelbine.wav",
+        "spoken": "vinorelbine",
+        "carrier": "The drug name is vinorelbine.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is venorelbine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 230,
+          "text": "The",
+          "confidence": 0.996139,
+          "word_is_final": true
+        },
+        {
+          "start": 245,
+          "end": 552,
+          "text": "drug",
+          "confidence": 0.999856,
+          "word_is_final": true
+        },
+        {
+          "start": 567,
+          "end": 874,
+          "text": "name",
+          "confidence": 0.999968,
+          "word_is_final": true
+        },
+        {
+          "start": 889,
+          "end": 1042,
+          "text": "is",
+          "confidence": 0.999981,
+          "word_is_final": true
+        },
+        {
+          "start": 1057,
+          "end": 1979,
+          "text": "venorelbine.",
+          "confidence": 0.984387,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5900,
+      "audioSeconds": 2.56,
+      "openMs": 2067,
+      "firstPartialMs": 3328,
+      "finalizationMs": 61,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/005-bupivacaine.wav",
+        "spoken": "bupivacaine",
+        "carrier": "The drug name is bupivacaine.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is bupivacaine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 230,
+          "text": "The",
+          "confidence": 0.995449,
+          "word_is_final": true
+        },
+        {
+          "start": 245,
+          "end": 552,
+          "text": "drug",
+          "confidence": 0.999429,
+          "word_is_final": true
+        },
+        {
+          "start": 567,
+          "end": 874,
+          "text": "name",
+          "confidence": 0.999974,
+          "word_is_final": true
+        },
+        {
+          "start": 889,
+          "end": 1042,
+          "text": "is",
+          "confidence": 0.999987,
+          "word_is_final": true
+        },
+        {
+          "start": 1057,
+          "end": 1979,
+          "text": "bupivacaine.",
+          "confidence": 0.996598,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6977,
+      "audioSeconds": 2.485,
+      "openMs": 2286,
+      "firstPartialMs": 3445,
+      "finalizationMs": 62,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/006-methimazole.wav",
+        "spoken": "methimazole",
+        "carrier": "The drug name is methimazole.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is methimazole.",
+      "words": [
+        {
+          "start": 0,
+          "end": 230,
+          "text": "The",
+          "confidence": 0.99598,
+          "word_is_final": true
+        },
+        {
+          "start": 245,
+          "end": 552,
+          "text": "drug",
+          "confidence": 0.999492,
+          "word_is_final": true
+        },
+        {
+          "start": 567,
+          "end": 874,
+          "text": "name",
+          "confidence": 0.999971,
+          "word_is_final": true
+        },
+        {
+          "start": 889,
+          "end": 1042,
+          "text": "is",
+          "confidence": 0.999987,
+          "word_is_final": true
+        },
+        {
+          "start": 1057,
+          "end": 1979,
+          "text": "methimazole.",
+          "confidence": 0.987859,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5041,
+      "audioSeconds": 2.495,
+      "openMs": 377,
+      "firstPartialMs": 1431,
+      "finalizationMs": 79,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/007-nifurtimox.wav",
+        "spoken": "nifurtimox",
+        "carrier": "The drug name is nifurtimox.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is nifurtimox.",
+      "words": [
+        {
+          "start": 0,
+          "end": 251,
+          "text": "The",
+          "confidence": 0.995949,
+          "word_is_final": true
+        },
+        {
+          "start": 267,
+          "end": 602,
+          "text": "drug",
+          "confidence": 0.999777,
+          "word_is_final": true
+        },
+        {
+          "start": 618,
+          "end": 953,
+          "text": "name",
+          "confidence": 0.999968,
+          "word_is_final": true
+        },
+        {
+          "start": 969,
+          "end": 1136,
+          "text": "is",
+          "confidence": 0.999969,
+          "word_is_final": true
+        },
+        {
+          "start": 1152,
+          "end": 2074,
+          "text": "nifurtimox.",
+          "confidence": 0.876482,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5268,
+      "audioSeconds": 2.61,
+      "openMs": 576,
+      "firstPartialMs": 1696,
+      "finalizationMs": 12,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/008-tacrolimus.wav",
+        "spoken": "tacrolimus",
+        "carrier": "The drug name is tacrolimus.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is tacrolimus.",
+      "words": [
+        {
+          "start": 0,
+          "end": 251,
+          "text": "The",
+          "confidence": 0.994814,
+          "word_is_final": true
+        },
+        {
+          "start": 267,
+          "end": 602,
+          "text": "drug",
+          "confidence": 0.999754,
+          "word_is_final": true
+        },
+        {
+          "start": 618,
+          "end": 953,
+          "text": "name",
+          "confidence": 0.999961,
+          "word_is_final": true
+        },
+        {
+          "start": 969,
+          "end": 1136,
+          "text": "is",
+          "confidence": 0.999987,
+          "word_is_final": true
+        },
+        {
+          "start": 1152,
+          "end": 2074,
+          "text": "tacrolimus.",
+          "confidence": 0.993453,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5201,
+      "audioSeconds": 2.62,
+      "openMs": 521,
+      "firstPartialMs": 1634,
+      "finalizationMs": 16,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/009-clopidogrel.wav",
+        "spoken": "clopidogrel",
+        "carrier": "The drug name is clopidogrel.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is clopidogrel.",
+      "words": [
+        {
+          "start": 0,
+          "end": 241,
+          "text": "The",
+          "confidence": 0.995961,
+          "word_is_final": true
+        },
+        {
+          "start": 257,
+          "end": 579,
+          "text": "drug",
+          "confidence": 0.999874,
+          "word_is_final": true
+        },
+        {
+          "start": 595,
+          "end": 917,
+          "text": "name",
+          "confidence": 0.999971,
+          "word_is_final": true
+        },
+        {
+          "start": 933,
+          "end": 1094,
+          "text": "is",
+          "confidence": 0.999982,
+          "word_is_final": true
+        },
+        {
+          "start": 1110,
+          "end": 2077,
+          "text": "clopidogrel.",
+          "confidence": 0.996771,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5050,
+      "audioSeconds": 2.595,
+      "openMs": 378,
+      "firstPartialMs": 1440,
+      "finalizationMs": 78,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/010-collavera.wav",
+        "spoken": "collavera",
+        "carrier": "The drug name is collavera.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is Colavera.",
+      "words": [
+        {
+          "start": 0,
+          "end": 315,
+          "text": "The",
+          "confidence": 0.991267,
+          "word_is_final": true
+        },
+        {
+          "start": 336,
+          "end": 757,
+          "text": "drug",
+          "confidence": 0.999648,
+          "word_is_final": true
+        },
+        {
+          "start": 778,
+          "end": 1199,
+          "text": "name",
+          "confidence": 0.99985,
+          "word_is_final": true
+        },
+        {
+          "start": 1220,
+          "end": 1430,
+          "text": "is",
+          "confidence": 0.999942,
+          "word_is_final": true
+        },
+        {
+          "start": 1451,
+          "end": 2398,
+          "text": "Colavera.",
+          "confidence": 0.65242,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5036,
+      "audioSeconds": 2.385,
+      "openMs": 374,
+      "firstPartialMs": 1453,
+      "finalizationMs": 263,
+      "turnCount": 5
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/011-pemigatinib.wav",
+        "spoken": "pemigatinib",
+        "carrier": "The drug name is pemigatinib.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is pamigatinib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 230,
+          "text": "The",
+          "confidence": 0.994171,
+          "word_is_final": true
+        },
+        {
+          "start": 245,
+          "end": 552,
+          "text": "drug",
+          "confidence": 0.999821,
+          "word_is_final": true
+        },
+        {
+          "start": 567,
+          "end": 874,
+          "text": "name",
+          "confidence": 0.999972,
+          "word_is_final": true
+        },
+        {
+          "start": 889,
+          "end": 1042,
+          "text": "is",
+          "confidence": 0.999984,
+          "word_is_final": true
+        },
+        {
+          "start": 1057,
+          "end": 1979,
+          "text": "pamigatinib.",
+          "confidence": 0.871195,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5044,
+      "audioSeconds": 2.45,
+      "openMs": 371,
+      "firstPartialMs": 1452,
+      "finalizationMs": 106,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/012-dinoprostone.wav",
+        "spoken": "dinoprostone",
+        "carrier": "The drug name is dinoprostone.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is dinoprostone.",
+      "words": [
+        {
+          "start": 0,
+          "end": 254,
+          "text": "The",
+          "confidence": 0.989508,
+          "word_is_final": true
+        },
+        {
+          "start": 270,
+          "end": 609,
+          "text": "drug",
+          "confidence": 0.999935,
+          "word_is_final": true
+        },
+        {
+          "start": 625,
+          "end": 964,
+          "text": "name",
+          "confidence": 0.999906,
+          "word_is_final": true
+        },
+        {
+          "start": 980,
+          "end": 1149,
+          "text": "is",
+          "confidence": 0.999969,
+          "word_is_final": true
+        },
+        {
+          "start": 1165,
+          "end": 2267,
+          "text": "dinoprostone.",
+          "confidence": 0.918673,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6088,
+      "audioSeconds": 2.805,
+      "openMs": 421,
+      "firstPartialMs": 1490,
+      "finalizationMs": 76,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/013-lonafarnib.wav",
+        "spoken": "lonafarnib",
+        "carrier": "The drug name is lonafarnib.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is lonafarnib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 228,
+          "text": "The",
+          "confidence": 0.994886,
+          "word_is_final": true
+        },
+        {
+          "start": 243,
+          "end": 547,
+          "text": "drug",
+          "confidence": 0.999635,
+          "word_is_final": true
+        },
+        {
+          "start": 562,
+          "end": 866,
+          "text": "name",
+          "confidence": 0.999969,
+          "word_is_final": true
+        },
+        {
+          "start": 881,
+          "end": 1033,
+          "text": "is",
+          "confidence": 0.999981,
+          "word_is_final": true
+        },
+        {
+          "start": 1048,
+          "end": 1885,
+          "text": "lonafarnib.",
+          "confidence": 0.975628,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5618,
+      "audioSeconds": 2.38,
+      "openMs": 938,
+      "firstPartialMs": 2207,
+      "finalizationMs": 65,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/014-zidesamtinib.wav",
+        "spoken": "zidesamtinib",
+        "carrier": "The drug name is zidesamtinib.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is zaitzamtonib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 232,
+          "text": "The",
+          "confidence": 0.995071,
+          "word_is_final": true
+        },
+        {
+          "start": 247,
+          "end": 557,
+          "text": "drug",
+          "confidence": 0.999907,
+          "word_is_final": true
+        },
+        {
+          "start": 572,
+          "end": 882,
+          "text": "name",
+          "confidence": 0.999967,
+          "word_is_final": true
+        },
+        {
+          "start": 897,
+          "end": 1052,
+          "text": "is",
+          "confidence": 0.999965,
+          "word_is_final": true
+        },
+        {
+          "start": 1067,
+          "end": 2075,
+          "text": "zaitzamtonib.",
+          "confidence": 0.721988,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5026,
+      "audioSeconds": 2.55,
+      "openMs": 363,
+      "firstPartialMs": 1535,
+      "finalizationMs": 77,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/015-imiglucerase.wav",
+        "spoken": "imiglucerase",
+        "carrier": "The drug name is imiglucerase.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is amiglycerase.",
+      "words": [
+        {
+          "start": 0,
+          "end": 243,
+          "text": "The",
+          "confidence": 0.994606,
+          "word_is_final": true
+        },
+        {
+          "start": 259,
+          "end": 583,
+          "text": "drug",
+          "confidence": 0.999406,
+          "word_is_final": true
+        },
+        {
+          "start": 599,
+          "end": 923,
+          "text": "name",
+          "confidence": 0.999959,
+          "word_is_final": true
+        },
+        {
+          "start": 939,
+          "end": 1101,
+          "text": "is",
+          "confidence": 0.999982,
+          "word_is_final": true
+        },
+        {
+          "start": 1117,
+          "end": 2172,
+          "text": "amiglycerase.",
+          "confidence": 0.744637,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6041,
+      "audioSeconds": 2.705,
+      "openMs": 371,
+      "firstPartialMs": 1456,
+      "finalizationMs": 83,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/016-naxitamab.wav",
+        "spoken": "naxitamab",
+        "carrier": "The drug name is naxitamab.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is naxitamab.",
+      "words": [
+        {
+          "start": 0,
+          "end": 262,
+          "text": "The",
+          "confidence": 0.994763,
+          "word_is_final": true
+        },
+        {
+          "start": 279,
+          "end": 628,
+          "text": "drug",
+          "confidence": 0.999806,
+          "word_is_final": true
+        },
+        {
+          "start": 645,
+          "end": 994,
+          "text": "name",
+          "confidence": 0.999975,
+          "word_is_final": true
+        },
+        {
+          "start": 1011,
+          "end": 1185,
+          "text": "is",
+          "confidence": 0.999984,
+          "word_is_final": true
+        },
+        {
+          "start": 1202,
+          "end": 2075,
+          "text": "naxitamab.",
+          "confidence": 0.991454,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5953,
+      "audioSeconds": 2.575,
+      "openMs": 1286,
+      "firstPartialMs": 2465,
+      "finalizationMs": 76,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/017-ibuprofen.wav",
+        "spoken": "ibuprofen",
+        "carrier": "The drug name is ibuprofen.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is ibuprofen.",
+      "words": [
+        {
+          "start": 0,
+          "end": 262,
+          "text": "The",
+          "confidence": 0.995078,
+          "word_is_final": true
+        },
+        {
+          "start": 279,
+          "end": 628,
+          "text": "drug",
+          "confidence": 0.999795,
+          "word_is_final": true
+        },
+        {
+          "start": 645,
+          "end": 994,
+          "text": "name",
+          "confidence": 0.99996,
+          "word_is_final": true
+        },
+        {
+          "start": 1011,
+          "end": 1185,
+          "text": "is",
+          "confidence": 0.999986,
+          "word_is_final": true
+        },
+        {
+          "start": 1202,
+          "end": 2075,
+          "text": "ibuprofen.",
+          "confidence": 0.997027,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 4145,
+      "audioSeconds": 2.59,
+      "openMs": 388,
+      "firstPartialMs": 1585,
+      "finalizationMs": 75,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/018-azacitidine.wav",
+        "spoken": "azacitidine",
+        "carrier": "The drug name is azacitidine.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is azacitidine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 241,
+          "text": "The",
+          "confidence": 0.991548,
+          "word_is_final": true
+        },
+        {
+          "start": 257,
+          "end": 579,
+          "text": "drug",
+          "confidence": 0.999808,
+          "word_is_final": true
+        },
+        {
+          "start": 595,
+          "end": 917,
+          "text": "name",
+          "confidence": 0.999961,
+          "word_is_final": true
+        },
+        {
+          "start": 933,
+          "end": 1094,
+          "text": "is",
+          "confidence": 0.999979,
+          "word_is_final": true
+        },
+        {
+          "start": 1110,
+          "end": 2077,
+          "text": "azacitidine.",
+          "confidence": 0.951551,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5020,
+      "audioSeconds": 2.58,
+      "openMs": 359,
+      "firstPartialMs": 1435,
+      "finalizationMs": 74,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/019-kenalog.wav",
+        "spoken": "kenalog",
+        "carrier": "The drug name is kenalog.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is Kenalog.",
+      "words": [
+        {
+          "start": 0,
+          "end": 330,
+          "text": "The",
+          "confidence": 0.994835,
+          "word_is_final": true
+        },
+        {
+          "start": 352,
+          "end": 792,
+          "text": "drug",
+          "confidence": 0.999133,
+          "word_is_final": true
+        },
+        {
+          "start": 814,
+          "end": 1254,
+          "text": "name",
+          "confidence": 0.99995,
+          "word_is_final": true
+        },
+        {
+          "start": 1276,
+          "end": 1496,
+          "text": "is",
+          "confidence": 0.999966,
+          "word_is_final": true
+        },
+        {
+          "start": 1518,
+          "end": 2398,
+          "text": "Kenalog.",
+          "confidence": 0.98788,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5730,
+      "audioSeconds": 2.315,
+      "openMs": 1050,
+      "firstPartialMs": 2610,
+      "finalizationMs": 357,
+      "turnCount": 5
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/020-levodopa.wav",
+        "spoken": "levodopa",
+        "carrier": "The drug name is levodopa.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is levodopa.",
+      "words": [
+        {
+          "start": 0,
+          "end": 248,
+          "text": "The",
+          "confidence": 0.995089,
+          "word_is_final": true
+        },
+        {
+          "start": 264,
+          "end": 595,
+          "text": "drug",
+          "confidence": 0.999953,
+          "word_is_final": true
+        },
+        {
+          "start": 611,
+          "end": 942,
+          "text": "name",
+          "confidence": 0.999943,
+          "word_is_final": true
+        },
+        {
+          "start": 958,
+          "end": 1123,
+          "text": "is",
+          "confidence": 0.999985,
+          "word_is_final": true
+        },
+        {
+          "start": 1139,
+          "end": 1884,
+          "text": "levodopa.",
+          "confidence": 0.993127,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5025,
+      "audioSeconds": 2.415,
+      "openMs": 356,
+      "firstPartialMs": 1428,
+      "finalizationMs": 76,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/021-abacavir.wav",
+        "spoken": "abacavir",
+        "carrier": "The drug name is abacavir.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is abacavir.",
+      "words": [
+        {
+          "start": 0,
+          "end": 248,
+          "text": "The",
+          "confidence": 0.996893,
+          "word_is_final": true
+        },
+        {
+          "start": 264,
+          "end": 595,
+          "text": "drug",
+          "confidence": 0.999857,
+          "word_is_final": true
+        },
+        {
+          "start": 611,
+          "end": 942,
+          "text": "name",
+          "confidence": 0.999956,
+          "word_is_final": true
+        },
+        {
+          "start": 958,
+          "end": 1123,
+          "text": "is",
+          "confidence": 0.999961,
+          "word_is_final": true
+        },
+        {
+          "start": 1139,
+          "end": 1884,
+          "text": "abacavir.",
+          "confidence": 0.994684,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5017,
+      "audioSeconds": 2.42,
+      "openMs": 358,
+      "firstPartialMs": 1532,
+      "finalizationMs": 74,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/022-darifenacin.wav",
+        "spoken": "darifenacin",
+        "carrier": "The drug name is darifenacin.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is darifenacin.",
+      "words": [
+        {
+          "start": 0,
+          "end": 241,
+          "text": "The",
+          "confidence": 0.993771,
+          "word_is_final": true
+        },
+        {
+          "start": 257,
+          "end": 579,
+          "text": "drug",
+          "confidence": 0.999549,
+          "word_is_final": true
+        },
+        {
+          "start": 595,
+          "end": 917,
+          "text": "name",
+          "confidence": 0.999965,
+          "word_is_final": true
+        },
+        {
+          "start": 933,
+          "end": 1094,
+          "text": "is",
+          "confidence": 0.999986,
+          "word_is_final": true
+        },
+        {
+          "start": 1110,
+          "end": 2077,
+          "text": "darifenacin.",
+          "confidence": 0.71646,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5506,
+      "audioSeconds": 2.6,
+      "openMs": 831,
+      "firstPartialMs": 1989,
+      "finalizationMs": 64,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/023-duloxetine.wav",
+        "spoken": "duloxetine",
+        "carrier": "The drug name is duloxetine.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is duloxetine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 240,
+          "text": "The",
+          "confidence": 0.995229,
+          "word_is_final": true
+        },
+        {
+          "start": 256,
+          "end": 576,
+          "text": "drug",
+          "confidence": 0.999878,
+          "word_is_final": true
+        },
+        {
+          "start": 592,
+          "end": 912,
+          "text": "name",
+          "confidence": 0.999959,
+          "word_is_final": true
+        },
+        {
+          "start": 928,
+          "end": 1088,
+          "text": "is",
+          "confidence": 0.999972,
+          "word_is_final": true
+        },
+        {
+          "start": 1104,
+          "end": 1984,
+          "text": "duloxetine.",
+          "confidence": 0.996965,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5084,
+      "audioSeconds": 2.555,
+      "openMs": 410,
+      "firstPartialMs": 1492,
+      "finalizationMs": 80,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/024-ciprofloxacin.wav",
+        "spoken": "ciprofloxacin",
+        "carrier": "The drug name is ciprofloxacin.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is ciprofloxacin.",
+      "words": [
+        {
+          "start": 0,
+          "end": 245,
+          "text": "The",
+          "confidence": 0.991575,
+          "word_is_final": true
+        },
+        {
+          "start": 261,
+          "end": 587,
+          "text": "drug",
+          "confidence": 0.999875,
+          "word_is_final": true
+        },
+        {
+          "start": 603,
+          "end": 929,
+          "text": "name",
+          "confidence": 0.999936,
+          "word_is_final": true
+        },
+        {
+          "start": 945,
+          "end": 1108,
+          "text": "is",
+          "confidence": 0.999958,
+          "word_is_final": true
+        },
+        {
+          "start": 1124,
+          "end": 2268,
+          "text": "ciprofloxacin.",
+          "confidence": 0.990236,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6429,
+      "audioSeconds": 2.78,
+      "openMs": 760,
+      "firstPartialMs": 2030,
+      "finalizationMs": 61,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/025-aripiprazole.wav",
+        "spoken": "aripiprazole",
+        "carrier": "The drug name is aripiprazole.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is aripiprazole.",
+      "words": [
+        {
+          "start": 0,
+          "end": 232,
+          "text": "The",
+          "confidence": 0.994846,
+          "word_is_final": true
+        },
+        {
+          "start": 247,
+          "end": 557,
+          "text": "drug",
+          "confidence": 0.999855,
+          "word_is_final": true
+        },
+        {
+          "start": 572,
+          "end": 882,
+          "text": "name",
+          "confidence": 0.999968,
+          "word_is_final": true
+        },
+        {
+          "start": 897,
+          "end": 1052,
+          "text": "is",
+          "confidence": 0.999978,
+          "word_is_final": true
+        },
+        {
+          "start": 1067,
+          "end": 2075,
+          "text": "aripiprazole.",
+          "confidence": 0.986235,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5077,
+      "audioSeconds": 2.585,
+      "openMs": 403,
+      "firstPartialMs": 1466,
+      "finalizationMs": 78,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/026-encorafenib.wav",
+        "spoken": "encorafenib",
+        "carrier": "The drug name is encorafenib.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is encarafenib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 241,
+          "text": "The",
+          "confidence": 0.995382,
+          "word_is_final": true
+        },
+        {
+          "start": 257,
+          "end": 579,
+          "text": "drug",
+          "confidence": 0.99983,
+          "word_is_final": true
+        },
+        {
+          "start": 595,
+          "end": 917,
+          "text": "name",
+          "confidence": 0.999966,
+          "word_is_final": true
+        },
+        {
+          "start": 933,
+          "end": 1094,
+          "text": "is",
+          "confidence": 0.999976,
+          "word_is_final": true
+        },
+        {
+          "start": 1110,
+          "end": 2077,
+          "text": "encarafenib.",
+          "confidence": 0.940106,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5052,
+      "audioSeconds": 2.555,
+      "openMs": 401,
+      "firstPartialMs": 1562,
+      "finalizationMs": 100,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/027-apixaban.wav",
+        "spoken": "apixaban",
+        "carrier": "The drug name is apixaban.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is apixaban.",
+      "words": [
+        {
+          "start": 0,
+          "end": 261,
+          "text": "The",
+          "confidence": 0.996539,
+          "word_is_final": true
+        },
+        {
+          "start": 278,
+          "end": 626,
+          "text": "drug",
+          "confidence": 0.999887,
+          "word_is_final": true
+        },
+        {
+          "start": 643,
+          "end": 991,
+          "text": "name",
+          "confidence": 0.99997,
+          "word_is_final": true
+        },
+        {
+          "start": 1008,
+          "end": 1182,
+          "text": "is",
+          "confidence": 0.999981,
+          "word_is_final": true
+        },
+        {
+          "start": 1199,
+          "end": 1982,
+          "text": "apixaban.",
+          "confidence": 0.860981,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5077,
+      "audioSeconds": 2.49,
+      "openMs": 400,
+      "firstPartialMs": 1569,
+      "finalizationMs": 79,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/028-glycopyrronium.wav",
+        "spoken": "glycopyrronium",
+        "carrier": "The drug name is glycopyrronium.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is glycopyrrhonium.",
+      "words": [
+        {
+          "start": 0,
+          "end": 228,
+          "text": "The",
+          "confidence": 0.99254,
+          "word_is_final": true
+        },
+        {
+          "start": 243,
+          "end": 547,
+          "text": "drug",
+          "confidence": 0.999806,
+          "word_is_final": true
+        },
+        {
+          "start": 562,
+          "end": 866,
+          "text": "name",
+          "confidence": 0.999949,
+          "word_is_final": true
+        },
+        {
+          "start": 881,
+          "end": 1033,
+          "text": "is",
+          "confidence": 0.999974,
+          "word_is_final": true
+        },
+        {
+          "start": 1048,
+          "end": 2267,
+          "text": "glycopyrrhonium.",
+          "confidence": 0.963363,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6070,
+      "audioSeconds": 2.82,
+      "openMs": 415,
+      "firstPartialMs": 1594,
+      "finalizationMs": 80,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/029-tranylcypromine.wav",
+        "spoken": "tranylcypromine",
+        "carrier": "The drug name is tranylcypromine.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is tranylcypromine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 219,
+          "text": "The",
+          "confidence": 0.996446,
+          "word_is_final": true
+        },
+        {
+          "start": 233,
+          "end": 525,
+          "text": "drug",
+          "confidence": 0.999851,
+          "word_is_final": true
+        },
+        {
+          "start": 539,
+          "end": 831,
+          "text": "name",
+          "confidence": 0.999969,
+          "word_is_final": true
+        },
+        {
+          "start": 845,
+          "end": 991,
+          "text": "is",
+          "confidence": 0.999957,
+          "word_is_final": true
+        },
+        {
+          "start": 1005,
+          "end": 2173,
+          "text": "tranylcypromine.",
+          "confidence": 0.955904,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 4463,
+      "audioSeconds": 2.67,
+      "openMs": 666,
+      "firstPartialMs": 1759,
+      "finalizationMs": 64,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/030-ribavirin.wav",
+        "spoken": "ribavirin",
+        "carrier": "The drug name is ribavirin.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is ribavirin.",
+      "words": [
+        {
+          "start": 0,
+          "end": 315,
+          "text": "The",
+          "confidence": 0.995526,
+          "word_is_final": true
+        },
+        {
+          "start": 336,
+          "end": 756,
+          "text": "drug",
+          "confidence": 0.999864,
+          "word_is_final": true
+        },
+        {
+          "start": 777,
+          "end": 1197,
+          "text": "name",
+          "confidence": 0.999839,
+          "word_is_final": true
+        },
+        {
+          "start": 1218,
+          "end": 1428,
+          "text": "is",
+          "confidence": 0.999862,
+          "word_is_final": true
+        },
+        {
+          "start": 1449,
+          "end": 2499,
+          "text": "ribavirin.",
+          "confidence": 0.749012,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6270,
+      "audioSeconds": 2.405,
+      "openMs": 643,
+      "firstPartialMs": 1706,
+      "finalizationMs": 330,
+      "turnCount": 5
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/031-inavolisib.wav",
+        "spoken": "inavolisib",
+        "carrier": "The drug name is inavolisib.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is inivollazib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 219,
+          "text": "The",
+          "confidence": 0.996153,
+          "word_is_final": true
+        },
+        {
+          "start": 233,
+          "end": 525,
+          "text": "drug",
+          "confidence": 0.999823,
+          "word_is_final": true
+        },
+        {
+          "start": 539,
+          "end": 831,
+          "text": "name",
+          "confidence": 0.999973,
+          "word_is_final": true
+        },
+        {
+          "start": 845,
+          "end": 991,
+          "text": "is",
+          "confidence": 0.999974,
+          "word_is_final": true
+        },
+        {
+          "start": 1005,
+          "end": 1883,
+          "text": "inivollazib.",
+          "confidence": 0.632852,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5076,
+      "audioSeconds": 2.375,
+      "openMs": 410,
+      "firstPartialMs": 1477,
+      "finalizationMs": 81,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/032-clesrovimab.wav",
+        "spoken": "clesrovimab",
+        "carrier": "The drug name is clesrovimab.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is clesrovimab.",
+      "words": [
+        {
+          "start": 0,
+          "end": 264,
+          "text": "The",
+          "confidence": 0.995212,
+          "word_is_final": true
+        },
+        {
+          "start": 281,
+          "end": 633,
+          "text": "drug",
+          "confidence": 0.99987,
+          "word_is_final": true
+        },
+        {
+          "start": 650,
+          "end": 1002,
+          "text": "name",
+          "confidence": 0.999964,
+          "word_is_final": true
+        },
+        {
+          "start": 1019,
+          "end": 1195,
+          "text": "is",
+          "confidence": 0.999986,
+          "word_is_final": true
+        },
+        {
+          "start": 1212,
+          "end": 2268,
+          "text": "clesrovimab.",
+          "confidence": 0.78903,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6192,
+      "audioSeconds": 2.735,
+      "openMs": 586,
+      "firstPartialMs": 1755,
+      "finalizationMs": 79,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/033-pioglitazone.wav",
+        "spoken": "pioglitazone",
+        "carrier": "The drug name is pioglitazone.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is pioglitazone.",
+      "words": [
+        {
+          "start": 0,
+          "end": 243,
+          "text": "The",
+          "confidence": 0.994389,
+          "word_is_final": true
+        },
+        {
+          "start": 259,
+          "end": 583,
+          "text": "drug",
+          "confidence": 0.999624,
+          "word_is_final": true
+        },
+        {
+          "start": 599,
+          "end": 923,
+          "text": "name",
+          "confidence": 0.999972,
+          "word_is_final": true
+        },
+        {
+          "start": 939,
+          "end": 1101,
+          "text": "is",
+          "confidence": 0.999986,
+          "word_is_final": true
+        },
+        {
+          "start": 1117,
+          "end": 2172,
+          "text": "pioglitazone.",
+          "confidence": 0.982534,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5055,
+      "audioSeconds": 2.65,
+      "openMs": 391,
+      "firstPartialMs": 1564,
+      "finalizationMs": 77,
+      "turnCount": 3
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/034-atacicept.wav",
+        "spoken": "atacicept",
+        "carrier": "The drug name is atacicept.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is atiscept.",
+      "words": [
+        {
+          "start": 0,
+          "end": 273,
+          "text": "The",
+          "confidence": 0.993749,
+          "word_is_final": true
+        },
+        {
+          "start": 291,
+          "end": 655,
+          "text": "drug",
+          "confidence": 0.999593,
+          "word_is_final": true
+        },
+        {
+          "start": 673,
+          "end": 1037,
+          "text": "name",
+          "confidence": 0.999977,
+          "word_is_final": true
+        },
+        {
+          "start": 1055,
+          "end": 1237,
+          "text": "is",
+          "confidence": 0.99998,
+          "word_is_final": true
+        },
+        {
+          "start": 1255,
+          "end": 2076,
+          "text": "atiscept.",
+          "confidence": 0.66456,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5053,
+      "audioSeconds": 2.565,
+      "openMs": 398,
+      "firstPartialMs": 1565,
+      "finalizationMs": 76,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/035-silodosin.wav",
+        "spoken": "silodosin",
+        "carrier": "The drug name is silodosin.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is silodosin.",
+      "words": [
+        {
+          "start": 0,
+          "end": 250,
+          "text": "The",
+          "confidence": 0.994176,
+          "word_is_final": true
+        },
+        {
+          "start": 266,
+          "end": 599,
+          "text": "drug",
+          "confidence": 0.999767,
+          "word_is_final": true
+        },
+        {
+          "start": 615,
+          "end": 948,
+          "text": "name",
+          "confidence": 0.999962,
+          "word_is_final": true
+        },
+        {
+          "start": 964,
+          "end": 1130,
+          "text": "is",
+          "confidence": 0.999986,
+          "word_is_final": true
+        },
+        {
+          "start": 1146,
+          "end": 1979,
+          "text": "silodosin.",
+          "confidence": 0.985376,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5078,
+      "audioSeconds": 2.455,
+      "openMs": 400,
+      "firstPartialMs": 1567,
+      "finalizationMs": 77,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/036-ibrutinib.wav",
+        "spoken": "ibrutinib",
+        "carrier": "The drug name is ibrutinib.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is ibrutinib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 237,
+          "text": "The",
+          "confidence": 0.996264,
+          "word_is_final": true
+        },
+        {
+          "start": 252,
+          "end": 569,
+          "text": "drug",
+          "confidence": 0.999867,
+          "word_is_final": true
+        },
+        {
+          "start": 584,
+          "end": 901,
+          "text": "name",
+          "confidence": 0.999976,
+          "word_is_final": true
+        },
+        {
+          "start": 916,
+          "end": 1074,
+          "text": "is",
+          "confidence": 0.999984,
+          "word_is_final": true
+        },
+        {
+          "start": 1089,
+          "end": 1882,
+          "text": "ibrutinib.",
+          "confidence": 0.998465,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5058,
+      "audioSeconds": 2.4,
+      "openMs": 396,
+      "firstPartialMs": 1569,
+      "finalizationMs": 75,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/037-raloxifene.wav",
+        "spoken": "raloxifene",
+        "carrier": "The drug name is raloxifene.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is raloxifene.",
+      "words": [
+        {
+          "start": 0,
+          "end": 251,
+          "text": "The",
+          "confidence": 0.994678,
+          "word_is_final": true
+        },
+        {
+          "start": 267,
+          "end": 602,
+          "text": "drug",
+          "confidence": 0.999621,
+          "word_is_final": true
+        },
+        {
+          "start": 618,
+          "end": 953,
+          "text": "name",
+          "confidence": 0.999972,
+          "word_is_final": true
+        },
+        {
+          "start": 969,
+          "end": 1136,
+          "text": "is",
+          "confidence": 0.999974,
+          "word_is_final": true
+        },
+        {
+          "start": 1152,
+          "end": 2074,
+          "text": "raloxifene.",
+          "confidence": 0.992457,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5076,
+      "audioSeconds": 2.58,
+      "openMs": 501,
+      "firstPartialMs": 1844,
+      "finalizationMs": 78,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/038-ivosidenib.wav",
+        "spoken": "ivosidenib",
+        "carrier": "The drug name is ivosidenib.",
+        "voice": "Microsoft David Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is ivacaiclib.",
+      "words": [
+        {
+          "start": 0,
+          "end": 240,
+          "text": "The",
+          "confidence": 0.995239,
+          "word_is_final": true
+        },
+        {
+          "start": 256,
+          "end": 576,
+          "text": "drug",
+          "confidence": 0.99986,
+          "word_is_final": true
+        },
+        {
+          "start": 592,
+          "end": 912,
+          "text": "name",
+          "confidence": 0.999951,
+          "word_is_final": true
+        },
+        {
+          "start": 928,
+          "end": 1088,
+          "text": "is",
+          "confidence": 0.999973,
+          "word_is_final": true
+        },
+        {
+          "start": 1104,
+          "end": 1984,
+          "text": "ivacaiclib.",
+          "confidence": 0.678909,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 5937,
+      "audioSeconds": 2.485,
+      "openMs": 779,
+      "firstPartialMs": 2097,
+      "finalizationMs": 65,
+      "turnCount": 2
+    },
+    {
+      "item": {
+        "file": "eval/native16/audio/039-levocarnitine.wav",
+        "spoken": "levocarnitine",
+        "carrier": "The drug name is levocarnitine.",
+        "voice": "Microsoft Zira Desktop",
+        "entityType": "drug_name"
+      },
+      "transcript": "The drug name is levocarnitine.",
+      "words": [
+        {
+          "start": 0,
+          "end": 234,
+          "text": "The",
+          "confidence": 0.992964,
+          "word_is_final": true
+        },
+        {
+          "start": 249,
+          "end": 562,
+          "text": "drug",
+          "confidence": 0.999717,
+          "word_is_final": true
+        },
+        {
+          "start": 577,
+          "end": 890,
+          "text": "name",
+          "confidence": 0.99996,
+          "word_is_final": true
+        },
+        {
+          "start": 905,
+          "end": 1061,
+          "text": "is",
+          "confidence": 0.999979,
+          "word_is_final": true
+        },
+        {
+          "start": 1076,
+          "end": 2171,
+          "text": "levocarnitine.",
+          "confidence": 0.992067,
+          "word_is_final": true
+        }
+      ],
+      "closeCode": 1000,
+      "socketMs": 6539,
+      "audioSeconds": 2.725,
+      "openMs": 861,
+      "firstPartialMs": 2115,
+      "finalizationMs": 63,
+      "turnCount": 3
+    }
+  ],
+  "scored": [
+    {
+      "spoken": "nelarabine",
+      "heard": "nelarabine",
+      "correct": true,
+      "minConfidence": 0.926797,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5098
+    },
+    {
+      "spoken": "melphalan",
+      "heard": "melphalan",
+      "correct": true,
+      "minConfidence": 0.91535,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 4617
+    },
+    {
+      "spoken": "moxidectin",
+      "heard": "moxidectin",
+      "correct": true,
+      "minConfidence": 0.972009,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6638
+    },
+    {
+      "spoken": "sirolimus",
+      "heard": "sirolimus",
+      "correct": true,
+      "minConfidence": 0.992004,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5158
+    },
+    {
+      "spoken": "vinorelbine",
+      "heard": "venorelbine",
+      "correct": false,
+      "minConfidence": 0.984387,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5900
+    },
+    {
+      "spoken": "bupivacaine",
+      "heard": "bupivacaine",
+      "correct": true,
+      "minConfidence": 0.995449,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 6977
+    },
+    {
+      "spoken": "methimazole",
+      "heard": "methimazole",
+      "correct": true,
+      "minConfidence": 0.987859,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5041
+    },
+    {
+      "spoken": "nifurtimox",
+      "heard": "nifurtimox",
+      "correct": true,
+      "minConfidence": 0.876482,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5268
+    },
+    {
+      "spoken": "tacrolimus",
+      "heard": "tacrolimus",
+      "correct": true,
+      "minConfidence": 0.993453,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5201
+    },
+    {
+      "spoken": "clopidogrel",
+      "heard": "clopidogrel",
+      "correct": true,
+      "minConfidence": 0.995961,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5050
+    },
+    {
+      "spoken": "collavera",
+      "heard": "colavera",
+      "correct": false,
+      "minConfidence": 0.65242,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5036
+    },
+    {
+      "spoken": "pemigatinib",
+      "heard": "pamigatinib",
+      "correct": false,
+      "minConfidence": 0.871195,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5044
+    },
+    {
+      "spoken": "dinoprostone",
+      "heard": "dinoprostone",
+      "correct": true,
+      "minConfidence": 0.918673,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6088
+    },
+    {
+      "spoken": "lonafarnib",
+      "heard": "lonafarnib",
+      "correct": true,
+      "minConfidence": 0.975628,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5618
+    },
+    {
+      "spoken": "zidesamtinib",
+      "heard": "zaitzamtonib",
+      "correct": false,
+      "minConfidence": 0.721988,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5026
+    },
+    {
+      "spoken": "imiglucerase",
+      "heard": "amiglycerase",
+      "correct": false,
+      "minConfidence": 0.744637,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 6041
+    },
+    {
+      "spoken": "naxitamab",
+      "heard": "naxitamab",
+      "correct": true,
+      "minConfidence": 0.991454,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5953
+    },
+    {
+      "spoken": "ibuprofen",
+      "heard": "ibuprofen",
+      "correct": true,
+      "minConfidence": 0.995078,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 4145
+    },
+    {
+      "spoken": "azacitidine",
+      "heard": "azacitidine",
+      "correct": true,
+      "minConfidence": 0.951551,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5020
+    },
+    {
+      "spoken": "kenalog",
+      "heard": "kenalog",
+      "correct": true,
+      "minConfidence": 0.98788,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5730
+    },
+    {
+      "spoken": "levodopa",
+      "heard": "levodopa",
+      "correct": true,
+      "minConfidence": 0.993127,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5025
+    },
+    {
+      "spoken": "abacavir",
+      "heard": "abacavir",
+      "correct": true,
+      "minConfidence": 0.994684,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5017
+    },
+    {
+      "spoken": "darifenacin",
+      "heard": "darifenacin",
+      "correct": true,
+      "minConfidence": 0.71646,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5506
+    },
+    {
+      "spoken": "duloxetine",
+      "heard": "duloxetine",
+      "correct": true,
+      "minConfidence": 0.995229,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5084
+    },
+    {
+      "spoken": "ciprofloxacin",
+      "heard": "ciprofloxacin",
+      "correct": true,
+      "minConfidence": 0.990236,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6429
+    },
+    {
+      "spoken": "aripiprazole",
+      "heard": "aripiprazole",
+      "correct": true,
+      "minConfidence": 0.986235,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5077
+    },
+    {
+      "spoken": "encorafenib",
+      "heard": "encarafenib",
+      "correct": false,
+      "minConfidence": 0.940106,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5052
+    },
+    {
+      "spoken": "apixaban",
+      "heard": "apixaban",
+      "correct": true,
+      "minConfidence": 0.860981,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5077
+    },
+    {
+      "spoken": "glycopyrronium",
+      "heard": "glycopyrrhonium",
+      "correct": false,
+      "minConfidence": 0.963363,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6070
+    },
+    {
+      "spoken": "tranylcypromine",
+      "heard": "tranylcypromine",
+      "correct": true,
+      "minConfidence": 0.955904,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 4463
+    },
+    {
+      "spoken": "ribavirin",
+      "heard": "ribavirin",
+      "correct": true,
+      "minConfidence": 0.749012,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6270
+    },
+    {
+      "spoken": "inavolisib",
+      "heard": "inivollazib",
+      "correct": false,
+      "minConfidence": 0.632852,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5076
+    },
+    {
+      "spoken": "clesrovimab",
+      "heard": "clesrovimab",
+      "correct": true,
+      "minConfidence": 0.78903,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 6192
+    },
+    {
+      "spoken": "pioglitazone",
+      "heard": "pioglitazone",
+      "correct": true,
+      "minConfidence": 0.982534,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5055
+    },
+    {
+      "spoken": "atacicept",
+      "heard": "atiscept",
+      "correct": false,
+      "minConfidence": 0.66456,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5053
+    },
+    {
+      "spoken": "silodosin",
+      "heard": "silodosin",
+      "correct": true,
+      "minConfidence": 0.985376,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5078
+    },
+    {
+      "spoken": "ibrutinib",
+      "heard": "ibrutinib",
+      "correct": true,
+      "minConfidence": 0.996264,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5058
+    },
+    {
+      "spoken": "raloxifene",
+      "heard": "raloxifene",
+      "correct": true,
+      "minConfidence": 0.992457,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 5076
+    },
+    {
+      "spoken": "ivosidenib",
+      "heard": "ivacaiclib",
+      "correct": false,
+      "minConfidence": 0.678909,
+      "voice": "Microsoft David Desktop",
+      "closeCode": 1000,
+      "socketMs": 5937
+    },
+    {
+      "spoken": "levocarnitine",
+      "heard": "levocarnitine",
+      "correct": true,
+      "minConfidence": 0.992067,
+      "voice": "Microsoft Zira Desktop",
+      "closeCode": 1000,
+      "socketMs": 6539
+    }
+  ]
+}

@@ -24,18 +24,18 @@ export type SttTermination = {
 
 export type SttMessage = SttBegin | SttTurn | SttTermination
 
-export type AgentTranscript = {
+type AgentTranscript = {
   type: "transcript.user" | "transcript.agent"
   text: string
   turn_order?: number
 }
 
-export type AgentAudio = {
+type AgentAudio = {
   type: "audio"
   audio: string
 }
 
-export type AgentLifecycle = {
+type AgentLifecycle = {
   type:
     | "session.created"
     | "session.updated"
@@ -46,7 +46,7 @@ export type AgentLifecycle = {
     | "input.speech.stopped"
 }
 
-export type AgentError = {
+type AgentError = {
   type: "error"
   error: { code: string; message: string }
 }
@@ -70,8 +70,4 @@ export type SessionFixture = {
 
 export function isSttTurn(message: SttMessage): message is SttTurn {
   return message.type === "Turn"
-}
-
-export function isAgentTranscript(message: AgentMessage): message is AgentTranscript {
-  return message.type === "transcript.user" || message.type === "transcript.agent"
 }

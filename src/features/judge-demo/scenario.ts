@@ -1,24 +1,22 @@
 import {
   CandidateStatus,
-  ConfirmationMode,
   type FieldCandidate,
   FieldName,
-  GateAction,
   type GateDecision,
-  LasaSource,
   makeCandidate,
-  makeLasaRisk,
   makeProvenance,
   makeVerdict,
   makeWordSpan,
-  ReasonCode,
+  policyFor,
   VerdictOutcome,
 } from "@/domain"
+import { decide } from "@/gate"
+import { lasaRiskFor } from "@/lasa"
 
 const SESSION = "fixture-lasa-001"
 
 const drugWords = [
-  makeWordSpan({ text: "Bisoprolol", startMs: 6800, endMs: 7620, confidence: 0.99 }),
+  makeWordSpan({ text: "Bisoprolol", startMs: 6800, endMs: 7620, confidence: 1 }),
 ]
 
 const strengthWords = [
@@ -35,6 +33,10 @@ const quantityWords = [
   makeWordSpan({ text: "thirty", startMs: 8340, endMs: 8640, confidence: 0.96 }),
   makeWordSpan({ text: "tablets", startMs: 8660, endMs: 9080, confidence: 0.98 }),
 ]
+
+export function decisionFor(candidate: FieldCandidate): GateDecision {
+  return decide(candidate, policyFor(candidate.field))
+}
 
 export const LASA_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-drug-1",
@@ -55,33 +57,13 @@ export const LASA_CANDIDATE: FieldCandidate = makeCandidate({
     checkedValue: "bisoprolol",
     evidence: { matchedColumn: "nonproprietary_name", saltStripped: "bisoprolol fumarate" },
   }),
-  lasa: makeLasaRisk({
-    matchedTerm: "Bisoprolol",
-    confusableWith: ["Lisinopril"],
-    source: LasaSource.Ismp2023,
-    sourceRow: "bisoprolol - LISINOPRIL (ISMP confused drug names, 2023 list)",
-  }),
+  lasa: lasaRiskFor("bisoprolol"),
   status: CandidateStatus.ReadBackPending,
   attempt: 1,
   createdAt: "2026-09-15T09:00:08.400Z",
 })
 
-export const LASA_DECISION: GateDecision = {
-  action: GateAction.AskDisambiguate,
-  reasonCode: ReasonCode.LasaHit,
-  field: FieldName.DrugName,
-  candidateId: "cand-drug-1",
-  agentUtterance:
-    "I heard Bisoprolol. That name is on the published confused-drug-names list together with Lisinopril. To be certain: did you say Bisoprolol or Lisinopril?",
-  evidence: {
-    minConfidence: 0.99,
-    threshold: 0.95,
-    lasaSource: LasaSource.Ismp2023,
-    confusableWith: ["Lisinopril"],
-    note: "asked regardless of confidence by design",
-  },
-  confirmationMode: null,
-}
+export const LASA_DECISION: GateDecision = decisionFor(LASA_CANDIDATE)
 
 export const NAME_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-name-1",
@@ -106,15 +88,7 @@ export const NAME_CANDIDATE: FieldCandidate = makeCandidate({
   createdAt: "2026-09-15T09:00:02.600Z",
 })
 
-export const NAME_DECISION: GateDecision = {
-  action: GateAction.AskConfirm,
-  reasonCode: ReasonCode.NoValidator,
-  field: FieldName.PatientName,
-  candidateId: "cand-name-1",
-  agentUtterance: "Let me confirm the patient name: Jane Doe. Is that right?",
-  evidence: { minConfidence: 0.92, threshold: 0.9, outcome: VerdictOutcome.NotApplicable },
-  confirmationMode: ConfirmationMode.ReadBack,
-}
+export const NAME_DECISION: GateDecision = decisionFor(NAME_CANDIDATE)
 
 export const QUANTITY_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-qty-1",
@@ -140,15 +114,7 @@ export const QUANTITY_CANDIDATE: FieldCandidate = makeCandidate({
   createdAt: "2026-09-15T09:00:09.080Z",
 })
 
-export const QUANTITY_DECISION: GateDecision = {
-  action: GateAction.AskConfirm,
-  reasonCode: ReasonCode.ReadBackRequired,
-  field: FieldName.Quantity,
-  candidateId: "cand-qty-1",
-  agentUtterance: "Confirming quantity: 30. Correct?",
-  evidence: { minConfidence: 0.96, threshold: 0.92, outcome: VerdictOutcome.Passed },
-  confirmationMode: ConfirmationMode.ReadBack,
-}
+export const QUANTITY_DECISION: GateDecision = decisionFor(QUANTITY_CANDIDATE)
 
 export const STRENGTH_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-strength-1",
@@ -165,10 +131,10 @@ export const STRENGTH_CANDIDATE: FieldCandidate = makeCandidate({
   verdict: makeVerdict({
     outcome: VerdictOutcome.Passed,
     validatorName: "combo_consistency",
-    detail: "lisinopril x 10 mg x TABLET x ORAL exists in the built catalogue",
+    detail: "bisoprolol fumarate x 10 mg x TABLET x ORAL exists in the built catalogue",
     checkedValue: "10 mg",
     evidence: {
-      drugName: "lisinopril",
+      drugName: "bisoprolol fumarate",
       strength: "10 mg",
       dosageForm: "TABLET",
       route: "ORAL",
@@ -178,13 +144,3 @@ export const STRENGTH_CANDIDATE: FieldCandidate = makeCandidate({
   attempt: 1,
   createdAt: "2026-09-15T09:00:08.320Z",
 })
-
-export const STRENGTH_DECISION: GateDecision = {
-  action: GateAction.AskConfirm,
-  reasonCode: ReasonCode.ReadBackRequired,
-  field: FieldName.Strength,
-  candidateId: "cand-strength-1",
-  agentUtterance: "Confirming strength: 10 mg. Correct?",
-  evidence: { minConfidence: 0.97, threshold: 0.92, outcome: VerdictOutcome.Passed },
-  confirmationMode: ConfirmationMode.ReadBack,
-}

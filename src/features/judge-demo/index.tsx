@@ -3,9 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { FieldCard } from "@/features/field-card"
 import { GateBanner } from "@/features/gate-banner"
+import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
 import { Button } from "@/shared/ui/primitives/button"
 import { Chip } from "@/shared/ui/primitives/chip"
 import {
+  DECISION_AT_MS,
   DEMO_ARMS,
   DEMO_DURATION_MS,
   DEMO_STAGES,
@@ -13,15 +15,25 @@ import {
   RECOGNIZER_CERTAINTY,
   SPOKEN_TRUTH,
 } from "./demo-arms"
+import { KeytermsAb } from "./keyterms-ab"
+import { ReplayNotice } from "./replay-notice"
 import { LASA_CANDIDATE, LASA_DECISION } from "./scenario"
+import { ScenarioPicker } from "./scenario-picker"
 import styles from "./styles.module.css"
 
 const TICK_MS = 100
 
-export function JudgeDemo() {
+export type JudgeDemoProps = {
+  readonly autoplay?: boolean
+  readonly headingLevel?: "h1" | "h2"
+}
+
+export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoProps) {
+  const Heading = headingLevel
   const [elapsedMs, setElapsedMs] = useState(0)
   const [running, setRunning] = useState(false)
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
+  const autoplayed = useRef(false)
 
   const clear = useCallback(() => {
     if (timer.current !== null) {
@@ -29,8 +41,6 @@ export function JudgeDemo() {
       timer.current = null
     }
   }, [])
-
-  useEffect(() => clear, [clear])
 
   const start = useCallback(() => {
     clear()
@@ -54,7 +64,27 @@ export function JudgeDemo() {
     setRunning(false)
   }, [clear])
 
-  const reached = elapsedMs >= 9600
+  useEffect(() => clear, [clear])
+
+  const settle = useCallback(() => {
+    clear()
+    setRunning(false)
+    setElapsedMs(DEMO_DURATION_MS)
+  }, [clear])
+
+  useEffect(() => {
+    if (!autoplay || autoplayed.current) {
+      return
+    }
+    autoplayed.current = true
+    if (globalThis.window?.matchMedia?.(REDUCED_MOTION_QUERY)?.matches === true) {
+      settle()
+      return
+    }
+    start()
+  }, [autoplay, settle, start])
+
+  const reached = elapsedMs >= DECISION_AT_MS
   const fraction = Math.min(1, elapsedMs / DEMO_DURATION_MS)
   const stage =
     [...DEMO_STAGES].reverse().find((entry) => elapsedMs >= entry.atMs) ?? DEMO_STAGES[0]
@@ -62,7 +92,7 @@ export function JudgeDemo() {
   return (
     <div className={styles.demo}>
       <div className={styles.lede}>
-        <h1 className={styles.title}>The forty-second demonstration</h1>
+        <Heading className={styles.title}>The forty-second demonstration</Heading>
         <p className={styles.body}>
           One recorded session, replayed through the whole pipeline. No microphone is needed and
           no second person has to be on the line. The caller said {SPOKEN_TRUTH}; the recognizer
@@ -70,6 +100,8 @@ export function JudgeDemo() {
           Watch what each configuration does with that.
         </p>
       </div>
+
+      <ReplayNotice />
 
       <div className={styles.truth}>
         <p className={styles.truthLabel}>Ground truth for this recording</p>
@@ -121,9 +153,15 @@ export function JudgeDemo() {
               </header>
               <div className={styles.said}>
                 <p className={styles.saidWho}>
-                  {reached ? "What the agent said at 9.6 seconds" : "What the agent will say"}
+                  {reached
+                    ? `What the agent said at ${(DECISION_AT_MS / 1000).toFixed(1)} seconds`
+                    : "What the agent will say"}
                 </p>
                 <p className={styles.saidText}>{arm.agentLine}</p>
+                <p className={styles.saidWho}>
+                  decided by the same gate function, reason code{" "}
+                  <code className={styles.reasonCode}>{arm.decision.reasonCode}</code>
+                </p>
               </div>
               <div className={outcomeClass}>
                 <p className={styles.outcomeLabel}>{arm.outcomeLabel}</p>
@@ -141,6 +179,9 @@ export function JudgeDemo() {
 
       <GateBanner decision={reached ? LASA_DECISION : null} />
       <FieldCard candidate={LASA_CANDIDATE} decision={reached ? LASA_DECISION : null} />
+
+      <ScenarioPicker />
+      <KeytermsAb />
     </div>
   )
 }

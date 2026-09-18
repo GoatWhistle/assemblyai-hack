@@ -1,0 +1,292 @@
+{
+    "builtAt":  "2026-09-16T14:43:03.693Z",
+    "method":  "Windows System.Speech synthesised directly at 16 kHz mono PCM16, so no resampling happens before the socket; same terms, voices and carrier phrase as eval/control",
+    "caveat":  "Synthetic speech. This arm exists to separate recognizer error from resampling loss in our own pipeline.",
+    "voices":  [
+                   "Microsoft David Desktop",
+                   "Microsoft Zira Desktop"
+               ],
+    "count":  40,
+    "items":  [
+                  {
+                      "file":  "eval/native16/audio/000-nelarabine.wav",
+                      "spoken":  "nelarabine",
+                      "carrier":  "The drug name is nelarabine.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/001-melphalan.wav",
+                      "spoken":  "melphalan",
+                      "carrier":  "The drug name is melphalan.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/002-moxidectin.wav",
+                      "spoken":  "moxidectin",
+                      "carrier":  "The drug name is moxidectin.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/003-sirolimus.wav",
+                      "spoken":  "sirolimus",
+                      "carrier":  "The drug name is sirolimus.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/004-vinorelbine.wav",
+                      "spoken":  "vinorelbine",
+                      "carrier":  "The drug name is vinorelbine.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/005-bupivacaine.wav",
+                      "spoken":  "bupivacaine",
+                      "carrier":  "The drug name is bupivacaine.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/006-methimazole.wav",
+                      "spoken":  "methimazole",
+                      "carrier":  "The drug name is methimazole.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/007-nifurtimox.wav",
+                      "spoken":  "nifurtimox",
+                      "carrier":  "The drug name is nifurtimox.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/008-tacrolimus.wav",
+                      "spoken":  "tacrolimus",
+                      "carrier":  "The drug name is tacrolimus.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/009-clopidogrel.wav",
+                      "spoken":  "clopidogrel",
+                      "carrier":  "The drug name is clopidogrel.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/010-collavera.wav",
+                      "spoken":  "collavera",
+                      "carrier":  "The drug name is collavera.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/011-pemigatinib.wav",
+                      "spoken":  "pemigatinib",
+                      "carrier":  "The drug name is pemigatinib.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/012-dinoprostone.wav",
+                      "spoken":  "dinoprostone",
+                      "carrier":  "The drug name is dinoprostone.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/013-lonafarnib.wav",
+                      "spoken":  "lonafarnib",
+                      "carrier":  "The drug name is lonafarnib.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/014-zidesamtinib.wav",
+                      "spoken":  "zidesamtinib",
+                      "carrier":  "The drug name is zidesamtinib.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/015-imiglucerase.wav",
+                      "spoken":  "imiglucerase",
+                      "carrier":  "The drug name is imiglucerase.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/016-naxitamab.wav",
+                      "spoken":  "naxitamab",
+                      "carrier":  "The drug name is naxitamab.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/017-ibuprofen.wav",
+                      "spoken":  "ibuprofen",
+                      "carrier":  "The drug name is ibuprofen.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/018-azacitidine.wav",
+                      "spoken":  "azacitidine",
+                      "carrier":  "The drug name is azacitidine.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/019-kenalog.wav",
+                      "spoken":  "kenalog",
+                      "carrier":  "The drug name is kenalog.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/020-levodopa.wav",
+                      "spoken":  "levodopa",
+                      "carrier":  "The drug name is levodopa.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/021-abacavir.wav",
+                      "spoken":  "abacavir",
+                      "carrier":  "The drug name is abacavir.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/022-darifenacin.wav",
+                      "spoken":  "darifenacin",
+                      "carrier":  "The drug name is darifenacin.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/023-duloxetine.wav",
+                      "spoken":  "duloxetine",
+                      "carrier":  "The drug name is duloxetine.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/024-ciprofloxacin.wav",
+                      "spoken":  "ciprofloxacin",
+                      "carrier":  "The drug name is ciprofloxacin.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/025-aripiprazole.wav",
+                      "spoken":  "aripiprazole",
+                      "carrier":  "The drug name is aripiprazole.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/026-encorafenib.wav",
+                      "spoken":  "encorafenib",
+                      "carrier":  "The drug name is encorafenib.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/027-apixaban.wav",
+                      "spoken":  "apixaban",
+                      "carrier":  "The drug name is apixaban.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/028-glycopyrronium.wav",
+                      "spoken":  "glycopyrronium",
+                      "carrier":  "The drug name is glycopyrronium.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/029-tranylcypromine.wav",
+                      "spoken":  "tranylcypromine",
+                      "carrier":  "The drug name is tranylcypromine.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/030-ribavirin.wav",
+                      "spoken":  "ribavirin",
+                      "carrier":  "The drug name is ribavirin.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/031-inavolisib.wav",
+                      "spoken":  "inavolisib",
+                      "carrier":  "The drug name is inavolisib.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/032-clesrovimab.wav",
+                      "spoken":  "clesrovimab",
+                      "carrier":  "The drug name is clesrovimab.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/033-pioglitazone.wav",
+                      "spoken":  "pioglitazone",
+                      "carrier":  "The drug name is pioglitazone.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/034-atacicept.wav",
+                      "spoken":  "atacicept",
+                      "carrier":  "The drug name is atacicept.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/035-silodosin.wav",
+                      "spoken":  "silodosin",
+                      "carrier":  "The drug name is silodosin.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/036-ibrutinib.wav",
+                      "spoken":  "ibrutinib",
+                      "carrier":  "The drug name is ibrutinib.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/037-raloxifene.wav",
+                      "spoken":  "raloxifene",
+                      "carrier":  "The drug name is raloxifene.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/038-ivosidenib.wav",
+                      "spoken":  "ivosidenib",
+                      "carrier":  "The drug name is ivosidenib.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "drug_name"
+                  },
+                  {
+                      "file":  "eval/native16/audio/039-levocarnitine.wav",
+                      "spoken":  "levocarnitine",
+                      "carrier":  "The drug name is levocarnitine.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "drug_name"
+                  }
+              ]
+}

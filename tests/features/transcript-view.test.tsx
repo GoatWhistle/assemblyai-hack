@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
@@ -78,6 +79,60 @@ describe("TranscriptView", () => {
       />,
     )
     expect(screen.getByText(/Discarded as the agent's own voice/i)).toBeDefined()
+  })
+})
+
+describe("TranscriptView under a long session", () => {
+  function manyEntries(count: number) {
+    return Array.from({ length: count }, (_, index) =>
+      callerEntry({
+        id: `c${index}`,
+        text: `turn ${index} lisinopril ten milligrams`,
+        turnOrder: index,
+        words: [],
+        receivedAtMs: index * 1000,
+      }),
+    )
+  }
+
+  function sizeScroller(element: HTMLElement, scrollHeight: number, clientHeight: number) {
+    Object.defineProperty(element, "scrollHeight", { value: scrollHeight, configurable: true })
+    Object.defineProperty(element, "clientHeight", { value: clientHeight, configurable: true })
+  }
+
+  it("follows the newest turn instead of freezing at the first one", () => {
+    const { container, rerender } = render(
+      <TranscriptView entries={manyEntries(50)} selection={null} />,
+    )
+    const view = container.firstElementChild as HTMLElement
+    expect(view).not.toBeNull()
+    sizeScroller(view, 2512, 512)
+    rerender(<TranscriptView entries={manyEntries(51)} selection={null} />)
+    expect(
+      view.scrollTop,
+      "the newest turn stays below the fold and a live session looks frozen",
+    ).toBe(2512)
+  })
+
+  it("stops following once the reader has scrolled up into the history", () => {
+    const { container, rerender } = render(
+      <TranscriptView entries={manyEntries(50)} selection={null} />,
+    )
+    const view = container.firstElementChild as HTMLElement
+    sizeScroller(view, 2512, 512)
+    view.scrollTop = 200
+    view.dispatchEvent(new Event("scroll", { bubbles: true }))
+    rerender(<TranscriptView entries={manyEntries(51)} selection={null} />)
+    expect(
+      view.scrollTop,
+      "yanking the reader to the bottom while they read history loses their place",
+    ).toBe(200)
+  })
+
+  it("keeps the transcript container bounded rather than growing without limit", () => {
+    const sheet = readFileSync("src/features/transcript-view/styles.module.css", "utf8")
+    expect(sheet).toMatch(/max-height:/)
+    expect(sheet).toMatch(/overflow-y:\s*auto/)
   })
 })
 

@@ -1,10 +1,17 @@
 import { normalizeDrugName } from "@/lasa"
-import type { ComboQuery } from "@/validators"
+import type { ComboQuery, SkeletonNeighbour, SkeletonSource } from "@/validators"
+import { skeletonNeighbours } from "@/validators"
 import type { CatalogIndex } from "./store"
 import type { CatalogCombo, CatalogDrug, DrugMatch } from "./types"
 
 function normalizeStrengthText(strength: string): string {
-  return strength.trim().toLowerCase().replace(/\s+/g, "").replace(/\/1$/, "")
+  return strength
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/\/1$/, "")
+    .replace(/mcg/g, "ug")
+    .replace(/µg/g, "ug")
 }
 
 function normalizeCombo(combo: CatalogCombo): string {
@@ -104,4 +111,17 @@ export function drugCount(index: CatalogIndex): number {
 
 export function allDrugNames(index: CatalogIndex): readonly string[] {
   return index.file.drugs.map((d: CatalogDrug) => d.nonproprietaryName)
+}
+
+function skeletonSourceFor(index: CatalogIndex): SkeletonSource {
+  return {
+    namesForSkeleton: (skeleton: string) => index.bySkeleton.get(skeleton) ?? [],
+  }
+}
+
+export function neighbourFor(index: CatalogIndex, heard: string): SkeletonNeighbour | null {
+  if (findDrug(index, heard) !== null) {
+    return null
+  }
+  return skeletonNeighbours(heard, skeletonSourceFor(index))
 }

@@ -1,11 +1,10 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import {
-  CLOSE_CODE_ROWS,
-  GATE_METRICS,
-  LATENCY_METRICS,
-} from "@/features/metrics/metric-definitions"
+import { closeCodeRows } from "@/features/metrics/close-code-tally"
+import { confidenceFigures, errorRateFigures } from "@/features/metrics/measured-figures"
+import { GATE_METRICS, LATENCY_METRICS } from "@/features/metrics/metric-definitions"
 import { MetricsDashboard } from "@/features/metrics/metrics-dashboard"
+import { allScored, closeCodeCounts } from "@/features/metrics/recorded-runs"
 import { NOT_MEASURED } from "@/shared/ui/data-display/figure-with-method"
 
 describe("every metric carries a method", () => {
@@ -62,28 +61,78 @@ describe("latency honesty", () => {
   })
 })
 
-describe("close codes", () => {
-  it("gives 3007, 3008 and 3009 their own lines", () => {
-    render(<MetricsDashboard />)
-    for (const code of ["3007", "3008", "3009"]) {
-      const cells = screen
-        .getAllByRole("cell")
-        .filter((cell) => cell.textContent?.startsWith(code))
-      expect(cells.length).toBe(1)
+describe("close codes are counted, not asserted", () => {
+  it("publishes only codes that a recorded run actually produced", () => {
+    const rows = closeCodeRows()
+    expect(
+      rows.length,
+      "the table used to declare 3007, 3008 and 3009 with count 0, which is a number without a method; it must now come from the recorded files",
+    ).toBeGreaterThan(0)
+    const observed = new Set(allScored().map((entry) => entry.closeCode))
+    for (const row of rows) {
+      expect(observed.has(row.code), `${row.code} is published but never observed`).toBe(true)
     }
   })
 
-  it("marks only the two money-burning codes as alert-worthy", () => {
-    const alerting = CLOSE_CODE_ROWS.filter((row) => row.alertWorthy).map((row) => row.code)
-    expect(alerting).toEqual([3008, 3009])
-    render(<MetricsDashboard />)
-    expect(screen.getAllByText("alert").length).toBe(2)
+  it("has every count sum to the number of recorded sessions", () => {
+    const total = closeCodeRows().reduce((sum, row) => sum + row.count, 0)
+    expect(total).toBe(allScored().length)
   })
 
-  it("explains what each code means rather than printing a bare number", () => {
+  it("does not publish a count of zero for anything", () => {
+    for (const row of closeCodeRows()) {
+      expect(
+        row.count,
+        `${row.code} is published with no observation behind it`,
+      ).toBeGreaterThan(0)
+    }
+  })
+
+  it("marks a rate-limit close as alert-worthy if one was ever recorded", () => {
+    const rows = closeCodeRows()
+    for (const row of rows) {
+      if (row.code === 1008 || row.code === 3008 || row.code === 3009) {
+        expect(row.alertWorthy, `${row.code} burns credit and must alert`).toBe(true)
+      }
+    }
+    expect(closeCodeCounts().length).toBeGreaterThan(0)
+  })
+
+  it("renders one row per observed code", () => {
     render(<MetricsDashboard />)
-    expect(screen.getByText(/50-1000 ms window/i)).toBeDefined()
-    expect(screen.getByText(/five new sessions/i)).toBeDefined()
+    for (const row of closeCodeRows()) {
+      const cells = screen
+        .getAllByRole("cell")
+        .filter((cell) => cell.textContent?.startsWith(String(row.code)))
+      expect(cells.length, `${row.code}`).toBe(1)
+    }
+  })
+})
+
+describe("measured figures reach the screen", () => {
+  it("publishes an error rate for every recorded run, with its command", () => {
+    const figures = errorRateFigures()
+    expect(figures.length).toBeGreaterThanOrEqual(3)
+    for (const figure of figures) {
+      expect(figure.value, figure.name).not.toBeNull()
+      expect(figure.command.length).toBeGreaterThan(0)
+      expect(figure.setDescription).toMatch(/[0-9]+ utterances/)
+    }
+  })
+
+  it("states how many errors the recognizer was confident about", () => {
+    const figure = confidenceFigures().find((entry) => entry.id === "errors-above-threshold")
+    expect(figure).toBeDefined()
+    expect(
+      figure?.value,
+      "this is the number the whole product rests on and it must not render as not measured",
+    ).toMatch(/^[0-9]+ of [0-9]+$/)
+  })
+
+  it("renders those figures rather than leaving the page all placeholders", () => {
+    render(<MetricsDashboard />)
+    expect(screen.getByText(/Why confidence is not the check/i)).toBeDefined()
+    expect(screen.getByText(/What the recognizer got wrong/i)).toBeDefined()
   })
 })
 
@@ -96,5 +145,22 @@ describe("held-out discipline is stated on the page", () => {
   it("says a number without a method is not published", () => {
     render(<MetricsDashboard />)
     expect(screen.getByText(/A number without a method is not published here/i)).toBeDefined()
+  })
+
+  it("says at section level why a blank section is blank", () => {
+    render(<MetricsDashboard />)
+    expect(
+      screen.getByText(/blank on purpose: the set is sealed, not unrun/i),
+      "five rows of not measured yet read as an unfinished page unless the section says the set is sealed, which is the discipline rather than a gap",
+    ).toBeDefined()
+    expect(screen.getByText(/blank until a paid run/i)).toBeDefined()
+  })
+
+  it("distinguishes an unrun measurement from a sealed one in the lede", () => {
+    render(<MetricsDashboard />)
+    expect(
+      screen.getByText(/the run has not happened or the set is sealed/i),
+      "not measured yet covers two different states and a judge cannot tell them apart without being told",
+    ).toBeDefined()
   })
 })

@@ -538,6 +538,36 @@
           "route": "ORAL"
         }
       ]
+    },
+    {
+      "nonproprietaryName": "phenylephrine hydrochloride",
+      "proprietaryNames": [
+        "Biorphen",
+        "IMMPHENTIV"
+      ],
+      "deaSchedule": null,
+      "combos": [
+        {
+          "strength": "100 mg/mL",
+          "dosageForm": "SOLUTION/ DROPS",
+          "route": "OPHTHALMIC"
+        },
+        {
+          "strength": "100 ug/mL",
+          "dosageForm": "INJECTION",
+          "route": "INTRAVENOUS"
+        },
+        {
+          "strength": "100 ug/mL",
+          "dosageForm": "INJECTABLE, LIPOSOMAL",
+          "route": "INTRAVENOUS"
+        },
+        {
+          "strength": "100 mg/10mL",
+          "dosageForm": "INJECTION",
+          "route": "INTRAVENOUS"
+        }
+      ]
     }
   ]
 }

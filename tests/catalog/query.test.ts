@@ -121,6 +121,27 @@ describe("catalogue access", () => {
     ).toBe(false)
   })
 
+  it("treats mcg and ug as the same unit, because speech normalises to one and the file uses the other", () => {
+    const source = comboSourceFor(catalog)
+    const asFile = source.comboExists({
+      drugName: "phenylephrine hydrochloride",
+      strength: "100 ug/mL",
+      dosageForm: "INJECTION",
+      route: "INTRAVENOUS",
+    })
+    const asSpoken = source.comboExists({
+      drugName: "phenylephrine hydrochloride",
+      strength: "100 mcg/mL",
+      dosageForm: "INJECTION",
+      route: "INTRAVENOUS",
+    })
+    expect(asFile, "the catalogue writes this strength as ug").toBe(true)
+    expect(
+      asSpoken,
+      "a caller saying one hundred micrograms normalises to mcg; rejecting that is a false refusal on a real prescription",
+    ).toBe(true)
+  })
+
   it("fails with a clear error when the data file is absent", () => {
     expect(() => loadCatalogFrom("data/does-not-exist.json")).toThrow(CatalogUnavailableError)
     expect(() => loadCatalogFrom("data/does-not-exist.json")).toThrow(/make data/)

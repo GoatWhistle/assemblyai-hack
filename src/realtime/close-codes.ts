@@ -1,6 +1,8 @@
 export const CloseCode = {
   Normal: 1000,
   GoingAway: 1001,
+  PolicyViolation: 1008,
+  MalformedConfiguration: 3006,
   MalformedChunks: 3007,
   ThreeHourCap: 3008,
   SessionLimit: 3009,
@@ -8,7 +10,7 @@ export const CloseCode = {
 
 export type CloseCode = (typeof CloseCode)[keyof typeof CloseCode]
 
-export type CloseSeverity = "normal" | "warning" | "alert"
+type CloseSeverity = "normal" | "warning" | "alert"
 
 export type CloseExplanation = {
   readonly code: number
@@ -30,6 +32,21 @@ const EXPLANATIONS: Readonly<Record<number, Omit<CloseExplanation, "code">>> = O
     label: "Page went away",
     explanation: "The tab was closed or navigated away from.",
     operatorAction: "Nothing to do; the exit path still sent session.end.",
+  },
+  3006: {
+    severity: "warning",
+    label: "Malformed configuration parameter",
+    explanation:
+      "Reported by another submission for a keyterms_prompt sent as something other than a JSON array. We have not reproduced it ourselves, and the vendor documents no close codes at all, so this entry is a third-party observation rather than a specification.",
+    operatorAction: "Check the shape of every query parameter before blaming the audio path.",
+  },
+  1008: {
+    severity: "alert",
+    label: "Rate limit, sent as a policy violation",
+    explanation:
+      "This is what the free tier actually sends when the five-new-sessions-per-minute limit is exceeded. The documented code for that condition is 3009, and we have never observed 3009; a sweep fired one second apart closed 21 of 40 sockets with 1008. Reading it as a transport fault rather than a rate limit is how a measurement sweep turns into a fabricated error rate.",
+    operatorAction:
+      "Alert-worthy on the first occurrence: space runs about 24 seconds apart and re-run. Do not score a run that contains any 1008.",
   },
   3007: {
     severity: "warning",
@@ -75,5 +92,9 @@ export function explainClose(code: number, reason: string): CloseExplanation {
 }
 
 export function isAlertWorthy(code: number): boolean {
-  return code === CloseCode.ThreeHourCap || code === CloseCode.SessionLimit
+  return (
+    code === CloseCode.ThreeHourCap ||
+    code === CloseCode.SessionLimit ||
+    code === CloseCode.PolicyViolation
+  )
 }

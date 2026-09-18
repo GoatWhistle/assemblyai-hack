@@ -1,11 +1,60 @@
 .page {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: var(--space-5) var(--space-5) var(--space-8);
+  padding: 0 var(--space-5) var(--space-6);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-5);
+  min-height: calc(100vh - 20rem);
+}
+
+.thesis {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) 0 0;
+  text-align: center;
+}
+
+.thesisTitle {
+  margin: 0;
+  max-width: var(--measure-prose);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--track-display);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.thesisBody {
+  margin: 0;
+  max-width: 56ch;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--track-tight);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.waiting {
+  width: 100%;
+  max-width: var(--measure-prose);
+  margin: var(--space-5) auto 0;
+}
+
+.fault {
+  margin-top: var(--space-5);
+  animation: var(--keyframes-flag) var(--dur-slow) var(--ease-out-quart) both;
 }
 
 .shell {
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--rail-width);
   gap: var(--space-6);
@@ -18,188 +67,43 @@
   min-width: 0;
 }
 
-.rail {
-  display: grid;
-  gap: var(--space-4);
-  position: sticky;
-  top: var(--space-5);
-  min-width: 0;
-}
-
-.masthead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-4) var(--space-6);
-  padding-bottom: var(--space-4);
-  margin-bottom: var(--space-5);
-  border-bottom: 1px solid var(--line-divider);
-}
-
-.brand {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.brandName {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  color: var(--text-primary);
-}
-
-.brandName svg {
-  color: var(--action-rest);
-  flex: 0 0 auto;
-}
-
-.brandClaim {
-  font-size: var(--text-md);
-  color: var(--text-secondary);
-  line-height: var(--leading-snug);
-  max-width: 62ch;
-  text-wrap: pretty;
-}
-
-.transport {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.phase {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: var(--radius-pill);
-  background-color: var(--line-strong);
-}
-
-.dotLive {
-  background-color: var(--state-accepted-ink);
-}
-
-.dotBusy {
-  background-color: var(--state-asking-ink);
-}
-
-.dotFault {
-  background-color: var(--state-escalated-ink);
-}
-
 .cards {
   display: grid;
   gap: var(--space-4);
 }
 
-.progressList {
+.prompt {
   display: grid;
-  gap: 1px;
+  justify-items: center;
+  gap: var(--space-5);
+  text-align: center;
+  animation: var(--keyframes-fade-rise) var(--dur-deliberate) var(--ease-out-quart) both;
 }
 
-.progressRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-2);
-  align-items: center;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  background: none;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: var(--transition-control);
-}
-
-.progressRow:hover {
-  background-color: var(--ink-a5);
-  color: var(--text-primary);
-}
-
-.progressRowActive {
-  border-color: var(--select-line);
-  background-color: var(--select-surface);
-  color: var(--select-ink);
-  font-weight: var(--weight-medium);
-}
-
-.progressName {
-  font-size: var(--text-base);
-}
-
-.levels {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 1.25rem;
-}
-
-.level {
-  width: 3px;
-  height: 100%;
-  border-radius: var(--radius-xs);
-  background-color: var(--action-rest);
-  transform-origin: bottom center;
-  animation: readback-level 900ms var(--ease-in-out) infinite;
-}
-
-.level:nth-child(2) {
-  animation-delay: 120ms;
-}
-
-.level:nth-child(3) {
-  animation-delay: 240ms;
-}
-
-.level:nth-child(4) {
-  animation-delay: 60ms;
-}
-
-.levelIdle {
-  background-color: var(--line-strong);
-  animation: none;
-  transform: scaleY(0.3);
-}
-
-.disclaimer {
-  display: grid;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border: 1px solid var(--line-divider);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-sunken);
-}
-
-.disclaimerTitle {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
-  color: var(--text-primary);
-}
-
-.disclaimerBody {
-  font-size: var(--text-2xs);
+.promptBody {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-md);
   line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
+  letter-spacing: var(--track-tight);
+  color: var(--text-muted);
+  text-wrap: pretty;
 }
 
-.nav {
-  display: flex;
-  gap: var(--space-3);
+.promptAside {
+  margin: 0;
+  max-width: var(--measure-prose);
   font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-faint);
+  text-wrap: pretty;
+}
+
+.promptActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
 }
 
 @media (max-width: 62rem) {
@@ -209,24 +113,43 @@
   }
 
   .page {
-    padding: var(--space-4) var(--space-4) var(--space-7);
+    padding: 0 var(--space-4) var(--space-7);
+  }
+}
+
+@media (max-width: 40rem) {
+  .thesisTitle {
+    font-size: var(--text-2xl);
+  }
+}
+
+@media (max-height: 40rem) {
+  .thesis {
+    padding-top: var(--space-3);
+    gap: var(--space-2);
   }
 
-  .rail {
-    position: static;
+  .thesisTitle {
+    font-size: var(--text-xl);
+  }
+
+  .thesisBody {
+    font-size: var(--text-base);
   }
 }
 
 @media (max-width: 30rem) {
   .page {
-    padding: var(--space-4) var(--space-3) var(--space-6);
+    padding: 0 var(--space-4) var(--space-6);
   }
 
   .shell {
     gap: var(--space-4);
   }
+}
 
-  .brandName {
-    font-size: var(--text-lg);
-  }
+.legal {
+  margin-top: var(--space-6);
+  max-width: var(--measure-prose);
+  margin-inline: auto;
 }

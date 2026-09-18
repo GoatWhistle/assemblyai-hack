@@ -15,7 +15,9 @@ import {
   stanceOf,
 } from "./field-status"
 import { LasaOverride } from "./lasa-override"
+import { priorAttemptOf, valueChanged } from "./prior-attempt"
 import styles from "./styles.module.css"
+import { ValueChange } from "./value-change"
 
 const CARD_CLASS: Record<string, string> = {
   lasa: styles.lasaCard ?? "",
@@ -26,6 +28,7 @@ const CARD_CLASS: Record<string, string> = {
 export type FieldCardProps = {
   readonly candidate: FieldCandidate
   readonly decision: GateDecision | null
+  readonly siblings?: readonly FieldCandidate[]
   readonly selectedWordStartMs?: number | null
   readonly onSelectWord?: (word: WordSpan) => void
 }
@@ -33,6 +36,7 @@ export type FieldCardProps = {
 export function FieldCard({
   candidate,
   decision,
+  siblings = [],
   selectedWordStartMs = null,
   onSelectWord,
 }: FieldCardProps) {
@@ -46,6 +50,7 @@ export function FieldCard({
     .join(" ")
   const displayValue =
     candidate.normalizedValue === null ? "no standard form" : String(candidate.normalizedValue)
+  const prior = priorAttemptOf(candidate, siblings)
 
   return (
     <article className={classes} aria-label={`${FIELD_LABEL[candidate.field]} field card`}>
@@ -80,6 +85,15 @@ export function FieldCard({
           threshold={policy.autoAcceptThreshold}
         />
       ) : null}
+
+      {prior === null ? null : (
+        <ValueChange
+          prior={prior}
+          current={displayValue}
+          currentRaw={candidate.rawValue}
+          changed={valueChanged(prior, candidate)}
+        />
+      )}
 
       <div className={styles.proof}>
         <div className={styles.proofPrimary}>

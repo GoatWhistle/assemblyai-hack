@@ -6,12 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "src/**",
-      "app/**",
-      "tests/**",
-      "scripts/**"
-    ]
+    "includes": ["src/**", "app/**", "tests/**", "scripts/**"]
   },
   "formatter": {
     "enabled": true,
@@ -58,21 +53,13 @@
                 "selector": {
                   "kind": "objectLiteralProperty"
                 },
-                "formats": [
-                  "camelCase",
-                  "PascalCase",
-                  "CONSTANT_CASE",
-                  "snake_case"
-                ]
+                "formats": ["camelCase", "PascalCase", "CONSTANT_CASE", "snake_case"]
               },
               {
                 "selector": {
                   "kind": "typeProperty"
                 },
-                "formats": [
-                  "camelCase",
-                  "snake_case"
-                ]
+                "formats": ["camelCase", "snake_case"]
               }
             ]
           }
@@ -83,10 +70,7 @@
         "noConsole": {
           "level": "error",
           "options": {
-            "allow": [
-              "error",
-              "warn"
-            ]
+            "allow": ["error", "warn"]
           }
         }
       },
@@ -115,9 +99,7 @@
       }
     },
     {
-      "includes": [
-        "scripts/**"
-      ],
+      "includes": ["scripts/**"],
       "linter": {
         "rules": {
           "suspicious": {

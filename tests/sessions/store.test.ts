@@ -6,6 +6,7 @@ import {
   createMemoryStore,
   FALSE_ASK_NOTE,
   reasonBreakdown,
+  SessionOrigin,
   summarize,
 } from "@/sessions"
 
@@ -36,6 +37,7 @@ const stored = {
   events: [],
   closes: [],
   gateEnabled: true,
+  origin: SessionOrigin.Live,
   orderId: "o1",
   committed: true,
 }

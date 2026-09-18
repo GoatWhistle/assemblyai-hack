@@ -7,6 +7,7 @@
 }
 
 .trigger {
+  position: relative;
   display: grid;
   place-items: center;
   width: 7rem;
@@ -22,6 +23,10 @@
     color var(--dur-base) var(--ease-out-quart),
     box-shadow var(--dur-base) var(--ease-out-quart),
     scale var(--dur-fast) var(--ease-out-quart);
+}
+
+.idle .trigger {
+  animation: var(--keyframes-breathe) 4200ms var(--ease-in-out) infinite;
 }
 
 .trigger:hover:not(:disabled) {
@@ -52,6 +57,25 @@
   box-shadow:
     var(--mic-lift-quiet),
     inset 0 0 0 2px var(--mic-listening-line);
+}
+
+.listening .trigger::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  animation: var(--keyframes-pulse-ring) 2600ms var(--ease-out-quart) infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idle .trigger {
+    animation: none;
+  }
+
+  .listening .trigger::after {
+    animation: none;
+  }
 }
 
 .speaking .trigger {
@@ -149,4 +173,16 @@
   font-size: var(--text-md);
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-height: 40rem) {
+  .console {
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .trigger {
+    width: 5rem;
+    height: 5rem;
+  }
 }

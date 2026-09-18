@@ -14,7 +14,7 @@ export type AgentDispatchEvents = {
   onError?: (error: unknown) => void
 }
 
-export function dispatchTyped(
+function dispatchTyped(
   message: AgentMessage & { audio?: string },
   events: AgentDispatchEvents,
 ): void {

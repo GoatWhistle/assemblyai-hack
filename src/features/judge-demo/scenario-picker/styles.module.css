@@ -1,0 +1,170 @@
+.block {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.head {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.headTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line-divider);
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--text-primary);
+}
+
+.current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.currentLabel {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.currentName {
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.headerNote {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.lede {
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: var(--space-3);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.legend {
+  grid-column: 1 / -1;
+  padding: 0;
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.button {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: start;
+  text-align: left;
+  min-height: var(--target-touch);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-panel);
+  cursor: pointer;
+  transition: var(--transition-control);
+}
+
+.button:hover {
+  border-color: var(--action-rest);
+}
+
+.button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.buttonActive {
+  border-color: var(--action-rest);
+  border-width: 2px;
+  background-color: var(--select-surface);
+}
+
+.buttonLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+.buttonOutcome {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-normal);
+  color: var(--text-muted);
+}
+
+.buttonActive .buttonOutcome {
+  color: var(--text-secondary);
+}
+
+.detail {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-sunken);
+}
+
+.heard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: baseline;
+}
+
+.heardTerm {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.heardValue {
+  font-family: var(--font-data);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.why {
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

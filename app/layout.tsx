@@ -1,11 +1,22 @@
 import type { Metadata, Viewport } from "next"
+import { Manrope } from "next/font/google"
 import type { ReactNode } from "react"
+import { RouteTransition } from "@/shared/ui/motion/route-transition"
 import "@/styles/global.css"
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-brand",
+  weight: ["400", "500", "600"],
+})
 
 const DESCRIPTION =
   "A voice agent for prescription intake that proves it did not mishear: per-field provenance, confidence, and a gate that refuses unverified values."
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+
+const BROWSER_CHROME_COLOR = "white"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -39,13 +50,16 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#08090a",
+  themeColor: BROWSER_CHROME_COLOR,
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={manrope.variable}>
+      <body>
+        <RouteTransition />
+        {children}
+      </body>
     </html>
   )
 }

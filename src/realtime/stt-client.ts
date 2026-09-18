@@ -3,7 +3,7 @@ import type { SttBegin, SttMessage, SttTermination, SttTurn } from "./protocol"
 import { mintToken, STT_TOKEN_ROUTE, sttSocketUrl } from "./tokens"
 import { type Transport, type TransportFactory, webSocketTransport } from "./transport"
 
-export const TERMINATION_TIMEOUT_MS = 4000
+const TERMINATION_TIMEOUT_MS = 4000
 
 export type SttClientEvents = {
   onBegin?: (message: SttBegin) => void

@@ -1,4 +1,5 @@
 import type { LasaRisk } from "@/domain"
+import { LASA_NOT_AN_ACCUSATION } from "@/features/gate-banner/hypothesis-language"
 import { Chip } from "@/shared/ui/primitives/chip"
 import styles from "./styles.module.css"
 
@@ -13,16 +14,17 @@ export function LasaOverride({ lasa, minConfidence, threshold }: LasaOverridePro
   return (
     <div className={styles.override}>
       <p className={styles.overrideHead}>
-        <Chip tone="lasa" glyph="!">
+        <Chip tone="lasa" glyph="?">
           Look-alike sound-alike pair
         </Chip>
-        <span>Confidence does not decide this field</span>
+        <span>Needs confirming, whatever the certainty says</span>
       </p>
       <p className={styles.overrideBody}>
         {aboveThreshold
-          ? `The recognizer reported ${minConfidence.toFixed(2)} certainty, at or above this field's ${threshold.toFixed(2)} threshold, and that changes nothing here. Certainty describes the acoustics it received, not which of two similar-sounding medicines was spoken. The published pair is what settles it, so the value is re-asked.`
-          : `The recognizer reported ${minConfidence.toFixed(2)} certainty, below this field's ${threshold.toFixed(2)} threshold. Even had it been 1.00, this re-ask would still fire: the name sits in a published pair, and that is decided independently of any number.`}
+          ? `The recognizer reported ${minConfidence.toFixed(2)} certainty, at or above this field's ${threshold.toFixed(2)} threshold, and that does not settle which name was spoken. Certainty describes the acoustics it received, not which of two similar-sounding medicines the caller chose. The published pair is why the value is confirmed rather than written.`
+          : `The recognizer reported ${minConfidence.toFixed(2)} certainty, below this field's ${threshold.toFixed(2)} threshold. Even at 1.00 this value would still be confirmed: the name sits in a published pair, and no number resolves which member of it was said.`}
       </p>
+      <p className={styles.overrideBody}>{LASA_NOT_AN_ACCUSATION}</p>
       <div className={styles.alternatives}>
         <span className={styles.altLabel}>Heard as</span>
         <Chip tone="lasa">{lasa.matchedTerm ?? "unknown"}</Chip>

@@ -23,7 +23,7 @@ export function fixtureDurationMs(fixture: SessionFixture): number {
   return fixture.frames.reduce((max, frame) => (frame.atMs > max ? frame.atMs : max), 0)
 }
 
-export function inboundFrames(fixture: SessionFixture): FixtureFrame[] {
+function inboundFrames(fixture: SessionFixture): FixtureFrame[] {
   return [...fixture.frames].sort((a, b) => a.atMs - b.atMs)
 }
 

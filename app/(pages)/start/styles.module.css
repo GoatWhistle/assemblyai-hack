@@ -1,0 +1,27 @@
+.shell {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding-inline: var(--space-5);
+}
+
+.page {
+  display: grid;
+  gap: var(--space-5);
+  padding-bottom: var(--space-8);
+}
+
+.onward {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+@media (max-width: 40rem) {
+  .shell {
+    padding-inline: var(--space-4);
+  }
+
+  .page {
+    padding-block: var(--space-5) var(--space-7);
+  }
+}

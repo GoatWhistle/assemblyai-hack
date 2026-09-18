@@ -1,6 +1,6 @@
 import { FIELD_NAMES } from "@/domain"
 
-export type ToolExecutionMode = "interactive" | "hold"
+type ToolExecutionMode = "interactive" | "hold"
 
 export type AgentTool = {
   readonly type: "function"
@@ -91,6 +91,11 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       parameters: {
         type: "object",
         properties: {
+          session_id: {
+            type: "string",
+            description:
+              "The session id you were given at the start of this call. Every call in one conversation uses the same value.",
+          },
           field: {
             type: "string",
             enum: FIELD_ENUM,
@@ -107,7 +112,7 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
               "The contiguous stretch of the caller's last utterance that this value came from, copied verbatim. Used to locate the source words and their timings and confidence. If you cannot copy it verbatim, say so to the caller instead of guessing.",
           },
         },
-        required: ["field", "value", "transcript_hint"],
+        required: ["session_id", "field", "value", "transcript_hint"],
         additionalProperties: false,
       },
       execution_mode: "interactive",
@@ -122,6 +127,11 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       parameters: {
         type: "object",
         properties: {
+          session_id: {
+            type: "string",
+            description:
+              "The session id you were given at the start of this call. Every call in one conversation uses the same value.",
+          },
           field: { type: "string", enum: FIELD_ENUM },
           candidate_id: {
             type: "string",
@@ -140,8 +150,13 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
               "plain for a normal read-back, spell_out when the gate asked for character-by-character.",
             default: "plain",
           },
+          caller_answer: {
+            type: "string",
+            description:
+              "Leave this out on the call that registers the read-back. Call read_back a SECOND time with the same candidate_id and the caller's reply copied verbatim once they have answered. That second call is the only path by which a value is ever written to the order, so a value the caller never answered aloud can never be recorded.",
+          },
         },
-        required: ["field", "candidate_id", "utterance"],
+        required: ["session_id", "field", "candidate_id", "utterance"],
         additionalProperties: false,
       },
       execution_mode: "interactive",
@@ -156,6 +171,11 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       parameters: {
         type: "object",
         properties: {
+          session_id: {
+            type: "string",
+            description:
+              "The session id you were given at the start of this call. Every call in one conversation uses the same value.",
+          },
           full_order_read_back: {
             type: "string",
             description:
@@ -167,7 +187,7 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
               "True only if the caller answered yes to the full read-back. Never set this true on your own judgement.",
           },
         },
-        required: ["full_order_read_back", "caller_confirmed"],
+        required: ["session_id", "full_order_read_back", "caller_confirmed"],
         additionalProperties: false,
       },
       execution_mode: "hold",

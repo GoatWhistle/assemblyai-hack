@@ -21,6 +21,7 @@ import {
   normalizeFailedUtterance,
   noValidatorUtterance,
   readBackUtterance,
+  ruleForbidsUtterance,
   spellOutUtterance,
 } from "./utterance"
 
@@ -94,6 +95,14 @@ export function decide(c: FieldCandidate, policy: FieldPolicy): GateDecision {
         extra: { failedValue: String(c.normalizedValue) },
       })
     case VerdictOutcome.FormatInvalid:
+      if (c.verdict.validatorName === "schedule_refills") {
+        return d({
+          action: GateAction.AskConfirm,
+          reasonCode: ReasonCode.ValidatorFormat,
+          agentUtterance: ruleForbidsUtterance(c.field, c.verdict.detail),
+          extra: { failedValue: String(c.normalizedValue), ruleCited: c.verdict.ruleCited },
+        })
+      }
       return d({
         action: GateAction.AskSpellOut,
         reasonCode: ReasonCode.ValidatorFormat,

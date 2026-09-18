@@ -1,16 +1,10 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
-import type { GateDecision } from "@/domain"
-import { FIELD_LABEL, INTAKE_ORDER } from "@/features/intake/field-language"
+import { FIELD_NAMES, type GateDecision, policyFor } from "@/domain"
+import { FIELD_LABEL, FIELD_PROOF_NOTE, INTAKE_ORDER } from "@/features/intake/field-language"
 import { IntakeScreen } from "@/features/intake/intake-screen"
-import {
-  DISCLAIMER,
-  FAULT_COPY,
-  PHASE_LABEL,
-  SessionFault,
-  SessionPhase,
-} from "@/features/intake/session-status"
+import { DISCLAIMER, PHASE_LABEL, SessionPhase } from "@/features/intake/session-status"
 import {
   LASA_CANDIDATE,
   LASA_DECISION,
@@ -52,10 +46,40 @@ function renderScreen(overrides: Partial<Parameters<typeof IntakeScreen>[0]> = {
 }
 
 describe("the intake screen", () => {
-  it("states the product claim in the masthead", () => {
+  it("names the product and shows no gate vocabulary before a call starts", () => {
+    renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
+    const brand = screen.getAllByRole("link").find((link) => link.textContent === "Readback")
+    expect(
+      brand,
+      "the brand lockup is one link even though the name is set in two tones",
+    ).toBeDefined()
+    expect(
+      screen.queryByText(/E_LASA_HIT|E_LOW_CONFIDENCE|E_VALIDATOR_CHECKSUM/),
+      "reason codes are the explanation page's vocabulary; an idle operator screen has no reason to carry them",
+    ).toBeNull()
+  })
+
+  it("states the claim in visible text before a call starts, not only to a screen reader", () => {
+    renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
+    const heading = screen.getByRole("heading", { level: 1 })
+    expect(
+      heading.className,
+      "the landing thesis was announced only to assistive technology; a judge arriving cold read a microphone and no claim",
+    ).not.toContain("visually-hidden")
+    expect(
+      screen.getByText(/high confidence does not protect/i),
+      "the product's whole argument is that certainty is not proof, so the screen has to say it before it says anything else",
+    ).toBeDefined()
+    expect(screen.getByText(/look-alike list is asked again/i)).toBeDefined()
+  })
+
+  it("hides the thesis once the order is under way", () => {
     renderScreen()
-    expect(screen.getByText("Readback")).toBeDefined()
-    expect(screen.getByText(/proves it did not mishear/i)).toBeDefined()
+    const heading = screen.getByRole("heading", { level: 1 })
+    expect(
+      heading.className,
+      "a live call needs the working screen, not a landing pitch, but the document still needs its h1",
+    ).toContain("visually-hidden")
   })
 
   it("carries the medical disclaimer, honestly worded", () => {
@@ -63,6 +87,14 @@ describe("the intake screen", () => {
     expect(screen.getByText(DISCLAIMER.title)).toBeDefined()
     expect(screen.getByText(/Synthetic data only/)).toBeDefined()
     expect(screen.getByText(/No real patients, no real prescriptions/)).toBeDefined()
+  })
+
+  it("carries the disclaimer before a call has started too", () => {
+    renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
+    expect(
+      screen.getByText(DISCLAIMER.title),
+      "the first screen a judge lands on is the one that most needs the medical disclaimer; it must not live only inside the rail that appears after a session starts",
+    ).toBeDefined()
   })
 
   it("shows one card per proposed field", () => {
@@ -101,25 +133,32 @@ describe("the intake screen", () => {
     ).not.toBeNull()
   })
 
-  it("explains the three re-ask reasons before anything has been proposed", () => {
-    renderScreen({ candidates: [], decisions: new Map() })
-    expect(screen.getByText(/three reasons the agent asks again/i)).toBeDefined()
-    expect(screen.getByText("E_LASA_HIT")).toBeDefined()
+  it("tells the operator what to say before anything has been proposed", () => {
+    renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
+    expect(screen.getByText(/say the patient, the drug/i)).toBeDefined()
     expect(
-      screen.getByText(/even at certainty 1\.00/i),
-      "the claim that outranks confidence has to be stated up front",
+      screen.getByRole("link", { name: /run the recorded session/i }),
+      "the recorded route is the one path that always works; offering it as a microphone fallback buries it",
     ).toBeDefined()
+    expect(
+      screen.queryByRole("link", { name: /no microphone\? watch the recording/i }),
+      "framing the replay as a consolation for broken hardware is exactly what this task removed",
+    ).toBeNull()
   })
 
   it("reports how many echo turns were discarded", () => {
     renderScreen({ echoDiscards: 3 })
-    expect(screen.getByText("3 echo turns discarded")).toBeDefined()
+    expect(
+      screen.getByText(/3 turns of the agent hearing itself were dropped/i),
+      "the echo defence has to be visible as a count, not asserted in prose",
+    ).toBeDefined()
   })
 
-  it("links to the demonstration and the measurements", () => {
+  it("links to the demonstration and the measurements exactly once each", () => {
     renderScreen()
-    expect(screen.getByRole("link", { name: /Recorded demonstration/i })).toBeDefined()
-    expect(screen.getByRole("link", { name: /Measurements/i })).toBeDefined()
+    expect(screen.getAllByRole("link", { name: /^Demonstration$/i })).toHaveLength(1)
+    expect(screen.getAllByRole("link", { name: /^Measurements$/i })).toHaveLength(1)
+    expect(screen.getByRole("link", { name: /How it works/i })).toBeDefined()
   })
 
   it("selects a field from the order rail and highlights its span", async () => {
@@ -137,38 +176,33 @@ describe("the intake screen", () => {
   })
 })
 
-describe("honest status surfaces", () => {
-  for (const fault of Object.values(SessionFault)) {
-    it(`explains the ${fault} fault with a remedy`, () => {
-      const { unmount } = renderScreen({ fault, phase: SessionPhase.Blocked })
-      expect(screen.getByRole("alert")).toBeDefined()
-      expect(screen.getByText(FAULT_COPY[fault].title)).toBeDefined()
-      expect(screen.getByText(FAULT_COPY[fault].remedy)).toBeDefined()
-      unmount()
-    })
-  }
-
-  it("offers the recorded demonstration as the way past a blocked microphone", () => {
-    renderScreen({ fault: SessionFault.MicrophoneDenied, phase: SessionPhase.Blocked })
-    expect(
-      screen.getByRole("button", { name: /Open the recorded demonstration/i }),
-    ).toBeDefined()
-  })
-
-  it("explains that a token is single-use when a socket drops", () => {
-    expect(FAULT_COPY.socket_dropped.body).toContain("single-use")
-  })
-
-  it("explains that both sockets bill at once when credit runs out", () => {
-    expect(FAULT_COPY.credits_exhausted.body).toContain("socket lifetime")
-  })
-})
-
 describe("field language", () => {
-  it("labels every field in the policy table", () => {
-    for (const field of INTAKE_ORDER) {
-      expect(FIELD_LABEL[field].length).toBeGreaterThan(0)
+  it("labels every field the domain declares, not merely every field the form lists", () => {
+    for (const field of FIELD_NAMES) {
+      expect(
+        FIELD_LABEL[field]?.length ?? 0,
+        `${field} exists in the domain with no label, so it would render as a blank row on the form`,
+      ).toBeGreaterThan(0)
+      expect(
+        FIELD_PROOF_NOTE[field]?.length ?? 0,
+        `${field} has no note saying what proves it, which is the decision the policy table forces on every new field`,
+      ).toBeGreaterThan(0)
     }
-    expect(INTAKE_ORDER.length).toBe(11)
+  })
+
+  it("puts every declared field in the intake order rather than silently dropping one", () => {
+    expect(
+      [...INTAKE_ORDER].sort(),
+      "a field added to the domain and left out of the intake order is collected by nothing, and the previous version of this test compared the order against itself",
+    ).toEqual([...FIELD_NAMES].sort())
+  })
+
+  it("carries a policy for every field the form intends to collect", () => {
+    for (const field of INTAKE_ORDER) {
+      expect(
+        policyFor(field).criticality,
+        `${field} appears on the form with no policy, so nothing decides how it is proved`,
+      ).toBeDefined()
+    }
   })
 })

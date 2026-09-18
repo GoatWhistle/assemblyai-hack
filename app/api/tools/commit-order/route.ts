@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { withStatus } from "@/domain"
-import { sessionStore } from "@/sessions"
-import { hasEscalation, intakeFor, missingCritical, runTool } from "@/tools"
-import { identifierField, utteranceField } from "@/tools/input-bounds"
+import { originFromEnv, sessionStore } from "@/sessions"
+import {
+  hasEscalation,
+  intakeFor,
+  missingByOutcome,
+  missingCritical,
+  recordEvent,
+  runTool,
+} from "@/tools"
+import { sessionIdField, utteranceField } from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
 
 const schema = z.object({
-  session_id: identifierField(),
+  session_id: sessionIdField(),
   full_order_read_back: utteranceField(),
   caller_confirmed: z.boolean(),
 })
@@ -19,6 +26,26 @@ function spoken(fields: readonly string[]): string {
     return String(words[0])
   }
   return `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}`
+}
+
+function missingCriticalMessage(input: {
+  neverAsked: readonly string[]
+  refused: readonly string[]
+  abandoned: readonly string[]
+}): string {
+  const sentences: string[] = []
+  if (input.neverAsked.length > 0) {
+    sentences.push(`I still need ${spoken(input.neverAsked)}`)
+  }
+  if (input.refused.length > 0) {
+    sentences.push(
+      `${spoken(input.refused)} was proposed but the gate did not accept it, so asking for it the same way again will not help`,
+    )
+  }
+  if (input.abandoned.length > 0) {
+    sentences.push(`${spoken(input.abandoned)} was left for the pharmacy to fill in`)
+  }
+  return `I cannot place this order yet. ${sentences.join(". ")}.`
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -35,6 +62,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     if (!input.caller_confirmed) {
+      recordEvent(state, "order_refused", {
+        detail: { reasonCode: "COMMIT_REFUSED_NO_FULL_READBACK" },
+      })
       return {
         committed: false,
         reason_code: "COMMIT_REFUSED_NO_FULL_READBACK",
@@ -45,6 +75,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     if (hasEscalation(state)) {
+      recordEvent(state, "order_refused", {
+        detail: { reasonCode: "COMMIT_REFUSED_ESCALATED" },
+      })
       return {
         committed: false,
         reason_code: "COMMIT_REFUSED_ESCALATED",
@@ -58,17 +91,32 @@ export async function POST(request: Request): Promise<NextResponse> {
     const missing = missingCritical(state)
 
     if (missing.length > 0) {
+      const byOutcome = missingByOutcome(state)
+      const refused = byOutcome.refused_by_gate
+      const abandoned = byOutcome.abandoned
+      const neverAsked = byOutcome.never_asked
+      recordEvent(state, "order_refused", {
+        detail: { reasonCode: "COMMIT_REFUSED_MISSING_CRITICAL" },
+      })
       return {
         committed: false,
         reason_code: "COMMIT_REFUSED_MISSING_CRITICAL",
         missing_critical: [...missing],
-        say_to_caller: `I cannot place this order yet. I still need ${spoken(missing)}.`,
+        never_asked: [...neverAsked],
+        refused_by_gate: [...refused],
+        abandoned: [...abandoned],
+        say_to_caller: missingCriticalMessage({
+          neverAsked: [...neverAsked],
+          refused: [...refused],
+          abandoned: [...abandoned],
+        }),
         gate_note:
-          "Order.setField accepts ConfirmedValue only; these fields have no ConfirmedValue.",
+          "Order.setField accepts ConfirmedValue only. Confirmed, refused and never-asked are three states, and reporting them as one absence would put a lie in the record.",
       }
     }
 
     state.order = withStatus(state.order, "committed")
+    recordEvent(state, "order_committed", { detail: { orderId: state.order.orderId } })
 
     const fields: Record<string, unknown> = {}
     for (const [field, value] of state.order.fields) {
@@ -87,6 +135,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       events: state.events,
       closes: [],
       gateEnabled: state.gateEnabled,
+      origin: originFromEnv(process.env),
       orderId: state.order.orderId,
       committed: true,
     })

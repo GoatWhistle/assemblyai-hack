@@ -1,0 +1,89 @@
+name: safety invariants
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: safety-invariants-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  the-gate:
+    name: the invariant, and every branch attacked
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: ConfirmedValue is constructible only inside the gate
+        run: make gate-invariant
+
+      - name: break each gate branch, its own test must fail by name
+        if: ${{ !cancelled() }}
+        run: make gate-mutation
+
+      - name: the gate file is byte-identical afterwards
+        if: always()
+        run: |
+          if [ -n "$(git diff --name-only src/gate/)" ]; then
+            echo "gate-mutation left the gate modified; it must restore the file byte for byte" >&2
+            git --no-pager diff --stat src/gate/
+            exit 1
+          fi
+          echo "src/gate/ is unchanged"
+
+      - name: no mutation lock survived the run
+        if: always()
+        run: |
+          if [ -f .gate-mutation-running ]; then
+            echo "an interrupted mutation run left .gate-mutation-running behind" >&2
+            exit 1
+          fi
+          echo "no mutation lock"
+
+  no-secret-leaks:
+    name: the key never reaches the client bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      READBACK_ALLOW_MEMORY_STORE: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: build
+        run: make build
+
+      - name: the bundle exists, so the scan has something to read
+        run: |
+          if [ ! -d .next/static ]; then
+            echo ".next/static is missing: the secrets check would skip the bundle scan and still pass" >&2
+            exit 1
+          fi
+          echo ".next/static is present"
+
+      - name: secrets
+        run: make secrets
+
+      - name: server-only values stay on the server
+        if: ${{ !cancelled() }}
+        run: make server-only

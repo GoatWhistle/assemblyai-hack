@@ -1,10 +1,13 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import type { WordSpan } from "@/domain"
 import { EmptyState } from "@/shared/ui/states/empty-state"
 import styles from "./styles.module.css"
 import type { SpanSelection, TranscriptEntry } from "./transcript-entry"
 import { TranscriptLine } from "./transcript-line"
+
+const FOLLOW_SLACK_PX = 72
 
 export type TranscriptViewProps = {
   readonly entries: readonly TranscriptEntry[]
@@ -19,6 +22,24 @@ export function TranscriptView({
   weakBelow = 0.9,
   onSelectWord,
 }: TranscriptViewProps) {
+  const viewRef = useRef<HTMLDivElement | null>(null)
+  const followingRef = useRef(true)
+  const rememberPosition = () => {
+    const view = viewRef.current
+    if (view === null) {
+      return
+    }
+    const distanceToEnd = view.scrollHeight - view.scrollTop - view.clientHeight
+    followingRef.current = distanceToEnd <= FOLLOW_SLACK_PX
+  }
+  const turnCount = entries.length
+  useEffect(() => {
+    const view = viewRef.current
+    if (view === null || !followingRef.current || turnCount === 0) {
+      return
+    }
+    view.scrollTop = view.scrollHeight
+  }, [turnCount])
   if (entries.length === 0) {
     return (
       <EmptyState
@@ -29,7 +50,7 @@ export function TranscriptView({
     )
   }
   return (
-    <div className={styles.view}>
+    <div className={styles.view} ref={viewRef} onScroll={rememberPosition}>
       {entries.map((entry) => (
         <TranscriptLine
           key={entry.id}

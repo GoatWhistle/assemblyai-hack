@@ -40,14 +40,35 @@ export type SessionRecord = {
   readonly events: readonly MetricEvent[]
   readonly closes: readonly CloseInfo[]
   readonly gateEnabled: boolean
+  readonly origin: string
 }
 
 export type SessionSummary = {
   readonly sessionId: string
+  readonly origin: string
   readonly startedAt: string
   readonly endedAt: string | null
   readonly decisionCount: number
   readonly askCount: number
   readonly acceptCount: number
   readonly lasaCatchCount: number
+}
+
+export const MAX_SESSION_ID_CHARS = 128
+
+const SAFE_SESSION_ID = /^[A-Za-z0-9._-]+$/
+
+export function isUsableSessionId(value: string): boolean {
+  if (value.length === 0 || value.length > MAX_SESSION_ID_CHARS) {
+    return false
+  }
+  if (!SAFE_SESSION_ID.test(value)) {
+    return false
+  }
+  return !value.includes("..")
+}
+
+export function usableSessionId(value: string): string | null {
+  const trimmed = value.trim()
+  return isUsableSessionId(trimmed) ? trimmed : null
 }

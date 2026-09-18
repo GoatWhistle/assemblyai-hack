@@ -2,8 +2,13 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import { ConfirmationMode, FIELD_NAMES, type FieldName, GateAction, policyFor } from "@/domain"
 import { confirm } from "@/gate"
-import { intakeFor, runTool, writeConfirmed } from "@/tools"
-import { identifierField, optionalUtteranceField, utteranceField } from "@/tools/input-bounds"
+import { intakeFor, recordEvent, rememberAgentLine, runTool, writeConfirmed } from "@/tools"
+import {
+  identifierField,
+  optionalUtteranceField,
+  sessionIdField,
+  utteranceField,
+} from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
 
@@ -19,7 +24,7 @@ const CONFIRMING = [
 const DENYING = ["no", "nope", "wrong", "not quite", "negative"]
 
 const schema = z.object({
-  session_id: identifierField(),
+  session_id: sessionIdField(),
   field: z.enum(FIELD_NAMES as [FieldName, ...FieldName[]]),
   candidate_id: identifierField(),
   utterance: utteranceField(),
@@ -33,7 +38,10 @@ export function classifyAnswer(
   if (answer === undefined) {
     return "unclear"
   }
-  const text = answer.trim().toLowerCase().replace(/[.!?]/g, "")
+  const text = answer
+    .trim()
+    .toLowerCase()
+    .replace(/[.!?,]/g, "")
   if (CONFIRMING.some((c) => text === c || text.startsWith(`${c} `))) {
     return "confirmed"
   }
@@ -54,10 +62,25 @@ export async function POST(request: Request): Promise<NextResponse> {
       utterance: input.utterance,
       style,
     }
+    rememberAgentLine(state, input.utterance)
+    recordEvent(state, "read_back_requested", {
+      field: input.field,
+      detail: { candidateId: input.candidate_id, style },
+    })
+    if (style === "spell_out") {
+      recordEvent(state, "spell_out_entered", {
+        field: input.field,
+        detail: { candidateId: input.candidate_id },
+      })
+    }
 
     const answer = classifyAnswer(input.caller_answer)
 
     if (answer !== "confirmed") {
+      recordEvent(state, "read_back_failed", {
+        field: input.field,
+        detail: { candidateId: input.candidate_id, answer },
+      })
       return {
         registered: true,
         field: input.field,
@@ -74,6 +97,10 @@ export async function POST(request: Request): Promise<NextResponse> {
       .find((d) => d.candidateId === input.candidate_id)
 
     if (candidate === undefined || decision === undefined) {
+      recordEvent(state, "read_back_failed", {
+        field: input.field,
+        detail: { candidateId: input.candidate_id, cause: "no_decision" },
+      })
       return {
         registered: true,
         field: input.field,
@@ -85,11 +112,27 @@ export async function POST(request: Request): Promise<NextResponse> {
       }
     }
 
+    if (candidate.field !== input.field) {
+      recordEvent(state, "read_back_failed", {
+        field: candidate.field,
+        detail: { candidateId: input.candidate_id, cause: "field_mismatch" },
+      })
+      return {
+        registered: true,
+        field: candidate.field,
+        candidate_id: input.candidate_id,
+        awaiting: "yes_no",
+        answer,
+        written_to_order: false,
+        error: `candidate ${input.candidate_id} was proved for ${candidate.field}, not for ${input.field}; a value is confirmed under the field it was proved for or not at all`,
+      }
+    }
+
     const mode = style === "spell_out" ? ConfirmationMode.SpellOut : ConfirmationMode.ReadBack
 
     const value = confirm({
       candidate,
-      policy: policyFor(input.field),
+      policy: policyFor(candidate.field),
       decision,
       confirmationMode:
         decision.action === GateAction.Accept ? ConfirmationMode.Validator : mode,
@@ -97,10 +140,14 @@ export async function POST(request: Request): Promise<NextResponse> {
     })
 
     writeConfirmed(state, value)
+    recordEvent(state, "read_back_matched", {
+      field: candidate.field,
+      detail: { candidateId: input.candidate_id },
+    })
 
     return {
       registered: true,
-      field: input.field,
+      field: candidate.field,
       candidate_id: input.candidate_id,
       awaiting: null,
       answer,

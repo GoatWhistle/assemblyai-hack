@@ -73,43 +73,74 @@ export function normalizeInteger(raw: string): number | null {
   return matched > 0 && matched === tokens.length ? total : null
 }
 
+function strengthPerUnit(text: string): string | null {
+  const match = text.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)\s*\/\s*(\d*)\s*([a-z]*)$/)
+  if (match === null) {
+    return null
+  }
+  const unit = UNIT_WORDS[String(match[2])] ?? match[2]
+  const denominator = String(match[3] ?? "")
+  const denominatorUnit = String(match[4] ?? "")
+  if (denominator === "1" && denominatorUnit.length === 0) {
+    return `${match[1]} ${unit}`
+  }
+  return `${match[1]} ${unit}/${denominator}${denominatorUnit}`
+}
+
+function strengthNumeric(text: string): string | null {
+  const match = text.match(/^(\d+(?:\.\d+)?)\s*([a-z%]+)$/)
+  if (match === null) {
+    return null
+  }
+  const unit = UNIT_WORDS[String(match[2])] ?? match[2]
+  return `${match[1]} ${unit}`
+}
+
+function strengthSpelled(text: string): string | null {
+  const match = text.match(/^([a-z\s-]+?)\s+([a-z]+)$/)
+  if (match === null) {
+    return null
+  }
+  const amount = normalizeInteger(String(match[1]))
+  const unit = UNIT_WORDS[String(match[2])]
+  if (amount === null || unit === undefined) {
+    return null
+  }
+  return `${amount} ${unit}`
+}
+
+function strengthPointFive(text: string): string | null {
+  const match = text.match(/^point\s+(\w+)\s+([a-z]+)$/)
+  if (match === null) {
+    return null
+  }
+  const digit = normalizeInteger(String(match[1]))
+  const unit = UNIT_WORDS[String(match[2])]
+  if (digit === null || unit === undefined) {
+    return null
+  }
+  return `0.${digit} ${unit}`
+}
+
+const STRENGTH_PARSERS: readonly ((text: string) => string | null)[] = [
+  strengthPerUnit,
+  strengthNumeric,
+  strengthSpelled,
+  strengthPointFive,
+]
+
 export function normalizeStrength(raw: string): string | null {
   const text = raw.trim().toLowerCase().replace(/\s+/g, " ")
-  const perUnit = text.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)\s*\/\s*(\d*)\s*([a-z]*)$/)
-  if (perUnit !== null) {
-    const unit = UNIT_WORDS[String(perUnit[2])] ?? perUnit[2]
-    const denominator = String(perUnit[3] ?? "")
-    const denominatorUnit = String(perUnit[4] ?? "")
-    if (denominator === "1" && denominatorUnit.length === 0) {
-      return `${perUnit[1]} ${unit}`
-    }
-    return `${perUnit[1]} ${unit}/${denominator}${denominatorUnit}`
-  }
-  const numeric = text.match(/^(\d+(?:\.\d+)?)\s*([a-z%]+)$/)
-  if (numeric !== null) {
-    const unit = UNIT_WORDS[String(numeric[2])] ?? numeric[2]
-    return `${numeric[1]} ${unit}`
-  }
-  const spelled = text.match(/^([a-z\s-]+?)\s+([a-z]+)$/)
-  if (spelled !== null) {
-    const amount = normalizeInteger(String(spelled[1]))
-    const unit = UNIT_WORDS[String(spelled[2])]
-    if (amount !== null && unit !== undefined) {
-      return `${amount} ${unit}`
-    }
-  }
-  const pointFive = text.match(/^point\s+(\w+)\s+([a-z]+)$/)
-  if (pointFive !== null) {
-    const digit = normalizeInteger(String(pointFive[1]))
-    const unit = UNIT_WORDS[String(pointFive[2])]
-    if (digit !== null && unit !== undefined) {
-      return `0.${digit} ${unit}`
+  for (const parse of STRENGTH_PARSERS) {
+    const value = parse(text)
+    if (value !== null) {
+      return value
     }
   }
   return null
 }
 
-export function normalizeName(raw: string): string | null {
+function normalizeName(raw: string): string | null {
   const text = raw.trim().replace(/\s+/g, " ")
   if (text.length === 0) {
     return null

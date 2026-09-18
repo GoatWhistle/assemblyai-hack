@@ -7,6 +7,7 @@ import {
   ALL_REASONS,
   describeReason,
 } from "@/features/gate-banner/reason-language"
+import { RECOVERY_STEP } from "@/features/gate-banner/recovery-language"
 
 function decisionWith(code: ReasonCode): GateDecision {
   return {
@@ -75,5 +76,57 @@ describe("GateBanner", () => {
   it("labels the field the decision was about", () => {
     render(<GateBanner decision={decisionWith(ReasonCode.ValidatorCatalog)} />)
     expect(screen.getByText("Drug name")).toBeDefined()
+  })
+})
+
+describe("the refusal carries its recovery path on the same screen", () => {
+  it("names a way forward for every refusal reason code", () => {
+    for (const code of REASON_CODES) {
+      if (code === ReasonCode.ValidatorPassedHighConf) {
+        continue
+      }
+      expect(
+        RECOVERY_STEP[code],
+        `${code} refuses a value but names no way forward, leaving the refusal a dead end`,
+      ).not.toBeNull()
+    }
+  })
+
+  it("shows no recovery step beside an accepted value", () => {
+    render(<GateBanner decision={decisionWith(ReasonCode.ValidatorPassedHighConf)} />)
+    expect(
+      screen.queryByText(/The way forward on/),
+      "a value that entered the order has nothing left to recover from",
+    ).toBeNull()
+  })
+
+  it("shows the recovery step in the same banner as the refusal, not a separate element", () => {
+    render(<GateBanner decision={decisionWith(ReasonCode.LasaHit)} />)
+    const status = screen.getByRole("status")
+    expect(
+      status.textContent,
+      "the refusal and its recovery must be readable inside one landmark, not scattered across the page",
+    ).toContain("Answer which of the two names you said")
+  })
+
+  it("gives the LASA re-ask its own disambiguation instruction, not a generic confirm", () => {
+    render(<GateBanner decision={decisionWith(ReasonCode.LasaHit)} />)
+    expect(
+      screen.getByText("Answer which of the two names you said"),
+      "collapsing the LASA recovery into a plain confirm hides the product's central distinction",
+    ).toBeDefined()
+  })
+
+  it("tells the caller a pharmacist finishes the field after the attempt budget is spent", () => {
+    render(<GateBanner decision={decisionWith(ReasonCode.EscalateAfterThirdFailure)} />)
+    expect(
+      screen.getByText("A pharmacist finishes this field"),
+      "an escalation with no stated next step reads as the agent giving up rather than handing off",
+    ).toBeDefined()
+  })
+
+  it("names the field inside the recovery label so it reads correctly with multiple cards open", () => {
+    render(<GateBanner decision={decisionWith(ReasonCode.LowConfidence)} />)
+    expect(screen.getByText("The way forward on Drug name")).toBeDefined()
   })
 })

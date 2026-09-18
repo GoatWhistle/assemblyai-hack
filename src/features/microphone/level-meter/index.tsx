@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react"
+import { type CSSProperties, useEffect, useRef, useState } from "react"
+import { useReducedMotion } from "@/shared/ui/motion/use-reduced-motion"
 import { MicState } from "../mic-state"
 import styles from "./styles.module.css"
 
@@ -31,6 +32,7 @@ export function barHeights(history: readonly number[]): readonly number[] {
 }
 
 export function LevelMeter({ level, state }: LevelMeterProps) {
+  const reduced = useReducedMotion()
   const listening = state === MicState.Listening
   const [history, setHistory] = useState<readonly number[]>(() => BAR_INDEXES.map(() => REST))
   const latest = useRef(level)
@@ -68,7 +70,7 @@ export function LevelMeter({ level, state }: LevelMeterProps) {
         <span
           key={`bar-${BAR_INDEXES[index]}`}
           className={styles.bar}
-          style={{ scale: `1 ${height.toFixed(3)}` }}
+          style={reduced ? undefined : ({ "--bar-level": height.toFixed(3) } as CSSProperties)}
         />
       ))}
     </div>

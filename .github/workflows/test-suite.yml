@@ -1,0 +1,87 @@
+name: test suite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: test-suite-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  READBACK_ALLOW_MEMORY_STORE: "1"
+
+jobs:
+  suite:
+    name: the suite, serialized
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: no credential is present, so nothing can reach a paid socket
+        run: |
+          if [ -n "${ASSEMBLYAI_API_KEY:-}" ]; then
+            echo "ASSEMBLYAI_API_KEY is set in a test job; tests must never be able to bill" >&2
+            exit 1
+          fi
+          echo "no credential in the environment"
+
+      - name: test
+        run: make test
+
+      - name: the ratchet controls left no planted file behind
+        if: always()
+        run: |
+          leftover=$(git status --porcelain --untracked-files=all | grep -E '__control__|__probe__|__credential_probe__' || true)
+          if [ -n "$leftover" ]; then
+            echo "a positive control planted a file and did not remove it:" >&2
+            echo "$leftover" >&2
+            exit 1
+          fi
+          echo "no planted file survived the run"
+
+  evidence:
+    name: offline figures and the recorded pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: smoke
+        run: make smoke
+
+      - name: latency budget
+        if: ${{ !cancelled() }}
+        run: make latency-budget
+
+      - name: keyterms purity
+        if: ${{ !cancelled() }}
+        run: make keyterms-purity
+
+      - name: the held-out set is still sealed
+        if: ${{ !cancelled() }}
+        run: make heldout-seal
+
+      - name: every offline figure reproduces
+        if: ${{ !cancelled() }}
+        run: make honest

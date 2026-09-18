@@ -1,4 +1,11 @@
 import { ConfirmationMode, type FieldName, SpellOutStyle } from "@/domain"
+import {
+  CANCELLING,
+  CONFIRMING,
+  DENYING,
+  leadsWith,
+  normalizeAnswer,
+} from "./answer-vocabulary"
 
 export const ReadBackState = {
   Idle: "idle",
@@ -7,6 +14,7 @@ export const ReadBackState = {
   Failed: "failed",
   SpellOut: "spell_out",
   Escalated: "escalated",
+  Cancelled: "cancelled",
 } as const
 
 export type ReadBackState = (typeof ReadBackState)[keyof typeof ReadBackState]
@@ -14,10 +22,11 @@ export type ReadBackState = (typeof ReadBackState)[keyof typeof ReadBackState]
 export const READ_BACK_STATE_LABEL: Readonly<Record<ReadBackState, string>> = Object.freeze({
   idle: "No read-back in flight",
   awaiting_confirmation: "Waiting for the caller to confirm aloud",
-  matched: "Confirmed aloud and written",
+  matched: "Confirmed aloud, pending the server's write",
   failed: "The caller did not confirm it",
   spell_out: "Taking it one character at a time",
   escalated: "Handed to a pharmacist",
+  cancelled: "The caller called the read-back off",
 })
 
 export type ReadBackEvent =
@@ -54,46 +63,65 @@ export function initialContext(overrides: Partial<ReadBackContext> = {}): ReadBa
   }
 }
 
-const AFFIRMATIVE = [
-  "yes",
-  "yeah",
-  "yep",
-  "correct",
-  "that is right",
-  "thats right",
-  "right",
-  "confirmed",
-  "affirmative",
-]
-
-const NEGATIVE = ["no", "nope", "negative", "wrong", "incorrect", "not right"]
-
-function normalize(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
+function letters(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]/g, "")
 }
 
-export type HeardVerdict = "affirmed" | "denied" | "restated" | "unclear"
+export function repeatsExpectedValue(heard: string, expected: string): boolean {
+  const target = letters(expected)
+  if (target.length < 3) {
+    return false
+  }
+  return letters(heard) === target
+}
 
-export function classifyHeard(text: string, expectedValue: string): HeardVerdict {
-  const normalized = normalize(text)
-  if (normalized.length === 0) {
-    return "unclear"
-  }
-  if (NEGATIVE.some((token) => normalized === token || normalized.startsWith(`${token} `))) {
-    return "denied"
-  }
-  if (AFFIRMATIVE.some((token) => normalized === token || normalized.startsWith(`${token} `))) {
+export type HeardVerdict = "affirmed" | "denied" | "cancelled" | "unclear"
+
+export function classifyHeard(text: string): HeardVerdict {
+  const normalized = normalizeAnswer(text)
+  if (leadsWith(normalized, CONFIRMING)) {
     return "affirmed"
   }
-  const expected = normalize(expectedValue)
-  if (expected.length > 0 && normalized.includes(expected)) {
-    return "restated"
+  if (leadsWith(normalized, DENYING)) {
+    return "denied"
+  }
+  if (leadsWith(normalized, CANCELLING)) {
+    return "cancelled"
   }
   return "unclear"
+}
+
+export const OPEN_TO_ANSWER: readonly ReadBackState[] = Object.freeze([
+  ReadBackState.AwaitingConfirmation,
+  ReadBackState.SpellOut,
+])
+
+function afterHearing(context: ReadBackContext, text: string): ReadBackContext {
+  if (!OPEN_TO_ANSWER.includes(context.state)) {
+    return context
+  }
+  const verdict = classifyHeard(text)
+  if (verdict === "cancelled") {
+    return { ...context, state: ReadBackState.Cancelled, heard: text }
+  }
+  const spelledBack =
+    context.state === ReadBackState.SpellOut &&
+    repeatsExpectedValue(text, context.expectedValue)
+  if (verdict === "affirmed" || spelledBack) {
+    return {
+      ...context,
+      state: ReadBackState.Matched,
+      heard: text,
+      confirmationMode:
+        context.state === ReadBackState.SpellOut
+          ? ConfirmationMode.SpellOut
+          : ConfirmationMode.ReadBack,
+    }
+  }
+  if (context.attempts >= context.maxAttempts) {
+    return { ...context, state: ReadBackState.Escalated, heard: text }
+  }
+  return { ...context, state: ReadBackState.Failed, heard: text }
 }
 
 export function reduceReadBack(
@@ -110,34 +138,13 @@ export function reduceReadBack(
         heard: null,
         attempts: context.attempts + 1,
       }
-    case "heard": {
-      if (
-        context.state !== ReadBackState.AwaitingConfirmation &&
-        context.state !== ReadBackState.SpellOut
-      ) {
-        return context
-      }
-      const verdict = classifyHeard(event.text, context.expectedValue)
-      if (verdict === "affirmed" || verdict === "restated") {
-        return {
-          ...context,
-          state: ReadBackState.Matched,
-          heard: event.text,
-          confirmationMode:
-            context.state === ReadBackState.SpellOut
-              ? ConfirmationMode.SpellOut
-              : ConfirmationMode.ReadBack,
-        }
-      }
-      if (context.attempts >= context.maxAttempts) {
-        return { ...context, state: ReadBackState.Escalated, heard: event.text }
-      }
-      return { ...context, state: ReadBackState.Failed, heard: event.text }
-    }
+    case "heard":
+      return afterHearing(context, event.text)
     case "enter_spell_out":
       if (
         context.state === ReadBackState.Matched ||
-        context.state === ReadBackState.Escalated
+        context.state === ReadBackState.Escalated ||
+        context.state === ReadBackState.Cancelled
       ) {
         return context
       }

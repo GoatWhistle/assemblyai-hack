@@ -1,7 +1,7 @@
 import type { z } from "zod"
 import { ReadbackError, ToolAuthError } from "@/domain"
 import { assertToolSecret } from "./auth"
-import { fitsToolLimit, type ToolPayload } from "./respond"
+import { argumentRefusal, fitsToolLimit, type ToolPayload } from "./respond"
 
 export type ToolResult = {
   readonly status: number
@@ -31,16 +31,7 @@ export async function runTool<T>(
 
   const parsed = schema.safeParse(body)
   if (!parsed.success) {
-    const first = parsed.error.issues[0]
-    return {
-      status: 400,
-      payload: {
-        error:
-          first === undefined
-            ? "invalid arguments"
-            : `${first.path.join(".")}: ${first.message}`,
-      },
-    }
+    return { status: 400, payload: argumentRefusal(parsed.error.issues) }
   }
 
   try {

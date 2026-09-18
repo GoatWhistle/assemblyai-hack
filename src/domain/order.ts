@@ -47,6 +47,15 @@ export function setField(order: Order, value: ConfirmedValue): Order {
   return Object.freeze({ ...order, fields })
 }
 
+export function withdrawField(order: Order, field: FieldName): Order {
+  if (!order.fields.has(field)) {
+    return order
+  }
+  const fields = new Map(order.fields)
+  fields.delete(field)
+  return Object.freeze({ ...order, fields })
+}
+
 export function abortField(order: Order, field: FieldName): Order {
   if (order.abortedFields.includes(field)) {
     return order

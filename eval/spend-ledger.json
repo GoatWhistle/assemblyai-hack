@@ -1,0 +1,12 @@
+{
+  "ratesCheckedOn": "2026-09-17",
+  "ratesSource": "https://www.assemblyai.com/pricing",
+  "balanceObservations": [
+    {
+      "on": "2026-09-17",
+      "availableUsd": 149.93,
+      "method": "read by a human off the AssemblyAI dashboard billing page and typed in here"
+    }
+  ],
+  "runs": []
+}

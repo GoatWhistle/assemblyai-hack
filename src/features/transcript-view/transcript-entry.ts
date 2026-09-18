@@ -1,6 +1,6 @@
 import type { WordSpan } from "@/domain"
 
-export type TranscriptSpeaker = "caller" | "agent"
+type TranscriptSpeaker = "caller" | "agent"
 
 export type TranscriptEntry = {
   readonly id: string

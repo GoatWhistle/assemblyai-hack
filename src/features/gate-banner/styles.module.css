@@ -14,19 +14,21 @@
   --banner-surface: var(--state-accepted-surface);
   --banner-line: var(--state-accepted-line);
   --banner-ink: var(--state-accepted-ink);
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .asking {
   --banner-surface: var(--state-asking-surface);
   --banner-line: var(--state-asking-line);
   --banner-ink: var(--state-asking-ink);
+  animation: var(--keyframes-flag) var(--dur-deliberate) var(--ease-out-expo) both;
 }
 
 .lasa {
-  --banner-surface: var(--state-lasa-surface);
+  --banner-surface: var(--surface-panel);
   --banner-line: var(--state-lasa-line);
   --banner-ink: var(--state-lasa-ink);
-  border-width: 2px;
+  animation: var(--keyframes-flag-emphatic) var(--dur-emphatic) var(--ease-out-expo) both;
 }
 
 .escalated {
@@ -34,12 +36,14 @@
   --banner-line: var(--state-escalated-line);
   --banner-ink: var(--state-escalated-ink);
   border-width: 2px;
+  animation: var(--keyframes-flag) var(--dur-deliberate) var(--ease-out-expo) both;
 }
 
 .aborted {
   --banner-surface: var(--state-aborted-surface);
   --banner-line: var(--state-aborted-line);
   --banner-ink: var(--state-aborted-ink);
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .top {
@@ -92,4 +96,44 @@
   color: var(--text-secondary);
   line-height: var(--leading-relaxed);
   max-width: var(--measure-prose);
+}
+
+.recovery {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--banner-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-raised);
+  animation: var(--keyframes-fade-rise) var(--dur-slow) var(--ease-out-quart) both;
+  animation-delay: var(--dur-fast);
+}
+
+.recoveryLabel {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.recoveryStep {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--banner-ink);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+.recoveryDetail {
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-width: var(--measure-prose);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery {
+    animation: none;
+  }
 }

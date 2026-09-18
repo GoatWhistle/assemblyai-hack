@@ -15,7 +15,7 @@
 }
 
 .dialog[open] {
-  animation: readback-fade-rise var(--dur-base) var(--ease-out-quart);
+  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
 }
 
 .head {

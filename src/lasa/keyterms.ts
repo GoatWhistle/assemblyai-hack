@@ -1,13 +1,13 @@
 export const KEYTERMS_MAX = 100
 
-export const CLINIC_TERMS: readonly string[] = [
+const CLINIC_TERMS: readonly string[] = [
   "Mercy Family Clinic",
   "Northside Pharmacy",
   "Lakeview Medical Group",
   "Riverbend Health Center",
 ]
 
-export const PRESCRIBER_TERMS: readonly string[] = [
+const PRESCRIBER_TERMS: readonly string[] = [
   "Doctor Alvarez",
   "Doctor Whitfield",
   "Doctor Okonkwo",
@@ -18,7 +18,7 @@ export const PRESCRIBER_TERMS: readonly string[] = [
   "Physician Assistant Doyle",
 ]
 
-export const FORM_TERMS: readonly string[] = [
+const FORM_TERMS: readonly string[] = [
   "tablet",
   "tablets",
   "capsule",
@@ -33,7 +33,7 @@ export const FORM_TERMS: readonly string[] = [
   "suppository",
 ]
 
-export const UNIT_TERMS: readonly string[] = [
+const UNIT_TERMS: readonly string[] = [
   "milligram",
   "milligrams",
   "microgram",
@@ -48,7 +48,7 @@ export const UNIT_TERMS: readonly string[] = [
   "milliequivalent",
 ]
 
-export const ROUTE_TERMS: readonly string[] = [
+const ROUTE_TERMS: readonly string[] = [
   "by mouth",
   "oral",
   "orally",
@@ -65,7 +65,7 @@ export const ROUTE_TERMS: readonly string[] = [
   "transdermal",
 ]
 
-export const DICTATION_TERMS: readonly string[] = [
+const DICTATION_TERMS: readonly string[] = [
   "NPI",
   "DEA",
   "refills",
@@ -84,7 +84,7 @@ export const DICTATION_TERMS: readonly string[] = [
   "at bedtime",
 ]
 
-export const NATO_TERMS: readonly string[] = [
+const NATO_TERMS: readonly string[] = [
   "Alfa",
   "Bravo",
   "Charlie",

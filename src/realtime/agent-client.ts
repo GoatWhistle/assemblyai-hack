@@ -3,7 +3,7 @@ import { type CloseExplanation, explainClose, isAlertWorthy } from "./close-code
 import { AGENT_TOKEN_ROUTE, agentSocketUrl, mintToken } from "./tokens"
 import { type Transport, type TransportFactory, webSocketTransport } from "./transport"
 
-export const SESSION_END_TIMEOUT_MS = 4000
+const SESSION_END_TIMEOUT_MS = 4000
 
 export type AgentSessionConfig = {
   readonly agentId?: string
@@ -118,6 +118,12 @@ export class AgentClient {
   sendAudio(samples: Int16Array, encode: (bytes: Uint8Array) => string): void {
     const bytes = new Uint8Array(samples.buffer, samples.byteOffset, samples.byteLength)
     this.transport?.send(JSON.stringify({ type: "input.audio", audio: encode(bytes) }))
+  }
+
+  updateTurnDetection(patch: Record<string, unknown>): void {
+    this.transport?.send(
+      JSON.stringify({ type: "session.update", session: { input: { ...patch } } }),
+    )
   }
 
   requestReply(instructions?: string): void {

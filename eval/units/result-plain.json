@@ -1,0 +1,114 @@
+{
+  "measuredAt": "2026-09-16T15:16:57.681Z",
+  "spacingMs": 24000,
+  "outcomes": [
+    {
+      "expected": "15 mg",
+      "transcript": "The strength is 15 mg.",
+      "normalised": "15 mg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.768882,
+      "closeCode": 1000
+    },
+    {
+      "expected": "15 mcg",
+      "transcript": "The strength is 15 micrograms.",
+      "normalised": "15 mcg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.846799,
+      "closeCode": 1000
+    },
+    {
+      "expected": "15 mL",
+      "transcript": "The strength is 15 milliliters.",
+      "normalised": "15 mL",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.930209,
+      "closeCode": 1000
+    },
+    {
+      "expected": "50 mg",
+      "transcript": "The strength is 50 mg.",
+      "normalised": "50 mg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.859198,
+      "closeCode": 1000
+    },
+    {
+      "expected": "50 mcg",
+      "transcript": "The strength is 50 micrograms.",
+      "normalised": "50 mcg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.967531,
+      "closeCode": 1000
+    },
+    {
+      "expected": "50 mL",
+      "transcript": "The strength is 50 milliliters.",
+      "normalised": "50 mL",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.895955,
+      "closeCode": 1000
+    },
+    {
+      "expected": "100 mg",
+      "transcript": "The strength is 100 mg.",
+      "normalised": "100 mg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.781801,
+      "closeCode": 1000
+    },
+    {
+      "expected": "100 mcg",
+      "transcript": "The strength is 100 micrograms.",
+      "normalised": "100 mcg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.93274,
+      "closeCode": 1000
+    },
+    {
+      "expected": "100 mL",
+      "transcript": "The strength is 100 milliliters.",
+      "normalised": "100 mL",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.928055,
+      "closeCode": 1000
+    },
+    {
+      "expected": "500 mg",
+      "transcript": "The strength is 500 mg.",
+      "normalised": "500 mg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.866731,
+      "closeCode": 1000
+    },
+    {
+      "expected": "500 mcg",
+      "transcript": "The strength is 500 micrograms.",
+      "normalised": "500 mcg",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.950266,
+      "closeCode": 1000
+    },
+    {
+      "expected": "500 mL",
+      "transcript": "The strength is 500 milliliters.",
+      "normalised": "500 mL",
+      "correct": true,
+      "unitClassWrong": false,
+      "minConfidence": 0.883518,
+      "closeCode": 1000
+    }
+  ]
+}

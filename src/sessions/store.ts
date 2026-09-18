@@ -1,5 +1,6 @@
 import type { SessionRecord, SessionSummary } from "@/domain"
 import { ReasonCode } from "@/domain"
+import { type SessionOrigin, sessionOriginOf } from "./origin"
 
 export type StoredSession = SessionRecord & {
   readonly orderId: string | null
@@ -9,7 +10,7 @@ export type StoredSession = SessionRecord & {
 export type SessionStore = {
   put(session: StoredSession): Promise<void>
   get(sessionId: string): Promise<StoredSession | null>
-  list(): Promise<readonly SessionSummary[]>
+  list(origin?: SessionOrigin): Promise<readonly SessionSummary[]>
   backend(): "blob" | "memory"
 }
 
@@ -17,6 +18,7 @@ export function summarize(session: StoredSession): SessionSummary {
   const decisions = session.decisions
   return {
     sessionId: session.sessionId,
+    origin: sessionOriginOf(session.origin),
     startedAt: session.startedAt,
     endedAt: session.endedAt,
     decisionCount: decisions.length,
@@ -35,8 +37,9 @@ export function createMemoryStore(): SessionStore {
     async get(sessionId) {
       return sessions.get(sessionId) ?? null
     },
-    async list() {
+    async list(origin) {
       return [...sessions.values()]
+        .filter((session) => origin === undefined || sessionOriginOf(session.origin) === origin)
         .sort((a, b) => b.startedAt.localeCompare(a.startedAt))
         .map(summarize)
     },

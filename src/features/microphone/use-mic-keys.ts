@@ -1,6 +1,8 @@
 import { useEffect } from "react"
 
 const EDITABLE = /^(INPUT|TEXTAREA|SELECT)$/
+const ACTIVATES_ON_SPACE = 'button, a[href], [role="button"], [role="switch"], summary'
+const DIALOG = '[role="dialog"], dialog[open]'
 
 export const MicKeyAction = {
   Ignore: "ignore",
@@ -21,7 +23,24 @@ export type MicKeyOptions = MicKeyState & {
 }
 
 function isEditing(target: EventTarget | null): boolean {
-  return target instanceof HTMLElement && EDITABLE.test(target.tagName)
+  if (!(target instanceof HTMLElement)) {
+    return false
+  }
+  return EDITABLE.test(target.tagName) || target.isContentEditable
+}
+
+export function ownsSpace(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false
+  }
+  return target.closest(ACTIVATES_ON_SPACE) !== null
+}
+
+export function insideDialog(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false
+  }
+  return target.closest(DIALOG) !== null
 }
 
 export function micKeyAction(
@@ -42,6 +61,12 @@ export function useMicKeys({ busy, open, onStart, onStop }: MicKeyOptions): void
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (isEditing(event.target)) {
+        return
+      }
+      if (event.code === "Space" && ownsSpace(event.target)) {
+        return
+      }
+      if (event.key === "Escape" && insideDialog(event.target)) {
         return
       }
       const action = micKeyAction(event.key, event.code, { busy, open })

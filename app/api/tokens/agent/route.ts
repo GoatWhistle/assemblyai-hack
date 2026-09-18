@@ -1,10 +1,30 @@
 import { NextResponse } from "next/server"
+import {
+  admitAgainstRateBrake,
+  allowlistedTokenFields,
+  freshRateBrakeState,
+  RATE_BRAKE_HONESTY_NOTE,
+  tokenLifetime,
+  vendorTokenOf,
+} from "@/domain"
 
 const AGENT_TOKEN_URL = "https://agents.assemblyai.com/v1/token"
 
 export const dynamic = "force-dynamic"
 
+const rateBrakeState = freshRateBrakeState()
+
 export async function GET(): Promise<NextResponse> {
+  const brake = admitAgainstRateBrake({ state: rateBrakeState, nowMs: Date.now() })
+  if (!brake.allowed) {
+    return NextResponse.json(
+      {
+        error: `this instance has minted too many agent tokens in the last window; ${RATE_BRAKE_HONESTY_NOTE}`,
+      },
+      { status: 429, headers: { "retry-after": String(Math.ceil(brake.retryAfterMs / 1000)) } },
+    )
+  }
+
   const key = process.env.ASSEMBLYAI_API_KEY
   if (key === undefined || key.trim().length === 0) {
     return NextResponse.json(
@@ -13,8 +33,9 @@ export async function GET(): Promise<NextResponse> {
     )
   }
 
-  const expiresIn = Number(process.env.TOKEN_EXPIRES_IN_SECONDS ?? 60)
-  const maxSession = Number(process.env.MAX_SESSION_DURATION_SECONDS ?? 900)
+  const { expiresInSeconds: expiresIn, maxSessionDurationSeconds: maxSession } = tokenLifetime(
+    process.env,
+  )
 
   const url = new URL(AGENT_TOKEN_URL)
   url.searchParams.set("expires_in_seconds", String(expiresIn))
@@ -32,8 +53,8 @@ export async function GET(): Promise<NextResponse> {
     )
   }
 
-  const body = (await response.json()) as { token?: string }
-  if (body.token === undefined) {
+  const token = vendorTokenOf(await response.json())
+  if (token === undefined) {
     return NextResponse.json(
       { error: "the agent token response had no token" },
       { status: 502 },
@@ -42,10 +63,12 @@ export async function GET(): Promise<NextResponse> {
 
   return NextResponse.json(
     {
-      token: body.token,
+      ...allowlistedTokenFields({
+        token,
+        expiresInSeconds: expiresIn,
+        maxSessionDurationSeconds: maxSession,
+      }),
       agentId: process.env.ASSEMBLYAI_AGENT_ID ?? null,
-      expiresInSeconds: expiresIn,
-      maxSessionDurationSeconds: maxSession,
     },
     { headers: { "cache-control": "no-store" } },
   )

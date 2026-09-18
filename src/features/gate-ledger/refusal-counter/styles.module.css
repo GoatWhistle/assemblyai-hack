@@ -1,0 +1,114 @@
+.headline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line-hairline);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-5);
+  padding-top: var(--space-4);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  min-width: 0;
+}
+
+.groupTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.groupBody {
+  font-size: var(--text-2xs);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+  max-width: var(--measure-narrow);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.rows {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.override {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--state-lasa-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--state-lasa-surface);
+  animation: var(--keyframes-flag) var(--dur-slow) var(--ease-out-quart) both;
+}
+
+.overrideTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+}
+
+.overrideCount {
+  font-family: var(--font-data);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--state-lasa-ink);
+}
+
+.overrideBody {
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-width: var(--measure-prose);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.stance {
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-width: var(--measure-prose);
+  margin: var(--space-5) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-hairline);
+  text-wrap: pretty;
+}
+
+.method {
+  font-size: var(--text-2xs);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+  max-width: var(--measure-prose);
+  margin: var(--space-4) 0 0;
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .override {
+    animation: none;
+  }
+}
+
+@media (max-width: 34rem) {
+  .headline {
+    gap: var(--space-4);
+  }
+
+  .split {
+    gap: var(--space-5);
+  }
+}

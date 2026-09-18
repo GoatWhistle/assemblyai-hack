@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
-import { SessionFault, SessionPhase } from "@/features/intake/session-status"
+import { isMicrophoneFault, SessionFault, SessionPhase } from "@/features/intake/session-status"
 import {
   BAR_COUNT,
   barHeights,
@@ -51,6 +51,45 @@ describe("micStateFor", () => {
     expect(micStateFor(SessionPhase.Live, true, SessionFault.MicrophoneDenied)).toBe(
       MicState.Blocked,
     )
+  })
+
+  it("blocks on every one of the four distinct microphone faults, not only on denial", () => {
+    for (const fault of [
+      SessionFault.MicrophoneDenied,
+      SessionFault.MicrophoneAbsent,
+      SessionFault.MicrophoneBusy,
+      SessionFault.InsecureContext,
+    ]) {
+      expect(micStateFor(SessionPhase.Blocked, false, fault)).toBe(MicState.Blocked)
+    }
+  })
+})
+
+describe("isMicrophoneFault", () => {
+  it("recognises all four microphone-class faults", () => {
+    for (const fault of [
+      SessionFault.MicrophoneDenied,
+      SessionFault.MicrophoneAbsent,
+      SessionFault.MicrophoneBusy,
+      SessionFault.InsecureContext,
+    ]) {
+      expect(isMicrophoneFault(fault)).toBe(true)
+    }
+  })
+
+  it("excludes faults that have nothing to do with getUserMedia", () => {
+    for (const fault of [
+      SessionFault.TokenFailed,
+      SessionFault.SocketDropped,
+      SessionFault.CreditsExhausted,
+      SessionFault.ConcurrencyReached,
+    ]) {
+      expect(isMicrophoneFault(fault)).toBe(false)
+    }
+  })
+
+  it("treats no fault as not a microphone fault", () => {
+    expect(isMicrophoneFault(null)).toBe(false)
   })
 
   it("marks only the transitional states busy", () => {

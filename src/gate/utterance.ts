@@ -25,6 +25,11 @@ export function spokenField(field: FieldName): string {
   return SPOKEN_FIELD[field] ?? field.replace(/_/g, " ")
 }
 
+export function spokenFieldLeading(field: FieldName): string {
+  const spoken = spokenField(field)
+  return spoken.charAt(0).toUpperCase() + spoken.slice(1)
+}
+
 export function escalateUtterance(): string {
   return "I want to make sure we get this exactly right. I am bringing a pharmacist onto the line to take this field."
 }
@@ -44,11 +49,32 @@ export function checksumUtterance(
   policy: FieldPolicy,
 ): string {
   const spelled = spellForPolicy(String(value), policy)
-  return `The ${spokenField(field)} I have, ${spelled}, does not pass its check, so one character is off. Please read it back to me one character at a time.`
+  return `${spokenFieldLeading(field)} I have, ${spelled}, does not pass its check, so one character is off. Please read it back to me one character at a time.`
+}
+
+export function ruleForbidsUtterance(field: FieldName, detail: string): string {
+  return `${detail}. I cannot take ${spokenField(field)} as heard. Shall I record none?`
+}
+
+export function recoveredNames(candidate: FieldCandidate): readonly string[] {
+  const named = candidate.verdict.evidence.skeletonNeighbours
+  if (typeof named !== "string" || named.trim().length === 0) {
+    return []
+  }
+  return named
+    .split(",")
+    .map((name) => name.trim())
+    .filter((name) => name.length > 0)
 }
 
 export function catalogUtterance(candidate: FieldCandidate): string {
-  return `I do not find "${candidate.rawValue}" in the drug directory. Could you say ${spokenField(candidate.field)} again, or spell the first few letters?`
+  const opening = `I do not find "${candidate.rawValue}" in the drug directory.`
+  const closing = `Could you say ${spokenField(candidate.field)} again, or spell the first few letters?`
+  const recovered = recoveredNames(candidate)
+  if (recovered.length === 0) {
+    return `${opening} ${closing}`
+  }
+  return `${opening} The closest name I do hold is ${recovered.join(" or ")}, which differs only in its vowels. Did you mean ${recovered.join(" or ")}, or should I take it again?`
 }
 
 export function comboUtterance(detail: string): string {

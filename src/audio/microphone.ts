@@ -7,9 +7,9 @@ import {
   STT_SAMPLE_RATE,
 } from "./resample"
 
-export const CAPTURE_SAMPLE_RATE = 48000
-export const CHUNK_MS = 100
-export const WORKLET_URL = "/worklets/capture-processor.js"
+const CAPTURE_SAMPLE_RATE = 48000
+const CHUNK_MS = 100
+const WORKLET_URL = "/worklets/capture-processor.js"
 
 export const MIC_CONSTRAINTS: MediaStreamConstraints = {
   audio: {
@@ -27,13 +27,62 @@ export type CaptureSinks = {
   readonly onLevel?: (peak: number) => void
 }
 
+export const MicrophoneFailureReason = {
+  Denied: "denied",
+  NoDevice: "no_device",
+  DeviceBusy: "device_busy",
+  InsecureContext: "insecure_context",
+  Unknown: "unknown",
+} as const
+
+export type MicrophoneFailureReason =
+  (typeof MicrophoneFailureReason)[keyof typeof MicrophoneFailureReason]
+
+const DENIED_NAMES = new Set(["NotAllowedError", "PermissionDeniedError", "SecurityError"])
+const NO_DEVICE_NAMES = new Set([
+  "NotFoundError",
+  "DevicesNotFoundError",
+  "OverconstrainedError",
+])
+const BUSY_NAMES = new Set(["NotReadableError", "TrackStartError"])
+
+function nameOf(cause: unknown): string {
+  if (typeof cause !== "object" || cause === null) {
+    return ""
+  }
+  const named = cause as { name?: unknown }
+  return typeof named.name === "string" ? named.name : ""
+}
+
+function reasonFor(cause: unknown, secureContextLost: boolean): MicrophoneFailureReason {
+  if (secureContextLost) {
+    return MicrophoneFailureReason.InsecureContext
+  }
+  const name = nameOf(cause)
+  if (DENIED_NAMES.has(name)) {
+    return MicrophoneFailureReason.Denied
+  }
+  if (NO_DEVICE_NAMES.has(name)) {
+    return MicrophoneFailureReason.NoDevice
+  }
+  if (BUSY_NAMES.has(name)) {
+    return MicrophoneFailureReason.DeviceBusy
+  }
+  return MicrophoneFailureReason.Unknown
+}
+
 export class MicrophonePermissionError extends Error {
   readonly code = "MIC_PERMISSION_DENIED"
+  readonly reason: MicrophoneFailureReason
 
-  constructor(cause: unknown) {
+  constructor(
+    cause: unknown,
+    reason: MicrophoneFailureReason = MicrophoneFailureReason.Unknown,
+  ) {
     super("the microphone permission was refused or no input device is available")
     this.name = "MicrophonePermissionError"
     this.cause = cause
+    this.reason = reason
   }
 }
 
@@ -45,13 +94,17 @@ export type MicrophoneCapture = {
 
 export async function requestMicrophone(): Promise<MediaStream> {
   const media = globalThis.navigator?.mediaDevices
+  const insecure = globalThis.window?.isSecureContext === false
   if (media === undefined) {
-    throw new MicrophonePermissionError(new Error("mediaDevices is unavailable"))
+    throw new MicrophonePermissionError(
+      new Error("mediaDevices is unavailable"),
+      reasonFor(null, insecure),
+    )
   }
   try {
     return await media.getUserMedia(MIC_CONSTRAINTS)
   } catch (cause) {
-    throw new MicrophonePermissionError(cause)
+    throw new MicrophonePermissionError(cause, reasonFor(cause, insecure))
   }
 }
 

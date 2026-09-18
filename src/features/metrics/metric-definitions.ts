@@ -83,28 +83,3 @@ export type CloseCodeTally = {
   readonly count: number
   readonly alertWorthy: boolean
 }
-
-export const CLOSE_CODE_ROWS: readonly CloseCodeTally[] = [
-  {
-    code: 3007,
-    label: "Malformed chunks",
-    meaning: "A chunk fell outside the 50-1000 ms window the socket accepts.",
-    count: 0,
-    alertWorthy: false,
-  },
-  {
-    code: 3008,
-    label: "Three-hour cap",
-    meaning:
-      "A streaming session hit its automatic three-hour close and was billed for the whole time the socket stayed open.",
-    count: 0,
-    alertWorthy: true,
-  },
-  {
-    code: 3009,
-    label: "Session limit exceeded",
-    meaning: "More than five new sessions were opened inside one minute on the free tier.",
-    count: 0,
-    alertWorthy: true,
-  },
-]

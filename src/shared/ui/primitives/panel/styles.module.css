@@ -25,10 +25,6 @@
   border-bottom: 1px solid var(--line-hairline);
 }
 
-.headless {
-  border-bottom: none;
-}
-
 .title {
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);

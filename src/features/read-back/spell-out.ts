@@ -29,7 +29,7 @@ export const NATO: Readonly<Record<string, string>> = Object.freeze({
   Z: "Zulu",
 })
 
-export const DIGIT_WORDS: Readonly<Record<string, string>> = Object.freeze({
+const DIGIT_WORDS: Readonly<Record<string, string>> = Object.freeze({
   "0": "zero",
   "1": "one",
   "2": "two",

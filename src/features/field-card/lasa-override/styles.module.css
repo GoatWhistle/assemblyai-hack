@@ -4,11 +4,12 @@
   padding: var(--space-4) var(--space-5);
   background-color: var(--state-lasa-surface);
   border-bottom: 1px solid var(--state-lasa-line);
-  animation: readback-flag var(--dur-deliberate) var(--ease-out-expo) both;
+  animation: var(--keyframes-flag-emphatic) var(--dur-emphatic) var(--ease-out-expo) both;
 }
 
 .overrideHead {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-md);

@@ -1,0 +1,96 @@
+{
+    "builtAt":  "2026-09-16T15:10:27.727Z",
+    "method":  "every combination of four amounts and three unit classes spoken in a fixed carrier phrase, scored against the same normaliser the product uses",
+    "caveat":  "Synthetic speech. The rate is a property of the recognizer against a synthesizer, not against a prescriber on a phone.",
+    "voices":  [
+                   "Microsoft David Desktop",
+                   "Microsoft Zira Desktop"
+               ],
+    "count":  12,
+    "items":  [
+                  {
+                      "file":  "eval/units/audio/000-15mg.wav",
+                      "spoken":  "15 mg",
+                      "carrier":  "The strength is 15 milligrams.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/001-15mcg.wav",
+                      "spoken":  "15 mcg",
+                      "carrier":  "The strength is 15 micrograms.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/002-15mL.wav",
+                      "spoken":  "15 mL",
+                      "carrier":  "The strength is 15 milliliters.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/003-50mg.wav",
+                      "spoken":  "50 mg",
+                      "carrier":  "The strength is 50 milligrams.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/004-50mcg.wav",
+                      "spoken":  "50 mcg",
+                      "carrier":  "The strength is 50 micrograms.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/005-50mL.wav",
+                      "spoken":  "50 mL",
+                      "carrier":  "The strength is 50 milliliters.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/006-100mg.wav",
+                      "spoken":  "100 mg",
+                      "carrier":  "The strength is 100 milligrams.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/007-100mcg.wav",
+                      "spoken":  "100 mcg",
+                      "carrier":  "The strength is 100 micrograms.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/008-100mL.wav",
+                      "spoken":  "100 mL",
+                      "carrier":  "The strength is 100 milliliters.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/009-500mg.wav",
+                      "spoken":  "500 mg",
+                      "carrier":  "The strength is 500 milligrams.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/010-500mcg.wav",
+                      "spoken":  "500 mcg",
+                      "carrier":  "The strength is 500 micrograms.",
+                      "voice":  "Microsoft David Desktop",
+                      "entityType":  "strength"
+                  },
+                  {
+                      "file":  "eval/units/audio/011-500mL.wav",
+                      "spoken":  "500 mL",
+                      "carrier":  "The strength is 500 milliliters.",
+                      "voice":  "Microsoft Zira Desktop",
+                      "entityType":  "strength"
+                  }
+              ]
+}

@@ -1,6 +1,7 @@
 import { z } from "zod"
+import { isUsableSessionId } from "@/domain"
 
-export const MAX_IDENTIFIER_CHARS = 128
+const MAX_IDENTIFIER_CHARS = 128
 export const MAX_VALUE_CHARS = 256
 export const MAX_UTTERANCE_CHARS = 1024
 
@@ -17,6 +18,11 @@ function bounded(max: number) {
 }
 
 export const identifierField = () => bounded(MAX_IDENTIFIER_CHARS)
+
+export const sessionIdField = () =>
+  bounded(MAX_IDENTIFIER_CHARS).refine(isUsableSessionId, {
+    message: "a session id is letters, digits, dot, underscore or hyphen, and never ..",
+  })
 
 export const spokenValueField = () => bounded(MAX_VALUE_CHARS)
 

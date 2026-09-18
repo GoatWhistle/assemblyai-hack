@@ -1,5 +1,6 @@
 import { FIELD_LABEL } from "@/features/intake/field-language"
 import { EmptyState } from "@/shared/ui/states/empty-state"
+import { type FastPath, FastPathAction, NO_FAST_PATH } from "../fast-path"
 import {
   READ_BACK_STATE_LABEL,
   type ReadBackContext,
@@ -22,6 +23,7 @@ const TRACK_LABEL: Readonly<Record<ReadBackState, string>> = Object.freeze({
   failed: "failed",
   spell_out: "spell-out",
   escalated: "escalated",
+  cancelled: "cancelled",
 })
 
 function stepClass(step: ReadBackState, current: ReadBackState): string {
@@ -42,9 +44,10 @@ function stepClass(step: ReadBackState, current: ReadBackState): string {
 
 export type ReadBackPanelProps = {
   readonly context: ReadBackContext
+  readonly fastPath?: FastPath
 }
 
-export function ReadBackPanel({ context }: ReadBackPanelProps) {
+export function ReadBackPanel({ context, fastPath = NO_FAST_PATH }: ReadBackPanelProps) {
   if (context.state === ReadBackState.Idle || context.field === null) {
     return (
       <EmptyState
@@ -80,6 +83,17 @@ export function ReadBackPanel({ context }: ReadBackPanelProps) {
       <output className={styles.status} aria-live="polite">
         {READ_BACK_STATE_LABEL[context.state]} &mdash; {FIELD_LABEL[context.field]}
       </output>
+
+      {fastPath.action === FastPathAction.None ? null : (
+        <output
+          key={`${context.field}:${context.attempts}`}
+          className={styles.localNote}
+          aria-live="polite"
+        >
+          <span className={styles.localLabel}>answered locally, no model round trip</span>
+          {fastPath.label}
+        </output>
+      )}
 
       <div className={styles.exchange}>
         <div className={styles.said}>

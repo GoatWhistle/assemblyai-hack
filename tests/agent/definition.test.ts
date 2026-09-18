@@ -46,8 +46,12 @@ describe("agent definition", () => {
     expect(definition.model).not.toBe("gpt-oss-120b")
   })
 
-  it("keeps min silence strictly below max silence", () => {
-    expect(TURN_DETECTION.min_silence).toBeLessThan(TURN_DETECTION.max_silence)
+  it("leaves the silence bounds to the vendor rather than fixing them", () => {
+    const sent = TURN_DETECTION as Record<string, unknown>
+    expect(
+      Object.hasOwn(sent, "min_silence") || Object.hasOwn(sent, "max_silence"),
+      "either field disables adaptive pacing and entity-aware waiting for the rest of the session, and entity-aware waiting is what holds a turn through a dictated identifier",
+    ).toBe(false)
   })
 
   it("passes keyterms that contain no lasa checked drug name", () => {
@@ -87,5 +91,38 @@ describe("agent definition", () => {
       expect(tool.parameters.type, tool.name).toBe("object")
       expect(tool.parameters.additionalProperties, tool.name).toBe(false)
     }
+  })
+})
+
+describe("the prompt forbids collecting what the order does not need", () => {
+  it("names every category a medical intake line must never ask for", () => {
+    for (const category of [
+      "diagnosis",
+      "medical\n    history",
+      "insurance",
+      "payment card",
+      "Social Security",
+      "date of birth",
+      "home address",
+    ]) {
+      expect(
+        SYSTEM_PROMPT,
+        `a voice agent on a medical line will collect whatever it is asked to collect, and the FIELDS list says what to gather rather than what is forbidden. Without ${category.replace(/\s+/g, " ")} named explicitly, a caller who volunteers it gets it recorded`,
+      ).toContain(category)
+    }
+  })
+
+  it("covers the case where the caller offers it unprompted, which is the likely one", () => {
+    expect(
+      SYSTEM_PROMPT,
+      "a prohibition on asking is not a prohibition on recording; a caller reciting their date of birth unbidden is more likely than the agent inventing the question",
+    ).toMatch(/even if the caller offers it unprompted/)
+  })
+
+  it("tells the agent not to repeat volunteered data back", () => {
+    expect(
+      SYSTEM_PROMPT,
+      "reading it back would put it into the transcript and therefore into the session record, which is the thing the rule exists to prevent",
+    ).toMatch(/without repeating it back/)
   })
 })

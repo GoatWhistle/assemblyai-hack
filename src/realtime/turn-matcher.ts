@@ -1,7 +1,7 @@
 import { makeProvenance, type Provenance, type WordSpan, wordSpanFromTurnWord } from "@/domain"
 import type { SttTurn } from "./protocol"
 
-export const DEFAULT_MATCH_WINDOW_MS = 12000
+const DEFAULT_MATCH_WINDOW_MS = 12000
 
 export type MatchedTurn = {
   readonly turn: SttTurn
@@ -13,7 +13,7 @@ export function turnToWordSpans(turn: SttTurn): readonly WordSpan[] {
   return turn.words.map((word) => wordSpanFromTurnWord(word))
 }
 
-export function tokensOf(text: string): string[] {
+function tokensOf(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9.\s]/g, " ")

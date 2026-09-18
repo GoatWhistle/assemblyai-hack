@@ -1,0 +1,99 @@
+name: code quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: code-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  correctness:
+    name: lint, types and the structural ratchets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: lint
+        run: make lint
+
+      - name: typecheck
+        if: ${{ !cancelled() }}
+        run: make typecheck
+
+      - name: file length
+        if: ${{ !cancelled() }}
+        run: make file-length
+
+      - name: package size
+        if: ${{ !cancelled() }}
+        run: make package-size
+
+      - name: package subject
+        if: ${{ !cancelled() }}
+        run: make package-subject
+
+      - name: import cycles
+        if: ${{ !cancelled() }}
+        run: make import-cycles
+
+      - name: language
+        if: ${{ !cancelled() }}
+        run: make ascii
+
+  interface:
+    name: the rules a screenshot cannot prove
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: design tokens
+        run: make tokens
+
+      - name: token references
+        if: ${{ !cancelled() }}
+        run: make token-refs
+
+      - name: colocation
+        if: ${{ !cancelled() }}
+        run: make colocation
+
+      - name: dead css
+        if: ${{ !cancelled() }}
+        run: make css-dead
+
+      - name: contrast
+        if: ${{ !cancelled() }}
+        run: make contrast
+
+      - name: touch targets
+        if: ${{ !cancelled() }}
+        run: make touch-targets
+
+      - name: confidence is never rendered as a score
+        if: ${{ !cancelled() }}
+        run: make confidence-language

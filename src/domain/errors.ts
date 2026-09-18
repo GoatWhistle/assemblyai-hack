@@ -50,6 +50,18 @@ export class ToolAuthError extends ReadbackError {
   }
 }
 
+export class EchoTurnError extends ReadbackError {
+  constructor(message: string) {
+    super("ECHO_TURN_REJECTED", message)
+  }
+}
+
+export class SessionStorageError extends ReadbackError {
+  constructor(message: string) {
+    super("SESSION_STORAGE_UNCONFIGURED", message)
+  }
+}
+
 export class UpstreamError extends ReadbackError {
   readonly status: number
 

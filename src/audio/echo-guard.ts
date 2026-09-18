@@ -1,6 +1,6 @@
 export const ECHO_MATCH_THRESHOLD = 0.6
 
-export function normalizeUtterance(text: string): string[] {
+function normalizeUtterance(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")

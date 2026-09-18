@@ -1,7 +1,7 @@
 export const STT_TOKEN_ROUTE = "/api/tokens/stt"
 export const AGENT_TOKEN_ROUTE = "/api/tokens/agent"
-export const STT_SOCKET_URL = "wss://streaming.assemblyai.com/v3/ws"
-export const AGENT_SOCKET_URL = "wss://agents.assemblyai.com/v1/ws"
+const STT_SOCKET_URL = "wss://streaming.assemblyai.com/v3/ws"
+const AGENT_SOCKET_URL = "wss://agents.assemblyai.com/v1/ws"
 
 export class TokenMintError extends Error {
   readonly code = "TOKEN_MINT_FAILED"
@@ -14,7 +14,7 @@ export class TokenMintError extends Error {
   }
 }
 
-export type TokenResponse = { token: string }
+type TokenResponse = { token: string }
 
 export async function mintToken(route: string, signal?: AbortSignal): Promise<string> {
   const response = await fetch(route, {
@@ -33,7 +33,7 @@ export async function mintToken(route: string, signal?: AbortSignal): Promise<st
   return payload.token
 }
 
-export const STT_QUERY: Readonly<Record<string, string>> = Object.freeze({
+const STT_QUERY: Readonly<Record<string, string>> = Object.freeze({
   speech_model: "universal-3-5-pro",
   encoding: "pcm_s16le",
   sample_rate: "16000",

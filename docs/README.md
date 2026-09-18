@@ -1,146 +1,77 @@
-# Readback — голосовой приём рецептов, который доказывает, что не ослышался
+# Documentation
 
-Проект на [AssemblyAI Voice Agent Hackathon](https://lablab.ai/ai-hackathons/assemblyai-voice-agent-hackathon). Дедлайн **30 сентября 2026, 18:00 MSK**. Исследование поля собрано 11 сентября 2026.
+Readback is a voice agent that takes prescription orders and proves it did not mishear.
+Every field carries provenance: which spoken words produced the value, with millisecond
+timecodes, the recogniser confidence over those words, and the verdict of an independent
+validator. A value cannot enter the order unless a validator passed it or a human
+confirmed it aloud.
 
----
+The product's hard claim is that **high recogniser confidence does not protect against
+homophony**. The model can be certain it heard Bisoprolol while the human said
+Lisinopril. Confidence proves nothing there; a regulator-published look-alike
+sound-alike list does. So a drug name inside a published ISMP or FDA LASA pair triggers
+a mandatory re-ask **even at confidence 1.0**.
 
-## Что делаем
+This folder is flat and English. Start with whichever question you have.
 
-Голосовой агент принимает рецептурный заказ и для каждого поля хранит происхождение: какие произнесённые слова его породили (с таймкодами), насколько уверен распознаватель на этих словах, и что сказал независимый валидатор. **Значение, не прошедшее валидатор и не подтверждённое вслух, физически не может попасть в заказ** — функция записи принимает только тип `ConfirmedValue`, который нельзя сконструировать в обход шлюза.
+## What it is and why
 
-Стек: **FastAPI (Python 3.12) + React/TypeScript**.
-
-→ **[Кейс целиком](cases/readback.md)** · **[Инженерная спека](cases/readback-spec.md)**
-
-## Почему называется Readback
-
-Read-back — не метафора, а **официальное название процедуры безопасности, которую продукт автоматизирует**:
-
-- **Авиация, ICAO Annex 11 §3.7.3:** «a procedure whereby the receiving station repeats a received message or an appropriate part thereof back to the transmitting station so as to obtain confirmation of correct reception».
-- **Клиника, Joint Commission NPSG, с 2003 года:** «For verbal or telephone orders or for telephonic reporting of critical test results, verify the complete order or test result by having the person receiving the order or test result read-back the complete order or test result».
-
-Медицина заимствовала пару readback/hearback прямо из авиации. То есть мы не изобретаем протокол, а автоматизируем регуляторно обязательный шаг, который на практике пропускают (это зафиксировано ISMP). В питче это одна сильная строка.
-
-Разбор кандидатов и коллизий — [reference/naming.md](reference/naming.md).
-
-## Проблема в трёх числах
-
-Все три — от самой AssemblyAI ([разбор](assemblyai-signals.md)):
-
-| Факт | Значение |
+| File | Answers |
 |---|---|
-| Entity Error Rate у Universal-3.5 Pro Realtime | **15,31%** при WER 6,99% |
-| Успех пятиходового сценария при точности захвата 84,69% за ход | **43,6%** |
-| Тот же сценарий с шагами подтверждения | **79,1%** |
+| [case.md](case.md) | What the product is, who it is for, why read-back is the right procedure, and what the competing approaches get wrong |
+| [spec.md](spec.md) | The engineering specification: data model, gate branches, tool schemas, system prompt, metric formulas. Written against a FastAPI/SQLite design that was dropped — the logic holds, the Python does not |
+| [slides.md](slides.md) | The presentation, twenty slides, speakable as written |
 
-Последние две строки — весь бизнес-кейс. Контур подтверждения почти удваивает долю успешных транзакций, и AssemblyAI приводит его как приём, а не как готовую функцию: реализовать и измерить — наша работа.
+## What is true, and what is not
 
-Почему это не видно как ошибка: «Lisinopril» распознаётся как «Bisoprolol» — оба препарата существуют, оба правдоподобны, сигнала нет. Цитата из их статьи: *«голосовой агент — это цепочка, и LLM никак не может узнать, что его вход был неверным»*.
-
-## Почему шансы реальные
-
-На 15 сентября ([снимок](field-15sep.md)): **840 команд → 63 сдавших → серьёзных около десяти → 5 равных призовых мест.** За четыре дня поле выросло на 40%, но поверхностно: голосование стоит, 25 из 50 видимых проектов имеют 0 голосов, топ-10 не изменился вообще.
-
-Главный фильтр — доделать и сдать. Второй — не иметь дыр, на которых поле уже теряет очки:
-
-| Дыра поля | Поймано | Где смотреть |
-|---|---|---|
-| Мёртвое или неправильное демо | **12 из 45** | [demo-health.md](demo-health.md) |
-| Нет измеренной латентности | **44 из 45** | [competitors.md](competitors.md) |
-| Нет работающего CI | **45 из 45** | [stack-and-code.md](stack-and-code.md) |
-| Расхождение заявки и кода | минимум 6 | [competitors.md](competitors.md) |
-| Противоречивые или сфабрикованные цифры | минимум 3 | [competitors.md](competitors.md) |
-| Лидеры по голосам не упоминают AssemblyAI в README | #1 и #2 | [competitors.md](competitors.md) |
-
-И главное: **AssemblyAI 8–9 сентября, в середине хакатона, опубликовала рамку оценки голосовых агентов** — Entity Error Rate вместо WER, caller repeat rate, процентили латентности по компонентам, close codes 3007/3008/3009. Её не применил никто из 45.
-
-Свободные фичи API: word-level timings — 2 проекта из 45, speaker labels — 3, LeMUR — 2, code-switching как несущая функция — 1 ([карта](assemblyai-feature-usage.md)).
-
-## Три опоры проекта
-
-**1. Ошибка доказывается арифметикой.** DEA mod-10, NPI Luhn+80840 — контрольные суммы, воспроизведены вручную. Спорить не с чем: либо сходится, либо нет. Честный минус, который называем сами: у NDC контрольной цифры нет, там формат плюс существование в справочнике на 116 155 продуктов.
-
-**2. Adversarial-набор составил регулятор, а не мы.** Списки путаемых препаратов опубликованы ISMP и FDA именно потому, что путаница убивает: [ISMP Confused Drug Names](https://www.ismp.org/system/files/resources/2023-10/ISMP_ConfusedDrugNames_2023.pdf) (632 KB), [ISMP Error-Prone Abbreviations](https://www.ismp.org/system/files/resources/2024-04/ISMP_ErrorProneAbbreviation_List.pdf) (330 KB), [FDA Name Differentiation](https://www.fda.gov/drugs/medication-errors-related-cder-regulated-drug-products/fda-name-differentiation-project) (23 пары). Это снимает вопрос «почему ваш тест репрезентативен».
-
-**3. Уверенность не спасает от гомофонии.** Ключевая идея продукта: если распознанное название входит в пару LASA, переспрос обязателен **даже при confidence 1.0**. Модель может быть уверена, что услышала «Bisoprolol», когда человек сказал «Lisinopril». Высокая уверенность здесь ничего не доказывает — а список регулятора спасает.
-
-Источники данных и проверенные контрольные суммы — [reference/domain-data-sources.md](reference/domain-data-sources.md).
-
-## Навигация
-
-### Проект
-
-| Файл | Что внутри |
+| File | Answers |
 |---|---|
-| [../CLAUDE.md](../CLAUDE.md) | **Правила работы.** Сильнее всего остального: инвариант шлюза, границы слоёв, запреты, разделение на двух агентов |
-| [plan.md](plan.md) | **План реализации:** архитектура целиком, контракт между агентами, календарь на 15 дней, что резать первым |
-| [cases/readback.md](cases/readback.md) | **Кейс:** зачем это, почему аптека, демо-режимы, чем бьём конкурентов |
-| [cases/readback-spec.md](cases/readback-spec.md) | **Инженерная спека:** модель данных, правила шлюза как код, tool-схемы, системный промпт, DDL, формулы метрик |
-| [rework-tasks.md](rework-tasks.md) | **Колокация, светлая тема Hims, микрофон по центру:** три задачи от владельца и что нашлось по ходу |
-| [audit-plan.md](audit-plan.md) | **Аудиты и переделка фронтенда:** шесть аудитов, дизайн-система Linear, микрофон как центр экрана, анимации и логотип |
-| [scaffold-decisions.md](scaffold-decisions.md) | **Решения каркаса:** почему контракт написан первым, чем держится бренд `ConfirmedValue`, что найдено в таблице мутаций |
-| [submission-requirements.md](submission-requirements.md) | Что обязательно сдать — дословно из Rule Book, проверено 15 сентября |
-| [plan-review.md](plan-review.md) | **Враждебный аудит плана:** 20 находок, что сломается и почему. Читать вместе с планом |
-| [lessons-from-competitors.md](lessons-from-competitors.md) | **Уроки из разбора 21 конкурента:** протокольные находки, на чём поле провалилось, что мы зря считали своим отличием |
-| [reference/data-feasibility.md](reference/data-feasibility.md) | Проверка данных исполнением: что реально скачивается и парсится, где план врал по срокам |
+| [evidence.md](evidence.md) | Every claim the project makes, what it was measured with, at what n, and what that n is **not** enough for |
+| [limitations.md](limitations.md) | Everything the project cannot prove, at full strength, nothing softened. Measured, enforced, assumed, or false and admitted |
+| [findings.md](findings.md) | Every defect found after the codebase already passed every check it declares. Eight audits, then a cleanup pass; not one came back empty |
+| [../eval/REPORT.md](../eval/REPORT.md) | The measurements themselves, each with the command that produced it and the size of the set it came from |
 
-### Конкуренты
+Numbers without a method are forbidden here. Every figure in the report and on the
+metrics page carries its command and its set size, and
+`tests/scripts/report/honest-report-agreement.test.ts` runs those commands and requires the
+printed figures to appear in the report — so a published number cannot go stale
+silently.
 
-| Файл | Что внутри |
+## The platform and the data
+
+| File | Answers |
 |---|---|
-| [competitors.md](competitors.md) | **Тирлист 21 сильнейшего** (S/A/B/C/D/F), пять сквозных выводов |
-| [competitors/](competitors/) | 21 детальный разбор — по файлу на проект, включая «чем побить» |
-| [competitors-catalog.md](competitors-catalog.md) | Полный каталог всех 45 сабмишенов |
-| [demo-health.md](demo-health.md) | HTTP-проверка всех 45 демо |
-| [stack-and-code.md](stack-and-code.md) | Стек, объём кода, коммиты по каждому |
+| [assemblyai-api.md](assemblyai-api.md) | The AssemblyAI contract **as observed**, not as documented. Where live behaviour contradicts the vendor, the live run wins and this file records it |
+| [vercel.md](vercel.md) | What the platform actually allows, verified against current docs rather than memory |
+| [domain-data.md](domain-data.md) | The public catalogues — NDC, ISMP, FDA — how each is fetched, filtered and deduplicated, and what each one does not contain |
+| [cost-guardrails.md](cost-guardrails.md) | Which commands bill and which do not, what a forgotten socket costs, and how spend is derived from a ledger rather than estimated |
 
-### Контекст
+## Running it
 
-| Файл | Что внутри |
-|---|---|
-| [strategy.md](strategy.md) | Расстановка сил, бреши поля, техминимум, чек-лист сабмита |
-| [assemblyai-signals.md](assemblyai-signals.md) | Что сама AssemblyAI считает признаком зрелого агента |
-| [assemblyai-feature-usage.md](assemblyai-feature-usage.md) | Какие фичи API заняты, какие пустуют |
-| [hackathon.md](hackathon.md) | Правила, призы, критерии, расписание, судьи |
-| [field-stats.md](field-stats.md) | Воронка, технологии, лидерборд |
+```bash
+npm run dev     # the Next.js development server
+make data       # build the NDC catalogue and the LASA table into data/
+make agent      # create the stored agent once, keep the id in the environment
+make verify     # everything that must pass before a task counts as done
+make help       # every target, grouped
+```
 
-### Справочники
+`make verify` is the gate for done. Its step list lives in `VERIFY_STEPS` in the
+`Makefile` and nowhere else — read it there rather than from any prose, including this
+paragraph, because a copy of a list is a copy that drifts.
 
-| Файл | Что внутри |
-|---|---|
-| [reference/assemblyai-api.md](reference/assemblyai-api.md) | Voice Agent API, Streaming STT v3, LLM Gateway: эндпоинты, протокол, события, параметры, цены, ловушки |
-| [reference/domain-data-sources.md](reference/domain-data-sources.md) | Датасеты и контрольные суммы по домену |
-| [reference/naming.md](reference/naming.md) | Выбор названия: read-back в ICAO и Joint Commission, проверка коллизий |
+Every ratchet in that list has a positive control in
+`tests/scripts/ratchet-positive-control.test.ts`, which plants a violation and requires
+the check to fail. That exists because several of these checks were once green while
+checking nothing, which is worse than no check at all: it manufactures confidence.
 
-## Двух главных соперников придётся обойти по существу
+## A note on this folder
 
-| Кто | Чем силён | Чем обходим |
-|---|---|---|
-| **[Saakshi](competitors/saakshi.md)** | 418 тестов, p50 1368 мс, три поверхности API, hash-chain, judge-solo | Их precision 1.00 — на выборке, которую они сами правили (честно назвали «regression suite, not a generalisation estimate»). У нас held-out, закрытый со дня 2. Плюс LLM Gateway как основной путь против их Groq |
-| **[VoiceMed AI](competitors/voicemed-ai.md)** | Строго спецификационный Voice Agent API, 44 теста | Единственное измеренное число — 5,63 с до приветствия, turn-to-turn не мерили. У нас P95 turn-to-turn. Их база — 20 симптомов против 116 155 продуктов |
+Russian used to live here and no longer does. The repository is English throughout —
+names, strings, logs, error codes, commands, documentation — because the domain data
+(NDC, ISMP, FDA, Joint Commission) is English and translating clinical terms would
+introduce an error class nobody can validate. `make ascii` enforces it.
 
-## Чек-лист сабмита
-
-- [ ] Демо открывается в инкогнито с чужого устройства, **не на бесплатном Render**
-- [ ] Judge-solo режим: один человек, без второго говорящего, возможно без микрофона
-- [ ] Названная модель и верный эндпоинт; заявка и README не противоречат друг другу
-- [ ] Ни одной цифры без методики и команды воспроизведения
-- [ ] Held-out метрика, а не только регрессионная выборка
-- [ ] Тесты проходят, CI зелёный, бейдж в README
-- [ ] Видео с таймером на экране и моментом переспроса
-- [ ] Слайды загружены, публичный репозиторий, MIT-лицензия
-- [ ] Сессии закрываются корректно (`session.end` / `disconnect(terminate=True)`), idle не течёт
-- [ ] Явный дисклеймер: демонстрация технологии, не медицинское устройство, данные синтетические
-
----
-
-## Как это собрано
-
-- Страница хакатона и live-дашборд lablab.ai — все 45 проектов прокликаны
-- 45 GitHub-репозиториев: README, структура, зависимости, коммиты, языки
-- HTTP-проверка 45 демо-ссылок
-- Документация AssemblyAI + пять публикаций их блога за 8–9 сентября 2026
-- Контрольные суммы DEA, NPI, VIN, ISIN, LEI воспроизведены вручную
-- Терминология read-back сверена с ICAO и Joint Commission по первоисточникам
-
-Собственных измерений латентности и точности здесь нет — они появляются по плану после дня 11. Числа, помеченные как иллюстративные, таковыми и являются.
+There are no comments in this codebase, in code or in configuration. When a comment
+would have explained something non-obvious, the explanation moves into one of the files
+above instead of vanishing.

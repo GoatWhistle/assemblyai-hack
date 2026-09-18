@@ -1,7 +1,7 @@
 import { type ValidatorVerdict, VerdictOutcome } from "@/domain"
 import styles from "./styles.module.css"
 
-export const OUTCOME_HEADLINE: Readonly<Record<VerdictOutcome, string>> = Object.freeze({
+const OUTCOME_HEADLINE: Readonly<Record<VerdictOutcome, string>> = Object.freeze({
   passed: "Independently verified",
   failed_checksum: "Check digit does not match",
   not_in_catalog: "Not found in the catalogue",

@@ -1,5 +1,4 @@
 import {
-  ConfirmationMode,
   type FieldCandidate,
   FieldName,
   type GateDecision,
@@ -91,5 +90,3 @@ export function runDemo(sessionId: string): readonly DemoOutcome[] {
 
   return [on, off]
 }
-
-export const DEMO_CONFIRMATION_MODE = ConfirmationMode.HumanOverride

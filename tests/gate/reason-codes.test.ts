@@ -159,11 +159,18 @@ describe("policy table", () => {
     }
   })
 
-  it("only drug name and strength are lasa checked", () => {
+  it("checks the pair table on the drug name, and only where the table can match", () => {
     const checked = [...FIELD_POLICIES.values()]
       .filter((p) => p.lasaChecked)
       .map((p) => p.field)
-    expect(checked.sort()).toEqual([FieldName.DrugName, FieldName.Strength].sort())
+    expect(
+      checked,
+      "the pair table indexes drug names, so that field must be checked",
+    ).toContain(FieldName.DrugName)
+    expect(
+      checked,
+      "strength once carried this flag while the pair table held no strength values, so the branch could never fire; a flag that cannot fire is a claim the gate does not honour",
+    ).toEqual([FieldName.DrugName])
   })
 
   it("thresholds sit inside the unit interval", () => {

@@ -12,7 +12,7 @@ export type FieldStance = "proposed" | "asking" | "lasa" | "accepted" | "escalat
 export const STANCE_LABEL: Readonly<Record<FieldStance, string>> = Object.freeze({
   proposed: "Proposed, not yet decided",
   asking: "Re-ask in flight",
-  lasa: "Mandatory re-ask: look-alike pair",
+  lasa: "Confirm aloud: look-alike pair",
   accepted: "In the order",
   escalated: "Escalated, field stays empty",
   aborted: "Left blank and flagged",

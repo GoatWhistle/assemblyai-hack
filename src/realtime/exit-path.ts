@@ -1,4 +1,4 @@
-export type Closable = {
+type Closable = {
   end: () => Promise<void>
 }
 

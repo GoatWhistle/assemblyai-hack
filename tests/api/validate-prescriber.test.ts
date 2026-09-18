@@ -1,6 +1,6 @@
 import { POST as validatePrescriber } from "@app/api/tools/validate-prescriber/route"
 import { beforeEach, describe, expect, it } from "vitest"
-import { call, resetToolEnvironment } from "./harness"
+import { call, refusalText, resetToolEnvironment } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -25,7 +25,7 @@ describe("validate_prescriber", () => {
   it("rejects an npi that is not ten digits at the schema", async () => {
     const response = await validatePrescriber(call("validate-prescriber", { npi: "12345" }))
     expect(response.status).toBe(400)
-    expect((await response.json()).error).toContain("10 digits")
+    expect(refusalText(await response.json())).toContain("10 digits")
   })
 
   it("reports dea as not applicable when none was supplied", async () => {

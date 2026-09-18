@@ -1,8 +1,9 @@
 import { FigureWithMethod } from "@/shared/ui/data-display/figure-with-method"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { Panel } from "@/shared/ui/primitives/panel"
+import { closeCodeRows, closeCodeSetDescription } from "../close-code-tally"
+import { confidenceFigures, errorRateFigures } from "../measured-figures"
 import {
-  CLOSE_CODE_ROWS,
   type CloseCodeTally,
   GATE_METRICS,
   LATENCY_METRICS,
@@ -37,7 +38,7 @@ function Figures({ metrics }: { readonly metrics: readonly MetricDefinition[] })
 export function MetricsDashboard({
   gateMetrics = GATE_METRICS,
   latencyMetrics = LATENCY_METRICS,
-  closeCodes = CLOSE_CODE_ROWS,
+  closeCodes = closeCodeRows(),
 }: MetricsDashboardProps) {
   return (
     <div className={styles.dashboard}>
@@ -45,8 +46,9 @@ export function MetricsDashboard({
         <h1 className={styles.ledeTitle}>Measurements</h1>
         <p className={styles.ledeBody}>
           Every figure on this page carries the command that produced it and the size of the set
-          it came from. A number without a method is not published here, so figures read as not
-          measured yet until a run fills them in.
+          it came from. A number without a method is not published here, so a figure reads as
+          not measured yet rather than being filled with an estimate. Where it says that, the
+          run has not happened or the set is sealed, and the method line says which.
         </p>
         <div className={styles.rule}>
           <p className={styles.ruleTitle}>Held-out discipline</p>
@@ -58,11 +60,35 @@ export function MetricsDashboard({
         </div>
       </div>
 
-      <Panel title="What the gate costs and catches" padding="tight">
+      <Panel
+        title="What the recognizer got wrong"
+        note="measured on recorded runs, not tuned on"
+        padding="tight"
+      >
+        <Figures metrics={errorRateFigures()} />
+      </Panel>
+
+      <Panel
+        title="Why confidence is not the check"
+        note="the cost and the catch, side by side"
+        padding="tight"
+      >
+        <Figures metrics={confidenceFigures()} />
+      </Panel>
+
+      <Panel
+        title="What the gate costs and catches"
+        note="blank on purpose: the set is sealed, not unrun"
+        padding="tight"
+      >
         <Figures metrics={gateMetrics} />
       </Panel>
 
-      <Panel title="Latency" note="browser measurements are labelled as such" padding="tight">
+      <Panel
+        title="Latency"
+        note="blank until a paid run; browser measurements are labelled as such"
+        padding="tight"
+      >
         <Figures metrics={latencyMetrics} />
       </Panel>
 
@@ -70,9 +96,9 @@ export function MetricsDashboard({
         <div className={styles.tableWrap}>
           <table className={styles.closeTable}>
             <caption>
-              Counted per session across both sockets. 3008 and 3009 are alert-worthy on the
-              first occurrence, because billing runs on socket lifetime rather than audio
-              volume.
+              Counted from {closeCodeSetDescription()}. 1008, 3008 and 3009 are alert-worthy on
+              the first occurrence, because billing runs on socket lifetime rather than audio
+              volume. A run containing any 1008 is a rate-limit artefact and is not scored.
             </caption>
             <thead>
               <tr>

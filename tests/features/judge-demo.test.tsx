@@ -8,9 +8,13 @@ import {
   DEMO_DURATION_MS,
   RECOGNIZED_AS,
   RECOGNIZER_CERTAINTY,
+  SHIPPED_POLICY,
   SPOKEN_TRUTH,
+  THRESHOLD_ONLY_POLICY,
 } from "@/features/judge-demo/demo-arms"
 import { LASA_CANDIDATE, LASA_DECISION } from "@/features/judge-demo/scenario"
+import { decide } from "@/gate"
+import { lasaRiskFor } from "@/lasa"
 
 describe("the judge-solo requirement", () => {
   it("needs exactly one click and no microphone", async () => {
@@ -54,19 +58,28 @@ describe("the two arms of the contrast", () => {
     const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
     const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
     expect(gated?.outcomeValue).toBe("Nothing yet")
-    expect(ungated?.outcomeValue).toContain("bisoprolol")
+    expect(ungated?.outcomeValue).toContain(RECOGNIZED_AS)
   })
 
   it("explains the ungated failure as one a threshold cannot catch", () => {
     const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
     expect(ungated?.outcomeBody).toContain("no threshold catches it")
-    expect(ungated?.outcomeBody).toContain("0.99")
+    expect(
+      ungated?.outcomeBody,
+      "the demo must name the certainty it failed at, and at the ceiling rather than near it, so that raising the threshold is visibly not an answer",
+    ).toContain(`${RECOGNIZER_CERTAINTY.toFixed(2)}`)
+    expect(
+      RECOGNIZER_CERTAINTY,
+      "a demonstration at 0.99 invites the reply that a threshold of 1.0 would have caught it; the gate refuses at exactly 1.00 and the demo should show that",
+    ).toBe(1)
   })
 
   it("names both alternatives in the gated arm's utterance", () => {
     const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
-    expect(gated?.agentLine).toContain("Bisoprolol")
-    expect(gated?.agentLine).toContain("Lisinopril")
+    expect(gated?.agentLine).toContain(LASA_CANDIDATE.lasa.matchedTerm)
+    for (const partner of LASA_CANDIDATE.lasa.confusableWith) {
+      expect(gated?.agentLine).toContain(partner)
+    }
     expect(gated?.agentLine).toContain("confused-drug-names list")
   })
 
@@ -81,10 +94,12 @@ describe("the two arms of the contrast", () => {
       screen.getByText(/nothing will enter/i),
       "the gated arm must say what it refuses to write",
     ).toBeDefined()
+    const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
     expect(
-      screen.getByText(/bisoprolol 10 mg will enter/i),
+      screen.getByText(String(ungated?.restingValue)),
       "the ungated arm must say what it would accept",
     ).toBeDefined()
+    expect(String(ungated?.restingValue)).toContain(RECOGNIZED_AS)
     expect(
       screen.queryByText(/not reached yet/),
       "an empty placeholder hides the very thing the page exists to show",
@@ -117,5 +132,62 @@ describe("the scenario behind the demo", () => {
 
   it("records in its evidence that the ask is by design, not by threshold", () => {
     expect(String(LASA_DECISION.evidence.note)).toContain("regardless of confidence")
+  })
+})
+
+describe("the demonstration computes its refusal instead of printing one", () => {
+  it("shows the agent line the gate raised, not a string written into the page", () => {
+    const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
+    const raised = decide(LASA_CANDIDATE, SHIPPED_POLICY)
+    expect(
+      gated?.agentLine,
+      "the forty-second demonstration is the one screen that explains the product; a hand-typed refusal there is the defect we accuse the field of",
+    ).toBe(raised.agentUtterance)
+    render(<JudgeDemo />)
+    expect(
+      screen.getAllByText(raised.agentUtterance).length,
+      "the gate's own utterance must appear on the page; the scenario picker renders it a second time, so the count is at least one rather than exactly one",
+    ).toBeGreaterThan(0)
+  })
+
+  it("shows the comparison line the same function raised with the two proofs switched off", () => {
+    const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
+    const raised = decide(LASA_CANDIDATE, THRESHOLD_ONLY_POLICY)
+    expect(ungated?.agentLine).toBe(raised.agentUtterance)
+    render(<JudgeDemo />)
+    expect(screen.getByText(raised.agentUtterance)).toBeDefined()
+  })
+
+  it("differs between the arms only by the pair check and the read-back requirement", () => {
+    expect(THRESHOLD_ONLY_POLICY.autoAcceptThreshold).toBe(SHIPPED_POLICY.autoAcceptThreshold)
+    expect(THRESHOLD_ONLY_POLICY.validator).toBe(SHIPPED_POLICY.validator)
+    expect(THRESHOLD_ONLY_POLICY.lasaChecked).toBe(false)
+    expect(SHIPPED_POLICY.lasaChecked).toBe(true)
+  })
+
+  it("accepts the wrong drug in the comparison arm, so the contrast is a real outcome", () => {
+    const raised = decide(LASA_CANDIDATE, THRESHOLD_ONLY_POLICY)
+    expect(
+      raised.action,
+      "if the comparison arm also refused, the page would claim a contrast it does not have",
+    ).toBe(GateAction.Accept)
+    expect(raised.reasonCode).toBe(ReasonCode.ValidatorPassedHighConf)
+  })
+
+  it("prints each arm's reason code on screen, so the refusal is attributable", () => {
+    render(<JudgeDemo />)
+    expect(
+      screen.getAllByText(ReasonCode.LasaHit).length,
+      "the pair reason code must be attributable on screen; the scenario picker prints it too, so the count is at least one rather than exactly one",
+    ).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText(ReasonCode.ValidatorPassedHighConf).length,
+      "the comparison arm's reason code must be attributable on screen",
+    ).toBeGreaterThan(0)
+  })
+
+  it("takes the pair citation from the curated table rather than from the page", () => {
+    expect(LASA_CANDIDATE.lasa.sourceRow).toBe(lasaRiskFor(RECOGNIZED_AS).sourceRow)
+    expect(LASA_CANDIDATE.lasa.hit).toBe(true)
   })
 })
