@@ -6,11 +6,12 @@ import { POST as lookupDrug } from "../../app/api/tools/lookup-drug/route"
 import { POST as proposeField } from "../../app/api/tools/propose-field/route"
 import { POST as readBack } from "../../app/api/tools/read-back/route"
 import { POST as validatePrescriber } from "../../app/api/tools/validate-prescriber/route"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "../api/harness"
+import { call, readBackAloud, resetToolEnvironment, SESSION, seedTurn } from "../api/harness"
 
 const definition = buildAgentDefinition({
   baseUrl: "https://readback.example.com",
   toolSecret: "test-tool-secret",
+  sessionId: SESSION,
 })
 
 type Schema = {
@@ -28,7 +29,6 @@ function schemaOf(name: string): Schema {
 }
 
 const SAMPLES: Readonly<Record<string, unknown>> = Object.freeze({
-  session_id: SESSION,
   field: FieldName.DrugName,
   value: "lisinopril",
   transcript_hint: "lisinopril",
@@ -77,9 +77,9 @@ const PATHS: Readonly<Record<string, string>> = Object.freeze({
 })
 
 describe("every tool the agent is given can actually be called", () => {
-  beforeEach(() => {
-    resetToolEnvironment()
-    seedTurn("lisinopril ten milligrams", 0.99)
+  beforeEach(async () => {
+    await resetToolEnvironment()
+    await seedTurn("lisinopril ten milligrams", 0.99)
   })
 
   it("sends a body built only from the tool's own schema and is never rejected for a missing argument", async () => {
@@ -98,14 +98,17 @@ describe("every tool the agent is given can actually be called", () => {
     }
   })
 
-  it("declares session_id on every tool whose route requires it", async () => {
-    for (const name of ["propose_field", "read_back", "commit_order"]) {
-      const schema = schemaOf(name)
+  it("declares no session_id argument on any tool, because the session is bound by the tool URL", () => {
+    for (const tool of definition.tools) {
+      const schema = tool.parameters as unknown as Schema
       expect(
         Object.keys(schema.properties),
-        `${name} closes its schema with additionalProperties false, so an argument its route requires but its schema omits can never be sent`,
-      ).toContain("session_id")
-      expect(schema.required ?? []).toContain("session_id")
+        `${tool.name} must not ask the model for a session id: a model-supplied id is exactly the channel that never carried one`,
+      ).not.toContain("session_id")
+      expect(
+        new URL(tool.http.url).searchParams.get("sid"),
+        `${tool.name} must carry the server-issued session id in its URL`,
+      ).toBe(SESSION)
     }
   })
 
@@ -144,6 +147,7 @@ describe("every tool the agent is given can actually be called", () => {
     )
     expect(registered.status).toBe(200)
 
+    await readBackAloud("Confirming the drug name: lisinopril. Correct?", "yes")
     const answered = await readBack(
       call("read-back", {
         ...bodyFromSchema("read_back", { candidate_id: proposedBody.candidate_id }),

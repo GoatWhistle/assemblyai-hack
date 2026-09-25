@@ -2,7 +2,7 @@
 
 import { existsSync, readFileSync } from "node:fs"
 import { resolve } from "node:path"
-import { parseLedger, ratePerHourFor } from "@/domain"
+import { type PaidRun, parseLedger, ratePerHourFor } from "@/domain"
 
 const HONEST_COUNT_RULE =
   "a paid call that failed still cost money and still happened. This counts sessions from the artefacts each run left behind, so a run cannot be omitted by forgetting to record it, and it names what the artefacts cannot show"
@@ -169,7 +169,7 @@ function main(): void {
   process.stdout.write(`\nwhy their evidence is weaker: ${DISCARDED_PROVENANCE}\n`)
 
   process.stdout.write(
-    `\ntotal paid runs: ${total.runs}\ntotal paid sessions opened: ${total.sessions}\n`,
+    `\ntotal paid runs counted here, all made before the spend ledger existed: ${total.runs}\ntotal paid sessions opened: ${total.sessions}\n`,
   )
   process.stdout.write(
     `sessions that closed 1000: ${total.cleanCloses}\nsessions the rate limiter closed with 1008, billed regardless: ${total.rateLimited}\nsessions with another close code: ${total.otherCloses}\n`,
@@ -194,14 +194,32 @@ function main(): void {
     process.exit(1)
     return
   }
-  process.stdout.write(
-    `\nReconciliation against ${LEDGER_PATH}: the ledger holds ${ledger.length} run${ledger.length === 1 ? "" : "s"} against the ${total.runs} counted here.\n`,
-  )
-  if (ledger.length < total.runs) {
-    process.stdout.write(
-      `The ledger is behind by ${total.runs - ledger.length}. It was added after these runs were made, so it records none of them; that gap is stated rather than closed by back-filling entries whose socket clocks nobody kept. Runs made from now on are recorded by scripts/report/record-spend.ts at the time they happen.\n`,
-    )
+  process.stdout.write(`\n${reconciliation(all, ledger)}\n`)
+}
+
+export function reconciliation(
+  counted: readonly ArtefactRun[],
+  ledger: readonly PaidRun[],
+): string {
+  const firstLedger = ledger.map((run) => run.at).sort()[0]
+  const lastCounted = counted
+    .map((run) => run.measuredAt)
+    .filter((at): at is string => at !== null)
+    .sort()
+    .at(-1)
+  const head = `Reconciliation against ${LEDGER_PATH}: the ledger holds ${ledger.length} run${ledger.length === 1 ? "" : "s"}; ${counted.length} are counted above from artefacts.`
+  if (firstLedger === undefined) {
+    return `${head} The ledger is empty, so every run above is unrecorded there.`
   }
+  const overlapping = counted.filter(
+    (run) => run.measuredAt !== null && run.measuredAt >= firstLedger,
+  )
+  const failed = ledger.filter((run) => run.outcome !== "completed").length
+  const relation =
+    overlapping.length === 0
+      ? `Every run counted above was made before the ledger's first entry (${firstLedger}; the latest artefact is dated ${lastCounted ?? "nowhere"}), so none of them is in the ledger and none of the ledger's runs is among them: the two are disjoint sets, not one behind the other, and the earlier runs are stated rather than back-filled with socket clocks nobody kept.`
+      : `${overlapping.length} run(s) counted above were measured after the ledger's first entry (${firstLedger}) and may also be in it: ${overlapping.map((run) => run.file).join(", ")}.`
+  return `${head} ${relation}\npaid runs on record, artefacts plus ledger: ${counted.length + ledger.length}; of the ledger's runs, ${failed} did not complete and were billed regardless.`
 }
 
 if (process.argv[1]?.includes("live-run-count")) {

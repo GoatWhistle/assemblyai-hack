@@ -1,17 +1,22 @@
 import { POST as proposeField } from "@app/api/tools/propose-field/route"
-import { classifyAnswer, POST as readBack } from "@app/api/tools/read-back/route"
+import { POST as readBack } from "@app/api/tools/read-back/route"
 import { beforeEach, describe, expect, it } from "vitest"
-import { intakeFor } from "@/tools"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { classifyCallerReply } from "@/confirmation"
+import { call, intake, readBackAloud, resetToolEnvironment, seedTurn } from "./harness"
+
+const READ_BACK = "Confirming the quantity: 30. Correct?"
+
+function classifyAnswer(text: string, valueText = "lisinopril 10 mg"): string {
+  return classifyCallerReply({ text, valueText }).verdict
+}
 
 beforeEach(resetToolEnvironment)
 
 async function proposeQuantity(): Promise<string> {
-  seedTurn("thirty", 0.99)
+  await seedTurn("thirty", 0.99)
   const body = await (
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: "quantity",
         value: "thirty",
         transcript_hint: "thirty",
@@ -21,13 +26,15 @@ async function proposeQuantity(): Promise<string> {
   return body.candidate_id
 }
 
-function answer(candidateId: string, callerAnswer: string): Promise<Response> {
+async function answer(candidateId: string, callerAnswer: string): Promise<Response> {
+  if (callerAnswer.trim().length > 0) {
+    await readBackAloud(READ_BACK, callerAnswer)
+  }
   return readBack(
     call("read-back", {
-      session_id: SESSION,
       field: "quantity",
       candidate_id: candidateId,
-      utterance: "Confirming the quantity: 30. Correct?",
+      utterance: READ_BACK,
       caller_answer: callerAnswer,
     }),
   )
@@ -49,19 +56,19 @@ describe("read_back", () => {
 
     expect(body.written_to_order).toBe(true)
     expect(body.confirmation_mode).toBe("read_back")
-    expect(intakeFor(SESSION).order.fields.get("quantity")?.value).toBe(30)
+    expect((await intake()).order.fields.get("quantity")?.value).toBe(30)
   })
 
   it("accepts the documented affirmations and rejects the denials", async () => {
     for (const yes of ["yes", "yeah", "correct", "that's right", "confirmed", "right"]) {
-      resetToolEnvironment()
+      await resetToolEnvironment()
       const candidateId = await proposeQuantity()
       const body = await (await answer(candidateId, yes)).json()
       expect(body.written_to_order, yes).toBe(true)
     }
 
     for (const no of ["no", "nope", "wrong", "not quite", "negative"]) {
-      resetToolEnvironment()
+      await resetToolEnvironment()
       const candidateId = await proposeQuantity()
       const body = await (await answer(candidateId, no)).json()
       expect(body.written_to_order, no).toBe(false)
@@ -74,7 +81,6 @@ describe("read_back", () => {
     const body = await (
       await readBack(
         call("read-back", {
-          session_id: SESSION,
           field: "quantity",
           candidate_id: candidateId,
           utterance: "Confirming the quantity: 30. Correct?",
@@ -98,10 +104,10 @@ describe("read_back", () => {
   it("stores the spelled out utterance literally, not the normalized value", async () => {
     const candidateId = await proposeQuantity()
     const spoken = "three zero"
+    await readBackAloud(spoken, "yes")
     const body = await (
       await readBack(
         call("read-back", {
-          session_id: SESSION,
           field: "quantity",
           candidate_id: candidateId,
           utterance: spoken,
@@ -140,11 +146,10 @@ describe("the dissolved-verb transcript: a recognizer preserves proper nouns and
   )
 
   it("does not accept the value alone even when it repeats the exact field content", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     const proposal = await (
       await proposeField(
         call("propose-field", {
-          session_id: SESSION,
           field: "quantity",
           value: "thirty",
           transcript_hint: "thirty",
@@ -152,13 +157,13 @@ describe("the dissolved-verb transcript: a recognizer preserves proper nouns and
       )
     ).json()
 
+    await readBackAloud(READ_BACK, "thirty")
     const body = await (
       await readBack(
         call("read-back", {
-          session_id: SESSION,
           field: "quantity",
           candidate_id: proposal.candidate_id,
-          utterance: "Confirming the quantity: 30. Correct?",
+          utterance: READ_BACK,
           caller_answer: "thirty",
         }),
       )
@@ -168,7 +173,7 @@ describe("the dissolved-verb transcript: a recognizer preserves proper nouns and
       body.written_to_order,
       "the recognizer returning the number back is not the same as the caller confirming it; only an explicit yes counts",
     ).toBe(false)
-    expect(intakeFor(SESSION).order.fields.has("quantity")).toBe(false)
+    expect((await intake()).order.fields.has("quantity")).toBe(false)
   })
 
   it("rejects a denial even when punctuation is glued onto the word", () => {

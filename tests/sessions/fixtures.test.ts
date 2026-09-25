@@ -78,10 +78,10 @@ describe("session fixtures", () => {
     const turn = frames
       .map((f) => f.message)
       .filter((m): m is Extract<SttMessage, { type: "Turn" }> => m.type === "Turn")
-      .find((m) => m.transcript.toLowerCase().includes("bisoprolol"))
+      .find((m) => m.words.some((w) => w.text.toLowerCase() === "morphine"))
 
     expect(turn).toBeDefined()
-    const word = turn?.words.find((w) => w.text.toLowerCase() === "bisoprolol")
+    const word = turn?.words.find((w) => w.text.toLowerCase() === "morphine")
     expect(word?.confidence).toBe(1.0)
   })
 
@@ -101,7 +101,7 @@ describe("session fixtures", () => {
     const phantom = frames
       .map((f) => f.message)
       .filter((m): m is Extract<SttMessage, { type: "Turn" }> => m.type === "Turn")
-      .find((m) => m.transcript.toLowerCase().includes("did you say"))
+      .find((m) => m.transcript.toLowerCase().includes("morphine and hydromorphone are"))
 
     expect(agentLine).toBeDefined()
     expect(phantom, "without a phantom turn the client has nothing to discard").toBeDefined()

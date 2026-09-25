@@ -1,3 +1,4 @@
+import { ismpPairCount, LASA_PAIRS } from "@/lasa"
 import styles from "./styles.module.css"
 
 type Limit = {
@@ -19,8 +20,8 @@ const LIMITS: readonly Limit[] = [
   },
   {
     id: "lasa",
-    title: "The pair table is curated, not imported",
-    body: "The ISMP list moved to ECRI and is no longer at a stable public URL, so the build falls back to a hand-curated table of 20 pairs rather than a parsed one. Matching strips salt forms, because the catalogue stores tramadol hydrochloride where the pair says tramadol.",
+    title: "The rule is the published list; the evaluation is the curated core",
+    body: `The pair rule applies the full 2023 ISMP List of Confused Drug Names, ${ismpPairCount()} pairs parsed from the published PDF with the page and row of each kept. Our measured catches and the demo rest on a hand-curated table of ${LASA_PAIRS.length} pairs, each checked by hand against its row; the rest of the list is applied, not separately evaluated. Matching strips salt forms, because the catalogue stores tramadol hydrochloride where the pair says tramadol.`,
   },
 ]
 

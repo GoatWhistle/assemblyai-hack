@@ -1,5 +1,4 @@
 import type { ConfirmationMode, FieldName, GateAction } from "./enums"
-import { TERMINAL_ACTIONS } from "./enums"
 import type { ReasonCode } from "./reason-codes"
 import type { EvidenceValue } from "./verdict"
 
@@ -15,8 +14,4 @@ export type GateDecision = {
   readonly agentUtterance: string
   readonly evidence: DecisionEvidence
   readonly confirmationMode: ConfirmationMode | null
-}
-
-export function isTerminal(decision: GateDecision): boolean {
-  return TERMINAL_ACTIONS.includes(decision.action)
 }

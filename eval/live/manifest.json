@@ -1,0 +1,1196 @@
+{
+  "builtAt": "2026-09-25T15:20:47.784Z",
+  "source": "docs/voice-set.md",
+  "method": "three team members read docs/voice-set.md once each into 16 kHz mono PCM16 WAV; the sha256 of each file is recorded so a later run can prove it used the same audio",
+  "count": 75,
+  "present": 0,
+  "items": [
+    {
+      "id": "s1-01",
+      "speaker": "s1",
+      "line": "01",
+      "file": "eval/live/audio/s1-01.wav",
+      "text": "Hydromorphone two milligrams per millilitre, one milligram intravenous every four hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "hydromorphone",
+      "lasaPartners": [
+        "morphine",
+        "buprenorphine",
+        "hydralazine",
+        "hydroxyzine",
+        "oxymorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-02",
+      "speaker": "s1",
+      "line": "02",
+      "file": "eval/live/audio/s1-02.wav",
+      "text": "Morphine two milligrams per millilitre, two milligrams intravenous every four hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "morphine",
+      "lasaPartners": [
+        "hydromorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-03",
+      "speaker": "s1",
+      "line": "03",
+      "file": "eval/live/audio/s1-03.wav",
+      "text": "Hydralazine twenty-five milligrams, by mouth three times a day.",
+      "kind": "lasa",
+      "expectedDrug": "hydralazine",
+      "lasaPartners": [
+        "hydroxyzine",
+        "hydrochlorothiazide",
+        "hydromorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-04",
+      "speaker": "s1",
+      "line": "04",
+      "file": "eval/live/audio/s1-04.wav",
+      "text": "Hydroxyzine twenty-five milligrams, by mouth at bedtime as needed.",
+      "kind": "lasa",
+      "expectedDrug": "hydroxyzine",
+      "lasaPartners": [
+        "hydralazine",
+        "hydrochlorothiazide",
+        "hydrogesic",
+        "hydromorphone",
+        "hydroxyurea"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-05",
+      "speaker": "s1",
+      "line": "05",
+      "file": "eval/live/audio/s1-05.wav",
+      "text": "Clonidine zero point one milligrams, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "clonidine",
+      "lasaPartners": [
+        "clozapine",
+        "clonazepam",
+        "klonopin"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-06",
+      "speaker": "s1",
+      "line": "06",
+      "file": "eval/live/audio/s1-06.wav",
+      "text": "Clozapine twenty-five milligrams, by mouth at bedtime.",
+      "kind": "lasa",
+      "expectedDrug": "clozapine",
+      "lasaPartners": [
+        "clonidine",
+        "clonazepam"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-07",
+      "speaker": "s1",
+      "line": "07",
+      "file": "eval/live/audio/s1-07.wav",
+      "text": "Metformin five hundred milligrams, by mouth twice daily with meals.",
+      "kind": "lasa",
+      "expectedDrug": "metformin",
+      "lasaPartners": [
+        "metronidazole"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-08",
+      "speaker": "s1",
+      "line": "08",
+      "file": "eval/live/audio/s1-08.wav",
+      "text": "Metronidazole five hundred milligrams, by mouth three times a day for seven days.",
+      "kind": "lasa",
+      "expectedDrug": "metronidazole",
+      "lasaPartners": [
+        "metformin"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-09",
+      "speaker": "s1",
+      "line": "09",
+      "file": "eval/live/audio/s1-09.wav",
+      "text": "Tramadol fifty milligrams, by mouth every six hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "tramadol",
+      "lasaPartners": [
+        "trazodone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-10",
+      "speaker": "s1",
+      "line": "10",
+      "file": "eval/live/audio/s1-10.wav",
+      "text": "Trazodone fifty milligrams, by mouth at bedtime.",
+      "kind": "lasa",
+      "expectedDrug": "trazodone",
+      "lasaPartners": [
+        "tramadol"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-11",
+      "speaker": "s1",
+      "line": "11",
+      "file": "eval/live/audio/s1-11.wav",
+      "text": "Diazepam five milligrams, by mouth twice daily as needed.",
+      "kind": "lasa",
+      "expectedDrug": "diazepam",
+      "lasaPartners": [
+        "diltiazem"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-12",
+      "speaker": "s1",
+      "line": "12",
+      "file": "eval/live/audio/s1-12.wav",
+      "text": "Diltiazem one hundred twenty milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "diltiazem",
+      "lasaPartners": [
+        "diazepam"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-13",
+      "speaker": "s1",
+      "line": "13",
+      "file": "eval/live/audio/s1-13.wav",
+      "text": "Cycloserine two hundred fifty milligrams, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "cycloserine",
+      "lasaPartners": [
+        "cyclosporine",
+        "cyclophosphamide"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-14",
+      "speaker": "s1",
+      "line": "14",
+      "file": "eval/live/audio/s1-14.wav",
+      "text": "Cyclosporine one hundred milligrams, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "cyclosporine",
+      "lasaPartners": [
+        "cycloserine",
+        "cyclophosphamide",
+        "cyclosporine modified"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-01",
+      "speaker": "s2",
+      "line": "01",
+      "file": "eval/live/audio/s2-01.wav",
+      "text": "Dexamethasone four milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "dexamethasone",
+      "lasaPartners": [
+        "dexmedetomidine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-02",
+      "speaker": "s2",
+      "line": "02",
+      "file": "eval/live/audio/s2-02.wav",
+      "text": "Dexmedetomidine zero point four micrograms per kilogram per hour, intravenous.",
+      "kind": "lasa",
+      "expectedDrug": "dexmedetomidine",
+      "lasaPartners": [
+        "dexamethasone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-03",
+      "speaker": "s2",
+      "line": "03",
+      "file": "eval/live/audio/s2-03.wav",
+      "text": "Glipizide five milligrams, by mouth once daily before breakfast.",
+      "kind": "lasa",
+      "expectedDrug": "glipizide",
+      "lasaPartners": [
+        "glyburide"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-04",
+      "speaker": "s2",
+      "line": "04",
+      "file": "eval/live/audio/s2-04.wav",
+      "text": "Glyburide five milligrams, by mouth once daily with breakfast.",
+      "kind": "lasa",
+      "expectedDrug": "glyburide",
+      "lasaPartners": [
+        "glipizide"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-05",
+      "speaker": "s2",
+      "line": "05",
+      "file": "eval/live/audio/s2-05.wav",
+      "text": "Amiloride five milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "amiloride",
+      "lasaPartners": [
+        "amlodipine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-06",
+      "speaker": "s2",
+      "line": "06",
+      "file": "eval/live/audio/s2-06.wav",
+      "text": "Amlodipine five milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "amlodipine",
+      "lasaPartners": [
+        "amiloride"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-07",
+      "speaker": "s2",
+      "line": "07",
+      "file": "eval/live/audio/s2-07.wav",
+      "text": "Oxycodone five milligrams, by mouth every six hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "oxycodone",
+      "lasaPartners": [
+        "oxycontin",
+        "hydrocodone",
+        "oxybutynin",
+        "oxymorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-08",
+      "speaker": "s2",
+      "line": "08",
+      "file": "eval/live/audio/s2-08.wav",
+      "text": "OxyContin ten milligrams, by mouth every twelve hours.",
+      "kind": "lasa",
+      "expectedDrug": "oxycontin",
+      "lasaPartners": [
+        "oxycodone",
+        "ms contin",
+        "oxybutynin",
+        "oxymorphone",
+        "oxytocin"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-09",
+      "speaker": "s2",
+      "line": "09",
+      "file": "eval/live/audio/s2-09.wav",
+      "text": "Rifampin six hundred milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "rifampin",
+      "lasaPartners": [
+        "rifaximin",
+        "rifamate"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-10",
+      "speaker": "s2",
+      "line": "10",
+      "file": "eval/live/audio/s2-10.wav",
+      "text": "Rifabutin three hundred milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "rifabutin",
+      "lasaPartners": [
+        "rifapentine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-11",
+      "speaker": "s2",
+      "line": "11",
+      "file": "eval/live/audio/s2-11.wav",
+      "text": "Clobazam ten milligrams, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "clobazam",
+      "lasaPartners": [
+        "clonazepam"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-12",
+      "speaker": "s2",
+      "line": "12",
+      "file": "eval/live/audio/s2-12.wav",
+      "text": "Clonazepam half a milligram, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "clonazepam",
+      "lasaPartners": [
+        "clobazam",
+        "alprazolam",
+        "clonidine",
+        "clozapine",
+        "lorazepam"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-13",
+      "speaker": "s2",
+      "line": "13",
+      "file": "eval/live/audio/s2-13.wav",
+      "text": "Lamotrigine twenty-five milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "lamotrigine",
+      "lasaPartners": [
+        "lamivudine",
+        "labetalol",
+        "levetiracetam",
+        "levothyroxine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-14",
+      "speaker": "s2",
+      "line": "14",
+      "file": "eval/live/audio/s2-14.wav",
+      "text": "Lamivudine one hundred fifty milligrams, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "lamivudine",
+      "lasaPartners": [
+        "lamotrigine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-01",
+      "speaker": "s3",
+      "line": "01",
+      "file": "eval/live/audio/s3-01.wav",
+      "text": "Guaifenesin four hundred milligrams, by mouth every four hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "guaifenesin",
+      "lasaPartners": [
+        "guanfacine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-02",
+      "speaker": "s3",
+      "line": "02",
+      "file": "eval/live/audio/s3-02.wav",
+      "text": "Guanfacine one milligram, by mouth at bedtime.",
+      "kind": "lasa",
+      "expectedDrug": "guanfacine",
+      "lasaPartners": [
+        "guaifenesin"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-03",
+      "speaker": "s3",
+      "line": "03",
+      "file": "eval/live/audio/s3-03.wav",
+      "text": "Buprenorphine eight milligrams, under the tongue once daily.",
+      "kind": "lasa",
+      "expectedDrug": "buprenorphine",
+      "lasaPartners": [
+        "hydromorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-04",
+      "speaker": "s3",
+      "line": "04",
+      "file": "eval/live/audio/s3-04.wav",
+      "text": "Bupropion one hundred fifty milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "bupropion",
+      "lasaPartners": [
+        "buspirone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-05",
+      "speaker": "s3",
+      "line": "05",
+      "file": "eval/live/audio/s3-05.wav",
+      "text": "Dobutamine five micrograms per kilogram per minute, intravenous.",
+      "kind": "lasa",
+      "expectedDrug": "dobutamine",
+      "lasaPartners": [
+        "dopamine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-06",
+      "speaker": "s3",
+      "line": "06",
+      "file": "eval/live/audio/s3-06.wav",
+      "text": "Dopamine five micrograms per kilogram per minute, intravenous.",
+      "kind": "lasa",
+      "expectedDrug": "dopamine",
+      "lasaPartners": [
+        "dobutamine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-07",
+      "speaker": "s3",
+      "line": "07",
+      "file": "eval/live/audio/s3-07.wav",
+      "text": "Nifedipine thirty milligrams, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "nifedipine",
+      "lasaPartners": [
+        "nimodipine",
+        "nicardipine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-08",
+      "speaker": "s3",
+      "line": "08",
+      "file": "eval/live/audio/s3-08.wav",
+      "text": "Nimodipine sixty milligrams, by mouth every four hours.",
+      "kind": "lasa",
+      "expectedDrug": "nimodipine",
+      "lasaPartners": [
+        "nifedipine",
+        "nicardipine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-09",
+      "speaker": "s3",
+      "line": "09",
+      "file": "eval/live/audio/s3-09.wav",
+      "text": "Cefazolin one gram, intravenous every eight hours.",
+      "kind": "lasa",
+      "expectedDrug": "cefazolin",
+      "lasaPartners": [
+        "cefotetan",
+        "cefoxitin",
+        "ceftazidime",
+        "ceftriaxone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-10",
+      "speaker": "s3",
+      "line": "10",
+      "file": "eval/live/audio/s3-10.wav",
+      "text": "Cefotetan one gram, intravenous every twelve hours.",
+      "kind": "lasa",
+      "expectedDrug": "cefotetan",
+      "lasaPartners": [
+        "cefazolin",
+        "cefoxitin",
+        "ceftazidime",
+        "ceftriaxone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-11",
+      "speaker": "s3",
+      "line": "11",
+      "file": "eval/live/audio/s3-11.wav",
+      "text": "Levothyroxine fifty micrograms, by mouth once daily.",
+      "kind": "lasa",
+      "expectedDrug": "levothyroxine",
+      "lasaPartners": [
+        "liothyronine",
+        "lamotrigine",
+        "lanoxin"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-12",
+      "speaker": "s3",
+      "line": "12",
+      "file": "eval/live/audio/s3-12.wav",
+      "text": "Levetiracetam five hundred milligrams, by mouth twice daily.",
+      "kind": "lasa",
+      "expectedDrug": "levetiracetam",
+      "lasaPartners": [
+        "lamotrigine",
+        "levocarnitine",
+        "levofloxacin"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-13",
+      "speaker": "s3",
+      "line": "13",
+      "file": "eval/live/audio/s3-13.wav",
+      "text": "Hydromorphone four milligrams, by mouth every four hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "hydromorphone",
+      "lasaPartners": [
+        "morphine",
+        "buprenorphine",
+        "hydralazine",
+        "hydroxyzine",
+        "oxymorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-14",
+      "speaker": "s3",
+      "line": "14",
+      "file": "eval/live/audio/s3-14.wav",
+      "text": "Morphine thirty milligrams, by mouth every four hours as needed.",
+      "kind": "lasa",
+      "expectedDrug": "morphine",
+      "lasaPartners": [
+        "hydromorphone"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-15",
+      "speaker": "s1",
+      "line": "15",
+      "file": "eval/live/audio/s1-15.wav",
+      "text": "Lisinopril ten milligrams, by mouth once daily.",
+      "kind": "safe",
+      "expectedDrug": "lisinopril",
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-16",
+      "speaker": "s1",
+      "line": "16",
+      "file": "eval/live/audio/s1-16.wav",
+      "text": "Atorvastatin twenty milligrams, by mouth at bedtime.",
+      "kind": "safe",
+      "expectedDrug": "atorvastatin",
+      "lasaPartners": [
+        "atomoxetine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-17",
+      "speaker": "s1",
+      "line": "17",
+      "file": "eval/live/audio/s1-17.wav",
+      "text": "My NPI is one two three, four five six, seven eight nine three.",
+      "kind": "npi",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "1234567893",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-18",
+      "speaker": "s1",
+      "line": "18",
+      "file": "eval/live/audio/s1-18.wav",
+      "text": "NPI nine eight seven, six five four, three two one three.",
+      "kind": "npi",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "9876543213",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-19",
+      "speaker": "s1",
+      "line": "19",
+      "file": "eval/live/audio/s1-19.wav",
+      "text": "DEA number A B, one two three, four five six three.",
+      "kind": "dea",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "AB1234563",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-20",
+      "speaker": "s1",
+      "line": "20",
+      "file": "eval/live/audio/s1-20.wav",
+      "text": "Yes.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "confirmed",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-21",
+      "speaker": "s1",
+      "line": "21",
+      "file": "eval/live/audio/s1-21.wav",
+      "text": "Yeah, no.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-22",
+      "speaker": "s1",
+      "line": "22",
+      "file": "eval/live/audio/s1-22.wav",
+      "text": "Yes, but the dose is wrong.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-23",
+      "speaker": "s1",
+      "line": "23",
+      "file": "eval/live/audio/s1-23.wav",
+      "text": "Yes, morphine.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-24",
+      "speaker": "s1",
+      "line": "24",
+      "file": "eval/live/audio/s1-24.wav",
+      "text": "Thank you.",
+      "kind": "non-command",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "unclear",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s1-25",
+      "speaker": "s1",
+      "line": "25",
+      "file": "eval/live/audio/s1-25.wav",
+      "text": "Mhm.",
+      "kind": "non-command",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "unclear",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-15",
+      "speaker": "s2",
+      "line": "15",
+      "file": "eval/live/audio/s2-15.wav",
+      "text": "Lisinopril ten milligrams, by mouth once daily.",
+      "kind": "safe",
+      "expectedDrug": "lisinopril",
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-16",
+      "speaker": "s2",
+      "line": "16",
+      "file": "eval/live/audio/s2-16.wav",
+      "text": "Atorvastatin twenty milligrams, by mouth at bedtime.",
+      "kind": "safe",
+      "expectedDrug": "atorvastatin",
+      "lasaPartners": [
+        "atomoxetine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-17",
+      "speaker": "s2",
+      "line": "17",
+      "file": "eval/live/audio/s2-17.wav",
+      "text": "My NPI is one two three, four five six, seven eight nine three.",
+      "kind": "npi",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "1234567893",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-18",
+      "speaker": "s2",
+      "line": "18",
+      "file": "eval/live/audio/s2-18.wav",
+      "text": "NPI nine eight seven, six five four, three two one three.",
+      "kind": "npi",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "9876543213",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-19",
+      "speaker": "s2",
+      "line": "19",
+      "file": "eval/live/audio/s2-19.wav",
+      "text": "DEA number A B, one two three, four five six three.",
+      "kind": "dea",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "AB1234563",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-20",
+      "speaker": "s2",
+      "line": "20",
+      "file": "eval/live/audio/s2-20.wav",
+      "text": "Yes.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "confirmed",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-21",
+      "speaker": "s2",
+      "line": "21",
+      "file": "eval/live/audio/s2-21.wav",
+      "text": "Yeah, no.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-22",
+      "speaker": "s2",
+      "line": "22",
+      "file": "eval/live/audio/s2-22.wav",
+      "text": "Yes, but the dose is wrong.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-23",
+      "speaker": "s2",
+      "line": "23",
+      "file": "eval/live/audio/s2-23.wav",
+      "text": "Yes, morphine.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-24",
+      "speaker": "s2",
+      "line": "24",
+      "file": "eval/live/audio/s2-24.wav",
+      "text": "Thank you.",
+      "kind": "non-command",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "unclear",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s2-25",
+      "speaker": "s2",
+      "line": "25",
+      "file": "eval/live/audio/s2-25.wav",
+      "text": "Mhm.",
+      "kind": "non-command",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "unclear",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-15",
+      "speaker": "s3",
+      "line": "15",
+      "file": "eval/live/audio/s3-15.wav",
+      "text": "Lisinopril ten milligrams, by mouth once daily.",
+      "kind": "safe",
+      "expectedDrug": "lisinopril",
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-16",
+      "speaker": "s3",
+      "line": "16",
+      "file": "eval/live/audio/s3-16.wav",
+      "text": "Atorvastatin twenty milligrams, by mouth at bedtime.",
+      "kind": "safe",
+      "expectedDrug": "atorvastatin",
+      "lasaPartners": [
+        "atomoxetine"
+      ],
+      "expectedIdentifier": null,
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-17",
+      "speaker": "s3",
+      "line": "17",
+      "file": "eval/live/audio/s3-17.wav",
+      "text": "My NPI is one two three, four five six, seven eight nine three.",
+      "kind": "npi",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "1234567893",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-18",
+      "speaker": "s3",
+      "line": "18",
+      "file": "eval/live/audio/s3-18.wav",
+      "text": "NPI nine eight seven, six five four, three two one three.",
+      "kind": "npi",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "9876543213",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-19",
+      "speaker": "s3",
+      "line": "19",
+      "file": "eval/live/audio/s3-19.wav",
+      "text": "DEA number A B, one two three, four five six three.",
+      "kind": "dea",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": "AB1234563",
+      "expectedAnswer": null,
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-20",
+      "speaker": "s3",
+      "line": "20",
+      "file": "eval/live/audio/s3-20.wav",
+      "text": "Yes.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "confirmed",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-21",
+      "speaker": "s3",
+      "line": "21",
+      "file": "eval/live/audio/s3-21.wav",
+      "text": "Yeah, no.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-22",
+      "speaker": "s3",
+      "line": "22",
+      "file": "eval/live/audio/s3-22.wav",
+      "text": "Yes, but the dose is wrong.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-23",
+      "speaker": "s3",
+      "line": "23",
+      "file": "eval/live/audio/s3-23.wav",
+      "text": "Yes, morphine.",
+      "kind": "readback-answer",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "rejected",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-24",
+      "speaker": "s3",
+      "line": "24",
+      "file": "eval/live/audio/s3-24.wav",
+      "text": "Thank you.",
+      "kind": "non-command",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "unclear",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "id": "s3-25",
+      "speaker": "s3",
+      "line": "25",
+      "file": "eval/live/audio/s3-25.wav",
+      "text": "Mhm.",
+      "kind": "non-command",
+      "expectedDrug": null,
+      "lasaPartners": [],
+      "expectedIdentifier": null,
+      "expectedAnswer": "unclear",
+      "present": false,
+      "sha256": null
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import { type CloseExplanation, explainClose, isAlertWorthy } from "./close-codes"
+import { guardSttQuery, guardSttUpdate } from "./param-guard"
 import type { SttBegin, SttMessage, SttTermination, SttTurn } from "./protocol"
-import { mintToken, STT_TOKEN_ROUTE, sttSocketUrl } from "./tokens"
+import { checkBeginModel } from "./stt-model"
+import { mintToken, STT_TOKEN_ROUTE, sttQueryParams, sttSocketUrl } from "./tokens"
 import { type Transport, type TransportFactory, webSocketTransport } from "./transport"
 
 const TERMINATION_TIMEOUT_MS = 4000
@@ -9,9 +11,10 @@ export type SttClientEvents = {
   onBegin?: (message: SttBegin) => void
   onTurn?: (message: SttTurn) => void
   onTermination?: (message: SttTermination) => void
-  onClose?: (explanation: CloseExplanation) => void
+  onClose?: (explanation: CloseExplanation, expected: boolean) => void
   onError?: (error: unknown) => void
   onTokenMinted?: (attempt: number) => void
+  onModelMismatch?: (model: string) => void
 }
 
 export type SttClientOptions = {
@@ -25,6 +28,7 @@ export class SttClient {
   private transport: Transport | null = null
   private terminationWaiters: (() => void)[] = []
   private terminated = false
+  private closeRequested = false
   private mintCount = 0
   private readonly events: SttClientEvents
   private readonly factory: TransportFactory
@@ -42,33 +46,39 @@ export class SttClient {
     return this.transport?.isOpen === true
   }
 
-  get tokensMinted(): number {
-    return this.mintCount
-  }
-
   async connect(): Promise<void> {
+    guardSttQuery(sttQueryParams("", this.query))
     const token = await mintToken(this.tokenRoute)
     this.mintCount += 1
     this.events.onTokenMinted?.(this.mintCount)
     this.terminated = false
+    this.closeRequested = false
     await new Promise<void>((resolve, reject) => {
       let settled = false
-      this.transport = this.factory(sttSocketUrl(token, this.query), {
+      const opened: Transport = this.factory(sttSocketUrl(token, this.query), {
         onOpen: () => {
           if (!settled) {
             settled = true
             resolve()
           }
         },
-        onMessage: (data) => this.handle(data),
+        onMessage: (data) => {
+          if (this.transport === opened) {
+            this.handle(data)
+          }
+        },
         onClose: (code, reason) => {
+          if (this.transport !== null && this.transport !== opened) {
+            return
+          }
           const explanation = explainClose(code, reason)
           if (isAlertWorthy(code)) {
             console.warn(`stt socket close ${code}: ${explanation.operatorAction}`)
           }
-          this.events.onClose?.(explanation)
-          this.releaseWaiters()
+          const expected = code === 1000 || this.closeRequested || this.terminated
           this.transport = null
+          this.events.onClose?.(explanation, expected)
+          this.releaseWaiters()
           if (!settled) {
             settled = true
             reject(new Error(`the stt socket closed before opening: ${code}`))
@@ -82,12 +92,14 @@ export class SttClient {
           }
         },
       })
+      this.transport = opened
     })
   }
 
   async reconnect(): Promise<void> {
-    this.transport?.close(1000, "reconnecting")
+    const previous = this.transport
     this.transport = null
+    previous?.close(1000, "reconnecting")
     await this.connect()
   }
 
@@ -104,13 +116,16 @@ export class SttClient {
   }
 
   updateConfiguration(patch: Record<string, unknown>): void {
-    this.transport?.send(JSON.stringify({ type: "UpdateConfiguration", ...patch }))
+    const message = { type: "UpdateConfiguration", ...patch }
+    guardSttUpdate(message)
+    this.transport?.send(JSON.stringify(message))
   }
 
   async end(): Promise<void> {
     if (this.transport === null) {
       return
     }
+    this.closeRequested = true
     this.transport.send(JSON.stringify({ type: "Terminate" }))
     await this.waitForTermination()
     this.transport?.close(1000, "terminated")
@@ -141,6 +156,19 @@ export class SttClient {
     }
   }
 
+  private acceptBegin(message: SttBegin): void {
+    const check = checkBeginModel(message)
+    this.events.onBegin?.(message)
+    if (check.kind !== "mismatch") {
+      return
+    }
+    this.closeRequested = true
+    this.events.onModelMismatch?.(check.model)
+    const current = this.transport
+    this.transport = null
+    current?.close(1000, "unexpected speech model")
+  }
+
   private handle(data: string | ArrayBuffer): void {
     if (typeof data !== "string") {
       return
@@ -153,7 +181,7 @@ export class SttClient {
       return
     }
     if (message.type === "Begin") {
-      this.events.onBegin?.(message)
+      this.acceptBegin(message)
       return
     }
     if (message.type === "Turn") {

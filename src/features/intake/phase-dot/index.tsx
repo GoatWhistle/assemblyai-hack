@@ -9,7 +9,7 @@ function dotClass(phase: SessionPhase): string {
   if (phase === SessionPhase.Live) {
     return styles.dotLive ?? ""
   }
-  if (phase === SessionPhase.Blocked) {
+  if (phase === SessionPhase.Blocked || phase === SessionPhase.Degraded) {
     return styles.dotFault ?? ""
   }
   if (phase === SessionPhase.Idle || phase === SessionPhase.Closed) {

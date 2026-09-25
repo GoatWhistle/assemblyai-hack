@@ -1,2 +1,2 @@
-export * from "./band"
+export * from "./benchmark"
 export * from "./wilson"

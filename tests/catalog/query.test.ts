@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest"
 import {
-  allDrugNames,
   catalogFromFile,
   comboExists,
   comboSourceFor,
@@ -104,8 +103,7 @@ describe("catalogue access", () => {
 
   it("exposes the dea schedule when the catalogue carries one", () => {
     expect(deaScheduleFor(catalog, "zolpidrex")).toBeNull()
-    const names = allDrugNames(catalog)
-    expect(names.length).toBe(drugCount(catalog))
+    expect(drugCount(catalog)).toBe(catalog.file.drugs.length)
   })
 
   it("adapts to the pure combo source the validator expects", () => {

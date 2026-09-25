@@ -1,27 +1,4 @@
-export const ECHO_MATCH_THRESHOLD = 0.6
-
-function normalizeUtterance(text: string): string[] {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter((token) => token.length > 0)
-}
-
-export function utteranceOverlap(candidate: string, reference: string): number {
-  const candidateTokens = normalizeUtterance(candidate)
-  const referenceTokens = new Set(normalizeUtterance(reference))
-  if (candidateTokens.length === 0 || referenceTokens.size === 0) {
-    return 0
-  }
-  let shared = 0
-  for (const token of candidateTokens) {
-    if (referenceTokens.has(token)) {
-      shared += 1
-    }
-  }
-  return shared / candidateTokens.length
-}
+import { isEchoOf, utteranceOverlap } from "@/confirmation"
 
 export type EchoVerdict = {
   readonly discard: boolean
@@ -73,7 +50,7 @@ export class EchoGuard {
       }
     }
     const overlap = utteranceOverlap(transcript, this.lastAgentLine)
-    const discard = overlap >= ECHO_MATCH_THRESHOLD
+    const discard = isEchoOf(transcript, this.lastAgentLine)
     if (discard) {
       this.discarded += 1
     }

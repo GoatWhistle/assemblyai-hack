@@ -14,7 +14,6 @@ playwright-report/
 .playwright-mcp/
 .gate-mutation-running
 
-data/*.json
 data/*.csv
 data/*.zip
 eval/*/audio/
@@ -23,3 +22,5 @@ screenshots/
 artefacts/
 .impeccable/
 CLAUDE.md
+.claude/
+*.partial.json

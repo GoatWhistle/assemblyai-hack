@@ -1,5 +1,4 @@
 .line {
-  animation: var(--keyframes-enter) var(--dur-base) var(--ease-out-quart) both;
   font-size: var(--text-base);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);

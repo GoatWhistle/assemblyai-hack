@@ -6,6 +6,7 @@ import {
   sessionOriginOf,
   storagePrefixFor,
 } from "./origin"
+import { processSingleton } from "./process-memory"
 import type { SessionStore, StoredSession } from "./store"
 import { createMemoryStore, summarize } from "./store"
 
@@ -83,7 +84,9 @@ export function createBlobStore(token: string, client: BlobClient): SessionStore
       for (const blob of blobs) {
         const response = await fetch(blob.url, { cache: "no-store" })
         if (response.ok) {
-          out.push(summarize((await response.json()) as StoredSession))
+          const summary = summarize((await response.json()) as StoredSession)
+          urls.set(summary.sessionId, blob.url)
+          out.push(summary)
         }
       }
       return out.sort((a, b) => b.startedAt.localeCompare(a.startedAt))
@@ -122,7 +125,11 @@ export function chooseSessionStore(
 
 export function sessionStore(): SessionStore {
   if (active === null) {
-    active = chooseSessionStore(process.env)
+    active = processSingleton("session-store", () => chooseSessionStore(process.env))
   }
   return active
+}
+
+export function installSessionStore(store: SessionStore | null): void {
+  active = store
 }

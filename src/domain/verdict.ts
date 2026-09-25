@@ -58,10 +58,6 @@ export function makeVerdict(input: {
   })
 }
 
-export function verdictPassed(verdict: ValidatorVerdict): boolean {
-  return verdict.outcome === VerdictOutcome.Passed
-}
-
 export function notApplicableVerdict(checkedValue: string): ValidatorVerdict {
   return makeVerdict({
     outcome: VerdictOutcome.NotApplicable,

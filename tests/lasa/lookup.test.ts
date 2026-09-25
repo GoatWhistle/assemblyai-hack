@@ -1,25 +1,25 @@
 import { describe, expect, it } from "vitest"
 import { LasaSource } from "@/domain"
-import { LASA_PAIRS, lasaCheckedTerms, lasaPairCount, lasaRiskFor } from "@/lasa"
+import { ISMP_PAIRS, LASA_PAIRS, lasaCheckedTerms, lasaRiskFor } from "@/lasa"
 
 describe("lasa lookup", () => {
   it("finds the demo pair from either side", () => {
-    const heard = lasaRiskFor("Bisoprolol")
+    const heard = lasaRiskFor("Morphine")
     expect(heard.hit).toBe(true)
-    expect(heard.confusableWith).toContain("lisinopril")
+    expect(heard.confusableWith).toContain("hydromorphone")
     expect(heard.source).toBe(LasaSource.Ismp2023)
     expect(heard.sourceRow).toContain("ISMP")
 
-    const spoken = lasaRiskFor("Lisinopril")
+    const spoken = lasaRiskFor("Hydromorphone")
     expect(spoken.hit).toBe(true)
-    expect(spoken.confusableWith).toContain("bisoprolol")
+    expect(spoken.confusableWith).toContain("morphine")
   })
 
   it("is case insensitive and handles tall man forms", () => {
-    for (const form of ["vinblastine", "VINBLASTINE", "vinBLAStine", "VinBlastine"]) {
+    for (const form of ["hydromorphone", "HYDROMORPHONE", "HYDROmorphone", "HydroMorphone"]) {
       const risk = lasaRiskFor(form)
       expect(risk.hit, form).toBe(true)
-      expect(risk.confusableWith).toContain("vincristine")
+      expect(risk.confusableWith).toContain("morphine")
     }
   })
 
@@ -37,23 +37,41 @@ describe("lasa lookup", () => {
     expect(risk.confusableWith).toEqual([])
   })
 
-  it("carries at least twenty curated pairs", () => {
-    expect(lasaPairCount()).toBeGreaterThanOrEqual(20)
-    expect(lasaCheckedTerms().size).toBe(LASA_PAIRS.length * 2)
+  it("carries at least twenty curated pairs, and checks the whole published list", () => {
+    expect(LASA_PAIRS.length).toBeGreaterThanOrEqual(20)
+    const terms = lasaCheckedTerms()
+    for (const pair of LASA_PAIRS) {
+      expect(terms.has(pair.termA) && terms.has(pair.termB), pair.sourceRow).toBe(true)
+    }
+    const listed = new Set(ISMP_PAIRS.flatMap((pair) => [pair.termA, pair.termB]))
+    expect(
+      terms.size,
+      "the rule checks every name of the full ISMP list and nothing else",
+    ).toBe(listed.size)
+  })
+
+  it("names every published partner of a name, not only the first one found", () => {
+    const partners = ISMP_PAIRS.filter(
+      (pair) => pair.termA === "hydromorphone" || pair.termB === "hydromorphone",
+    ).map((pair) => (pair.termA === "hydromorphone" ? pair.termB : pair.termA))
+    expect(partners.length).toBeGreaterThan(1)
+    expect([...lasaRiskFor("hydromorphone").confusableWith].sort()).toEqual(
+      [...partners].sort(),
+    )
   })
 
   it("includes the pairs the demo and the plan require", () => {
     const required: readonly [string, string][] = [
-      ["lisinopril", "bisoprolol"],
+      ["hydromorphone", "morphine"],
       ["hydralazine", "hydroxyzine"],
-      ["clonidine", "klonopin"],
+      ["clonidine", "clozapine"],
       ["metformin", "metronidazole"],
       ["tramadol", "trazodone"],
-      ["vinblastine", "vincristine"],
+      ["diazepam", "diltiazem"],
       ["cycloserine", "cyclosporine"],
-      ["chlorpromazine", "chlorpropamide"],
+      ["dexamethasone", "dexmedetomidine"],
       ["glipizide", "glyburide"],
-      ["sulfadiazine", "sulfasalazine"],
+      ["cefazolin", "cefotetan"],
     ]
 
     for (const [a, b] of required) {

@@ -100,10 +100,13 @@ beforeEach(() => {
   heard = null
   globalThis.fetch = vi.fn(
     async () =>
-      new Response(JSON.stringify({ token: "token-1" }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      }),
+      new Response(
+        JSON.stringify({ token: "token-1", sessionId: "server-session-1", agentId: "agent-1" }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        },
+      ),
   ) as unknown as typeof fetch
 })
 
@@ -164,7 +167,7 @@ describe("the fast path is invoked from the product path, not merely callable", 
 
 describe("the fast path is reached from the product tree, not only from this test", () => {
   it("acts on the fast path from the intake client rather than merely displaying it", () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(client).toContain("readBack.hear")
     expect(
       /endpointNow/.test(client),
@@ -185,7 +188,7 @@ describe("the fast path is reached from the product tree, not only from this tes
     expect(
       machine,
       "a second literal list of confirming words inside the machine is the drift the shared module exists to prevent",
-    ).toContain('from "./answer-vocabulary"')
+    ).toContain('from "@/confirmation"')
     expect(/const CONFIRMING = \[/.test(machine)).toBe(false)
   })
 })

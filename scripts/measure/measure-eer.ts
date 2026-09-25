@@ -1,11 +1,22 @@
 #!/usr/bin/env -S npx tsx
 
-import { existsSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { buildKeyterms } from "../../src/lasa"
 import { printReport } from "../eer/report"
+import {
+  inManifestOrder,
+  type PartialRun,
+  pendingItems,
+  readPartial,
+  withFailure,
+  withResult,
+  writePartial,
+} from "../eer/resume"
+import { describeFailure } from "../eer/retry"
 import { entityErrorRate, score } from "../eer/score"
 import { type ManifestItem, type TranscriptResult, transcribeItem } from "../eer/transcribe"
+import { appendPaidRun, paidRunOf } from "../report/record-spend"
 
 const SPACING_MS = Number(process.env.EER_SPACING_MS ?? 24000)
 
@@ -47,23 +58,57 @@ function requireKey(): string {
   return key
 }
 
-async function transcribeAll(
+export type SweepDeps = {
+  readonly transcribe: (
+    item: ManifestItem,
+    key: string,
+    keyterms: readonly string[],
+  ) => Promise<TranscriptResult>
+  readonly sleep: (ms: number) => Promise<void>
+  readonly log: (line: string) => void
+  readonly spacingMs: number
+}
+
+const SWEEP_DEPS: SweepDeps = {
+  transcribe: (item, key, keyterms) => transcribeItem(item, key, keyterms),
+  sleep,
+  log: (line) => console.log(line),
+  spacingMs: SPACING_MS,
+}
+
+export async function transcribeAll(
   items: readonly ManifestItem[],
   key: string,
   keyterms: readonly string[],
-): Promise<readonly TranscriptResult[]> {
-  const results: TranscriptResult[] = []
-  for (const [index, item] of items.entries()) {
-    const result = await transcribeItem(item, key, keyterms)
-    results.push(result)
-    console.log(
-      `  ${index + 1}/${items.length} ${item.spoken} -> ${result.transcript.length === 0 ? "(empty)" : result.transcript}`,
+  partialPath: string,
+  deps: SweepDeps = SWEEP_DEPS,
+): Promise<PartialRun> {
+  let run = readPartial(partialPath)
+  const pending = pendingItems(items, run)
+  const resumed = items.length - pending.length
+  if (resumed > 0) {
+    deps.log(
+      `  resumed ${resumed} scored item(s) from ${partialPath}; ${pending.length} remaining`,
     )
-    if (index < items.length - 1) {
-      await sleep(SPACING_MS)
+  }
+  for (const [index, item] of pending.entries()) {
+    const position = `${resumed + index + 1}/${items.length}`
+    try {
+      const result = await deps.transcribe(item, key, keyterms)
+      run = withResult(run, result)
+      deps.log(
+        `  ${position} ${item.spoken} -> ${result.transcript.length === 0 ? "(empty)" : result.transcript}`,
+      )
+    } catch (error) {
+      run = withFailure(run, item, error)
+      deps.log(`  ${position} ${item.spoken} -> FAILED, recorded: ${describeFailure(error)}`)
+    }
+    writePartial(partialPath, run)
+    if (index < pending.length - 1) {
+      await deps.sleep(deps.spacingMs)
     }
   }
-  return results
+  return { results: inManifestOrder(items, run.results), failed: run.failed }
 }
 
 async function main(): Promise<void> {
@@ -110,7 +155,30 @@ async function main(): Promise<void> {
   console.log(`  caveat: ${manifest.caveat}`)
   console.log("")
 
-  const results = await transcribeAll(items, key, keyterms)
+  const partialPath = outPath.replace(/\.json$/, ".partial.json")
+  const { results, failed } = await transcribeAll(items, key, keyterms, partialPath)
+  const socketMs = results.reduce((sum, result) => sum + result.socketMs, 0)
+  appendPaidRun(
+    paidRunOf({
+      command: `scripts/measure/measure-eer.ts --set ${setPath}`,
+      sockets: ["stt"],
+      openedAtMs: 0,
+      closedAtMs: socketMs,
+      outcome:
+        failed.length === 0 && results.every((result) => result.closeCode === 1000)
+          ? "completed"
+          : "failed",
+      nowIso: new Date().toISOString(),
+    }),
+  )
+  console.log(
+    `spend recorded: ${(socketMs / 1000).toFixed(1)} s of STT socket time in eval/spend-ledger.json, summed over every scored item including resumed ones`,
+  )
+  if (failed.length > 0) {
+    console.log(
+      `${failed.length} item(s) failed after retries and are excluded from every rate below; they are listed under "failed" in the result file`,
+    )
+  }
   const scored = score(results)
   printReport(scored, results)
 
@@ -124,16 +192,21 @@ async function main(): Promise<void> {
         spacingMs: SPACING_MS,
         keyterms: keyterms.length,
         entityErrorRate: entityErrorRate(scored),
+        itemsFailed: failed.length,
         results,
         scored,
+        failed,
       },
       null,
       2,
     )}\n`,
     "utf8",
   )
+  rmSync(partialPath, { force: true })
   console.log("")
-  console.log(`raw results: ${outPath}`)
+  console.log(
+    `raw results: ${outPath}; the resume checkpoint ${partialPath} is removed once the result is written`,
+  )
 }
 
 if (process.argv[1]?.includes("measure-eer")) {

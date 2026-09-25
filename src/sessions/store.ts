@@ -1,10 +1,12 @@
-import type { SessionRecord, SessionSummary } from "@/domain"
+import type { OrderReceipt, OrderWitness, SessionRecord, SessionSummary } from "@/domain"
 import { ReasonCode } from "@/domain"
 import { type SessionOrigin, sessionOriginOf } from "./origin"
 
 export type StoredSession = SessionRecord & {
   readonly orderId: string | null
   readonly committed: boolean
+  readonly receipt?: OrderReceipt | null
+  readonly witness?: OrderWitness | null
 }
 
 export type SessionStore = {

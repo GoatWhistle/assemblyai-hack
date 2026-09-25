@@ -2,8 +2,7 @@ import { POST as commitOrder } from "@app/api/tools/commit-order/route"
 import { POST as proposeField } from "@app/api/tools/propose-field/route"
 import { POST as readBack } from "@app/api/tools/read-back/route"
 import { beforeEach, describe, expect, it } from "vitest"
-import { intakeFor } from "@/tools"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { call, intake, readBackAloud, resetToolEnvironment, seedTurn } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -21,11 +20,10 @@ const ORDER: readonly FieldInput[] = [
 ]
 
 async function collect(input: FieldInput): Promise<string> {
-  seedTurn(input.value, 0.99, input.turn)
+  await seedTurn(input.value, 0.99)
   const proposed = await (
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: input.field,
         value: input.value,
         transcript_hint: input.value,
@@ -36,10 +34,11 @@ async function collect(input: FieldInput): Promise<string> {
   expect(proposed.written_to_order, `${input.field} was written by propose_field`).toBe(false)
   expect(proposed.candidate_id, `${input.field}: ${proposed.reason_code}`).not.toBeNull()
 
+  await readBackAloud(`Confirming ${input.field}: ${input.value}. Correct?`, "yes")
+
   const confirmed = await (
     await readBack(
       call("read-back", {
-        session_id: SESSION,
         field: input.field,
         candidate_id: proposed.candidate_id,
         utterance: `Confirming ${input.field}: ${input.value}. Correct?`,
@@ -58,13 +57,12 @@ describe("a whole intake from first field to committed order", () => {
       await collect(field)
     }
 
-    const state = intakeFor(SESSION)
+    const state = await intake()
     expect(state.order.fields.size).toBe(ORDER.length)
 
     const committed = await (
       await commitOrder(
         call("commit-order", {
-          session_id: SESSION,
           full_order_read_back:
             "Reading the whole order back. azithromycin 200 mg per 5 mL, oral, quantity 30. Is all of that correct?",
           caller_confirmed: true,
@@ -76,7 +74,7 @@ describe("a whole intake from first field to committed order", () => {
     expect(committed.order_id.length).toBeGreaterThan(0)
     expect(committed.fields.drug_name.value).toBe("azithromycin")
     expect(committed.fields.prescriber_npi.value).toBe("1245319599")
-    expect(intakeFor(SESSION).order.status).toBe("committed")
+    expect((await intake()).order.status).toBe("committed")
   })
 
   it("is idempotent, so a second call returns the same order rather than a second one", async () => {
@@ -85,7 +83,6 @@ describe("a whole intake from first field to committed order", () => {
     }
 
     const body = {
-      session_id: SESSION,
       full_order_read_back: "Reading the whole order back...",
       caller_confirmed: true,
     }
@@ -106,7 +103,6 @@ describe("a whole intake from first field to committed order", () => {
     const body = await (
       await commitOrder(
         call("commit-order", {
-          session_id: SESSION,
           full_order_read_back: "Reading the whole order back...",
           caller_confirmed: true,
         }),

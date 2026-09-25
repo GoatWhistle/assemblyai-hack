@@ -1,16 +1,26 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it } from "vitest"
-import { GateAction, policyFor, ReasonCode } from "@/domain"
+import {
+  ConfirmationReason,
+  type FieldPolicy,
+  GateAction,
+  PAIR_RULE_FLAG,
+  policyFor,
+  ReasonCode,
+} from "@/domain"
 import { JudgeDemo } from "@/features/judge-demo"
 import {
   DEMO_ARMS,
   DEMO_DURATION_MS,
+  NAMED_ANSWER,
+  PLAIN_ANSWER,
+  productLine,
   RECOGNIZED_AS,
   RECOGNIZER_CERTAINTY,
   SHIPPED_POLICY,
   SPOKEN_TRUTH,
-  THRESHOLD_ONLY_POLICY,
+  WITHOUT_PAIR_RULE_POLICY,
 } from "@/features/judge-demo/demo-arms"
 import { LASA_CANDIDATE, LASA_DECISION } from "@/features/judge-demo/scenario"
 import { decide } from "@/gate"
@@ -19,21 +29,22 @@ import { lasaRiskFor } from "@/lasa"
 describe("the judge-solo requirement", () => {
   it("needs exactly one click and no microphone", async () => {
     render(<JudgeDemo />)
-    const play = screen.getByRole("button", { name: /Play the recorded session/i })
+    const play = screen.getByRole("button", { name: /Play the replay/i })
     await userEvent.click(play)
     expect(screen.getByRole("button", { name: /Stop/i }).hasAttribute("disabled")).toBe(false)
   })
 
   it("states the ground truth before anything is played", () => {
     render(<JudgeDemo />)
-    expect(screen.getByText(/Ground truth for this recording/i)).toBeDefined()
+    expect(screen.getByText(/Ground truth for this replay/i)).toBeDefined()
     expect(screen.getAllByText(new RegExp(SPOKEN_TRUTH)).length).toBeGreaterThan(0)
     expect(screen.getAllByText(new RegExp(RECOGNIZED_AS)).length).toBeGreaterThan(0)
   })
 
-  it("says both drugs pass a catalogue lookup and treat different conditions", () => {
+  it("says both drugs are opioid pain medicines whose danger is the dose, not the indication", () => {
     render(<JudgeDemo />)
-    expect(screen.getByText(/treat different conditions/i)).toBeDefined()
+    expect(screen.getByText(/both are opioid pain medicines dosed differently/i)).toBeDefined()
+    expect(screen.queryByText(/different conditions/i)).toBeNull()
   })
 
   it("runs under forty seconds", () => {
@@ -42,73 +53,106 @@ describe("the judge-solo requirement", () => {
 })
 
 describe("the two arms of the contrast", () => {
-  it("shows a gated arm and an ungated arm side by side", () => {
+  const pair = DEMO_ARMS.find((arm) => arm.id === "pair-rule")
+  const plain = DEMO_ARMS.find((arm) => arm.id === "plain-read-back")
+
+  it("shows the arm with the pair rule and the arm without it side by side", () => {
     render(<JudgeDemo />)
-    expect(screen.getByRole("region", { name: "Gate on" })).toBeDefined()
-    expect(screen.getByRole("region", { name: "Gate off" })).toBeDefined()
+    expect(screen.getByRole("region", { name: "Pair rule on" })).toBeDefined()
+    expect(screen.getByRole("region", { name: "Pair rule off" })).toBeDefined()
   })
 
-  it("marks only the gated arm as the shipped configuration", () => {
+  it("marks only the arm with the pair rule as the shipped configuration", () => {
     render(<JudgeDemo />)
     expect(screen.getByText("shipped")).toBeDefined()
     expect(screen.getByText("comparison only")).toBeDefined()
+    expect(pair?.policy).toBe(SHIPPED_POLICY)
   })
 
-  it("writes nothing in the gated arm and the wrong drug in the ungated arm", () => {
-    const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
-    const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
-    expect(gated?.outcomeValue).toBe("Nothing yet")
-    expect(ungated?.outcomeValue).toContain(RECOGNIZED_AS)
+  it("orders the spoken drug with the pair rule and the misheard one without it", () => {
+    expect(pair?.written?.value).toBe(SPOKEN_TRUTH)
+    expect(plain?.written?.value).toBe(RECOGNIZED_AS)
+    expect(pair?.value.settled).toBe(productLine(SPOKEN_TRUTH))
+    expect(plain?.value.settled).toBe(productLine(RECOGNIZED_AS))
   })
 
-  it("explains the ungated failure as one a threshold cannot catch", () => {
-    const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
-    expect(ungated?.outcomeBody).toContain("no threshold catches it")
+  it("writes nothing in either arm between the question and the answer", () => {
+    expect(pair?.value.asked).toBe("Nothing yet")
+    expect(plain?.value.asked).toBe("Nothing yet")
+  })
+
+  it("explains the failure without the pair rule as one no threshold catches", () => {
+    expect(plain?.body.settled).toContain("no threshold catches it")
     expect(
-      ungated?.outcomeBody,
-      "the demo must name the certainty it failed at, and at the ceiling rather than near it, so that raising the threshold is visibly not an answer",
+      plain?.body.settled,
+      "the demo must name the certainty it failed at, at the ceiling, so raising the threshold is visibly not an answer",
     ).toContain(`${RECOGNIZER_CERTAINTY.toFixed(2)}`)
-    expect(
-      RECOGNIZER_CERTAINTY,
-      "a demonstration at 0.99 invites the reply that a threshold of 1.0 would have caught it; the gate refuses at exactly 1.00 and the demo should show that",
-    ).toBe(1)
+    expect(RECOGNIZER_CERTAINTY).toBe(1)
   })
 
-  it("names both alternatives in the gated arm's utterance", () => {
-    const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
-    expect(gated?.agentLine).toContain(LASA_CANDIDATE.lasa.matchedTerm)
+  it("models the reflex yes as possible, not as what every caller does", () => {
+    expect(plain?.body.settled).toContain("can confirm the one read to them")
+    expect(plain?.body.settled).not.toContain("confirms the one read to them")
+  })
+
+  it("names both alternatives in the shipped arm's question", () => {
+    expect(pair?.agentLine).toContain(LASA_CANDIDATE.lasa.matchedTerm)
     for (const partner of LASA_CANDIDATE.lasa.confusableWith) {
-      expect(gated?.agentLine).toContain(partner)
+      expect(pair?.agentLine).toContain(partner)
     }
-    expect(gated?.agentLine).toContain("confused-drug-names list")
   })
 
-  it("says the refusal is structural rather than a choice the model made", () => {
-    const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
-    expect(gated?.outcomeBody).toContain("no code path that writes an unconfirmed value")
+  it("says in the shipped arm that a reflexive yes would have written nothing", () => {
+    expect(pair?.body.settled).toContain(ConfirmationReason.LasaNamedAnswerRequired)
+    expect(pair?.body.asked).toContain(ConfirmationReason.LasaNamedAnswerRequired)
   })
 
   it("states the contrast before anything is played, so the page explains itself at rest", () => {
     render(<JudgeDemo />)
-    expect(
-      screen.getByText(/nothing will enter/i),
-      "the gated arm must say what it refuses to write",
-    ).toBeDefined()
-    const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
-    expect(
-      screen.getByText(String(ungated?.restingValue)),
-      "the ungated arm must say what it would accept",
-    ).toBeDefined()
-    expect(String(ungated?.restingValue)).toContain(RECOGNIZED_AS)
-    expect(
-      screen.queryByText(/not reached yet/),
-      "an empty placeholder hides the very thing the page exists to show",
-    ).toBeNull()
+    expect(screen.getByText(String(pair?.value.resting))).toBeDefined()
+    expect(screen.getByText(String(plain?.value.resting))).toBeDefined()
+    expect(String(plain?.value.resting)).toContain(RECOGNIZED_AS)
+    expect(screen.queryByText(/not reached yet/)).toBeNull()
   })
 
-  it("marks the outcome as prospective before playback and settled after it", () => {
+  it("marks the outcome as prospective before playback", () => {
     render(<JudgeDemo />)
     expect(screen.getAllByText(/what the agent will say/i).length).toBe(2)
+    expect(screen.getAllByText(/what the caller will answer/i).length).toBe(2)
+  })
+})
+
+describe("S0: the arms differ by exactly one policy flag, the pair rule", () => {
+  it("changes one key of the policy and nothing else", () => {
+    const keys = Object.keys(SHIPPED_POLICY) as (keyof FieldPolicy)[]
+    const differing = keys.filter(
+      (key) => SHIPPED_POLICY[key] !== WITHOUT_PAIR_RULE_POLICY[key],
+    )
+    expect(differing, "AU6-P0-03: the comparison arm once switched off two flags").toEqual([
+      PAIR_RULE_FLAG,
+    ])
+    expect(SHIPPED_POLICY.lasaChecked).toBe(true)
+    expect(WITHOUT_PAIR_RULE_POLICY.readBackAlways).toBe(true)
+  })
+
+  it("runs the comparison arm through the shipped read-back, not a threshold alone", () => {
+    const plain = DEMO_ARMS.find((arm) => arm.id === "plain-read-back")
+    expect(plain?.decision.action).toBe(GateAction.AskConfirm)
+    expect(plain?.decision.reasonCode).toBe(ReasonCode.ReadBackRequired)
+    expect(plain?.agentLine).toContain(RECOGNIZED_AS)
+    for (const partner of LASA_CANDIDATE.lasa.confusableWith) {
+      expect(plain?.agentLine, "a plain read-back names only the heard drug").not.toContain(
+        partner,
+      )
+    }
+  })
+
+  it("has the caller answer yes to the plain read-back and name the drug to the contrastive one", () => {
+    const [pair, plain] = DEMO_ARMS
+    expect(plain?.answer.callerSaid).toBe(PLAIN_ANSWER)
+    expect(plain?.answer.reasonCode).toBe(ConfirmationReason.CallerAffirmed)
+    expect(pair?.answer.callerSaid).toBe(NAMED_ANSWER)
+    expect(pair?.answer.reasonCode).toBe(ConfirmationReason.CallerNamedPartner)
   })
 })
 
@@ -136,54 +180,23 @@ describe("the scenario behind the demo", () => {
 })
 
 describe("the demonstration computes its refusal instead of printing one", () => {
-  it("shows the agent line the gate raised, not a string written into the page", () => {
-    const gated = DEMO_ARMS.find((arm) => arm.id === "gated")
-    const raised = decide(LASA_CANDIDATE, SHIPPED_POLICY)
-    expect(
-      gated?.agentLine,
-      "the forty-second demonstration is the one screen that explains the product; a hand-typed refusal there is the defect we accuse the field of",
-    ).toBe(raised.agentUtterance)
+  it("shows the agent lines the gate raised, not strings written into the page", () => {
+    const [pair, plain] = DEMO_ARMS
+    expect(pair?.agentLine).toBe(decide(LASA_CANDIDATE, SHIPPED_POLICY).agentUtterance)
+    expect(plain?.agentLine).toBe(
+      decide(LASA_CANDIDATE, WITHOUT_PAIR_RULE_POLICY).agentUtterance,
+    )
     render(<JudgeDemo />)
-    expect(
-      screen.getAllByText(raised.agentUtterance).length,
-      "the gate's own utterance must appear on the page; the scenario picker renders it a second time, so the count is at least one rather than exactly one",
-    ).toBeGreaterThan(0)
+    expect(screen.getAllByText(String(pair?.agentLine)).length).toBeGreaterThan(0)
+    expect(screen.getByText(String(plain?.agentLine))).toBeDefined()
   })
 
-  it("shows the comparison line the same function raised with the two proofs switched off", () => {
-    const ungated = DEMO_ARMS.find((arm) => arm.id === "ungated")
-    const raised = decide(LASA_CANDIDATE, THRESHOLD_ONLY_POLICY)
-    expect(ungated?.agentLine).toBe(raised.agentUtterance)
+  it("prints each arm's reason codes on screen, so every outcome is attributable", () => {
     render(<JudgeDemo />)
-    expect(screen.getByText(raised.agentUtterance)).toBeDefined()
-  })
-
-  it("differs between the arms only by the pair check and the read-back requirement", () => {
-    expect(THRESHOLD_ONLY_POLICY.autoAcceptThreshold).toBe(SHIPPED_POLICY.autoAcceptThreshold)
-    expect(THRESHOLD_ONLY_POLICY.validator).toBe(SHIPPED_POLICY.validator)
-    expect(THRESHOLD_ONLY_POLICY.lasaChecked).toBe(false)
-    expect(SHIPPED_POLICY.lasaChecked).toBe(true)
-  })
-
-  it("accepts the wrong drug in the comparison arm, so the contrast is a real outcome", () => {
-    const raised = decide(LASA_CANDIDATE, THRESHOLD_ONLY_POLICY)
-    expect(
-      raised.action,
-      "if the comparison arm also refused, the page would claim a contrast it does not have",
-    ).toBe(GateAction.Accept)
-    expect(raised.reasonCode).toBe(ReasonCode.ValidatorPassedHighConf)
-  })
-
-  it("prints each arm's reason code on screen, so the refusal is attributable", () => {
-    render(<JudgeDemo />)
-    expect(
-      screen.getAllByText(ReasonCode.LasaHit).length,
-      "the pair reason code must be attributable on screen; the scenario picker prints it too, so the count is at least one rather than exactly one",
-    ).toBeGreaterThan(0)
-    expect(
-      screen.getAllByText(ReasonCode.ValidatorPassedHighConf).length,
-      "the comparison arm's reason code must be attributable on screen",
-    ).toBeGreaterThan(0)
+    expect(screen.getAllByText(ReasonCode.LasaHit).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(ReasonCode.ReadBackRequired).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(ConfirmationReason.CallerNamedPartner).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(ConfirmationReason.CallerAffirmed).length).toBeGreaterThan(0)
   })
 
   it("takes the pair citation from the curated table rather than from the page", () => {

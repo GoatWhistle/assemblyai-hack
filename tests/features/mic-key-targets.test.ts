@@ -15,7 +15,7 @@ function element(html: string): HTMLElement {
 describe("the global mic shortcut yields to whatever already owns the key", () => {
   it("leaves Space to a focused button", () => {
     expect(
-      ownsSpace(element("<button type='button'>Play the recorded session</button>")),
+      ownsSpace(element("<button type='button'>Play the replay</button>")),
       "a judge tabbing to the play button and pressing Space must not also toggle the session",
     ).toBe(true)
   })

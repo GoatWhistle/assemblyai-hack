@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-25T18:21:18.430Z",
+  "kind": "live_smoke",
+  "deployment": "https://disallow-reformist-ditto.ngrok-free.dev",
+  "sessionId": "ec85b429-d3c1-49f5-a0ce-59a15302c174",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 246.4,
+    "stt": 246.4
+  },
+  "costUsd": 0.3491,
+  "outcome": "failed",
+  "reason": "live smoke clean-order: not observed: the order committed; 0 of 9 caller lines played; last agent line: none; socket time is the harness wall clock, an upper bound; the receipt could not be fetched: fetch failed",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+  ]
+}

@@ -42,11 +42,11 @@ export const DIGIT_WORDS: Readonly<Record<string, string>> = Object.freeze({
   "9": "nine",
 })
 
-export function digitWord(character: string): string {
+function digitWord(character: string): string {
   return DIGIT_WORDS[character] ?? character
 }
 
-export function natoWord(character: string): string {
+function natoWord(character: string): string {
   return NATO[character.toLowerCase()] ?? character
 }
 

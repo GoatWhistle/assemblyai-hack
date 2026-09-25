@@ -1,8 +1,9 @@
-import { readFileSync } from "node:fs"
-import WebSocket from "ws"
+import { type ConnectDeps, connectStreaming, DEFAULT_CONNECT_DEPS } from "./connect"
+import { readWav, resampleLinear } from "./wav"
 
 const TARGET_RATE = 16000
 const CHUNK_MS = 100
+const SOCKET_OPEN = 1
 
 export type ManifestItem = {
   readonly file: string
@@ -30,69 +31,6 @@ export type TranscriptResult = {
   readonly firstPartialMs: number | null
   readonly finalizationMs: number | null
   readonly turnCount: number
-}
-
-function readWav(path: string): { readonly rate: number; readonly samples: Int16Array } {
-  const buffer = readFileSync(path)
-  let offset = 12
-  let rate = 0
-  let dataStart = -1
-  let dataLength = 0
-
-  while (offset + 8 <= buffer.length) {
-    const id = buffer.toString("ascii", offset, offset + 4)
-    const size = buffer.readUInt32LE(offset + 4)
-    if (id === "fmt ") {
-      rate = buffer.readUInt32LE(offset + 12)
-    }
-    if (id === "data") {
-      dataStart = offset + 8
-      dataLength = size
-      break
-    }
-    offset += 8 + size + (size % 2)
-  }
-
-  if (dataStart < 0 || rate === 0) {
-    throw new Error(`${path}: no data or fmt chunk found`)
-  }
-
-  const count = Math.floor(dataLength / 2)
-  const samples = new Int16Array(count)
-  for (let i = 0; i < count; i += 1) {
-    samples[i] = buffer.readInt16LE(dataStart + i * 2)
-  }
-  return { rate, samples }
-}
-
-function resampleLinear(samples: Int16Array, fromRate: number, toRate: number): Int16Array {
-  if (fromRate === toRate) {
-    return samples
-  }
-  const ratio = fromRate / toRate
-  const outLength = Math.floor(samples.length / ratio)
-  const out = new Int16Array(outLength)
-  for (let i = 0; i < outLength; i += 1) {
-    const source = i * ratio
-    const low = Math.floor(source)
-    const high = Math.min(samples.length - 1, low + 1)
-    const weight = source - low
-    const value = (samples[low] ?? 0) * (1 - weight) + (samples[high] ?? 0) * weight
-    out[i] = Math.max(-32768, Math.min(32767, Math.round(value)))
-  }
-  return out
-}
-
-async function mintToken(key: string): Promise<string> {
-  const response = await fetch(
-    "https://streaming.assemblyai.com/v3/token?expires_in_seconds=60",
-    { headers: { Authorization: key } },
-  )
-  if (!response.ok) {
-    throw new Error(`token mint failed with ${response.status}`)
-  }
-  const body = (await response.json()) as { token: string }
-  return body.token
 }
 
 type TurnState = {
@@ -134,14 +72,13 @@ export async function transcribeItem(
   item: ManifestItem,
   key: string,
   keyterms: readonly string[],
+  deps: ConnectDeps = DEFAULT_CONNECT_DEPS,
 ): Promise<TranscriptResult> {
   const wav = readWav(item.file)
   const samples = resampleLinear(wav.samples, wav.rate, TARGET_RATE)
   const audioSeconds = samples.length / TARGET_RATE
-  const token = await mintToken(key)
 
   const query = new URLSearchParams({
-    token,
     sample_rate: String(TARGET_RATE),
     encoding: "pcm_s16le",
     format_turns: "true",
@@ -150,8 +87,7 @@ export async function transcribeItem(
     query.set("keyterms_prompt", JSON.stringify(keyterms))
   }
 
-  const socket = new WebSocket(`wss://streaming.assemblyai.com/v3/ws?${query.toString()}`)
-  const openedAt = Date.now()
+  const { socket, openedAt, openMs } = await connectStreaming(item.spoken, key, query, deps)
 
   return await new Promise<TranscriptResult>((resolve, reject) => {
     const state: TurnState = {
@@ -161,29 +97,25 @@ export async function transcribeItem(
       finalizationMs: null,
       turnCount: 0,
     }
-    let openMs = 0
     let lastAudioSentAt = 0
 
-    socket.on("open", () => {
-      openMs = Date.now() - openedAt
-      const perChunk = (TARGET_RATE * CHUNK_MS) / 1000
-      let sent = 0
-      const timer = setInterval(() => {
-        if (socket.readyState !== WebSocket.OPEN) {
-          clearInterval(timer)
-          return
-        }
-        const slice = samples.subarray(sent, sent + perChunk)
-        if (slice.length === 0) {
-          clearInterval(timer)
-          socket.send(JSON.stringify({ type: "Terminate" }))
-          return
-        }
-        socket.send(Buffer.from(slice.buffer, slice.byteOffset, slice.byteLength))
-        lastAudioSentAt = Date.now()
-        sent += perChunk
-      }, CHUNK_MS)
-    })
+    const perChunk = (TARGET_RATE * CHUNK_MS) / 1000
+    let sent = 0
+    const timer = setInterval(() => {
+      if (socket.readyState !== SOCKET_OPEN) {
+        clearInterval(timer)
+        return
+      }
+      const slice = samples.subarray(sent, sent + perChunk)
+      if (slice.length === 0) {
+        clearInterval(timer)
+        socket.send(JSON.stringify({ type: "Terminate" }))
+        return
+      }
+      socket.send(Buffer.from(slice.buffer, slice.byteOffset, slice.byteLength))
+      lastAudioSentAt = Date.now()
+      sent += perChunk
+    }, CHUNK_MS)
 
     socket.on("message", (data: Buffer) => {
       try {
@@ -207,6 +139,7 @@ export async function transcribeItem(
     })
 
     socket.on("close", (code: number, reason: Buffer) => {
+      clearInterval(timer)
       if (code !== 1000) {
         console.error(
           `    close ${code} on ${item.spoken}: ${reason.toString("utf8") || "(no reason given)"}`,
@@ -226,6 +159,9 @@ export async function transcribeItem(
       })
     })
 
-    socket.on("error", reject)
+    socket.on("error", (error: Error) => {
+      clearInterval(timer)
+      reject(error)
+    })
   })
 }

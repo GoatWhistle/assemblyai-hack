@@ -4,7 +4,7 @@
   padding: var(--space-4) var(--space-5);
   background-color: var(--state-lasa-surface);
   border-bottom: 1px solid var(--state-lasa-line);
-  animation: var(--keyframes-flag-emphatic) var(--dur-emphatic) var(--ease-out-expo) both;
+  animation: var(--keyframes-verdict-emphatic) var(--dur-base) var(--ease-out-expo) both;
 }
 
 .overrideHead {

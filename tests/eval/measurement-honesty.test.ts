@@ -4,10 +4,12 @@ import { describe, expect, it } from "vitest"
 import { parseLedger } from "@/domain"
 import { resultFileName } from "../../scripts/measure/measure-eer"
 import {
+  type ArtefactRun,
   artefactRuns,
   DISCARDED_RUNS,
   honestCount,
   LEDGER_PATH,
+  reconciliation,
 } from "../../scripts/report/live-run-count"
 
 function runScript(path: string): { code: number; output: string } {
@@ -121,13 +123,44 @@ describe("the count of live runs includes the ones that failed", () => {
       ledger,
       "a ledger that does not parse must fail loudly rather than reconcile to zero",
     ).not.toBeNull()
-    const counted = honestCount([...artefactRuns(), ...DISCARDED_RUNS]).runs
-    if ((ledger ?? []).length < counted) {
-      const result = runScript("scripts/report/live-run-count.ts")
-      expect(
-        result.output,
-        "the ledger was added after these runs happened, and inventing entries with guessed durations would be worse than publishing the gap",
-      ).toMatch(/ledger is behind by/)
+    const counted = [...artefactRuns(), ...DISCARDED_RUNS]
+    const text = reconciliation(counted, ledger ?? [])
+    expect(
+      text,
+      "the ledger was added after these runs happened, and inventing entries with guessed durations would be worse than publishing the gap",
+    ).toMatch(/none of them is in the ledger/)
+    expect(text).toContain(`artefacts plus ledger: ${counted.length + (ledger ?? []).length}`)
+    expect(
+      text,
+      "the ledger's runs are later ones, so subtracting one count from the other measures nothing",
+    ).not.toMatch(/behind by/)
+  })
+
+  it("names an artefact that postdates the ledger's first entry instead of calling the sets disjoint", () => {
+    const late: ArtefactRun = {
+      setPath: "eval/dev",
+      file: "eval/dev/late.json",
+      measuredAt: "2026-09-26T00:00:00.000Z",
+      sessions: 1,
+      cleanCloses: 1,
+      rateLimited: 0,
+      otherCloses: 0,
+      socketSeconds: 1,
+      socketSecondsKnown: true,
     }
+    const text = reconciliation(
+      [late],
+      [
+        {
+          runId: "r",
+          at: "2026-09-25T00:00:00.000Z",
+          command: "c",
+          sockets: ["stt"],
+          openSeconds: 1,
+          outcome: "completed",
+        },
+      ],
+    )
+    expect(text).toMatch(/may also be in it: eval\/dev\/late\.json/)
   })
 })

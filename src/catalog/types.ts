@@ -18,6 +18,7 @@ export type CatalogFile = {
   readonly rowsAfterPrescriptionFilter: number
   readonly rowsAfterDedup: number
   readonly drugs: readonly CatalogDrug[]
+  readonly sha256?: string
 }
 
 export type DrugMatch = {

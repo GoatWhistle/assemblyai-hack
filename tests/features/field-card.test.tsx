@@ -34,7 +34,7 @@ describe("the LASA hit at high confidence", () => {
   it("states in words that certainty does not settle which name was spoken", () => {
     render(<FieldCard candidate={LASA_CANDIDATE} decision={LASA_DECISION} />)
     expect(
-      screen.getByText(/Needs confirming, whatever the certainty says/i),
+      screen.getByText(/Needs the name, not a yes/i),
       "the heading has to name the ask; a heading about confidence alone reads as an argument with the recognizer",
     ).toBeDefined()
     expect(
@@ -131,8 +131,8 @@ describe("the field with no validator", () => {
 describe("provenance on the card", () => {
   it("shows each source word with its millisecond span and certainty", () => {
     render(<FieldCard candidate={QUANTITY_CANDIDATE} decision={null} />)
-    expect(screen.getByText(/8340-8640 ms/)).toBeDefined()
-    expect(screen.getByText(/span 8340-9080 ms/)).toBeDefined()
+    expect(screen.getByText(/11200-11440 ms/)).toBeDefined()
+    expect(screen.getByText(/span 11200-11900 ms/)).toBeDefined()
   })
 
   it("states that provenance is a browser computation", () => {
@@ -146,16 +146,16 @@ describe("provenance on the card", () => {
     render(
       <FieldCard candidate={QUANTITY_CANDIDATE} decision={null} onSelectWord={onSelectWord} />,
     )
-    await userEvent.click(screen.getByRole("button", { name: /thirty/i }))
+    await userEvent.click(screen.getByRole("button", { name: /^ten/i }))
     expect(onSelectWord).toHaveBeenCalledOnce()
-    expect(onSelectWord.mock.calls[0]?.[0]).toMatchObject({ text: "thirty", startMs: 8340 })
+    expect(onSelectWord.mock.calls[0]?.[0]).toMatchObject({ text: "ten", startMs: 11200 })
   })
 
   it("marks the selected word as pressed for assistive technology", () => {
     render(
-      <FieldCard candidate={QUANTITY_CANDIDATE} decision={null} selectedWordStartMs={8340} />,
+      <FieldCard candidate={QUANTITY_CANDIDATE} decision={null} selectedWordStartMs={11200} />,
     )
-    expect(screen.getByRole("button", { name: /thirty/i }).getAttribute("aria-pressed")).toBe(
+    expect(screen.getByRole("button", { name: /^ten/i }).getAttribute("aria-pressed")).toBe(
       "true",
     )
   })

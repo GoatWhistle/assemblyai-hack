@@ -1,8 +1,7 @@
 #!/usr/bin/env -S npx tsx
 
 import { buildAgentDefinition } from "@/agent"
-
-const AGENTS_URL = "https://agents.assemblyai.com/v1/agents"
+import { agentWriteRequest, definitionDigest } from "./agent-drift"
 
 function requireEnv(name: string): string {
   const value = process.env[name]
@@ -41,9 +40,13 @@ async function main(): Promise<void> {
   }
 
   const key = requireEnv("ASSEMBLYAI_API_KEY")
+  const existing = process.env.ASSEMBLYAI_AGENT_ID?.trim() ?? ""
+  const target = agentWriteRequest({ existingId: existing.length === 0 ? null : existing })
+  console.log(`definition sha256 ${await definitionDigest(definition)}`)
+  console.log(`${target.method} ${target.url}`)
 
-  const response = await fetch(AGENTS_URL, {
-    method: "POST",
+  const response = await fetch(target.url, {
+    method: target.method,
     headers: {
       Authorization: `Bearer ${key}`,
       "Content-Type": "application/json",
@@ -54,7 +57,7 @@ async function main(): Promise<void> {
   const text = await response.text()
 
   if (!response.ok) {
-    console.error(`POST ${AGENTS_URL} returned ${response.status}`)
+    console.error(`${target.method} ${target.url} returned ${response.status}`)
     console.error(text)
     process.exit(1)
     return
@@ -63,7 +66,7 @@ async function main(): Promise<void> {
   const parsed = JSON.parse(text) as { id?: string; agent_id?: string }
   const id = parsed.agent_id ?? parsed.id
 
-  console.log(`agent created: ${id}`)
+  console.log(`agent ${target.method === "PUT" ? "updated in place" : "created"}: ${id}`)
   console.log(`keyterms: ${definition.input.keyterms.length}`)
   console.log(`tools: ${definition.tools.map((t) => t.name).join(", ")}`)
   console.log("")

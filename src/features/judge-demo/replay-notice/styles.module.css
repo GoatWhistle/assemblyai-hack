@@ -43,3 +43,10 @@
 .insurance {
   color: var(--text-muted);
 }
+
+.tagLine {
+  flex: 1 1 16rem;
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+}

@@ -11,7 +11,7 @@ const catalog = catalogFromFile(fixture)
 
 describe("the forty second demo path", () => {
   it("resolves a salted catalogue name from the bare spoken name", () => {
-    expect(findDrug(catalog, "Bisoprolol")?.drug.nonproprietaryName).toBe("bisoprolol fumarate")
+    expect(findDrug(catalog, "Morphine")?.drug.nonproprietaryName).toBe("morphine sulfate")
     expect(findDrug(catalog, "Tramadol")?.drug.nonproprietaryName).toBe(
       "tramadol hydrochloride",
     )
@@ -23,7 +23,7 @@ describe("the forty second demo path", () => {
   it("lasa hit is not pre-empted by a catalogue miss at perfect confidence", () => {
     const verdict = validateField({
       field: FieldName.DrugName,
-      normalizedValue: "bisoprolol",
+      normalizedValue: "morphine",
       catalog,
     })
 
@@ -34,11 +34,11 @@ describe("the forty second demo path", () => {
 
     const candidate = candidateFor({
       field: FieldName.DrugName,
-      rawValue: "Bisoprolol",
-      normalizedValue: "bisoprolol",
+      rawValue: "Morphine",
+      normalizedValue: "morphine",
       confidence: 1.0,
       outcome: verdict.outcome,
-      lasa: lasaRiskFor("Bisoprolol"),
+      lasa: lasaRiskFor("Morphine"),
     })
 
     const decision = decide(candidate, policyFor(FieldName.DrugName))
@@ -46,13 +46,13 @@ describe("the forty second demo path", () => {
     expect(decision.reasonCode).not.toBe(ReasonCode.ValidatorCatalog)
     expect(decision.action).toBe(GateAction.AskDisambiguate)
     expect(decision.reasonCode).toBe(ReasonCode.LasaHit)
-    expect(decision.agentUtterance.toLowerCase()).toContain("lisinopril")
+    expect(decision.agentUtterance.toLowerCase()).toContain("hydromorphone")
   })
 
   it("every lasa checked pair member that exists in the catalogue reaches the lasa branch", () => {
     const names = [
-      "bisoprolol",
-      "lisinopril",
+      "morphine",
+      "hydromorphone",
       "tramadol",
       "trazodone",
       "hydralazine",

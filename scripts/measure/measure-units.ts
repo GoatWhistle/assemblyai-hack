@@ -2,7 +2,7 @@
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { resolve } from "node:path"
-import { normalizeStrength } from "../../src/sessions/normalize-value"
+import { normalizeStrength } from "@/confirmation"
 import { formatInterval, wilson } from "../../src/stats/wilson"
 import { type ManifestItem, transcribeItem } from "../eer/transcribe"
 

@@ -74,12 +74,24 @@
 }
 
 @media (max-width: 40rem) {
+  .header {
+    gap: 0 var(--space-4);
+    padding: var(--space-2) 0;
+  }
+
   .nav {
-    margin-inline-start: 0;
-    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: var(--space-1);
+    margin-inline: calc(-1 * var(--space-1));
+    width: calc(100% + 2 * var(--space-1));
+    scrollbar-width: none;
   }
 
   .link {
+    flex: 0 0 auto;
     padding: 0 var(--space-2);
+    white-space: nowrap;
   }
 }

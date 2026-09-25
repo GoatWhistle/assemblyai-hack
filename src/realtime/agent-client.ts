@@ -1,6 +1,8 @@
+import type { SessionBinding } from "@/domain"
 import { type AgentDispatchEvents, buildSessionUpdate, dispatchRaw } from "./agent-dispatch"
 import { type CloseExplanation, explainClose, isAlertWorthy } from "./close-codes"
-import { AGENT_TOKEN_ROUTE, agentSocketUrl, mintToken } from "./tokens"
+import { guardAgentInput, guardAgentSession } from "./param-guard"
+import { AGENT_TOKEN_ROUTE, agentSocketUrl, mintAgentToken } from "./tokens"
 import { type Transport, type TransportFactory, webSocketTransport } from "./transport"
 
 const SESSION_END_TIMEOUT_MS = 4000
@@ -12,15 +14,14 @@ export type AgentSessionConfig = {
   readonly keyterms?: readonly string[]
   readonly turnDetection?: {
     readonly vadThreshold?: number
-    readonly minSilence?: number
-    readonly maxSilence?: number
     readonly interruptResponse?: boolean
   }
 }
 
 export type AgentClientEvents = Omit<AgentDispatchEvents, "onSessionEnded"> & {
-  onClose?: (explanation: CloseExplanation) => void
+  onClose?: (explanation: CloseExplanation, expected: boolean) => void
   onTokenMinted?: (attempt: number) => void
+  onBound?: (binding: SessionBinding) => void
 }
 
 export type AgentClientOptions = {
@@ -34,8 +35,9 @@ export class AgentClient {
   private transport: Transport | null = null
   private endWaiters: (() => void)[] = []
   private ended = false
+  private closeRequested = false
   private mintCount = 0
-  private sessionId: string | null = null
+  private bound: SessionBinding | null = null
   private readonly events: AgentClientEvents
   private readonly factory: TransportFactory
   private readonly tokenRoute: string
@@ -48,51 +50,46 @@ export class AgentClient {
     this.session = options.session ?? {}
   }
 
-  get isOpen(): boolean {
-    return this.transport?.isOpen === true
-  }
-
-  get tokensMinted(): number {
-    return this.mintCount
-  }
-
-  get currentSessionId(): string | null {
-    return this.sessionId
-  }
-
   async connect(): Promise<void> {
-    const token = await mintToken(this.tokenRoute)
+    guardAgentSession(buildSessionUpdate(this.session))
+    const grant = await mintAgentToken(this.tokenRoute, this.bound?.sessionId ?? null)
     this.mintCount += 1
     this.events.onTokenMinted?.(this.mintCount)
+    if (this.bound === null) {
+      this.bound = grant.binding
+      this.events.onBound?.(grant.binding)
+    }
     this.ended = false
+    this.closeRequested = false
+    const session = this.sessionFor(grant.binding)
+    guardAgentSession(session)
     await new Promise<void>((resolve, reject) => {
       let settled = false
-      this.transport = this.factory(agentSocketUrl(token), {
+      const opened: Transport = this.factory(agentSocketUrl(grant.token), {
         onOpen: () => {
-          this.transport?.send(
-            JSON.stringify({
-              type: "session.update",
-              session: buildSessionUpdate(this.session),
-            }),
-          )
+          opened.send(JSON.stringify({ type: "session.update", session }))
           if (!settled) {
             settled = true
             resolve()
           }
         },
         onMessage: (data) => {
-          if (typeof data === "string") {
+          if (typeof data === "string" && this.transport === opened) {
             dispatchRaw(data, this.dispatchEvents())
           }
         },
         onClose: (code, reason) => {
+          if (this.transport !== null && this.transport !== opened) {
+            return
+          }
           const explanation = explainClose(code, reason)
           if (isAlertWorthy(code)) {
             console.warn(`agent socket close ${code}: ${explanation.operatorAction}`)
           }
-          this.events.onClose?.(explanation)
-          this.releaseWaiters()
+          const expected = code === 1000 || this.closeRequested || this.ended
           this.transport = null
+          this.events.onClose?.(explanation, expected)
+          this.releaseWaiters()
           if (!settled) {
             settled = true
             reject(new Error(`the agent socket closed before opening: ${code}`))
@@ -106,12 +103,14 @@ export class AgentClient {
           }
         },
       })
+      this.transport = opened
     })
   }
 
   async reconnect(): Promise<void> {
-    this.transport?.close(1000, "reconnecting")
+    const previous = this.transport
     this.transport = null
+    previous?.close(1000, "reconnecting")
     await this.connect()
   }
 
@@ -121,17 +120,9 @@ export class AgentClient {
   }
 
   updateTurnDetection(patch: Record<string, unknown>): void {
+    guardAgentInput(patch)
     this.transport?.send(
       JSON.stringify({ type: "session.update", session: { input: { ...patch } } }),
-    )
-  }
-
-  requestReply(instructions?: string): void {
-    this.transport?.send(
-      JSON.stringify({
-        type: "reply.create",
-        ...(instructions === undefined ? {} : { instructions }),
-      }),
     )
   }
 
@@ -139,19 +130,23 @@ export class AgentClient {
     if (this.transport === null) {
       return
     }
+    this.closeRequested = true
     this.transport.send(JSON.stringify({ type: "session.end" }))
     await this.waitForEnded()
     this.transport?.close(1000, "session ended")
     this.transport = null
   }
 
+  private sessionFor(binding: SessionBinding): Record<string, unknown> {
+    if (this.session.agentId !== undefined || binding.agentId.length === 0) {
+      return buildSessionUpdate(this.session)
+    }
+    return buildSessionUpdate({ ...this.session, agentId: binding.agentId })
+  }
+
   private dispatchEvents(): AgentDispatchEvents {
     return {
       ...this.events,
-      onReady: (sessionId) => {
-        this.sessionId = sessionId
-        this.events.onReady?.(sessionId)
-      },
       onSessionEnded: () => {
         this.ended = true
         this.releaseWaiters()

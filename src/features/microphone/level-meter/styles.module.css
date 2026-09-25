@@ -45,7 +45,7 @@
 @media (prefers-reduced-motion: reduce) {
   .meter .bar {
     scale: 1 0.3;
-    transition: background-color var(--dur-fast) linear;
+    transition: background-color var(--dur-fast) var(--ease-constant);
   }
 
   .meter.live .bar {

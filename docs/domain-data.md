@@ -84,20 +84,23 @@ Matching also needs salt stripping. `SUBSTANCENAME` stores `tramadol hydrochlori
 naive comparison misses `tramadol` and scores 42% where stripping the salt scores 52%.
 
 **Never hardcode a row count from this file.** The FDA rebuilds it daily, and a count
-written into code or into prose is a number that was true once. `scripts/build-ndc.ts`
+written into code or into prose is a number that was true once. `scripts/build/ndc.ts`
 reads it at build time.
 
-## The LASA table is curated, not imported
+## The LASA table: the full list plus a curated tier
 
-The ISMP list moved to ECRI and no longer sits at a stable public PDF URL, so
-`scripts/build-lasa.ts` falls back to the hand-curated table in `src/lasa/pairs.ts` and
-records that fallback as the provenance of the built artefact. Use `LASA_PAIRS.length`
-rather than a remembered number; it is **20 curated pairs** today.
+`npx tsx scripts/build/lasa.ts` parses the 2023 ISMP List of Confused Drug Names from the
+ismp.org PDF into `data/lasa-pairs.json`, recording the URL, the PDF sha256 and the page and
+row of every pair; the product rule checks all of them. `src/lasa/pairs.ts` keeps a
+hand-checked curated tier for the demo and the evaluation. Counts come from
+`npx tsx scripts/measure/ismp-coverage.ts`, never from memory. Without the PDF, `make data`
+keeps the committed snapshot; a parse below 40 pairs refuses to overwrite it.
 
-A design target of roughly 240 surviving pairs was written down before the source
-disappeared. It was never measured and must not be quoted as though it were. If the ECRI
-list becomes reachable again, the parser refuses to overwrite the curated table below a
-40-pair floor, so a broken parse cannot quietly shrink the protection.
+An earlier version of this section said the list had moved to ECRI and off a stable public
+URL, so that only the curated table could ship. That was wrong: the 2023 PDF is on ismp.org
+(first row of the table above). A design target of roughly 240 surviving pairs was also
+written down before any parse ran; it was never measured and must not be quoted as though
+it were.
 
 ## What could not be verified
 

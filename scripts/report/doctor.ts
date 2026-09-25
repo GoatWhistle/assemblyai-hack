@@ -1,6 +1,7 @@
 #!/usr/bin/env -S npx tsx
 
 import { buildAgentDefinition } from "@/agent"
+import { checkAgentMatches } from "./agent-drift"
 import { doctorExitCode, runAllChecks } from "./doctor-checks"
 
 function requireEnv(name: string): string | null {
@@ -24,12 +25,13 @@ async function main(): Promise<void> {
 
   const definition = buildAgentDefinition({ baseUrl, toolSecret: secret })
 
-  const results = await runAllChecks({
-    key,
-    agentId,
-    tools: definition.tools,
-    doFetch: (url, init) => fetch(url, init),
-  })
+  const doFetch = (url: string, init: RequestInit) => fetch(url, init)
+  const results = [
+    ...(await runAllChecks({ key, agentId, tools: definition.tools, doFetch })),
+    ...(key === null || agentId === null
+      ? []
+      : await checkAgentMatches({ key, agentId, expected: definition, doFetch })),
+  ]
 
   process.stdout.write("| Check | Result | Detail |\n")
   process.stdout.write("|---|---|---|\n")

@@ -10,9 +10,9 @@ export type ScriptStep = {
 export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
   Object.freeze({
     id: "play",
-    action: "Play the recorded session.",
+    action: "Play the replay.",
     watchFor:
-      "The left panel refuses to write. The right panel, one policy flag apart, orders a beta blocker where an ACE inhibitor was spoken.",
+      "Both panels read the drug back. The left one asks which of the two drugs was meant and writes hydromorphone once the caller names it. The right one, the pair rule switched off and nothing else, reads morphine back, hears yes, and orders morphine where hydromorphone was spoken.",
     href: "/demo",
     linkLabel: "Open the replay",
     needsMicrophone: false,

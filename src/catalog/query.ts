@@ -2,7 +2,7 @@ import { normalizeDrugName } from "@/lasa"
 import type { ComboQuery, SkeletonNeighbour, SkeletonSource } from "@/validators"
 import { skeletonNeighbours } from "@/validators"
 import type { CatalogIndex } from "./store"
-import type { CatalogCombo, CatalogDrug, DrugMatch } from "./types"
+import type { CatalogCombo, DrugMatch } from "./types"
 
 function normalizeStrengthText(strength: string): string {
   return strength
@@ -14,12 +14,28 @@ function normalizeStrengthText(strength: string): string {
     .replace(/µg/g, "ug")
 }
 
-function normalizeCombo(combo: CatalogCombo): string {
-  return [
-    normalizeStrengthText(combo.strength),
-    combo.dosageForm.trim().toLowerCase(),
-    combo.route.trim().toLowerCase(),
-  ].join("|")
+function productKey(combo: CatalogCombo): string {
+  return [normalizeStrengthText(combo.strength), combo.dosageForm.trim().toLowerCase()].join(
+    "|",
+  )
+}
+
+function routeSet(route: string): ReadonlySet<string> {
+  return new Set(
+    route
+      .split(";")
+      .map((member) => member.trim().toLowerCase().replace(/\s+/g, " "))
+      .filter((member) => member.length > 0),
+  )
+}
+
+function routeCovered(requested: string, listed: string): boolean {
+  const wanted = routeSet(requested)
+  if (wanted.size === 0) {
+    return false
+  }
+  const offered = routeSet(listed)
+  return [...wanted].every((member) => offered.has(member))
 }
 
 export function findDrug(index: CatalogIndex, query: string): DrugMatch | null {
@@ -92,12 +108,14 @@ export function combosFor(index: CatalogIndex, drugName: string): readonly Catal
 
 export function comboExists(index: CatalogIndex, query: ComboQuery): boolean {
   const combos = combosFor(index, query.drugName)
-  const wanted = normalizeCombo({
+  const wanted = productKey({
     strength: query.strength,
     dosageForm: query.dosageForm,
     route: query.route,
   })
-  return combos.some((combo) => normalizeCombo(combo) === wanted)
+  return combos.some(
+    (combo) => productKey(combo) === wanted && routeCovered(query.route, combo.route),
+  )
 }
 
 export function deaScheduleFor(index: CatalogIndex, drugName: string): string | null {
@@ -107,10 +125,6 @@ export function deaScheduleFor(index: CatalogIndex, drugName: string): string | 
 
 export function drugCount(index: CatalogIndex): number {
   return index.file.drugs.length
-}
-
-export function allDrugNames(index: CatalogIndex): readonly string[] {
-  return index.file.drugs.map((d: CatalogDrug) => d.nonproprietaryName)
 }
 
 function skeletonSourceFor(index: CatalogIndex): SkeletonSource {

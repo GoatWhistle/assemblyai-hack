@@ -1,0 +1,60 @@
+name: live smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: The deployed https URL to call, a preview or production deployment
+        required: true
+        type: string
+      confirm:
+        description: Type BILL to confirm that six scripted calls spend AssemblyAI credit on the deployment's key
+        required: true
+        type: string
+
+concurrency:
+  group: live-smoke
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: six scripted calls through both live sockets
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: refuse without the explicit confirmation
+        run: |
+          if [ "${{ inputs.confirm }}" != "BILL" ]; then
+            echo "the live smoke spends credit; rerun with confirm set to BILL" >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: the calls
+        env:
+          LIVE_SMOKE_CONFIRM_PAID: "1"
+          LIVE_SMOKE_URL: ${{ inputs.url }}
+        run: make live-smoke
+
+      - name: keep the receipts and the run records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-smoke-evidence
+          path: |
+            eval/live/
+            test-results/
+          retention-days: 30

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { VerdictOutcome } from "@/domain"
-import { type ComboQuery, type ComboSource, validateCombo } from "@/validators"
+import { type ComboQuery, type ComboSource, spokenStrength, validateCombo } from "@/validators"
 
 const CATALOGUE: Readonly<
   Record<string, readonly { strength: string; dosageForm: string; route: string }[]>
@@ -73,5 +73,32 @@ describe("combo consistency", () => {
     )
     expect(verdict.evidence.hasCheckDigit).toBe(false)
     expect(verdict.ruleCited).toContain("tuple must exist")
+  })
+
+  it("names a partner that comes in the dose the heard drug lacks", () => {
+    const verdict = validateCombo(
+      { drugName: "lisinopril", strength: "80 mg", dosageForm: "TABLET", route: "ORAL" },
+      { ...source, partnersOf: () => ["lisinoprol", "fosinopril"] },
+    )
+    expect(verdict.outcome).toBe(VerdictOutcome.InconsistentCombo)
+    expect(verdict.evidence.partnersWithCombo).toBeUndefined()
+    const named = validateCombo(
+      { drugName: "fosinopril", strength: "10 mg", dosageForm: "TABLET", route: "ORAL" },
+      {
+        ...source,
+        combosFor: () => [{ strength: "20 mg", dosageForm: "TABLET", route: "ORAL" }],
+        partnersOf: () => ["lisinopril"],
+      },
+    )
+    expect(named.detail).toBe(
+      "fosinopril does not come as a 10 milligram tablet; lisinopril does",
+    )
+  })
+
+  it("speaks a strength in words a caller hears", () => {
+    expect(spokenStrength("2 mg")).toBe("2 milligram")
+    expect(spokenStrength("2 mg/1")).toBe("2 milligram")
+    expect(spokenStrength("2 mg/mL")).toBe("2 milligram per milliliter")
+    expect(spokenStrength("100 mcg")).toBe("100 microgram")
   })
 })

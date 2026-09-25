@@ -9,6 +9,7 @@ export type StateShellProps = {
   readonly centered?: boolean
   readonly alarmed?: boolean
   readonly note?: ReactNode
+  readonly headingLevel?: "h2" | "h3" | "h4"
 }
 
 export function StateShell({
@@ -19,7 +20,9 @@ export function StateShell({
   centered,
   alarmed,
   note,
+  headingLevel,
 }: StateShellProps) {
+  const Title = headingLevel ?? "p"
   const shell = [styles.state, centered === true ? styles.centered : ""]
     .filter((value) => value !== "")
     .join(" ")
@@ -31,7 +34,7 @@ export function StateShell({
       <span className={mark} aria-hidden="true">
         {glyph}
       </span>
-      <p className={styles.title}>{title}</p>
+      <Title className={styles.title}>{title}</Title>
       <div className={styles.body}>{body}</div>
       {note === undefined ? null : <p className={styles.body}>{note}</p>}
       {actions === undefined ? null : <div className={styles.actions}>{actions}</div>}

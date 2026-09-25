@@ -1,0 +1,119 @@
+{
+  "rule": "every attempted live run is recorded here, including failed and inconclusive ones; a dropped socket or a lost turn is neither a success nor a failure of the product",
+  "runs": [
+    {
+      "runId": "live_smoke-2026-09-25T18:01:39.960Z",
+      "recordedAt": "2026-09-25T18:01:39.960Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "the page never bound a server session (unbound-clean-order-1790359299711), so no receipt exists; live smoke clean-order: not observed: the order committed; 0 of 9 caller lines played; last agent line: none; socket time is the harness wall clock, an upper bound | diagnosis recorded after the six attempts of 25 September: they found three defects in the local path, all since fixed, and then could not run at all because AudioWorklet does not start in any automated browser on this Windows machine, so no caller line after the first reached the sockets. The run failed for a local reason and says nothing about the gate; it is kept because it was billed",
+      "socketSeconds": 246.3,
+      "costUsd": 0.3489,
+      "sessionIds": [
+        "unbound-clean-order-1790359299711"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-25T18:12:20.189Z",
+      "recordedAt": "2026-09-25T18:12:20.189Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "the page never bound a server session (unbound-npi-groups-1790359939871), so no receipt exists; live smoke npi-groups: not observed: the ten-digit NPI is in the order; 0 of 10 caller lines played; last agent line: none; socket time is the harness wall clock, an upper bound | diagnosis recorded after the six attempts of 25 September: they found three defects in the local path, all since fixed, and then could not run at all because AudioWorklet does not start in any automated browser on this Windows machine, so no caller line after the first reached the sockets. The run failed for a local reason and says nothing about the gate; it is kept because it was billed",
+      "socketSeconds": 245.8,
+      "costUsd": 0.3482,
+      "sessionIds": [
+        "unbound-npi-groups-1790359939871"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-25T18:21:18.430Z",
+      "recordedAt": "2026-09-25T18:21:18.430Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 0 of 9 caller lines played; last agent line: none; socket time is the harness wall clock, an upper bound; the receipt could not be fetched: fetch failed | diagnosis recorded after the six attempts of 25 September: they found three defects in the local path, all since fixed, and then could not run at all because AudioWorklet does not start in any automated browser on this Windows machine, so no caller line after the first reached the sockets. The run failed for a local reason and says nothing about the gate; it is kept because it was billed",
+      "socketSeconds": 246.4,
+      "costUsd": 0.3491,
+      "sessionIds": [
+        "ec85b429-d3c1-49f5-a0ce-59a15302c174"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-25T18:33:38.033Z",
+      "recordedAt": "2026-09-25T18:33:38.033Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 1 of 9 caller lines played; last agent line: Pharmacy intake, this line is recorded for verification. Go ahead with the prescription.; socket time is the harness wall clock, an upper bound; the receipt route answered 404 | diagnosis recorded after the six attempts of 25 September: they found three defects in the local path, all since fixed, and then could not run at all because AudioWorklet does not start in any automated browser on this Windows machine, so no caller line after the first reached the sockets. The run failed for a local reason and says nothing about the gate; it is kept because it was billed",
+      "socketSeconds": 247.6,
+      "costUsd": 0.3508,
+      "sessionIds": [
+        "b7660085-0521-41e8-8ade-ef605f0e6333"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-25T18:40:54.316Z",
+      "recordedAt": "2026-09-25T18:40:54.316Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 1 of 9 caller lines played; last agent line: Pharmacy intake, this line is recorded for verification. Go ahead with the prescription.; socket time is the harness wall clock, an upper bound; the receipt route answered 404 | diagnosis recorded after the six attempts of 25 September: they found three defects in the local path, all since fixed, and then could not run at all because AudioWorklet does not start in any automated browser on this Windows machine, so no caller line after the first reached the sockets. The run failed for a local reason and says nothing about the gate; it is kept because it was billed",
+      "socketSeconds": 246.4,
+      "costUsd": 0.3491,
+      "sessionIds": [
+        "a19d03e1-5c76-470e-b873-790a647bbd47"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-25T18:45:24.140Z",
+      "recordedAt": "2026-09-25T18:45:24.140Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke lasa-named: not observed: hydromorphone is in the order, the order committed; 1 of 10 caller lines played; last agent line: Pharmacy intake, this line is recorded for verification. Go ahead with the prescription.; socket time is the harness wall clock, an upper bound; the receipt route answered 404 | diagnosis recorded after the six attempts of 25 September: they found three defects in the local path, all since fixed, and then could not run at all because AudioWorklet does not start in any automated browser on this Windows machine, so no caller line after the first reached the sockets. The run failed for a local reason and says nothing about the gate; it is kept because it was billed",
+      "socketSeconds": 246.7,
+      "costUsd": 0.3495,
+      "sessionIds": [
+        "23bd9c62-aeeb-4ba9-ae08-b63734ad0e01"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    }
+  ]
+}

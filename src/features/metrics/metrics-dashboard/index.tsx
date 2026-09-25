@@ -1,43 +1,60 @@
-import { FigureWithMethod } from "@/shared/ui/data-display/figure-with-method"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { Panel } from "@/shared/ui/primitives/panel"
+import { AbsentValue } from "../absent-value"
+import { type BenchmarkEntry, benchmarkEntries, RAW_RUN_AGREEMENT_TEST } from "../benchmark-row"
+import { BenchmarkTable } from "../benchmark-table"
+import { BUSINESS_FIGURES, type BusinessFigure } from "../business-figures"
+import { BusinessReading } from "../business-reading"
 import { closeCodeRows, closeCodeSetDescription } from "../close-code-tally"
-import { confidenceFigures, errorRateFigures } from "../measured-figures"
-import {
-  type CloseCodeTally,
-  GATE_METRICS,
-  LATENCY_METRICS,
-  type MetricDefinition,
-} from "../metric-definitions"
+import { type FalseAskTally, falseAskTally } from "../measured-figures"
+import type { CloseCodeTally } from "../metric-definitions"
+import { shippedPolicyEntries } from "../policy-figures"
 import styles from "./styles.module.css"
 
 export type MetricsDashboardProps = {
-  readonly gateMetrics?: readonly MetricDefinition[]
-  readonly latencyMetrics?: readonly MetricDefinition[]
+  readonly entries?: readonly BenchmarkEntry[]
+  readonly policyEntries?: readonly BenchmarkEntry[]
+  readonly falseAsks?: FalseAskTally | null
+  readonly businessFigures?: readonly BusinessFigure[]
   readonly closeCodes?: readonly CloseCodeTally[]
 }
 
-function Figures({ metrics }: { readonly metrics: readonly MetricDefinition[] }) {
+export const HEADLINE_POLICY = "The shipped gate asks about every correct drug name:"
+
+function Headline({ tally }: { readonly tally: FalseAskTally | null }) {
+  const dash = <AbsentValue />
   return (
-    <div className={styles.figures}>
-      {metrics.map((metric) => (
-        <FigureWithMethod
-          key={metric.id}
-          name={metric.name}
-          value={metric.value}
-          meaning={metric.meaning}
-          command={metric.command}
-          setDescription={metric.setDescription}
-          tone={metric.tone ?? "neutral"}
-        />
-      ))}
+    <div className={styles.headline}>
+      <p className={styles.headlineFigure} data-headline="false-asks">
+        {HEADLINE_POLICY} {tally === null ? dash : tally.asked} of{" "}
+        {tally === null ? dash : tally.of}.
+      </p>
+      <p className={styles.headlineMethod}>
+        {tally === null ? (
+          "Not measured yet: no recorded run supplies a correctly heard value to count against."
+        ) : (
+          <>
+            Every one of the {tally.of} drug names was heard correctly, and each is read back
+            once by policy. {tally.byStandingReadBack} got the plain read-back,{" "}
+            {tally.byThreshold} the threshold's re-ask below {tally.threshold}, and{" "}
+            {tally.byPairRule} the contrastive question, because the name is on the ISMP list.
+            With the pair rule switched off the threshold would take{" "}
+            {tally.thresholdWithoutPairRule} of the {tally.of}. Recorded confidences from
+            synthesised speech through the live recognizer,{" "}
+            <code className={styles.inlineCode}>{tally.command}</code>, n = {tally.of}, measured{" "}
+            {tally.measuredOn ?? "on an unrecorded date"}.
+          </>
+        )}
+      </p>
     </div>
   )
 }
 
 export function MetricsDashboard({
-  gateMetrics = GATE_METRICS,
-  latencyMetrics = LATENCY_METRICS,
+  entries = benchmarkEntries(),
+  policyEntries = shippedPolicyEntries(),
+  falseAsks = falseAskTally(),
+  businessFigures = BUSINESS_FIGURES,
   closeCodes = closeCodeRows(),
 }: MetricsDashboardProps) {
   return (
@@ -46,9 +63,15 @@ export function MetricsDashboard({
         <h1 className={styles.ledeTitle}>Measurements</h1>
         <p className={styles.ledeBody}>
           Every figure on this page carries the command that produced it and the size of the set
-          it came from. A number without a method is not published here, so a figure reads as
-          not measured yet rather than being filled with an estimate. Where it says that, the
-          run has not happened or the set is sealed, and the method line says which.
+          it came from. A number without a method is not published here, so a figure reads as a
+          dash rather than being filled with an estimate. A dash has two causes and the command
+          column says which: a named target means the run costs credit and has not been spent,
+          and no command yet means nothing computes the figure.
+        </p>
+        <Headline tally={falseAsks} />
+        <p className={styles.agreement}>
+          Published totals match raw runs {"—"} a test fails if they disagree:{" "}
+          <code className={styles.inlineCode}>{RAW_RUN_AGREEMENT_TEST}</code>
         </p>
         <div className={styles.rule}>
           <p className={styles.ruleTitle}>Held-out discipline</p>
@@ -61,39 +84,32 @@ export function MetricsDashboard({
       </div>
 
       <Panel
-        title="What the recognizer got wrong"
-        note="measured on recorded runs, not tuned on"
+        title="Shipped policy"
+        note="standing read-back, threshold and contrastive pair rule, as the server publishes them"
         padding="tight"
       >
-        <Figures metrics={errorRateFigures()} />
+        <BenchmarkTable entries={policyEntries} label="Shipped policy figures" />
+      </Panel>
+
+      <Panel title="Benchmark" note="figure, value, input, command, n, date" padding="tight">
+        <BenchmarkTable entries={entries} />
       </Panel>
 
       <Panel
-        title="Why confidence is not the check"
-        note="the cost and the catch, side by side"
+        title="Business reading"
+        note="derived only from figures above that carry a command"
         padding="tight"
       >
-        <Figures metrics={confidenceFigures()} />
-      </Panel>
-
-      <Panel
-        title="What the gate costs and catches"
-        note="blank on purpose: the set is sealed, not unrun"
-        padding="tight"
-      >
-        <Figures metrics={gateMetrics} />
-      </Panel>
-
-      <Panel
-        title="Latency"
-        note="blank until a paid run; browser measurements are labelled as such"
-        padding="tight"
-      >
-        <Figures metrics={latencyMetrics} />
+        <BusinessReading figures={businessFigures} />
       </Panel>
 
       <Panel title="Socket close codes" padding="tight">
-        <div className={styles.tableWrap}>
+        <section
+          className={styles.tableWrap}
+          aria-label="Socket close codes, scrollable sideways"
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: a table that scrolls sideways must be reachable by keyboard, which axe checks as scrollable-region-focusable
+          tabIndex={0}
+        >
           <table className={styles.closeTable}>
             <caption>
               Counted from {closeCodeSetDescription()}. 1008, 3008 and 3009 are alert-worthy on
@@ -128,7 +144,7 @@ export function MetricsDashboard({
               ))}
             </tbody>
           </table>
-        </div>
+        </section>
       </Panel>
     </div>
   )

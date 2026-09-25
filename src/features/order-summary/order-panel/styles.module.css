@@ -1,0 +1,117 @@
+.panel {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-panel);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-heading);
+  color: var(--text-primary);
+}
+
+.commit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-sunken);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+.committed {
+  border-color: var(--state-accepted-line);
+  background-color: var(--state-accepted-surface);
+}
+
+.blocked {
+  border-color: var(--state-escalated-line);
+  background-color: var(--state-escalated-surface);
+}
+
+.commitWord {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+
+.reference {
+  font-family: var(--font-data);
+  overflow-wrap: anywhere;
+}
+
+.refusals {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-inline-start: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+}
+
+.rows {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  padding-block: var(--space-2);
+  border-block-end: 1px solid var(--line-hairline);
+}
+
+.field {
+  min-width: 9rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.value {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.code {
+  font-family: var(--font-data);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.evidence {
+  flex-basis: 100%;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}

@@ -16,7 +16,6 @@ function commit(
 ): Promise<Response> {
   return commitOrder(
     call("commit-order", {
-      session_id: SESSION,
       full_order_read_back: readBack,
       caller_confirmed: callerConfirmed,
     }),

@@ -153,3 +153,9 @@ export function policyFor(field: FieldName): FieldPolicy {
 export const CRITICAL_FIELDS: readonly FieldName[] = POLICIES.filter(
   (p) => p.criticality === Criticality.Critical,
 ).map((p) => p.field)
+
+export const PAIR_RULE_FLAG = "lasaChecked" as const
+
+export function withoutPairRule(policy: FieldPolicy): FieldPolicy {
+  return Object.freeze({ ...policy, [PAIR_RULE_FLAG]: false })
+}

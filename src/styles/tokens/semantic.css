@@ -10,7 +10,7 @@
   --text-primary: var(--carbon);
   --text-secondary: var(--graphite);
   --text-muted: var(--slate);
-  --text-faint: var(--stone);
+  --text-faint: var(--flint);
   --text-display: var(--violet);
   --text-on-accent: var(--paper);
   --text-on-inverse: var(--paper);
@@ -51,7 +51,7 @@
   --state-escalated-surface: var(--refused-wash);
   --state-escalated-line: var(--refused-line);
 
-  --state-aborted-ink: var(--stone);
+  --state-aborted-ink: var(--flint);
   --state-aborted-surface: var(--vellum);
   --state-aborted-line: var(--linen);
 

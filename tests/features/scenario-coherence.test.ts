@@ -16,10 +16,10 @@ function drugNameIn(evidence: unknown): string | null {
   return typeof named === "string" ? named : null
 }
 
-describe("the recorded scenario cannot cite evidence the session never established", () => {
+describe("the synthesised scenario cannot cite evidence the session never established", () => {
   it("heard a drug name that the recognizer actually returned", () => {
     expect(LASA_CANDIDATE.field).toBe(FieldName.DrugName)
-    expect(LASA_CANDIDATE.normalizedValue).toBe("bisoprolol")
+    expect(LASA_CANDIDATE.normalizedValue).toBe("morphine")
   })
 
   it("validates every dependent field against the drug the session heard, not the right one", () => {
@@ -51,6 +51,6 @@ describe("the recorded scenario cannot cite evidence the session never establish
 
   it("shares one session and one transcript across every candidate", () => {
     const sessions = new Set(CANDIDATES.map((c) => c.provenance.sessionId))
-    expect(sessions.size, "a scenario spanning two sessions is not one recording").toBe(1)
+    expect(sessions.size, "a scenario spanning two sessions is not one session").toBe(1)
   })
 })

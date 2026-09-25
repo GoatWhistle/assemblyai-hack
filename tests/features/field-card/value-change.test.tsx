@@ -103,7 +103,10 @@ describe("nothing is written until the gate passes, and the panel says so", () =
   })
 
   it("is handed the sibling candidates by the live screen rather than defaulting to none", () => {
-    const source = readFileSync("src/features/intake/intake-screen/index.tsx", "utf8")
+    const source = readFileSync(
+      "src/features/intake/intake-screen/field-cards/index.tsx",
+      "utf8",
+    )
     expect(
       source,
       "the panel can only find a previous attempt if the screen passes the other candidates; without it the feature is dead on the live call",

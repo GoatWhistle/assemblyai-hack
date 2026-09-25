@@ -3,8 +3,7 @@ import { POST as proposeField } from "@app/api/tools/propose-field/route"
 import { POST as readBack } from "@app/api/tools/read-back/route"
 import { beforeEach, describe, expect, it } from "vitest"
 import { CRITICAL_FIELDS, ReasonCode } from "@/domain"
-import { intakeFor } from "@/tools"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { call, intake, readBackAloud, resetToolEnvironment, seedTurn } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -48,11 +47,10 @@ type Collected = {
 }
 
 async function collect(input: FieldInput): Promise<Collected> {
-  seedTurn(input.value, HONEST_CONFIDENCE, input.turn)
+  await seedTurn(input.value, HONEST_CONFIDENCE)
   const proposed = await (
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: input.field,
         value: input.value,
         transcript_hint: input.value,
@@ -60,10 +58,11 @@ async function collect(input: FieldInput): Promise<Collected> {
     )
   ).json()
 
+  await readBackAloud(`Confirming ${input.field}: ${input.value}. Correct?`, "yes")
+
   const confirmed = await (
     await readBack(
       call("read-back", {
-        session_id: SESSION,
         field: input.field,
         candidate_id: proposed.candidate_id,
         utterance: `Confirming ${input.field}: ${input.value}. Correct?`,
@@ -103,7 +102,6 @@ describe("an honest intake reaches commitOrder, and the false-ask rate is a fail
     const committed = await (
       await commitOrder(
         call("commit-order", {
-          session_id: SESSION,
           full_order_read_back:
             "phenylephrine hydrochloride 100 mg per 10 mL, injection, intravenous, quantity thirty. Is all of that correct?",
           caller_confirmed: true,
@@ -124,7 +122,6 @@ describe("an honest intake reaches commitOrder, and the false-ask rate is a fail
   it("places the order once, so a duplicate tool call cannot write a second prescription", async () => {
     await runHonestIntake()
     const body = {
-      session_id: SESSION,
       full_order_read_back: "phenylephrine hydrochloride 100 mg per 10 mL. Correct?",
       caller_confirmed: true,
     }
@@ -170,7 +167,7 @@ describe("an honest intake reaches commitOrder, and the false-ask rate is a fail
 
   it("holds every critical field as a confirmed value at the moment of commit", async () => {
     await runHonestIntake()
-    const state = intakeFor(SESSION)
+    const state = await intake()
     const missing = CRITICAL_FIELDS.filter((field) => !state.order.fields.has(field))
     expect(
       missing,

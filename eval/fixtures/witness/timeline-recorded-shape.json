@@ -1,0 +1,78 @@
+{
+  "session_id": "sess_b5f7793876a544baae0299c9d9fe6aad",
+  "started_at_unix_ms": 1790362728622,
+  "turns": [
+    {
+      "turn_id": "resp_79d0b2fb6a224ec4952138aa80b08841",
+      "item_id": "msg_39ec42bddabf4f3480e20fc5c14c0ba7",
+      "status": "completed",
+      "trigger": "greeting",
+      "requested_instructions": null,
+      "user_transcript": null,
+      "user_speech_started_at_ms": null,
+      "user_speech_ended_at_ms": null,
+      "user_confidence": null,
+      "agent_text": "Witness probe. Say a drug name.",
+      "agent_reply_started_at_ms": 1790362729086,
+      "agent_reply_ended_at_ms": 1790362732188,
+      "interrupted_at_ms": null,
+      "time_to_first_audio_ms": 436
+    },
+    {
+      "turn_id": "resp_1a8a75316bb5403e98f94c16953dde2e",
+      "item_id": "msg_a01a842faf3d4343bbe5cdecea9d715b",
+      "status": "completed",
+      "trigger": "user_speech",
+      "requested_instructions": null,
+      "user_transcript": "Hydromorphone.",
+      "user_speech_started_at_ms": 1790362733341,
+      "user_speech_ended_at_ms": 1790362734640,
+      "user_confidence": 1,
+      "agent_text": "Hydromorphone",
+      "agent_reply_started_at_ms": 1790362736050,
+      "agent_reply_ended_at_ms": 1790362737192,
+      "interrupted_at_ms": null,
+      "time_to_first_audio_ms": 1408
+    }
+  ],
+  "config_changes": [
+    {
+      "received_at_ms": 1790362728639,
+      "during_turn_id": null,
+      "update": {
+        "system_prompt": "You are a test line. When the caller names a drug, repeat the drug name once and say nothing else.",
+        "greeting": "Witness probe. Say a drug name.",
+        "input": {
+          "type": "audio",
+          "format": {
+            "encoding": "audio/pcm",
+            "sample_rate": 24000
+          },
+          "turn_detection": null,
+          "keyterms": null,
+          "transcription_mode": null,
+          "continuous_partials": null,
+          "transcription_prompt": null,
+          "language_codes": null,
+          "voice_focus": null,
+          "voice_focus_threshold": null
+        },
+        "output": {
+          "type": "audio",
+          "voice": "anna",
+          "format": {
+            "encoding": "audio/pcm",
+            "sample_rate": 24000
+          },
+          "volume": null
+        },
+        "tools": []
+      }
+    }
+  ],
+  "ended": {
+    "reason": "user_initiated",
+    "public_reason": "client_end",
+    "duration_seconds": 11.425790771484374
+  }
+}

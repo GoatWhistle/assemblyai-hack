@@ -12,13 +12,17 @@ metric formulas.
 
 The name is not a metaphor. It is **the exact term for the safety procedure the product automates** — and it is a ready-made line for the pitch.
 
-**Aviation, ICAO Annex 11 §3.7.3:**
+**Aviation, ICAO Annex 11 §3.7.3.1:**
 
-> A readback is a procedure whereby the receiving station repeats a received message or an appropriate part thereof back to the transmitting station so as to obtain confirmation of correct reception.
+> The flight crew shall read back to the air traffic controller safety-related parts of ATC clearances and instructions which are transmitted by voice.
 
-**Clinical, Joint Commission National Patient Safety Goals, requirement introduced in 2003:**
+The general definition of a read-back, often quoted under this section, sits elsewhere (SKYbrary attributes it to Annex 10 Volume II); §3.7.3.1 is the requirement itself.
 
-> For verbal or telephone orders or for telephonic reporting of critical test results, verify the complete order or test result by having the person receiving the order or test result read-back the complete order or test result.
+**Clinical, Joint Commission, a National Patient Safety Goal introduced in 2003** (NPSG.02.01.01, 2009 wording):
+
+> For verbal or telephone orders or for telephone reporting of critical test results, the individual giving the order or test result verifies the complete order or test result by having the person receiving the information record and "read back" the complete order or test result.
+
+ISMP's 2017 survey places the requirement in the standards at PC.02.01.03 EP 20. Its location in the 2026 manual, after the goals were restructured, is not verified by us.
 
 Medicine borrowed the readback/hearback pair straight from aviation; AHRQ TeamSTEPPS calls the same pattern check-back (closed-loop communication). So we are automating a step that regulation requires and practice skips — recorded by [ISMP](https://www.ismp.org/sites/default/files/attachments/2018-03/20170518.pdf) ("Despite technology, verbal orders persist, read back not widespread").
 
@@ -36,20 +40,22 @@ A voice agent for prescription intake that, for every extracted field, presents 
 
 AssemblyAI states it themselves, in an article dated 8 September 2026:
 
-> A voice agent is a chain, and the LLM has no way of knowing that its input was wrong.
+> A conversation isn't one transcription. It's a chain of them.
 
-In prescription intake that is not an abstraction. Their own example: "Lisinopril" is recognised as "Bisoprolol" — drugs of different classes, both real, both plausible in context. There is no error signal. The LLM confidently files an order for the wrong medication.
+([The Voice Agent Accuracy Problem Nobody Benchmarks](https://www.assemblyai.com/blog/voice-agent-accuracy-problem-benchmarks).)
 
-Three figures that set the scale (all from the AssemblyAI signals; source: AssemblyAI):
+In prescription intake that is not an abstraction. Their own example: "A patient states an allergy to Lisinopril. The transcript reads Bisoprolol." — drugs of different classes, both real, both plausible in context. There is no error signal. The LLM confidently files an order for the wrong medication. That particular pair, checked on 25 September 2026, is on no published LASA list we could find, so our pair rule would not catch it and only the read-back would; the demo therefore uses a pair the ISMP list does carry, hydromorphone and morphine, which ISMP's 2017 survey of verbal orders also reports being misheard between people.
+
+The figures that set the scale, all AssemblyAI's own (sources with exact wording in [sources.md](sources.md)):
 
 | Fact | Value |
 |---|---|
 | Entity Error Rate for Universal-3.5 Pro Realtime | 15.31% at WER 6.99% |
-| Errors on proper nouns (and drug names are proper nouns) | 16.92% |
+| Entity errors in the benchmark's names category | 16.92% |
 | Success of a five-turn scenario at 84.69% capture accuracy per turn | **43.6%** |
-| The same scenario with confirmation steps | **79.1%** |
+| The same, if every entity is read back and the caller catches 70% of errors | **79.1%**, a projection |
 
-The last two rows are the whole business case of the product in two numbers. A confirmation loop nearly doubles the share of successful transactions. And AssemblyAI presents it as a technique, not as a shipped feature: implementing it and measuring it is our work.
+The last row is the vendor's projection, not a measurement, and it rests on the caller catching seven errors in ten when a value is read back. A caller who answers "yes" to "morphine, correct?" out of habit is how that assumption fails; the contrastive read-back for published pairs exists to stop it.
 
 ## 3. Why pharmacy specifically
 
@@ -63,11 +69,11 @@ Of the five domains worked through ([domain-data.md](domain-data.md)), pharmacy 
 | [ISMP Error-Prone Abbreviations (2024-04)](https://www.ismp.org/system/files/resources/2024-04/ISMP_ErrorProneAbbreviation_List.pdf) | Dangerous sig codes: `qd` against `qid`, `U` against `0`, `MSO4` against `MgSO4` | downloaded, 330 KB |
 | [FDA Name Differentiation Project](https://www.fda.gov/drugs/medication-errors-related-cder-regulated-drug-products/fda-name-differentiation-project) | 23 official pairs with tall-man spelling (vinBLAStine / vinCRIStine, CISplatin / CARBOplatin) | 23 pairs read |
 
-That removes the main vulnerability of any hackathon metric — "and why is your test set representative?". The answer: the set was not assembled by me, it was assembled by ISMP and the FDA, and every pair has a documented clinical harm.
+That removes the main vulnerability of any hackathon metric — "and why is your test set representative?". The answer: the set was not assembled by me, it was assembled by ISMP, and every pair has a documented clinical harm.
 
 **A dictionary for keyterms — no registration.** [FDA NDC Directory](https://www.accessdata.fda.gov/cder/ndctext.zip), 10.8 MB zip → 70 MB TSV, **116,155 products** (verified: downloaded, unpacked, counted). Public domain. Plus the [openFDA NDC API](https://api.fda.gov/drug/ndc.json) with no key — 137,830 records.
 
-**AssemblyAI has a parameter dedicated to this domain.** In Streaming STT: `domain: medical-v1`. And promptability gives, by their figures, **−43% errors on medical terms**. So we have something to switch on, and something to measure by switching it on.
+**AssemblyAI has a parameter dedicated to this domain.** In Streaming STT: `domain: medical-v1`. AssemblyAI states that medical mode and prompting reduce errors on medical terms; we have not recorded the source of their figure and do not quote it. So we have something to switch on, and something to measure by switching it on.
 
 **Three independent hard validators** (all checked by hand in [domain-data.md](domain-data.md)):
 
@@ -90,13 +96,13 @@ The honest downside, which we must name in the README ourselves rather than wait
 A physician or nurse calls from a clinic and dictates a prescription order to a pharmacy. The agent carries the conversation and assembles a structured record in parallel:
 
 ```
-Drug:          Lisinopril
-Strength:      10 mg
-Form:          tablet
+Drug:          Hydromorphone
+Strength:      2 mg/mL
+Form:          injection, intravenous
 Quantity:      30
-Sig:           1 tablet by mouth once daily
+Sig:           1 mg intravenously every 4 hours as needed
 Prescriber:    NPI 1245319599
-DEA (if CS):   —
+DEA (if CS):   AB1234563 (hydromorphone is Schedule II)
 Patient:       Jane Doe (fictitious)
 ```
 
@@ -109,9 +115,9 @@ Every field is not merely a value but a record with provenance:
 | Value | extraction from the transcript | the data itself |
 | Source words + timecodes | `words[]` from `Turn`, the `start`/`end` fields in ms | clicking the field highlights exactly those words and plays the fragment |
 | Confidence | `confidence` on the source words, minimum over the span | the numeric threshold for a re-ask |
-| Validator status | local check (DEA/NPI mod-10/Luhn, NDC format, lookup) | an objective "does not add up" |
+| Validator status | local check (DEA mod-10, NPI Luhn, catalogue lookup) | an objective "does not add up" |
 | Confirmation status | `unconfirmed` / `read_back_pending` / `confirmed_by_voice` | it is visible what was confirmed aloud |
-| LASA risk | membership in an ISMP/FDA pair | "Lisinopril sounds like Bisoprolol — which one?" |
+| LASA risk | membership in a pair on the 2023 ISMP list | "morphine and hydromorphone are on a published confused-drug-names list. Which: morphine, M-O-R, or hydromorphone, H-Y-D? Answer with a name." |
 
 ### Three reasons the agent is obliged to re-ask
 
@@ -119,13 +125,13 @@ This is not a prompt, it is code. The function that writes into the order accept
 
 1. **Low confidence.** The minimum `confidence` over the source words is below the field's threshold (the drug name's threshold is higher than the quantity's).
 2. **Validator failure.** DEA/NPI does not add up against its checksum; NDC is the wrong format; the drug × strength × form combination is not in the catalogue.
-3. **Confusion risk.** The recognised name is part of a LASA pair from the ISMP list or of the 23 FDA pairs — then the re-ask is mandatory regardless of confidence, and the agent names both alternatives.
+3. **Confusion risk.** The recognised name is on the 2023 ISMP List of Confused Drug Names — then the re-ask is mandatory regardless of confidence, and it is contrastive: the agent names the heard drug and every drug the list pairs with it, and only a spoken name answers it. A "yes" confirms nothing, and naming a partner corrects the value.
 
-The third point is the most interesting place in the product. High recogniser confidence here **does not mean** being right: the model can be certain of "Bisoprolol" because it heard it clearly, while the human said "Lisinopril". Confidence does not protect against homophony; a regulator's list does.
+The third point is the most interesting place in the product. High recogniser confidence here **does not mean** being right: the model can be certain of "morphine" because it heard it clearly, while the human said "hydromorphone". Confidence does not protect against homophony; a regulator's list does.
 
 ### A critical subtlety: keyterms must not be fed the same words the rules look for
 
-The insight comes from the breakdown of claim-intake-agent and Saakshi (the competitor review), and it applies directly here. If you feed both names of a LASA pair into `keyterms_prompt`, the recogniser starts latching onto them, and the observation stops being independent of the check: we get confirmation of the very hint we supplied.
+The insight came from reviewing how other voice agents in this field configure the recogniser, and it applies directly here. If you feed both names of a LASA pair into `keyterms_prompt`, the recogniser starts latching onto them, and the observation stops being independent of the check: we get confirmation of the very hint we supplied.
 
 So the dictionaries are split:
 
@@ -139,7 +145,8 @@ And a test is written for this, which fails if someone adds a checked term to th
 ## 5. Architecture
 
 Stack: **one Next.js application on Vercel, TypeScript throughout**. No Docker, no
-always-on process, no database server.
+always-on process, no database server of our own: finished sessions go to Vercel Blob, and
+the shared daily budget and session registry to Upstash Redis from the Vercel Marketplace.
 
 ### Why a hybrid rather than the Voice Agent API alone
 
@@ -148,7 +155,7 @@ audio-in/audio-out black box gives no way to see a recognition error. We need `w
 with timecodes and confidence, so Streaming STT is mandatory. The conversational loop with
 turn detection and barge-in is cheaper taken ready-made from the Voice Agent API.
 
-25 of 45 competitors took only the black box. The hybrid is a difference from the outset.
+The hybrid is what the gate needs: without `words[]` there is nothing for it to check.
 
 ### Why the browser holds both sockets
 
@@ -214,7 +221,7 @@ prompt=<domain context, up to 1750 characters>
 session_heartbeat=true
 ```
 
-`domain=medical-v1` and `prompt` are exactly the promptability and domain context that, by AssemblyAI's figures, give −43% errors on medical terms. We switch them on not because we can, but because it is a measurable delta: a run with them and a run without them is a ready-made experiment.
+`domain=medical-v1` and `prompt` are the domain context that AssemblyAI states reduces errors on medical terms; we have not recorded the source of their figure and do not quote it. We switch them on not because we can, but because it is a measurable delta: a run with them and a run without them is a ready-made experiment.
 
 ### Tool calling: the critical pattern
 
@@ -232,7 +239,7 @@ if event["type"] == "reply.done":
     pending.clear()
 ```
 
-The asymmetry between `arguments` (an object) and `result` (a string) is real and not obvious. The LLM Gateway model has to be picked from those capable of tool calling: `gemini-2.5-flash`, `gpt-5-mini`, `claude-haiku-4-5`. The default in the documentation's examples, `qwen3.5-4b-32k-fast`, **cannot** do tool calling — a ready-made trap for competitors and a reason for a line in the README.
+The asymmetry between `arguments` (an object) and `result` (a string) is real and not obvious. The LLM Gateway model has to be picked from those capable of tool calling: `gemini-2.5-flash`, `gpt-5-mini`, `claude-haiku-4-5`. The default in the documentation's examples, `qwen3.5-4b-32k-fast`, **cannot** do tool calling, per the capabilities table in [assemblyai-api.md](assemblyai-api.md), which is a trap worth a line in the README.
 
 The agent's tools:
 
@@ -249,32 +256,35 @@ The agent's tools:
 
 ## 6. What we measure and how
 
-Here the project takes a category nobody in the field occupied (the competitor review: measured latency was presented only by Saakshi, observability by nobody).
+Few submissions in this field publish a measured number together with its command and set size; this section is where the project differs.
 
 ### Metrics
 
-| Metric | Method | AssemblyAI's benchmark |
-|---|---|---|
-| **Entity Error Rate** | on the held-out set, over turns with entities, by hand | their reference 15.31% |
-| EER with `domain=medical-v1` and `prompt` against without them | A/B on the same audio | their claim −43% on medical terms |
-| **Turn-to-turn latency** | from end of speech to the first byte of sound, N ≥ 30 | P95 < 1500 ms |
-| Finalization delay | from the `Turn` messages | P95 < 500 ms |
-| **Caller repeat rate** | consecutive repetitions of a phrase, segmented by the agent's preceding question | their example: 19% on email, 1% on yes/no |
-| **Scenario success: gate on / gate off** | the same set, two runs | we reproduce their 43.6% → 79.1% |
-| Share of errors caught by a validator against those caught by a re-ask | breakdown | — |
-| Cost per completed order | not $/hour | their formulation |
+This table is the plan as written. The Status column says what was run; `eval/REPORT.md`
+holds every figure that exists.
+
+| Metric | Method | AssemblyAI's benchmark | Status |
+|---|---|---|---|
+| **Entity Error Rate** | on the held-out set, scored against the known ground truth | their reference 15.31% | measured, `make eval-heldout` |
+| EER with `domain=medical-v1` and `prompt` against without them | A/B on the same audio | they state a reduction; figure not quoted | planned, not run |
+| **Turn-to-turn latency** | from end of speech to the first byte of sound, N ≥ 30 | P95 < 1500 ms | not measured |
+| Finalization delay | from the `Turn` messages | P95 < 500 ms | measured on live STT sockets, `make eval-control` |
+| **Caller repeat rate** | consecutive repetitions of a phrase, segmented by the agent's preceding question | their example: 19% on email, 1% on yes/no | planned, not run |
+| **What a reflex yes writes: pair rule on / off** | the same candidates and the same read-back, one flag apart (`make ab-gate`) | their 43.6% → 79.1% assumes the caller catches 70% of read-back errors; this measures the caller who catches none | measured offline, constructed mishearings |
+| Share of errors caught by a validator against those caught by a re-ask | breakdown | — | measured, `make coverage-matrix` |
+| Cost per completed order | not $/hour | their formulation | planned, not run |
 
 ### How to make the proof honest
 
-**Held-out.** The set is labelled in the first two days and is not used for tuning even once before the final evaluation. This is a direct way around Saakshi's weakness: their precision of 1.00 was obtained on a sample of 70 utterances in which they themselves corrected 9 patterns after a disagreement with the labels. They honestly called it a "regression suite, not a generalisation estimate" — and if we have a held-out set, our figure is stronger in meaning even if numerically worse.
+**Held-out.** The set is labelled in the first two days and is not used for tuning even once before the final evaluation. A figure measured on the set the thresholds were tuned on is a regression suite, not a generalisation estimate; a figure from a sealed held-out set is stronger in meaning even when it is numerically worse.
 
-**Corpus.** On AssemblyAI's recommendation — 50 worst cases: telephone quality (8 kHz mulaw, `encoding=pcm_mulaw`), background noise, accents, interruptions, false starts. And LASA pairs from ISMP in both directions, without fail.
+**Corpus.** On AssemblyAI's recommendation — 50 worst cases: telephone quality (8 kHz mulaw, `encoding=pcm_mulaw`), background noise, accents, interruptions, false starts. What was built: clean desktop TTS at 22 kHz and 16 kHz, and a stress set that passes every listed name through a telephone band, white noise and a speed-up (`eval/stress`). Not built: accents, interruptions, false starts, or any human voice.
 
 **Synthesis without PII.** DEA and NPI numbers are generated from their checksums; drugs and strengths come from the NDC catalogue; patient names are fictitious. Ground truth for every file is known by construction — so EER is computed without contestable manual labelling on the fields that have a validator.
 
 ### Observability as a product feature
 
-A dedicated `/metrics` page in the application, not a section in the README:
+A dedicated `/metrics` page in the application, not a section in the README. The list below is what it was planned to hold; what is measured shows its figure and command, and the rest shows a dash:
 
 - P50/P95/P99 by latency component
 - entity capture rate by field type
@@ -282,7 +292,7 @@ A dedicated `/metrics` page in the application, not a section in the README:
 - WebSocket close codes: **3007** (malformed chunks), **3008** (the three-hour cap, a billing leak), **3009** (session limit) — logged from the Error frame, not from the truncated reason
 - session cost
 
-Every number on the page carries the command that produced it. Not one figure without a method — a direct contrast with Veritas, where the benchmarks contradict one another, and with RevenueFlow, where the README says 8 tests and the devpost says 177.
+Every number on the page carries the command that produced it. Not one figure without a method.
 
 ---
 
@@ -292,9 +302,9 @@ The judge is alone, time is short, and there may be no microphone. Hence three m
 
 **Mode 1 — live conversation.** A microphone, a real dialogue, field cards visible with confidence and word highlighting.
 
-**Mode 2 — judge-solo (mandatory).** A "Run the scenario" button: substitute audio from the corpus instead of a microphone, the full path to a finished order. Works without microphone permission and without a second person. Saakshi provided for this, and they were right to.
+**Mode 2 — judge-solo (mandatory).** A synthesised session replays through the shipped gate instead of a microphone, the full path to a finished order. Works without microphone permission and without a second person.
 
-**Mode 3 — "catch the error".** The most convincing one. A file is played in which "Lisinopril" was spoken but the recogniser returns "Bisoprolol" with high confidence. On screen: the agent does **not** file the order, it says aloud that this is a pair from the ISMP list and asks for clarification. Beside it, the same file with the gate switched off, where the order goes out with the wrong drug.
+**Mode 3 — "catch the error".** The most convincing one. A synthesised session stages "hydromorphone" heard as "morphine" at confidence 1.0; no recognizer run has produced that error. On screen: the agent names both drugs from the ISMP list and asks which; a "yes" files nothing, and the name the caller says is what goes into the order. Beside it, the same session with only the pair rule switched off: the drug is read back plainly, the caller says "yes" by reflex, and the order goes out with the wrong drug.
 
 That is 40 seconds which explain the whole product without words.
 
@@ -302,7 +312,7 @@ That is 40 seconds which explain the whole product without words.
 
 | Time | What is shown |
 |---|---|
-| 0:00–0:15 | The problem: the Lisinopril → Bisoprolol example, the figure 43.6% |
+| 0:00–0:15 | The problem: the hydromorphone → morphine example, the figure 43.6% |
 | 0:15–0:50 | Live conversation: dictating the order, field cards filling in, confidence visible |
 | 0:50–1:20 | "Catch the error" mode: the gate stops the wrong drug, the agent re-asks |
 | 1:20–1:40 | Click on a field → the source words highlight and the fragment plays |
@@ -329,29 +339,26 @@ graph.
 Deleted along with the architecture it assumed. It scheduled FastAPI skeleton work and a
 deployment to an always-on host, both of which the project no longer does.
 
-## 10. How this beats each of the dangerous competitors
+## 10. Where the idea is not new, and where it is
 
-| Competitor | Their strength | Our answer |
-|---|---|---|
-| **Saakshi** | 418 tests, p50 1368 ms, three API surfaces, hash-chain | A held-out set against their regression sample. LLM Gateway as the main path against their Groq. Their precision of 1.00 was obtained on a sample they corrected themselves — our figure is more honest in meaning |
-| **VoiceMed AI** | Strictly specification-conformant Voice Agent API, 44 tests | Their only measured number is 5.63 s to the greeting; turn-to-turn they did not measure. Our turn-to-turn P95 plus a cold start under a second. Their base is 20 symptoms; ours is 116,155 products |
-| **claim-intake-agent** | The best insight: keyterms destroy the independence of the observation | We take that insight and carry it through to a test that fails on violation. Their evidence is n=3 and "my recollection"; ours is a held-out set and saved audio |
-| **Voice Action Gate** | The best gate idea: a capability instead of an `if`, the witness built before the proposal appears | Their live path browser→WS→gate was never run once, `READ_BACK_CONFIRMED` is not implemented, and the agent is a regex. We have a live run, an implemented read-back and an LLM with a JSON schema |
-| **Veritas Clinical AI** | The best presentation | Their benchmarks contradict one another, the Loom leads to the repository, the demo is on `localhost:3000`, and the safety filters are disabled with no disclaimer. We have a working demo, reproducible numbers and an explicit disclaimer |
-| **Officer Parker** / **MockMate** | Depth in the Voice Agent API | We take their depth and add the numbers MockMate does not have at all |
-| **Brand Studio Agent** | Async `reply.create`, forced JSON | Three of their five layers are marked as planned. In our pitch there is only what works |
+The gate idea is not ours. Several submissions in this field put deterministic code
+between the model and the record, and some did it earlier. The provability niche is
+the most crowded one at this hackathon, and we say so before a judge has to.
 
-### Honestly about our weak position: Originality
+What is genuinely different here:
 
-The gate idea is not ours. Voice Action Gate formulated it earlier and better ("a capability instead of an `if`"), Saakshi implemented it in their niche with 418 tests, and claim-intake-agent found the central insight about keyterms. The provability niche is the most crowded at this hackathon: six projects.
+1. **A regulator-published sound-alike list overrides confidence 1.0 for a value that
+   is valid in the catalogue.** The gates we found fire on low confidence, on a failed
+   validator, or on a value missing from a known set. A confident, valid, wrong drug
+   name passes all three; it does not pass ours.
+2. **The same list is the adversarial corpus.** Both directions of the 20 curated pairs
+   as they stood on 16 September are in the development set, rather than tests invented
+   by the team; eight pairs were replaced on 25 September and are not in it.
+3. **A held-out set, sealed since day 2**, so the published figure is a generalisation
+   estimate and not a regression suite.
 
-We enter it seventh and win not by novelty but by execution. What is genuinely new in our case:
-
-1. **A regulator's LASA list as the source of an adversarial corpus.** Not one of the 45 projects used a ready-made set assembled by ISMP and the FDA. They either invented their tests themselves or did not test.
-2. **A re-ask at confidence 1.0.** Every other gate fires on low confidence or on validator failure. Our rule that "high confidence does not protect against homophony" is a different logic: the recogniser can be absolutely certain and absolutely wrong.
-3. **A held-out set, sealed since day 2.** Even Saakshi honestly called their own estimate a regression one.
-
-This has to be said in the pitch by us, before the judge asks. An admission that "the gate idea is not new, this is what is new" reads as maturity, not as weakness.
+This belongs in the pitch as an admission: "the gate idea is not new, this is what is
+new" reads as maturity, not as weakness.
 
 ---
 
@@ -359,15 +366,15 @@ This has to be said in the pitch by us, before the judge asks. An admission that
 
 | Risk | Likelihood | Response |
 |---|---|---|
-| `domain=medical-v1` gives a smaller delta than the claimed −43% | medium | We publish the measurement as it is. A negative result with a method is stronger than somebody else's figure with no check. That is exactly the material for the "what we learned about the API" section |
+| `domain=medical-v1` gives a smaller delta than AssemblyAI states | medium | We publish the measurement as it is. A negative result with a method is stronger than somebody else's figure with no check. That is exactly the material for the "what we learned about the API" section |
 | The LASA pairs are recognised too well and the gate never fires | medium | The corpus is degraded on purpose: 8 kHz mulaw, noise, fast speech. AssemblyAI writes themselves that the degradation comes from real audio, not from the model |
 | Not enough time for everything | high | Order of cuts: first judge modes 2 and 3, then `/metrics`, then UI polish. The gate and the measurements are not to be cut |
-| The judge opens the demo while the backend is down | medium | An always-on instance, plus a page that honestly shows status, plus mode 2 on a pre-recorded run |
-| Medical liability in the pitch | low | An explicit disclaimer: a technology demonstration, not a medical device, synthetic data. Veritas exposed themselves on this by disabling the safety filters |
+| The judge opens the demo while the backend is down | medium | There is no backend to go down: the judge path replays a synthesised session through the real gate without a key or a microphone, and `/api/health` reports status honestly |
+| Medical liability in the pitch | low | An explicit disclaimer: a technology demonstration, not a medical device, synthetic data |
 | NDC regulation changes | low | [The FDA proposes a single NDC format](https://www.federalregister.gov/documents/2026/03/05/2026-04368/revising-the-national-drug-code-format-and-drug-label-barcode-requirements) — mention it as context awareness |
 
 ---
 
 ## 12. What to say in one paragraph at the pitch
 
-In prescription intake a recognition error does not look like an error: "Lisinopril" becomes "Bisoprolol", both drugs exist, the LLM confidently files the order, and there is no signal. By AssemblyAI's figures, at an entity capture accuracy of 84.69% per turn a five-turn scenario reaches the end in 43.6% of cases, and with confirmation steps in 79.1%. Readback implements that confirmation as an architectural constraint: a value does not enter the order if the checksum did not add up, if the confidence is below the threshold, or if the name is part of the published ISMP list of confused drugs. Every field shows the source words with timecodes and the recogniser's confidence, and the metrics page shows Entity Error Rate on the held-out set, latency P95 by component and caller repeat rate, with the commands to reproduce every figure.
+In prescription intake a recognition error does not look like an error: "hydromorphone" becomes "morphine", both drugs exist, the LLM confidently files the order, and there is no signal. By AssemblyAI's figures, at an entity capture accuracy of 84.69% per turn a five-turn scenario reaches the end in 43.6% of cases; AssemblyAI projects 79.1% if every entity is read back and the caller catches 70% of the errors, a model rather than a measurement. Readback implements that confirmation as an architectural constraint: a value does not enter the order if the checksum did not add up, if the confidence is below the threshold, or if the name is part of the published ISMP list of confused drugs. Every field shows the source words with timecodes and the recogniser's confidence, and the metrics page shows each figure with its command, and a dash where nothing was measured.

@@ -32,12 +32,6 @@ export class UnknownFieldError extends ReadbackError {
   }
 }
 
-export class NormalizationError extends ReadbackError {
-  constructor(message: string) {
-    super("NORMALIZATION_FAILED", message)
-  }
-}
-
 export class CatalogUnavailableError extends ReadbackError {
   constructor(message: string) {
     super("CATALOG_UNAVAILABLE", message)
@@ -68,5 +62,29 @@ export class UpstreamError extends ReadbackError {
   constructor(status: number, message: string) {
     super("UPSTREAM_FAILED", message)
     this.status = status
+  }
+}
+
+export class UnknownSessionError extends ReadbackError {
+  constructor(sessionId: string) {
+    super(
+      "E_UNKNOWN_SESSION",
+      `no registered session ${sessionId}; a session exists only once the agent token route has issued it, and nothing is created on demand`,
+    )
+  }
+}
+
+export class IntakeLogFullError extends ReadbackError {
+  constructor(sessionId: string, limit: number) {
+    super(
+      "E_INTAKE_LOG_FULL",
+      `session ${sessionId} has reached its ${limit}-event log limit; nothing further is recorded`,
+    )
+  }
+}
+
+export class SessionCollisionError extends ReadbackError {
+  constructor(sessionId: string) {
+    super("E_SESSION_EXISTS", `session ${sessionId} is already registered`)
   }
 }

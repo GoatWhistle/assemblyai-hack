@@ -2,9 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 import { FieldName } from "@/domain"
 import { POST as postTurn } from "../../app/api/sessions/[id]/turns/route"
 import { POST as proposeField } from "../../app/api/tools/propose-field/route"
-import { call, resetToolEnvironment } from "./harness"
-
-const SESSION = "echo-turn-session"
+import { call, resetToolEnvironment, SESSION } from "./harness"
 
 function turnRequest(body: unknown, id = SESSION): Request {
   return new Request(`https://readback.example.com/api/sessions/${id}/turns`, {
@@ -28,8 +26,8 @@ function words(text: string, confidence: number) {
 }
 
 describe("a turn spoken by the agent can never become a source of provenance, server-side", () => {
-  beforeEach(() => {
-    resetToolEnvironment()
+  beforeEach(async () => {
+    await resetToolEnvironment()
   })
 
   it(
@@ -39,9 +37,9 @@ describe("a turn spoken by the agent can never become a source of provenance, se
       await postTurn(
         turnRequest({
           turnOrder: 1,
-          transcript: "bisoprolol ten milligrams",
+          transcript: "morphine two milligrams",
           isFormatted: false,
-          words: words("bisoprolol ten milligrams", 1.0),
+          words: words("morphine two milligrams", 1.0),
         }),
         params(),
       )
@@ -49,10 +47,9 @@ describe("a turn spoken by the agent can never become a source of provenance, se
       const proposed = await (
         await proposeField(
           call("propose-field", {
-            session_id: SESSION,
             field: FieldName.DrugName,
-            value: "bisoprolol",
-            transcript_hint: "bisoprolol",
+            value: "morphine",
+            transcript_hint: "morphine",
           }),
         )
       ).json()
@@ -83,27 +80,26 @@ describe("a turn spoken by the agent can never become a source of provenance, se
     await postTurn(
       turnRequest({
         turnOrder: 1,
-        transcript: "bisoprolol ten milligrams",
+        transcript: "morphine two milligrams",
         isFormatted: false,
-        words: words("bisoprolol ten milligrams", 1.0),
+        words: words("morphine two milligrams", 1.0),
       }),
       params(),
     )
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: FieldName.DrugName,
-        value: "bisoprolol",
-        transcript_hint: "bisoprolol",
+        value: "morphine",
+        transcript_hint: "morphine",
       }),
     )
 
     const response = await postTurn(
       turnRequest({
         turnOrder: 2,
-        transcript: "lisinopril",
+        transcript: "hydromorphone",
         isFormatted: false,
-        words: words("lisinopril", 0.98),
+        words: words("hydromorphone", 0.98),
       }),
       params(),
     )
@@ -117,30 +113,29 @@ describe("a turn spoken by the agent can never become a source of provenance, se
       await postTurn(
         turnRequest({
           turnOrder: 1,
-          transcript: "bisoprolol ten milligrams",
+          transcript: "morphine two milligrams",
           isFormatted: false,
-          words: words("bisoprolol ten milligrams", 1.0),
+          words: words("morphine two milligrams", 1.0),
         }),
         params(),
       )
       const proposed = await (
         await proposeField(
           call("propose-field", {
-            session_id: SESSION,
             field: FieldName.DrugName,
-            value: "bisoprolol",
-            transcript_hint: "bisoprolol",
+            value: "morphine",
+            transcript_hint: "morphine",
           }),
         )
       ).json()
-      expect(proposed.say_to_caller.toLowerCase()).toContain("lisinopril")
+      expect(proposed.say_to_caller.toLowerCase()).toContain("hydromorphone")
 
       const response = await postTurn(
         turnRequest({
           turnOrder: 2,
-          transcript: "lisinopril",
+          transcript: "hydromorphone",
           isFormatted: false,
-          words: words("lisinopril", 0.97),
+          words: words("hydromorphone", 0.97),
         }),
         params(),
       )
@@ -150,4 +145,43 @@ describe("a turn spoken by the agent can never become a source of provenance, se
       ).toBe(200)
     },
   )
+
+  it("H9: refuses a caller turn that repeats an agent line the browser posted, and never proposes from it", async () => {
+    const line = "Reading the whole order back. Hydromorphone two milligrams tablet, by mouth."
+    const agent = await postTurn(
+      turnRequest({
+        role: "agent",
+        replyId: "reply-echo",
+        text: line,
+        status: "completed",
+        playedMs: 3000,
+        durationMs: 3000,
+      }),
+      params(),
+    )
+    expect(agent.status).toBe(200)
+    const echoed = await postTurn(
+      turnRequest({
+        turnOrder: 7,
+        transcript: line,
+        isFormatted: true,
+        words: words(line.replace(/[^a-zA-Z0-9 ]/g, ""), 0.95),
+      }),
+      params(),
+    )
+    expect(echoed.status).toBe(422)
+    const proposed = await (
+      await proposeField(
+        call("propose-field", {
+          field: FieldName.DrugName,
+          value: "hydromorphone",
+          transcript_hint: "Hydromorphone two milligrams",
+        }),
+      )
+    ).json()
+    expect(
+      proposed.reason_code,
+      "the agent's own words must never become the provenance of a value",
+    ).toBe("E_PROVENANCE_NOT_FOUND")
+  })
 })

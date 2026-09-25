@@ -77,15 +77,58 @@ export function catalogUtterance(candidate: FieldCandidate): string {
   return `${opening} The closest name I do hold is ${recovered.join(" or ")}, which differs only in its vowels. Did you mean ${recovered.join(" or ")}, or should I take it again?`
 }
 
-export function comboUtterance(detail: string): string {
+export function comboUtterance(detail: string, partnersWithCombo: unknown = null): string {
+  if (typeof partnersWithCombo === "string" && partnersWithCombo.length > 0) {
+    return `${detail}. Which did you mean?`
+  }
   return `${detail}. Which part should I change?`
 }
 
+const MIN_CUE_LETTERS = 3
+
+export function distinguishingCue(name: string, others: readonly string[]): string {
+  const letters = name.toLowerCase().replace(/[^a-z]/g, "")
+  const shared = others.map((other) => {
+    const rival = other.toLowerCase().replace(/[^a-z]/g, "")
+    let index = 0
+    while (index < letters.length && letters[index] === rival[index]) {
+      index += 1
+    }
+    return index
+  })
+  const length = Math.min(
+    letters.length,
+    Math.max(MIN_CUE_LETTERS, ...shared.map((n) => n + 1)),
+  )
+  return letters.slice(0, length).toUpperCase().split("").join("-")
+}
+
+function contrastiveChoices(heard: string, partners: readonly string[]): string {
+  const options = [heard, ...partners]
+  return options
+    .map(
+      (name) =>
+        `${name}, ${distinguishingCue(
+          name,
+          options.filter((o) => o !== name),
+        )}`,
+    )
+    .join(", or ")
+}
+
+export function contrastiveUtterance(heard: string, partners: readonly string[]): string {
+  return `${heard} and ${partners.join(", ")} are on a published confused-drug-names list. Which: ${contrastiveChoices(heard, partners)}? Answer with a name.`
+}
+
+export function namedAnswerRequiredUtterance(
+  heard: string,
+  partners: readonly string[],
+): string {
+  return `A yes cannot confirm this pair. Which: ${contrastiveChoices(heard, partners)}? Answer with a name.`
+}
+
 export function lasaUtterance(lasa: LasaRisk): string {
-  const heard = String(lasa.matchedTerm)
-  const partners = [...lasa.confusableWith]
-  const alternatives = [heard, ...partners].join(" or ")
-  return `I heard ${heard}. That name is on the published confused-drug-names list together with ${partners.join(", ")}. To be certain: did you say ${alternatives}?`
+  return contrastiveUtterance(String(lasa.matchedTerm), [...lasa.confusableWith])
 }
 
 export function noValidatorUtterance(field: FieldName, value: NormalizedValue): string {

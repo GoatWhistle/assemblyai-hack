@@ -8,5 +8,140 @@
       "method": "read by a human off the AssemblyAI dashboard billing page and typed in here"
     }
   ],
-  "runs": []
+  "runs": [
+    {
+      "runId": "scripts-report-probe-stt-ts-2026-09-25T14:19:51.926Z",
+      "at": "2026-09-25T14:19:51.926Z",
+      "command": "scripts/report/probe-stt.ts",
+      "sockets": [
+        "stt"
+      ],
+      "openSeconds": 9.151,
+      "outcome": "completed"
+    },
+    {
+      "runId": "scripts-report-probe-stt-ts-2026-09-25T14:20:10.533Z",
+      "at": "2026-09-25T14:20:10.533Z",
+      "command": "scripts/report/probe-stt.ts",
+      "sockets": [
+        "stt"
+      ],
+      "openSeconds": 9.794,
+      "outcome": "completed"
+    },
+    {
+      "runId": "scripts-measure-measure-eer-ts-set-eval-stress-2026-09-25T17:33:10.955Z",
+      "at": "2026-09-25T17:33:10.955Z",
+      "command": "scripts/measure/measure-eer.ts --set eval/stress",
+      "sockets": [
+        "stt"
+      ],
+      "openSeconds": 1205.382,
+      "outcome": "completed"
+    },
+    {
+      "runId": "scripts-measure-measure-eer-ts-set-eval-stress-2026-09-25T17:33:23.290Z",
+      "at": "2026-09-25T17:33:23.290Z",
+      "command": "scripts/measure/measure-eer.ts --set eval/stress",
+      "sockets": [
+        "stt"
+      ],
+      "openSeconds": 1296.071,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-25T18:01:39.960Z",
+      "at": "2026-09-25T18:01:39.960Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246.3,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-25T18:12:20.189Z",
+      "at": "2026-09-25T18:12:20.189Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 245.8,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-25T18:21:18.430Z",
+      "at": "2026-09-25T18:21:18.430Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-25T18:33:38.033Z",
+      "at": "2026-09-25T18:33:38.033Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 247.6,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-25T18:40:54.316Z",
+      "at": "2026-09-25T18:40:54.316Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-25T18:45:24.140Z",
+      "at": "2026-09-25T18:45:24.140Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246.7,
+      "outcome": "failed"
+    },
+    {
+      "runId": "scripts-report-probe-witness-ts-2026-09-25T18:58:58.197Z",
+      "at": "2026-09-25T18:58:58.197Z",
+      "command": "scripts/report/probe-witness.ts",
+      "sockets": [
+        "agent"
+      ],
+      "openSeconds": 11.47,
+      "outcome": "completed"
+    },
+    {
+      "runId": "reconciliation-from-the-vendor-session-list-diagnostic-agent-sessions-on-25-September-not-itemised-elsewhere-2026-09-25T18:50:00.000Z",
+      "at": "2026-09-25T18:50:00.000Z",
+      "command": "reconciliation from the vendor session list: diagnostic agent sessions on 25 September not itemised elsewhere",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 55.3,
+      "outcome": "failed"
+    }
+  ]
 }

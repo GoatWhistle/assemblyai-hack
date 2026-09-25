@@ -11,14 +11,11 @@ const HEIGHT_DECLARATION = /(?:^|[;{\s])(?:min-)?height:\s*([^;}]+)/g
 const COARSE_BLOCK = /@media[^{]*\(\s*pointer\s*:\s*coarse\s*\)\s*\{/g
 const HIT_AREA = /::(?:after|before)[^{]*\{[^}]*min-(?:width|height):\s*var\(--target-touch\)/s
 
-function clearsFloorOutright(source) {
-  for (const match of source.matchAll(HEIGHT_DECLARATION)) {
+function reachesFloor(source) {
+  return [...source.matchAll(HEIGHT_DECLARATION)].some((match) => {
     const pixels = pixelsOf(match[1])
-    if (pixels !== null && pixels >= FLOOR_PX) {
-      return true
-    }
-  }
-  return false
+    return pixels !== null && pixels >= FLOOR_PX
+  })
 }
 
 const INLINE_EXEMPT = new Map([
@@ -116,13 +113,7 @@ function classesMissingAFloor(source, coarse) {
   const standalone = [...interactiveClasses(source)].filter((name) =>
     /(?:^|[;{\s])display:/.test(bare.get(name) ?? ""),
   )
-  return standalone.filter((name) => {
-    const body = (bare.get(name) ?? "") + coarse
-    return ![...body.matchAll(HEIGHT_DECLARATION)].some((match) => {
-      const pixels = pixelsOf(match[1])
-      return pixels !== null && pixels >= FLOOR_PX
-    })
-  })
+  return standalone.filter((name) => !reachesFloor((bare.get(name) ?? "") + coarse))
 }
 
 function walk(dir, out = []) {
@@ -193,7 +184,7 @@ for (const sheet of sheets) {
   }
 
   if (short.length === 0) {
-    if (!source.includes(TOUCH_TOKEN) && !clearsFloorOutright(source)) {
+    if (!source.includes(TOUCH_TOKEN) && !reachesFloor(source)) {
       offenders.push({
         sheet,
         why: `no height declaration reaches ${TOUCH_TOKEN} or the ${FLOOR_PX}px floor outright`,

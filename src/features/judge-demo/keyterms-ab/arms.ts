@@ -24,7 +24,7 @@ export type KeytermsArm = {
 export const KEYTERMS_AB_TITLE = "The keyterms A/B, and why only one arm can be run"
 
 export const KEYTERMS_AB_LEDE =
-  "A competitor invites the reader to try it: ask for your hydrochlorothiazide, then delete the list and publish again. The invitation is a good one and the effect is real. One of the two arms, though, is a configuration this product will not ship, so the switch below shows what each list does to the read-back instead of offering both as settings."
+  "A competitor invites the reader to try it: ask for your hydrochlorothiazide, then delete the list and publish again. The invitation is a good one, and the vendor documents the biasing effect; we have not measured it. One of the two arms, though, is a configuration this product will not ship, so the switch below shows what each list does to the read-back instead of offering both as settings."
 
 export const SAMPLE_SIZE = 6
 
@@ -39,7 +39,7 @@ export const CIRCULARITY =
   "Keyterms bias the recognizer toward exactly the strings listed. Put a pair member in the list and the recognizer returns that string more readily; the read-back then asks the caller to confirm the string the configuration suggested. The confirmation still happens, and it still proves nothing the configuration did not already assume. That is what makes the second arm invalid as a product option rather than merely worse."
 
 export const WHY_NO_NUMBER =
-  "There is no measured figure for the biased arm and there will not be one. Producing it means sending a published pair member to the recognizer as a hint, which is what the purity test refuses, so the honest cell here is an absence rather than a number nobody produced."
+  "There is no measured figure for the biased arm. If it is ever measured, it is a one-off diagnostic on the human voice set, never a product setting, and make keyterms-purity still refuses it in the product. Until then the honest cell here is an absence rather than a number nobody produced."
 
 export const MEASURED_ARM_NOTE =
   "The shipped arm is the one the recorded sets were measured on: every result file under eval/ carries keyterms 0 for the recognizer socket, and the identity context that does go in is sampled below."

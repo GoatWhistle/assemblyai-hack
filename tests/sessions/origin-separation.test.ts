@@ -1,10 +1,13 @@
-import { describe, expect, it } from "vitest"
+import { GET as metricsRoute } from "@app/api/metrics/route"
+import { afterEach, describe, expect, it } from "vitest"
+import { FieldName, GateAction, ReasonCode } from "@/domain"
 import type { StoredSession } from "@/sessions"
 import {
   ALL_SESSION_ORIGINS,
   countsTowardPublishedMetrics,
   createBlobStore,
   createMemoryStore,
+  installSessionStore,
   originFromEnv,
   SESSION_ORIGIN_SEPARATION_NOTE,
   SessionOrigin,
@@ -142,5 +145,38 @@ describe("a demo rehearsal and a measured session never share storage", () => {
   it("states the separation rule in exported prose, so the reason survives the ban on comments", () => {
     expect(SESSION_ORIGIN_SEPARATION_NOTE).toMatch(/different prefixes/)
     expect(SESSION_ORIGIN_SEPARATION_NOTE).toMatch(/rehearsal/)
+  })
+})
+
+describe("W2: published metrics read only measured sessions", () => {
+  afterEach(() => {
+    installSessionStore(null)
+  })
+
+  it("counts a measurement and leaves out a live session and a demo rehearsal", async () => {
+    const store = createMemoryStore()
+    installSessionStore(store)
+    const decided = (sessionId: string, origin: SessionOrigin): StoredSession => ({
+      ...session(sessionId, origin),
+      decisions: [
+        {
+          action: GateAction.Accept,
+          reasonCode: ReasonCode.ValidatorPassedHighConf,
+          field: FieldName.Quantity,
+          candidateId: `${sessionId}-c1`,
+          agentUtterance: "",
+          evidence: {},
+          confirmationMode: null,
+        },
+      ],
+    })
+    await store.put(decided("measured", SessionOrigin.Measurement))
+    await store.put(decided("rehearsal", SessionOrigin.DemoRehearsal))
+    await store.put(decided("live", SessionOrigin.Live))
+    const body = await (await metricsRoute()).json()
+    expect(body.sessionCount).toBe(1)
+    expect(body.decisionCount).toBe(1)
+    expect(body.publishedOrigins).toEqual([SessionOrigin.Measurement])
+    expect(body.originNote).toBe(SESSION_ORIGIN_SEPARATION_NOTE)
   })
 })

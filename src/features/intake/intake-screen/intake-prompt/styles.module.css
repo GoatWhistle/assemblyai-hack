@@ -1,0 +1,33 @@
+.prompt {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  text-align: center;
+  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart) both;
+}
+
+.promptBody {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--track-tight);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.promptActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.promptAside {
+  margin: 0;
+  max-width: var(--measure-prose);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--text-faint);
+  text-wrap: pretty;
+}

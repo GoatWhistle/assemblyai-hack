@@ -1,35 +1,31 @@
 "use client"
 
-import { useCallback, useMemo, useState } from "react"
-import type { FieldCandidate, GateDecision, WordSpan } from "@/domain"
+import { type ReactNode, useMemo } from "react"
+import type { FieldCandidate, GateDecision } from "@/domain"
 import { estimateFromElapsed } from "@/features/cost/published-rate"
 import { RateEstimate } from "@/features/cost/rate-estimate"
-import { FieldCard } from "@/features/field-card"
+import type { ListenHandler } from "@/features/field-card/said-recorded"
 import { GateBanner } from "@/features/gate-banner"
 import { RefusalCounter } from "@/features/gate-ledger/refusal-counter"
 import { type RefusalTally, tallyRefusals } from "@/features/gate-ledger/refusal-tally"
 import { RejectedTable } from "@/features/gate-ledger/rejected-table"
-import { MicConsole } from "@/features/microphone/mic-console"
-import { micStateFor } from "@/features/microphone/mic-state"
+import type { LiveOrderSnapshot } from "@/features/order-summary/live-snapshot"
 import type { FastPath } from "@/features/read-back/fast-path"
 import type { ReadBackContext } from "@/features/read-back/read-back-machine"
-import type {
-  SpanSelection,
-  TranscriptEntry,
-} from "@/features/transcript-view/transcript-entry"
-import { WaitingIndicator } from "@/features/waiting/waiting-indicator"
+import type { TranscriptEntry } from "@/features/transcript-view/transcript-entry"
 import type { Patience } from "@/realtime/patience"
-import { ActionLink } from "@/shared/ui/primitives/action-link"
-import { Button } from "@/shared/ui/primitives/button"
-import { Panel } from "@/shared/ui/primitives/panel"
 import { SiteHeader } from "@/shared/ui/primitives/site-header"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
-import { ErrorState } from "@/shared/ui/states/error-state"
-import { AutoDegrade } from "../auto-degrade"
 import { IntakeRail } from "../intake-rail"
 import { PhaseDot } from "../phase-dot"
-import { FAULT_COPY, type SessionFault, SessionPhase } from "../session-status"
+import type { FaultDetail } from "../session-options"
+import type { SessionFault, SessionPhase } from "../session-status"
+import { useCandidateSelection } from "../use-candidate-selection"
+import { CallStage } from "./call-stage"
+import { FaultPanel } from "./fault-panel"
+import { FieldCards } from "./field-cards"
 import styles from "./styles.module.css"
+import { Thesis } from "./thesis"
 
 export type IntakeScreenProps = {
   readonly candidates: readonly FieldCandidate[]
@@ -39,6 +35,12 @@ export type IntakeScreenProps = {
   readonly fastPath?: FastPath
   readonly phase: SessionPhase
   readonly fault: SessionFault | null
+  readonly faultDetail?: FaultDetail | null
+  readonly alert?: string | null
+  readonly telemetry?: ReactNode
+  readonly summary?: ReactNode
+  readonly snapshot?: LiveOrderSnapshot | null
+  readonly onListen?: ListenHandler
   readonly decisionHistory?: readonly GateDecision[]
   readonly turnsHeld?: number | null
   readonly turnInFlight?: boolean
@@ -60,6 +62,12 @@ export function IntakeScreen({
   fastPath,
   phase,
   fault,
+  faultDetail = null,
+  alert = null,
+  telemetry,
+  summary,
+  snapshot = null,
+  onListen,
   decisionHistory,
   turnsHeld = null,
   turnInFlight = false,
@@ -72,34 +80,11 @@ export function IntakeScreen({
   onStop,
   onFinishAnswer,
 }: IntakeScreenProps) {
-  const [pinnedCandidateId, setPinnedCandidateId] = useState<string | null>(null)
-  const selected = useMemo(() => {
-    const pinned = candidates.find((entry) => entry.candidateId === pinnedCandidateId)
-    return pinned ?? candidates[candidates.length - 1] ?? null
-  }, [candidates, pinnedCandidateId])
-  const selectedCandidateId = selected?.candidateId ?? null
-  const [selection, setSelection] = useState<SpanSelection>(null)
-
-  const selectCandidate = useCallback((candidate: FieldCandidate) => {
-    setPinnedCandidateId(candidate.candidateId)
-    setSelection({
-      startMs: candidate.provenance.startMs,
-      endMs: candidate.provenance.endMs,
-    })
-  }, [])
-
-  const selectWord = useCallback(
-    (word: WordSpan) => {
-      setSelection({ startMs: word.startMs, endMs: word.endMs })
-      const owner = candidates.find((candidate) =>
-        candidate.provenance.words.some((entry) => entry.startMs === word.startMs),
-      )
-      if (owner !== undefined) {
-        setPinnedCandidateId(owner.candidateId)
-      }
-    },
-    [candidates],
+  const { selected, selection, selectCandidate, selectWord } = useCandidateSelection(
+    candidates,
+    onListen,
   )
+  const selectedCandidateId = selected?.candidateId ?? null
 
   const shownDecision = selected === null ? null : (decisions.get(selected.candidateId) ?? null)
 
@@ -111,119 +96,57 @@ export function IntakeScreen({
   const estimate = useMemo(() => estimateFromElapsed(elapsedMs), [elapsedMs])
 
   const started = candidates.length > 0 || transcript.length > 0
-  const idle = phase === SessionPhase.Idle || phase === SessionPhase.Closed
 
   return (
     <div className={styles.page}>
-      <SiteHeader current="intake" status={<PhaseDot phase={phase} />} />
+      <SiteHeader current="live" status={<PhaseDot phase={phase} />} />
 
-      {started ? (
-        <h1 className="visually-hidden">
-          Readback: prescription intake that proves it did not mishear
-        </h1>
-      ) : (
-        <div className={styles.thesis}>
-          <h1 className={styles.thesisTitle}>
-            Prescription intake that proves it did not mishear
-          </h1>
-          <p className={styles.thesisBody}>
-            High confidence does not protect against two medicines that sound alike. A name on a
-            regulator-published look-alike list is asked again even when the recognizer is
-            certain.
-          </p>
-        </div>
-      )}
+      <Thesis started={started} />
 
-      <div className={started || fault !== null ? undefined : styles.stage}>
-        {idle ? null : (
-          <div className={styles.waiting}>
-            <WaitingIndicator
-              signals={{
-                phase,
-                agentSpeaking,
-                turnInFlight,
-                readBackState: readBack.state,
-              }}
-            />
-          </div>
-        )}
-        <MicConsole
-          state={micStateFor(phase, agentSpeaking, fault)}
-          level={level}
-          elapsedMs={elapsedMs}
-          echoDiscards={echoDiscards}
-          patience={patience}
-          onStart={onStart}
-          onStop={onStop}
-          onFinishAnswer={onFinishAnswer}
-        />
-
-        {started || fault !== null || !idle ? null : (
-          <section className={styles.prompt}>
-            <p className={styles.promptBody}>
-              Say the patient, the drug, the strength and the sig. Each value is read back to
-              you before it is written, and anything that cannot be proved is asked again.
-            </p>
-            <div className={styles.promptActions}>
-              <ActionLink href="/demo" tone="primary" size="large">
-                Run the recorded session
-              </ActionLink>
-              <ActionLink href="/how-it-works" size="large">
-                How the check works
-              </ActionLink>
-            </div>
-            <p className={styles.promptAside}>
-              The recorded session needs no microphone and no second person, and it runs the
-              same gate over socket traffic captured from a live call. It is labelled as a
-              replay throughout, and it is the shortest way to see the product refuse a value.
-            </p>
-          </section>
-        )}
-      </div>
+      <CallStage
+        phase={phase}
+        fault={fault}
+        started={started}
+        agentSpeaking={agentSpeaking}
+        turnInFlight={turnInFlight}
+        readBackState={readBack.state}
+        level={level}
+        elapsedMs={elapsedMs}
+        echoDiscards={echoDiscards}
+        patience={patience}
+        onStart={onStart}
+        onStop={onStop}
+        onFinishAnswer={onFinishAnswer}
+      />
 
       {fault === null ? null : (
-        <div className={styles.fault}>
-          <Panel padding="none">
-            <ErrorState
-              title={FAULT_COPY[fault].title}
-              body={
-                <>
-                  <p>{FAULT_COPY[fault].body}</p>
-                  <p>{FAULT_COPY[fault].remedy}</p>
-                </>
-              }
-              code={fault}
-              actions={
-                <>
-                  <Button onClick={onStart}>Try again</Button>
-                  <ActionLink href="/demo">Watch the recording instead</ActionLink>
-                </>
-              }
-            />
-          </Panel>
-          <AutoDegrade key={fault ?? "none"} fault={fault} />
-        </div>
+        <FaultPanel fault={fault} faultDetail={faultDetail} onStart={onStart} />
+      )}
+
+      {alert === null ? null : (
+        <p className={styles.alert} role="alert">
+          {alert}
+        </p>
       )}
 
       {started ? (
         <div className={styles.shell}>
           <div className={styles.main}>
-            {candidates.length === 0 ? null : <GateBanner decision={shownDecision} />}
+            {candidates.length === 0 ? null : (
+              <GateBanner decision={shownDecision} candidate={selected} />
+            )}
+            {summary}
             <RefusalCounter tally={tally} turnsHeld={turnsHeld} />
             <RateEstimate estimate={estimate} />
             <RejectedTable decisionHistory={decisionHistory ?? []} />
-            <div className={styles.cards}>
-              {candidates.map((candidate) => (
-                <FieldCard
-                  key={candidate.candidateId}
-                  candidate={candidate}
-                  decision={decisions.get(candidate.candidateId) ?? null}
-                  siblings={candidates}
-                  selectedWordStartMs={selection?.startMs ?? null}
-                  onSelectWord={selectWord}
-                />
-              ))}
-            </div>
+            <FieldCards
+              candidates={candidates}
+              decisions={decisions}
+              snapshot={snapshot}
+              selectedWordStartMs={selection?.startMs ?? null}
+              onSelectWord={selectWord}
+              onListen={onListen}
+            />
           </div>
 
           <IntakeRail
@@ -239,6 +162,8 @@ export function IntakeScreen({
           />
         </div>
       ) : null}
+
+      {telemetry === undefined ? null : <div className={styles.telemetry}>{telemetry}</div>}
 
       <div className={styles.legal}>
         <Disclaimer />

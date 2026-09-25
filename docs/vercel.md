@@ -8,8 +8,9 @@ that still bind and the reasoning a reader needs to understand why the applicati
 shaped this way.
 
 **The architecture: one Next.js application, the browser holding both AssemblyAI sockets
-directly, short HTTPS routes on the server, finished sessions in Vercel Blob.** No Docker,
-no always-on process, no database server.
+directly, short HTTPS routes on the server, finished sessions in Vercel Blob, and the shared
+daily budget and session registry in Upstash Redis.** No Docker, no always-on process, no
+database server of our own.
 
 One question that was live at the time is now closed and is not reproduced: whether to keep
 FastAPI. Vercel supports it as a first-class preset with WebSockets and the same duration
@@ -117,13 +118,13 @@ Doc: https://vercel.com/docs/storage (last_updated **2026-09-03**), https://verc
 
 The answer to "does this need a separate sign-up with a third party":
 - Formally there is **no separate sign-up**: `vercel install neon` / `vercel install upstash` — one command, installs the integration, binds it to the project, pulls the credentials into `.env.local`, "Vercel injects provisioned resource credentials as environment variables", billing through Vercel. But legally it is a third-party resource, and Vercel writes it that way too.
-- **With zero third-party dependency at all — only Blob.**
+- **With zero third-party dependency at all — only Blob.** We did not stay there: the shared budget needs an atomic counter, so production also uses Upstash Redis (below).
 
 In the Hobby/Pro comparison table the Storage row reads exactly: Hobby — Blob, Pro — Blob (https://vercel.com/docs/plans/hobby). There is no Postgres or KV in the plan lists any more.
 
 Included in Hobby (https://vercel.com/docs/plans/hobby): 1,000,000 function invocations, **4 CPU-hrs Active CPU**, 360 GB-hrs provisioned memory, 100 GB Fast Data Transfer, 10 GB Fast Origin Transfer, Global Config — 100,000 reads but **only 100 writes**. Also: Hobby is restricted to "non-commercial, personal use only" (fair use), which is fine for a hackathon.
 
-**Our recommendation:** orders, transcripts and metrics as JSON in **Vercel Blob**, key `sessions/<session_id>.json`. Zero third-party services, zero schema, readable after the session. Global Config is unsuitable — 100 writes a month, and a write takes seconds.
+**What we use:** orders and transcripts as JSON in **Vercel Blob**, key `sessions/<session_id>.json`, zero schema, readable after the session; the shared daily budget and session registry in **Upstash Redis** from the Marketplace, a third-party resource, because the budget has to be debited atomically across instances. Production refuses to start without both. Global Config is unsuitable — 100 writes a month, and a write takes seconds.
 
 ---
 

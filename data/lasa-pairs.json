@@ -1,0 +1,4246 @@
+{
+ "builtAt": "2026-09-25T15:01:34.397Z",
+ "sourceUrl": "https://www.ismp.org/system/files/resources/2023-10/ISMP_ConfusedDrugNames_2023.pdf",
+ "source": "ISMP List of Confused Drug Names, updated through February 2023",
+ "sourcePdfSha256": "37adbabf78ebd91aee3f16d514c24c4c3b91294399bd01ad46b7750ac254afb8",
+ "extraction": "pdftotext -raw gives rows in reading order and pdftotext -layout gives cell boundaries; a row that spans several lines is resolved by the list's own symmetry, every pair appearing in both directions",
+ "rowsParsed": 1056,
+ "rowsUnresolved": [],
+ "curated": [
+  {
+   "termA": "hydromorphone",
+   "termB": "morphine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: HYDROmorphone - morphine"
+  },
+  {
+   "termA": "hydralazine",
+   "termB": "hydroxyzine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: hydrOXYzine - hydrALAZINE"
+  },
+  {
+   "termA": "clonidine",
+   "termB": "clozapine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: cloNIDine - cloZAPine"
+  },
+  {
+   "termA": "metformin",
+   "termB": "metronidazole",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: metroNIDAZOLE - metFORMIN"
+  },
+  {
+   "termA": "tramadol",
+   "termB": "trazodone",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: traMADol - traZODone"
+  },
+  {
+   "termA": "diazepam",
+   "termB": "diltiazem",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: diazePAM - dilTIAZem"
+  },
+  {
+   "termA": "cycloserine",
+   "termB": "cyclosporine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: cycloSERINE - cycloSPORINE"
+  },
+  {
+   "termA": "dexamethasone",
+   "termB": "dexmedetomidine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: dexAMETHasone - dexmedeTOMIDine"
+  },
+  {
+   "termA": "glipizide",
+   "termB": "glyburide",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: glyBURIDE - glipiZIDE"
+  },
+  {
+   "termA": "amiloride",
+   "termB": "amlodipine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: aMILoride - amLODIPine"
+  },
+  {
+   "termA": "oxycodone",
+   "termB": "oxycontin",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: oxyCODONE - OxyCONTIN"
+  },
+  {
+   "termA": "rifampin",
+   "termB": "rifaximin",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: rifAMPin - rifAXIMin"
+  },
+  {
+   "termA": "clobazam",
+   "termB": "clonazepam",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: cloBAZam - clonazePAM"
+  },
+  {
+   "termA": "lamotrigine",
+   "termB": "lamivudine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: lamoTRIgine - lamiVUDine"
+  },
+  {
+   "termA": "guaifenesin",
+   "termB": "guanfacine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: guaiFENesin - guanFACINE"
+  },
+  {
+   "termA": "bupropion",
+   "termB": "buspirone",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: buPROPion - busPIRone"
+  },
+  {
+   "termA": "dobutamine",
+   "termB": "dopamine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: DOBUTamine - DOPamine"
+  },
+  {
+   "termA": "nifedipine",
+   "termB": "nimodipine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: NIFEdipine - niMODipine"
+  },
+  {
+   "termA": "cefazolin",
+   "termB": "cefotetan",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: ceFAZolin - cefoTEtan"
+  },
+  {
+   "termA": "levothyroxine",
+   "termB": "liothyronine",
+   "source": "ISMP-2023",
+   "sourceRow": "ISMP List of Confused Drug Names, updated through February 2023: levothyroxine - liothyronine"
+  }
+ ],
+ "pairs": [
+  {
+   "termA": "abelcet",
+   "termB": "amphotericin b",
+   "listedA": "Abelcet",
+   "listedB": "amphotericin B",
+   "page": 1,
+   "row": 1
+  },
+  {
+   "termA": "accupril",
+   "termB": "aciphex",
+   "listedA": "Accupril",
+   "listedB": "Aciphex",
+   "page": 1,
+   "row": 2
+  },
+  {
+   "termA": "acetaminophen",
+   "termB": "acetazolamide",
+   "listedA": "acetaminophen",
+   "listedB": "acetaZOLAMIDE",
+   "page": 1,
+   "row": 3
+  },
+  {
+   "termA": "acetazolamide",
+   "termB": "acetohexamide",
+   "listedA": "acetaZOLAMIDE",
+   "listedB": "acetoHEXAMIDE",
+   "page": 1,
+   "row": 5
+  },
+  {
+   "termA": "acetic acid for irrigation",
+   "termB": "glacial acetic acid",
+   "listedA": "acetic acid for irrigation",
+   "listedB": "glacial acetic acid",
+   "page": 1,
+   "row": 6
+  },
+  {
+   "termA": "aciphex",
+   "termB": "aricept",
+   "listedA": "Aciphex",
+   "listedB": "Aricept",
+   "page": 1,
+   "row": 9
+  },
+  {
+   "termA": "activase",
+   "termB": "cathflo activase",
+   "listedA": "Activase",
+   "listedB": "Cathflo Activase",
+   "page": 1,
+   "row": 10
+  },
+  {
+   "termA": "activase",
+   "termB": "tnkase",
+   "listedA": "Activase",
+   "listedB": "TNKase",
+   "page": 1,
+   "row": 11
+  },
+  {
+   "termA": "actonel",
+   "termB": "actos",
+   "listedA": "Actonel",
+   "listedB": "Actos",
+   "page": 1,
+   "row": 12
+  },
+  {
+   "termA": "adacel",
+   "termB": "daptacel",
+   "listedA": "Adacel (Tdap)",
+   "listedB": "Daptacel (DTaP)",
+   "page": 1,
+   "row": 14
+  },
+  {
+   "termA": "adderall",
+   "termB": "adderall xr",
+   "listedA": "Adderall",
+   "listedB": "Adderall XR",
+   "page": 1,
+   "row": 15
+  },
+  {
+   "termA": "adderall",
+   "termB": "inderal",
+   "listedA": "Adderall",
+   "listedB": "Inderal",
+   "page": 1,
+   "row": 16
+  },
+  {
+   "termA": "ado trastuzumab emtansine",
+   "termB": "trastuzumab",
+   "listedA": "ado-trastuzumab emtansine",
+   "listedB": "trastuzumab",
+   "page": 1,
+   "row": 18
+  },
+  {
+   "termA": "advair",
+   "termB": "advicor",
+   "listedA": "Advair",
+   "listedB": "Advicor",
+   "page": 1,
+   "row": 19
+  },
+  {
+   "termA": "advicor",
+   "termB": "altocor",
+   "listedA": "Advicor",
+   "listedB": "Altocor",
+   "page": 1,
+   "row": 21
+  },
+  {
+   "termA": "aggrastat",
+   "termB": "argatroban",
+   "listedA": "Aggrastat",
+   "listedB": "argatroban",
+   "page": 1,
+   "row": 24
+  },
+  {
+   "termA": "aldara",
+   "termB": "alora",
+   "listedA": "Aldara",
+   "listedB": "Alora",
+   "page": 1,
+   "row": 25
+  },
+  {
+   "termA": "alfentanil",
+   "termB": "fentanyl",
+   "listedA": "ALfentanil*",
+   "listedB": "fentaNYL*",
+   "page": 1,
+   "row": 26
+  },
+  {
+   "termA": "alfentanil",
+   "termB": "sufentanil",
+   "listedA": "ALfentanil*",
+   "listedB": "SUFentanil*",
+   "page": 1,
+   "row": 27
+  },
+  {
+   "termA": "alkeran",
+   "termB": "leukeran",
+   "listedA": "Alkeran",
+   "listedB": "Leukeran",
+   "page": 1,
+   "row": 28
+  },
+  {
+   "termA": "alkeran",
+   "termB": "myleran",
+   "listedA": "Alkeran",
+   "listedB": "Myleran",
+   "page": 1,
+   "row": 29
+  },
+  {
+   "termA": "allegra",
+   "termB": "viagra",
+   "listedA": "Allegra",
+   "listedB": "Viagra",
+   "page": 1,
+   "row": 30
+  },
+  {
+   "termA": "allegra",
+   "termB": "allegra anti itch cream",
+   "listedA": "Allegra (fexofenadine)",
+   "listedB": "Allegra Anti-Itch Cream (diphenhydrAMINE/allantoin)",
+   "page": 1,
+   "row": 31
+  },
+  {
+   "termA": "alprazolam",
+   "termB": "clonazepam",
+   "listedA": "ALPRAZolam",
+   "listedB": "clonazePAM",
+   "page": 1,
+   "row": 34
+  },
+  {
+   "termA": "alprazolam",
+   "termB": "lorazepam",
+   "listedA": "ALPRAZolam",
+   "listedB": "LORazepam",
+   "page": 1,
+   "row": 35
+  },
+  {
+   "termA": "amantadine",
+   "termB": "amiodarone",
+   "listedA": "amantadine",
+   "listedB": "amiodarone",
+   "page": 1,
+   "row": 37
+  },
+  {
+   "termA": "amaryl",
+   "termB": "reminyl",
+   "listedA": "Amaryl",
+   "listedB": "Reminyl",
+   "page": 1,
+   "row": 38
+  },
+  {
+   "termA": "ambien",
+   "termB": "ambrisentan",
+   "listedA": "Ambien*",
+   "listedB": "ambrisentan*",
+   "page": 1,
+   "row": 39
+  },
+  {
+   "termA": "ambisome",
+   "termB": "amphotericin b",
+   "listedA": "Ambisome",
+   "listedB": "amphotericin B",
+   "page": 1,
+   "row": 40
+  },
+  {
+   "termA": "amicar",
+   "termB": "omacor",
+   "listedA": "Amicar",
+   "listedB": "Omacor",
+   "page": 1,
+   "row": 42
+  },
+  {
+   "termA": "amikin",
+   "termB": "kineret",
+   "listedA": "Amikin",
+   "listedB": "Kineret",
+   "page": 1,
+   "row": 43
+  },
+  {
+   "termA": "amiloride",
+   "termB": "amlodipine",
+   "listedA": "aMILoride",
+   "listedB": "amLODIPine",
+   "page": 1,
+   "row": 44
+  },
+  {
+   "termA": "amphotericin b",
+   "termB": "amphotericin b liposomal",
+   "listedA": "amphotericin B",
+   "listedB": "amphotericin B liposomal",
+   "page": 1,
+   "row": 49
+  },
+  {
+   "termA": "anacin",
+   "termB": "anacin 3",
+   "listedA": "Anacin",
+   "listedB": "Anacin-3",
+   "page": 2,
+   "row": 1
+  },
+  {
+   "termA": "antacid",
+   "termB": "atacand",
+   "listedA": "antacid",
+   "listedB": "Atacand",
+   "page": 2,
+   "row": 3
+  },
+  {
+   "termA": "anticoagulant citrate dextrose solution formula a",
+   "termB": "anticoagulant sodium citrate solution",
+   "listedA": "Anticoagulant Citrate Dextrose Solution Formula A",
+   "listedB": "Anticoagulant Sodium Citrate Solution",
+   "page": 2,
+   "row": 4
+  },
+  {
+   "termA": "antivert",
+   "termB": "axert",
+   "listedA": "Antivert",
+   "listedB": "Axert",
+   "page": 2,
+   "row": 6
+  },
+  {
+   "termA": "anzemet",
+   "termB": "avandamet",
+   "listedA": "Anzemet",
+   "listedB": "Avandamet",
+   "page": 2,
+   "row": 7
+  },
+  {
+   "termA": "apidra",
+   "termB": "spiriva",
+   "listedA": "Apidra",
+   "listedB": "Spiriva",
+   "page": 2,
+   "row": 8
+  },
+  {
+   "termA": "apixaban",
+   "termB": "axitinib",
+   "listedA": "apixaban*",
+   "listedB": "axitinib*",
+   "page": 2,
+   "row": 9
+  },
+  {
+   "termA": "apresoline",
+   "termB": "priscoline",
+   "listedA": "Apresoline",
+   "listedB": "Priscoline",
+   "page": 2,
+   "row": 10
+  },
+  {
+   "termA": "argatroban",
+   "termB": "orgaran",
+   "listedA": "argatroban",
+   "listedB": "Orgaran",
+   "page": 2,
+   "row": 12
+  },
+  {
+   "termA": "aricept",
+   "termB": "azilect",
+   "listedA": "Aricept",
+   "listedB": "Azilect",
+   "page": 2,
+   "row": 14
+  },
+  {
+   "termA": "aripiprazole",
+   "termB": "proton pump inhibitors",
+   "listedA": "ARIPiprazole",
+   "listedB": "proton pump inhibitors",
+   "page": 2,
+   "row": 15
+  },
+  {
+   "termA": "aripiprazole",
+   "termB": "rabeprazole",
+   "listedA": "ARIPiprazole",
+   "listedB": "RABEprazole",
+   "page": 2,
+   "row": 16
+  },
+  {
+   "termA": "arista ah",
+   "termB": "arixtra",
+   "listedA": "Arista AH (absorbable hemostatic agent)",
+   "listedB": "Arixtra",
+   "page": 2,
+   "row": 17
+  },
+  {
+   "termA": "asacol",
+   "termB": "os cal",
+   "listedA": "Asacol",
+   "listedB": "Os-Cal",
+   "page": 2,
+   "row": 19
+  },
+  {
+   "termA": "atomoxetine",
+   "termB": "atorvastatin",
+   "listedA": "atomoxetine",
+   "listedB": "atorvastatin",
+   "page": 2,
+   "row": 21
+  },
+  {
+   "termA": "atrovent",
+   "termB": "natru vent",
+   "listedA": "Atrovent",
+   "listedB": "Natru-Vent",
+   "page": 2,
+   "row": 23
+  },
+  {
+   "termA": "avandia",
+   "termB": "coumadin",
+   "listedA": "Avandia",
+   "listedB": "Coumadin",
+   "page": 2,
+   "row": 25
+  },
+  {
+   "termA": "avandia",
+   "termB": "prandin",
+   "listedA": "Avandia",
+   "listedB": "Prandin",
+   "page": 2,
+   "row": 26
+  },
+  {
+   "termA": "avinza",
+   "termB": "evista",
+   "listedA": "Avinza",
+   "listedB": "Evista",
+   "page": 2,
+   "row": 27
+  },
+  {
+   "termA": "avinza",
+   "termB": "invanz",
+   "listedA": "Avinza",
+   "listedB": "Invanz",
+   "page": 2,
+   "row": 28
+  },
+  {
+   "termA": "azacitidine",
+   "termB": "azathioprine",
+   "listedA": "azaCITIDine",
+   "listedB": "azaTHIOprine",
+   "page": 2,
+   "row": 31
+  },
+  {
+   "termA": "b o",
+   "termB": "beano",
+   "listedA": "B & O (belladonna and opium)",
+   "listedB": "Beano",
+   "page": 2,
+   "row": 34
+  },
+  {
+   "termA": "babybig",
+   "termB": "hbig",
+   "listedA": "BabyBIG",
+   "listedB": "HBIG (hepatitis B immune globulin)",
+   "page": 2,
+   "row": 35
+  },
+  {
+   "termA": "bamlanivimab",
+   "termB": "belimumab",
+   "listedA": "bamlanivimab*",
+   "listedB": "belimumab*",
+   "page": 2,
+   "row": 36
+  },
+  {
+   "termA": "bayhep b",
+   "termB": "bayrab",
+   "listedA": "Bayhep-B",
+   "listedB": "Bayrab",
+   "page": 2,
+   "row": 37
+  },
+  {
+   "termA": "bayhep b",
+   "termB": "bayrho d",
+   "listedA": "Bayhep-B",
+   "listedB": "Bayrho-D",
+   "page": 2,
+   "row": 38
+  },
+  {
+   "termA": "bayrab",
+   "termB": "bayrho d",
+   "listedA": "Bayrab",
+   "listedB": "Bayrho-D",
+   "page": 2,
+   "row": 40
+  },
+  {
+   "termA": "benadryl",
+   "termB": "benazepril",
+   "listedA": "Benadryl",
+   "listedB": "benazepril",
+   "page": 2,
+   "row": 45
+  },
+  {
+   "termA": "benicar",
+   "termB": "mevacor",
+   "listedA": "Benicar",
+   "listedB": "Mevacor",
+   "page": 2,
+   "row": 47
+  },
+  {
+   "termA": "bextra",
+   "termB": "zetia",
+   "listedA": "Bextra",
+   "listedB": "Zetia",
+   "page": 2,
+   "row": 52
+  },
+  {
+   "termA": "bicillin c r",
+   "termB": "bicillin l a",
+   "listedA": "Bicillin C-R",
+   "listedB": "Bicillin L-A",
+   "page": 2,
+   "row": 53
+  },
+  {
+   "termA": "bicitra",
+   "termB": "polycitra",
+   "listedA": "Bicitra",
+   "listedB": "Polycitra",
+   "page": 2,
+   "row": 55
+  },
+  {
+   "termA": "bidex",
+   "termB": "videx",
+   "listedA": "Bidex",
+   "listedB": "Videx",
+   "page": 2,
+   "row": 56
+  },
+  {
+   "termA": "bio t gel",
+   "termB": "t gel",
+   "listedA": "Bio-T-Gel",
+   "listedB": "T-Gel",
+   "page": 2,
+   "row": 57
+  },
+  {
+   "termA": "brethine",
+   "termB": "methergine",
+   "listedA": "Brethine",
+   "listedB": "Methergine",
+   "page": 2,
+   "row": 58
+  },
+  {
+   "termA": "brevibloc",
+   "termB": "brevital",
+   "listedA": "Brevibloc",
+   "listedB": "Brevital",
+   "page": 2,
+   "row": 59
+  },
+  {
+   "termA": "brilinta",
+   "termB": "brintellix",
+   "listedA": "Brilinta",
+   "listedB": "Brintellix",
+   "page": 2,
+   "row": 61
+  },
+  {
+   "termA": "brilinta",
+   "termB": "briviact",
+   "listedA": "Brilinta*",
+   "listedB": "Briviact*",
+   "page": 2,
+   "row": 62
+  },
+  {
+   "termA": "bupivacaine",
+   "termB": "ropivacaine",
+   "listedA": "BUPivacaine*",
+   "listedB": "ROPivacaine*",
+   "page": 2,
+   "row": 65
+  },
+  {
+   "termA": "buprenorphine",
+   "termB": "hydromorphone",
+   "listedA": "buprenorphine",
+   "listedB": "HYDROmorphone",
+   "page": 2,
+   "row": 66
+  },
+  {
+   "termA": "bupropion",
+   "termB": "buspirone",
+   "listedA": "buPROPion",
+   "listedB": "busPIRone",
+   "page": 2,
+   "row": 67
+  },
+  {
+   "termA": "capadex",
+   "termB": "kapidex",
+   "listedA": "Capadex [non-US product]",
+   "listedB": "Kapidex",
+   "page": 2,
+   "row": 69
+  },
+  {
+   "termA": "capex",
+   "termB": "kapidex",
+   "listedA": "Capex",
+   "listedB": "Kapidex",
+   "page": 2,
+   "row": 70
+  },
+  {
+   "termA": "captopril",
+   "termB": "carvedilol",
+   "listedA": "captopril",
+   "listedB": "carvedilol",
+   "page": 2,
+   "row": 71
+  },
+  {
+   "termA": "carac",
+   "termB": "kuric",
+   "listedA": "Carac",
+   "listedB": "Kuric",
+   "page": 2,
+   "row": 72
+  },
+  {
+   "termA": "carbamazepine",
+   "termB": "oxcarbazepine",
+   "listedA": "carBAMazepine",
+   "listedB": "OXcarbazepine",
+   "page": 2,
+   "row": 73
+  },
+  {
+   "termA": "carboplatin",
+   "termB": "cisplatin",
+   "listedA": "CARBOplatin",
+   "listedB": "CISplatin",
+   "page": 2,
+   "row": 74
+  },
+  {
+   "termA": "cardene",
+   "termB": "cardizem",
+   "listedA": "Cardene",
+   "listedB": "Cardizem",
+   "page": 2,
+   "row": 75
+  },
+  {
+   "termA": "cardura",
+   "termB": "coumadin",
+   "listedA": "Cardura",
+   "listedB": "Coumadin",
+   "page": 2,
+   "row": 77
+  },
+  {
+   "termA": "casodex",
+   "termB": "kapidex",
+   "listedA": "Casodex",
+   "listedB": "Kapidex",
+   "page": 2,
+   "row": 79
+  },
+  {
+   "termA": "cedax",
+   "termB": "cidex",
+   "listedA": "Cedax",
+   "listedB": "Cidex",
+   "page": 2,
+   "row": 81
+  },
+  {
+   "termA": "cefazolin",
+   "termB": "cefotetan",
+   "listedA": "ceFAZolin*",
+   "listedB": "cefoTEtan*",
+   "page": 3,
+   "row": 1
+  },
+  {
+   "termA": "cefazolin",
+   "termB": "cefoxitin",
+   "listedA": "ceFAZolin*",
+   "listedB": "cefOXitin*",
+   "page": 3,
+   "row": 2
+  },
+  {
+   "termA": "cefazolin",
+   "termB": "ceftazidime",
+   "listedA": "ceFAZolin*",
+   "listedB": "cefTAZidime*",
+   "page": 3,
+   "row": 3
+  },
+  {
+   "termA": "cefazolin",
+   "termB": "ceftriaxone",
+   "listedA": "ceFAZolin",
+   "listedB": "cefTRIAXone",
+   "page": 3,
+   "row": 4
+  },
+  {
+   "termA": "cefotetan",
+   "termB": "cefoxitin",
+   "listedA": "cefoTEtan*",
+   "listedB": "cefOXitin*",
+   "page": 3,
+   "row": 6
+  },
+  {
+   "termA": "cefotetan",
+   "termB": "ceftazidime",
+   "listedA": "cefoTEtan*",
+   "listedB": "cefTAZidime*",
+   "page": 3,
+   "row": 7
+  },
+  {
+   "termA": "cefotetan",
+   "termB": "ceftriaxone",
+   "listedA": "cefoTEtan*",
+   "listedB": "cefTRIAXone*",
+   "page": 3,
+   "row": 8
+  },
+  {
+   "termA": "cefoxitin",
+   "termB": "ceftazidime",
+   "listedA": "cefOXitin*",
+   "listedB": "cefTAZidime*",
+   "page": 3,
+   "row": 11
+  },
+  {
+   "termA": "cefoxitin",
+   "termB": "ceftriaxone",
+   "listedA": "cefOXitin*",
+   "listedB": "cefTRIAXone*",
+   "page": 3,
+   "row": 12
+  },
+  {
+   "termA": "ceftazidime",
+   "termB": "ceftriaxone",
+   "listedA": "cefTAZidime*",
+   "listedB": "cefTRIAXone*",
+   "page": 3,
+   "row": 16
+  },
+  {
+   "termA": "cefuroxime",
+   "termB": "sulfasalazine",
+   "listedA": "cefuroxime",
+   "listedB": "sulfaSALAzine",
+   "page": 3,
+   "row": 21
+  },
+  {
+   "termA": "celebrex",
+   "termB": "celexa",
+   "listedA": "CeleBREX",
+   "listedB": "CeleXA",
+   "page": 3,
+   "row": 22
+  },
+  {
+   "termA": "celebrex",
+   "termB": "cerebyx",
+   "listedA": "CeleBREX",
+   "listedB": "Cerebyx",
+   "page": 3,
+   "row": 23
+  },
+  {
+   "termA": "celexa",
+   "termB": "cerebyx",
+   "listedA": "CeleXA",
+   "listedB": "Cerebyx",
+   "page": 3,
+   "row": 25
+  },
+  {
+   "termA": "celexa",
+   "termB": "zyprexa",
+   "listedA": "CeleXA",
+   "listedB": "ZyPREXA",
+   "page": 3,
+   "row": 26
+  },
+  {
+   "termA": "cetirizine",
+   "termB": "sertraline",
+   "listedA": "cetirizine",
+   "listedB": "sertraline",
+   "page": 3,
+   "row": 29
+  },
+  {
+   "termA": "cetirizine",
+   "termB": "stavudine",
+   "listedA": "cetirizine",
+   "listedB": "stavudine",
+   "page": 3,
+   "row": 30
+  },
+  {
+   "termA": "chlordiazepoxide",
+   "termB": "chlorpromazine",
+   "listedA": "chlordiazePOXIDE",
+   "listedB": "chlorproMAZINE",
+   "page": 3,
+   "row": 31
+  },
+  {
+   "termA": "chlorpromazine",
+   "termB": "chlorpropamide",
+   "listedA": "chlorproMAZINE",
+   "listedB": "chlorproPAMIDE",
+   "page": 3,
+   "row": 33
+  },
+  {
+   "termA": "citalopram",
+   "termB": "escitalopram",
+   "listedA": "citalopram*",
+   "listedB": "escitalopram*",
+   "page": 3,
+   "row": 37
+  },
+  {
+   "termA": "clarispray",
+   "termB": "claritin",
+   "listedA": "Clarispray (fluticasone propionate)",
+   "listedB": "Claritin (loratadine)",
+   "page": 3,
+   "row": 38
+  },
+  {
+   "termA": "claritin",
+   "termB": "claritin eye",
+   "listedA": "Claritin (loratadine)",
+   "listedB": "Claritin Eye (ketotifen fumarate)",
+   "page": 3,
+   "row": 40
+  },
+  {
+   "termA": "claritin d",
+   "termB": "claritin d 24",
+   "listedA": "Claritin-D",
+   "listedB": "Claritin-D 24",
+   "page": 3,
+   "row": 42
+  },
+  {
+   "termA": "clindesse",
+   "termB": "clindets",
+   "listedA": "Clindesse",
+   "listedB": "Clindets",
+   "page": 3,
+   "row": 44
+  },
+  {
+   "termA": "clobazam",
+   "termB": "clonazepam",
+   "listedA": "cloBAZam",
+   "listedB": "clonazePAM",
+   "page": 3,
+   "row": 46
+  },
+  {
+   "termA": "clomiphene",
+   "termB": "clomipramine",
+   "listedA": "clomiPHENE",
+   "listedB": "clomiPRAMINE",
+   "page": 3,
+   "row": 47
+  },
+  {
+   "termA": "clonazepam",
+   "termB": "clonidine",
+   "listedA": "clonazePAM",
+   "listedB": "cloNIDine",
+   "page": 3,
+   "row": 51
+  },
+  {
+   "termA": "clonazepam",
+   "termB": "clozapine",
+   "listedA": "clonazePAM",
+   "listedB": "cloZAPine",
+   "page": 3,
+   "row": 52
+  },
+  {
+   "termA": "clonazepam",
+   "termB": "lorazepam",
+   "listedA": "clonazePAM",
+   "listedB": "LORazepam",
+   "page": 3,
+   "row": 53
+  },
+  {
+   "termA": "clonidine",
+   "termB": "clozapine",
+   "listedA": "cloNIDine",
+   "listedB": "cloZAPine",
+   "page": 3,
+   "row": 55
+  },
+  {
+   "termA": "clonidine",
+   "termB": "klonopin",
+   "listedA": "cloNIDine",
+   "listedB": "KlonoPIN",
+   "page": 3,
+   "row": 56
+  },
+  {
+   "termA": "clozaril",
+   "termB": "colazal",
+   "listedA": "Clozaril",
+   "listedB": "Colazal",
+   "page": 3,
+   "row": 59
+  },
+  {
+   "termA": "coagulation factor ix",
+   "termB": "factor ix complex vapor heated",
+   "listedA": "coagulation factor IX (recombinant)",
+   "listedB": "factor IX complex, vapor heated",
+   "page": 3,
+   "row": 60
+  },
+  {
+   "termA": "codeine",
+   "termB": "lodine",
+   "listedA": "codeine",
+   "listedB": "Lodine",
+   "page": 3,
+   "row": 61
+  },
+  {
+   "termA": "coenzyme q10",
+   "termB": "cometriq",
+   "listedA": "coenzyme Q10 (CoQ10)*",
+   "listedB": "Cometriq*",
+   "page": 3,
+   "row": 62
+  },
+  {
+   "termA": "colace",
+   "termB": "cozaar",
+   "listedA": "Colace",
+   "listedB": "Cozaar",
+   "page": 3,
+   "row": 63
+  },
+  {
+   "termA": "colchicine",
+   "termB": "cortrosyn",
+   "listedA": "colchicine",
+   "listedB": "Cortrosyn",
+   "page": 3,
+   "row": 65
+  },
+  {
+   "termA": "comvax",
+   "termB": "recombivax hb",
+   "listedA": "Comvax",
+   "listedB": "Recombivax HB",
+   "page": 3,
+   "row": 66
+  },
+  {
+   "termA": "covaryx hs",
+   "termB": "covera hs",
+   "listedA": "Covaryx HS",
+   "listedB": "Covera HS",
+   "page": 3,
+   "row": 71
+  },
+  {
+   "termA": "cozaar",
+   "termB": "zocor",
+   "listedA": "Cozaar",
+   "listedB": "Zocor",
+   "page": 3,
+   "row": 74
+  },
+  {
+   "termA": "cubicin",
+   "termB": "cubicin rf",
+   "listedA": "Cubicin",
+   "listedB": "Cubicin RF",
+   "page": 3,
+   "row": 75
+  },
+  {
+   "termA": "cyclophosphamide",
+   "termB": "cycloserine",
+   "listedA": "cycloPHOSphamide*",
+   "listedB": "cycloSERINE*",
+   "page": 3,
+   "row": 77
+  },
+  {
+   "termA": "cyclophosphamide",
+   "termB": "cyclosporine",
+   "listedA": "cycloPHOSphamide",
+   "listedB": "cycloSPORINE",
+   "page": 3,
+   "row": 78
+  },
+  {
+   "termA": "cycloserine",
+   "termB": "cyclosporine",
+   "listedA": "cycloSERINE",
+   "listedB": "cycloSPORINE",
+   "page": 3,
+   "row": 80
+  },
+  {
+   "termA": "cyclosporine",
+   "termB": "cyclosporine modified",
+   "listedA": "cycloSPORINE",
+   "listedB": "cycloSPORINE modified",
+   "page": 3,
+   "row": 83
+  },
+  {
+   "termA": "cymbalta",
+   "termB": "symbyax",
+   "listedA": "Cymbalta",
+   "listedB": "Symbyax",
+   "page": 3,
+   "row": 85
+  },
+  {
+   "termA": "dabigatran",
+   "termB": "vigabatrin",
+   "listedA": "dabigatran",
+   "listedB": "vigabatrin",
+   "page": 4,
+   "row": 1
+  },
+  {
+   "termA": "dactinomycin",
+   "termB": "daptomycin",
+   "listedA": "DACTINomycin",
+   "listedB": "DAPTOmycin",
+   "page": 4,
+   "row": 2
+  },
+  {
+   "termA": "darvocet",
+   "termB": "percocet",
+   "listedA": "Darvocet",
+   "listedB": "Percocet",
+   "page": 4,
+   "row": 5
+  },
+  {
+   "termA": "darvon",
+   "termB": "diovan",
+   "listedA": "Darvon",
+   "listedB": "Diovan",
+   "page": 4,
+   "row": 6
+  },
+  {
+   "termA": "daunorubicin",
+   "termB": "daunorubicin liposomal",
+   "listedA": "DAUNOrubicin",
+   "listedB": "DAUNOrubicin liposomal",
+   "page": 4,
+   "row": 7
+  },
+  {
+   "termA": "daunorubicin",
+   "termB": "doxorubicin",
+   "listedA": "DAUNOrubicin",
+   "listedB": "DOXOrubicin",
+   "page": 4,
+   "row": 8
+  },
+  {
+   "termA": "daunorubicin",
+   "termB": "idarubicin",
+   "listedA": "DAUNOrubicin",
+   "listedB": "IDArubicin",
+   "page": 4,
+   "row": 9
+  },
+  {
+   "termA": "denavir",
+   "termB": "indinavir",
+   "listedA": "Denavir",
+   "listedB": "indinavir",
+   "page": 4,
+   "row": 11
+  },
+  {
+   "termA": "depakote",
+   "termB": "depakote er",
+   "listedA": "Depakote",
+   "listedB": "Depakote ER",
+   "page": 4,
+   "row": 12
+  },
+  {
+   "termA": "depo medrol",
+   "termB": "solu medrol",
+   "listedA": "DEPO-Medrol",
+   "listedB": "SOLU-Medrol",
+   "page": 4,
+   "row": 14
+  },
+  {
+   "termA": "depo provera",
+   "termB": "depo subq provera 104",
+   "listedA": "Depo-Provera",
+   "listedB": "Depo-subQ provera 104",
+   "page": 4,
+   "row": 15
+  },
+  {
+   "termA": "desipramine",
+   "termB": "disopyramide",
+   "listedA": "desipramine",
+   "listedB": "disopyramide",
+   "page": 4,
+   "row": 17
+  },
+  {
+   "termA": "desmopressin",
+   "termB": "vasopressin",
+   "listedA": "desmopressin",
+   "listedB": "vasopressin",
+   "page": 4,
+   "row": 18
+  },
+  {
+   "termA": "desyrel",
+   "termB": "seroquel",
+   "listedA": "Desyrel",
+   "listedB": "Seroquel",
+   "page": 4,
+   "row": 19
+  },
+  {
+   "termA": "dexamethasone",
+   "termB": "dexmedetomidine",
+   "listedA": "dexAMETHasone",
+   "listedB": "dexmedeTOMIDine",
+   "page": 4,
+   "row": 20
+  },
+  {
+   "termA": "dexilant",
+   "termB": "duloxetine",
+   "listedA": "Dexilant",
+   "listedB": "DULoxetine",
+   "page": 4,
+   "row": 21
+  },
+  {
+   "termA": "dexmethylphenidate",
+   "termB": "dexmethylphenidate mixed salts",
+   "listedA": "dexmethylphenidate",
+   "listedB": "dexmethylphenidate mixed salts",
+   "page": 4,
+   "row": 23
+  },
+  {
+   "termA": "dexmethylphenidate",
+   "termB": "methadone",
+   "listedA": "dexmethylphenidate",
+   "listedB": "methadone",
+   "page": 4,
+   "row": 24
+  },
+  {
+   "termA": "diabenese",
+   "termB": "diamox",
+   "listedA": "Diabenese",
+   "listedB": "Diamox",
+   "page": 4,
+   "row": 26
+  },
+  {
+   "termA": "diabeta",
+   "termB": "zebeta",
+   "listedA": "Diabeta",
+   "listedB": "Zebeta",
+   "page": 4,
+   "row": 27
+  },
+  {
+   "termA": "diazepam",
+   "termB": "diltiazem",
+   "listedA": "diazePAM",
+   "listedB": "dilTIAZem",
+   "page": 4,
+   "row": 29
+  },
+  {
+   "termA": "diflucan",
+   "termB": "diprivan",
+   "listedA": "Diflucan",
+   "listedB": "Diprivan",
+   "page": 4,
+   "row": 30
+  },
+  {
+   "termA": "dilacor xr",
+   "termB": "pilocar",
+   "listedA": "Dilacor XR",
+   "listedB": "Pilocar",
+   "page": 4,
+   "row": 31
+  },
+  {
+   "termA": "dilaudid",
+   "termB": "dilaudid 5",
+   "listedA": "Dilaudid",
+   "listedB": "Dilaudid-5",
+   "page": 4,
+   "row": 32
+  },
+  {
+   "termA": "dimenhydrinate",
+   "termB": "diphenhydramine",
+   "listedA": "dimenhyDRINATE",
+   "listedB": "diphenhydrAMINE",
+   "page": 4,
+   "row": 35
+  },
+  {
+   "termA": "dioval",
+   "termB": "diovan",
+   "listedA": "Dioval",
+   "listedB": "Diovan",
+   "page": 4,
+   "row": 36
+  },
+  {
+   "termA": "diovan",
+   "termB": "zyban",
+   "listedA": "Diovan",
+   "listedB": "Zyban",
+   "page": 4,
+   "row": 39
+  },
+  {
+   "termA": "diprivan",
+   "termB": "ditropan",
+   "listedA": "Diprivan",
+   "listedB": "Ditropan",
+   "page": 4,
+   "row": 42
+  },
+  {
+   "termA": "dobutamine",
+   "termB": "dopamine",
+   "listedA": "DOBUTamine",
+   "listedB": "DOPamine",
+   "page": 4,
+   "row": 45
+  },
+  {
+   "termA": "docetaxel",
+   "termB": "paclitaxel",
+   "listedA": "DOCEtaxel",
+   "listedB": "PACLitaxel",
+   "page": 4,
+   "row": 46
+  },
+  {
+   "termA": "doribax",
+   "termB": "zovirax",
+   "listedA": "Doribax",
+   "listedB": "Zovirax",
+   "page": 4,
+   "row": 48
+  },
+  {
+   "termA": "doxil",
+   "termB": "paxil",
+   "listedA": "Doxil",
+   "listedB": "Paxil",
+   "page": 4,
+   "row": 49
+  },
+  {
+   "termA": "doxorubicin",
+   "termB": "doxorubicin liposomal",
+   "listedA": "DOXOrubicin",
+   "listedB": "DOXOrubicin liposomal",
+   "page": 4,
+   "row": 51
+  },
+  {
+   "termA": "doxorubicin",
+   "termB": "idarubicin",
+   "listedA": "DOXOrubicin",
+   "listedB": "IDArubicin",
+   "page": 4,
+   "row": 52
+  },
+  {
+   "termA": "dronabinol",
+   "termB": "droperidol",
+   "listedA": "droNABinol*",
+   "listedB": "droPERidol*",
+   "page": 4,
+   "row": 60
+  },
+  {
+   "termA": "duloxetine",
+   "termB": "fluoxetine",
+   "listedA": "DULoxetine",
+   "listedB": "FLUoxetine",
+   "page": 4,
+   "row": 65
+  },
+  {
+   "termA": "duloxetine",
+   "termB": "paroxetine",
+   "listedA": "DULoxetine",
+   "listedB": "PARoxetine",
+   "page": 4,
+   "row": 66
+  },
+  {
+   "termA": "durasal",
+   "termB": "durezol",
+   "listedA": "Durasal",
+   "listedB": "Durezol",
+   "page": 4,
+   "row": 67
+  },
+  {
+   "termA": "duricef",
+   "termB": "ultracet",
+   "listedA": "Duricef",
+   "listedB": "Ultracet",
+   "page": 4,
+   "row": 69
+  },
+  {
+   "termA": "dynacin",
+   "termB": "dynacirc",
+   "listedA": "Dynacin",
+   "listedB": "Dynacirc",
+   "page": 4,
+   "row": 70
+  },
+  {
+   "termA": "effexor",
+   "termB": "effexor xr",
+   "listedA": "Effexor",
+   "listedB": "Effexor XR",
+   "page": 4,
+   "row": 74
+  },
+  {
+   "termA": "effexor xr",
+   "termB": "enablex",
+   "listedA": "Effexor XR",
+   "listedB": "Enablex",
+   "page": 4,
+   "row": 76
+  },
+  {
+   "termA": "elvitegravir cobicistat emtricitabine and tenofovir alafenamide",
+   "termB": "elvitegravir cobicistat emtricitabine and tenofovir disoproxil",
+   "listedA": "elvitegravir, cobicistat, emtricitabine, and tenofovir alafenamide",
+   "listedB": "elvitegravir, cobicistat, emtricitabine, and tenofovir disoproxil fumarate",
+   "page": 4,
+   "row": 77
+  },
+  {
+   "termA": "enbrel",
+   "termB": "levbid",
+   "listedA": "Enbrel",
+   "listedB": "Levbid",
+   "page": 4,
+   "row": 80
+  },
+  {
+   "termA": "engerix b adult",
+   "termB": "engerix b pediatric adolescent",
+   "listedA": "Engerix-B adult",
+   "listedB": "Engerix-B pediatric/adolescent",
+   "page": 4,
+   "row": 81
+  },
+  {
+   "termA": "enjuvia",
+   "termB": "januvia",
+   "listedA": "Enjuvia",
+   "listedB": "Januvia",
+   "page": 4,
+   "row": 83
+  },
+  {
+   "termA": "ephedrine",
+   "termB": "epinephrine",
+   "listedA": "ePHEDrine",
+   "listedB": "EPINEPHrine",
+   "page": 5,
+   "row": 1
+  },
+  {
+   "termA": "epirubicin",
+   "termB": "eribulin",
+   "listedA": "epiRUBicin",
+   "listedB": "eriBULin",
+   "page": 5,
+   "row": 3
+  },
+  {
+   "termA": "estratest",
+   "termB": "estratest hs",
+   "listedA": "Estratest",
+   "listedB": "Estratest HS",
+   "page": 5,
+   "row": 6
+  },
+  {
+   "termA": "ethambutol",
+   "termB": "ethmozine",
+   "listedA": "ethambutol",
+   "listedB": "Ethmozine",
+   "page": 5,
+   "row": 8
+  },
+  {
+   "termA": "ethaverine",
+   "termB": "etravirine",
+   "listedA": "ethaverine [non-US name]",
+   "listedB": "etravirine",
+   "page": 5,
+   "row": 9
+  },
+  {
+   "termA": "fanapt",
+   "termB": "xanax",
+   "listedA": "Fanapt",
+   "listedB": "Xanax",
+   "page": 5,
+   "row": 14
+  },
+  {
+   "termA": "farxiga",
+   "termB": "fetzima",
+   "listedA": "Farxiga",
+   "listedB": "Fetzima",
+   "page": 5,
+   "row": 15
+  },
+  {
+   "termA": "femara",
+   "termB": "femhrt",
+   "listedA": "Femara",
+   "listedB": "Femhrt",
+   "page": 5,
+   "row": 18
+  },
+  {
+   "termA": "fentanyl",
+   "termB": "sufentanil",
+   "listedA": "fentaNYL",
+   "listedB": "SUFentanil",
+   "page": 5,
+   "row": 21
+  },
+  {
+   "termA": "fioricet",
+   "termB": "fiorinal",
+   "listedA": "Fioricet",
+   "listedB": "Fiorinal",
+   "page": 5,
+   "row": 23
+  },
+  {
+   "termA": "flavoxate",
+   "termB": "fluvoxamine",
+   "listedA": "flavoxATE",
+   "listedB": "fluvoxaMINE",
+   "page": 5,
+   "row": 25
+  },
+  {
+   "termA": "flonase",
+   "termB": "flovent",
+   "listedA": "Flonase",
+   "listedB": "Flovent",
+   "page": 5,
+   "row": 26
+  },
+  {
+   "termA": "floranex",
+   "termB": "florinef",
+   "listedA": "Floranex",
+   "listedB": "Florinef",
+   "page": 5,
+   "row": 27
+  },
+  {
+   "termA": "florastor",
+   "termB": "florinef",
+   "listedA": "Florastor",
+   "listedB": "Florinef",
+   "page": 5,
+   "row": 28
+  },
+  {
+   "termA": "flumazenil",
+   "termB": "influenza virus vaccine",
+   "listedA": "flumazenil",
+   "listedB": "influenza virus vaccine",
+   "page": 5,
+   "row": 32
+  },
+  {
+   "termA": "fluoxetine",
+   "termB": "loxitane",
+   "listedA": "FLUoxetine",
+   "listedB": "Loxitane",
+   "page": 5,
+   "row": 34
+  },
+  {
+   "termA": "fluoxetine",
+   "termB": "paroxetine",
+   "listedA": "FLUoxetine",
+   "listedB": "PARoxetine",
+   "page": 5,
+   "row": 35
+  },
+  {
+   "termA": "fluphenazine",
+   "termB": "fluvoxamine",
+   "listedA": "fluPHENAZine",
+   "listedB": "fluvoxaMINE",
+   "page": 5,
+   "row": 36
+  },
+  {
+   "termA": "fluzone high dose quadrivalent",
+   "termB": "fluzone quadrivalent",
+   "listedA": "Fluzone High-Dose Quadrivalent*",
+   "listedB": "Fluzone Quadrivalent*",
+   "page": 5,
+   "row": 39
+  },
+  {
+   "termA": "focalgin b",
+   "termB": "focalin",
+   "listedA": "Focalgin B",
+   "listedB": "Focalin",
+   "page": 5,
+   "row": 41
+  },
+  {
+   "termA": "folex",
+   "termB": "foltx",
+   "listedA": "Folex",
+   "listedB": "Foltx",
+   "page": 5,
+   "row": 43
+  },
+  {
+   "termA": "folic acid",
+   "termB": "folinic acid",
+   "listedA": "folic acid",
+   "listedB": "folinic acid (leucovorin calcium)",
+   "page": 5,
+   "row": 44
+  },
+  {
+   "termA": "fomepizole",
+   "termB": "omeprazole",
+   "listedA": "fomepizole",
+   "listedB": "omeprazole",
+   "page": 5,
+   "row": 47
+  },
+  {
+   "termA": "foradil",
+   "termB": "fortical",
+   "listedA": "Foradil",
+   "listedB": "Fortical",
+   "page": 5,
+   "row": 48
+  },
+  {
+   "termA": "foradil",
+   "termB": "toradol",
+   "listedA": "Foradil",
+   "listedB": "Toradol",
+   "page": 5,
+   "row": 49
+  },
+  {
+   "termA": "gabapentin",
+   "termB": "gemfibrozil",
+   "listedA": "gabapentin",
+   "listedB": "gemfibrozil",
+   "page": 5,
+   "row": 51
+  },
+  {
+   "termA": "gentamicin",
+   "termB": "gentian violet",
+   "listedA": "gentamicin",
+   "listedB": "gentian violet",
+   "page": 5,
+   "row": 53
+  },
+  {
+   "termA": "glipizide",
+   "termB": "glyburide",
+   "listedA": "glipiZIDE",
+   "listedB": "glyBURIDE",
+   "page": 5,
+   "row": 56
+  },
+  {
+   "termA": "glucotrol",
+   "termB": "glycotrol",
+   "listedA": "Glucotrol",
+   "listedB": "Glycotrol",
+   "page": 5,
+   "row": 57
+  },
+  {
+   "termA": "granulex",
+   "termB": "regranex",
+   "listedA": "Granulex",
+   "listedB": "Regranex",
+   "page": 5,
+   "row": 60
+  },
+  {
+   "termA": "guaifenesin",
+   "termB": "guanfacine",
+   "listedA": "guaiFENesin",
+   "listedB": "guanFACINE",
+   "page": 5,
+   "row": 61
+  },
+  {
+   "termA": "healon",
+   "termB": "hyalgan",
+   "listedA": "Healon",
+   "listedB": "Hyalgan",
+   "page": 5,
+   "row": 64
+  },
+  {
+   "termA": "heparin",
+   "termB": "hespan",
+   "listedA": "heparin",
+   "listedB": "Hespan",
+   "page": 5,
+   "row": 65
+  },
+  {
+   "termA": "hmg coa reductase inhibitors",
+   "termB": "nystatin",
+   "listedA": "HMG-CoA reductase inhibitors (\"statins\")",
+   "listedB": "nystatin",
+   "page": 5,
+   "row": 67
+  },
+  {
+   "termA": "humalog",
+   "termB": "humulin",
+   "listedA": "HumaLOG",
+   "listedB": "HumuLIN",
+   "page": 5,
+   "row": 68
+  },
+  {
+   "termA": "humalog",
+   "termB": "novolog",
+   "listedA": "HumaLOG",
+   "listedB": "NovoLOG",
+   "page": 5,
+   "row": 69
+  },
+  {
+   "termA": "humalog mix 75 25",
+   "termB": "humulin 70 30",
+   "listedA": "HumaLOG Mix 75/25",
+   "listedB": "HumuLIN 70/30",
+   "page": 5,
+   "row": 70
+  },
+  {
+   "termA": "humapen memoir",
+   "termB": "humira pen",
+   "listedA": "Humapen Memoir (for use with HumaLOG)",
+   "listedB": "Humira Pen",
+   "page": 5,
+   "row": 71
+  },
+  {
+   "termA": "humulin",
+   "termB": "novolin",
+   "listedA": "HumuLIN",
+   "listedB": "NovoLIN",
+   "page": 5,
+   "row": 74
+  },
+  {
+   "termA": "humulin r u 100",
+   "termB": "humulin r u 500",
+   "listedA": "HumuLIN R U-100",
+   "listedB": "HumuLIN R U-500",
+   "page": 5,
+   "row": 76
+  },
+  {
+   "termA": "hydralazine",
+   "termB": "hydrochlorothiazide",
+   "listedA": "hydrALAZINE",
+   "listedB": "hydroCHLOROthiazide",
+   "page": 5,
+   "row": 79
+  },
+  {
+   "termA": "hydralazine",
+   "termB": "hydromorphone",
+   "listedA": "hydrALAZINE*",
+   "listedB": "HYDROmorphone*",
+   "page": 5,
+   "row": 80
+  },
+  {
+   "termA": "hydralazine",
+   "termB": "hydroxyzine",
+   "listedA": "hydrALAZINE",
+   "listedB": "hydrOXYzine",
+   "page": 5,
+   "row": 81
+  },
+  {
+   "termA": "hydrea",
+   "termB": "lyrica",
+   "listedA": "Hydrea",
+   "listedB": "Lyrica",
+   "page": 6,
+   "row": 1
+  },
+  {
+   "termA": "hydrochlorothiazide",
+   "termB": "hydroxyzine",
+   "listedA": "hydroCHLOROthiazide",
+   "listedB": "hydrOXYzine",
+   "page": 6,
+   "row": 3
+  },
+  {
+   "termA": "hydrochlorothiazide",
+   "termB": "hydroxychloroquine",
+   "listedA": "hydroCHLOROthiazide*",
+   "listedB": "hydroxychloroquine*",
+   "page": 6,
+   "row": 4
+  },
+  {
+   "termA": "hydrocodone",
+   "termB": "oxycodone",
+   "listedA": "HYDROcodone",
+   "listedB": "oxyCODONE",
+   "page": 6,
+   "row": 5
+  },
+  {
+   "termA": "hydrogesic",
+   "termB": "hydroxyzine",
+   "listedA": "Hydrogesic",
+   "listedB": "hydrOXYzine",
+   "page": 6,
+   "row": 6
+  },
+  {
+   "termA": "hydromorphone",
+   "termB": "hydroxyzine",
+   "listedA": "HYDROmorphone*",
+   "listedB": "hydrOXYzine*",
+   "page": 6,
+   "row": 9
+  },
+  {
+   "termA": "hydromorphone",
+   "termB": "morphine",
+   "listedA": "HYDROmorphone",
+   "listedB": "morphine",
+   "page": 6,
+   "row": 10
+  },
+  {
+   "termA": "hydromorphone",
+   "termB": "oxymorphone",
+   "listedA": "HYDROmorphone",
+   "listedB": "oxyMORphone",
+   "page": 6,
+   "row": 11
+  },
+  {
+   "termA": "hydroxychloroquine",
+   "termB": "hydroxyurea",
+   "listedA": "hydroxychloroquine",
+   "listedB": "hydroxyurea",
+   "page": 6,
+   "row": 12
+  },
+  {
+   "termA": "hydroxyprogesterone",
+   "termB": "medroxyprogesterone",
+   "listedA": "HYDROXYprogesterone",
+   "listedB": "medroxyPROGESTERone",
+   "page": 6,
+   "row": 14
+  },
+  {
+   "termA": "hydroxyurea",
+   "termB": "hydroxyzine",
+   "listedA": "hydroxyurea",
+   "listedB": "hydrOXYzine",
+   "page": 6,
+   "row": 16
+  },
+  {
+   "termA": "hydroxyurea",
+   "termB": "ure na",
+   "listedA": "hydroxyurea*",
+   "listedB": "Ure-Na (palatable form of oral urea)*",
+   "page": 6,
+   "row": 17
+  },
+  {
+   "termA": "idarubicin",
+   "termB": "idarucizumab",
+   "listedA": "IDArubicin",
+   "listedB": "idaruCIZUmab",
+   "page": 6,
+   "row": 25
+  },
+  {
+   "termA": "ilaris",
+   "termB": "ilumya",
+   "listedA": "Ilaris*",
+   "listedB": "Ilumya*",
+   "page": 6,
+   "row": 27
+  },
+  {
+   "termA": "infliximab",
+   "termB": "rituximab",
+   "listedA": "inFLIXimab",
+   "listedB": "riTUXimab",
+   "page": 6,
+   "row": 31
+  },
+  {
+   "termA": "influenza virus vaccine",
+   "termB": "perflutren lipid microspheres",
+   "listedA": "influenza virus vaccine",
+   "listedB": "perflutren lipid microspheres",
+   "page": 6,
+   "row": 33
+  },
+  {
+   "termA": "influenza virus vaccine",
+   "termB": "tuberculin purified protein derivative",
+   "listedA": "influenza virus vaccine",
+   "listedB": "tuberculin purified protein derivative (PPD)",
+   "page": 6,
+   "row": 34
+  },
+  {
+   "termA": "inspra",
+   "termB": "spiriva",
+   "listedA": "Inspra",
+   "listedB": "Spiriva",
+   "page": 6,
+   "row": 35
+  },
+  {
+   "termA": "intuniv",
+   "termB": "invega",
+   "listedA": "Intuniv",
+   "listedB": "Invega",
+   "page": 6,
+   "row": 36
+  },
+  {
+   "termA": "iodine",
+   "termB": "lodine",
+   "listedA": "iodine",
+   "listedB": "Lodine",
+   "page": 6,
+   "row": 39
+  },
+  {
+   "termA": "isordil",
+   "termB": "plendil",
+   "listedA": "Isordil",
+   "listedB": "Plendil",
+   "page": 6,
+   "row": 40
+  },
+  {
+   "termA": "isotretinoin",
+   "termB": "tretinoin",
+   "listedA": "ISOtretinoin",
+   "listedB": "tretinoin",
+   "page": 6,
+   "row": 41
+  },
+  {
+   "termA": "jantoven",
+   "termB": "janumet",
+   "listedA": "Jantoven",
+   "listedB": "Janumet",
+   "page": 6,
+   "row": 42
+  },
+  {
+   "termA": "jantoven",
+   "termB": "januvia",
+   "listedA": "Jantoven",
+   "listedB": "Januvia",
+   "page": 6,
+   "row": 43
+  },
+  {
+   "termA": "janumet",
+   "termB": "januvia",
+   "listedA": "Janumet",
+   "listedB": "Januvia",
+   "page": 6,
+   "row": 45
+  },
+  {
+   "termA": "janumet",
+   "termB": "sinemet",
+   "listedA": "Janumet",
+   "listedB": "Sinemet",
+   "page": 6,
+   "row": 46
+  },
+  {
+   "termA": "kadian",
+   "termB": "kapidex",
+   "listedA": "Kadian",
+   "listedB": "Kapidex",
+   "page": 6,
+   "row": 50
+  },
+  {
+   "termA": "kaletra",
+   "termB": "keppra",
+   "listedA": "Kaletra",
+   "listedB": "Keppra",
+   "page": 6,
+   "row": 51
+  },
+  {
+   "termA": "kay ciel",
+   "termB": "kayexalate",
+   "listedA": "Kay Ciel",
+   "listedB": "Kayexalate",
+   "page": 6,
+   "row": 58
+  },
+  {
+   "termA": "keflex",
+   "termB": "keppra",
+   "listedA": "Keflex",
+   "listedB": "Keppra",
+   "page": 6,
+   "row": 60
+  },
+  {
+   "termA": "ketalar",
+   "termB": "ketorolac",
+   "listedA": "Ketalar",
+   "listedB": "ketorolac",
+   "page": 6,
+   "row": 63
+  },
+  {
+   "termA": "ketamine",
+   "termB": "ketorolac",
+   "listedA": "ketamine*",
+   "listedB": "ketorolac*",
+   "page": 6,
+   "row": 64
+  },
+  {
+   "termA": "ketorolac",
+   "termB": "methadone",
+   "listedA": "ketorolac",
+   "listedB": "methadone",
+   "page": 6,
+   "row": 67
+  },
+  {
+   "termA": "k phos neutral",
+   "termB": "neutra phos k",
+   "listedA": "K-Phos Neutral",
+   "listedB": "Neutra-Phos-K",
+   "page": 6,
+   "row": 70
+  },
+  {
+   "termA": "kwell",
+   "termB": "qwell",
+   "listedA": "Kwell",
+   "listedB": "Qwell",
+   "page": 6,
+   "row": 72
+  },
+  {
+   "termA": "labetalol",
+   "termB": "lamictal",
+   "listedA": "labetalol",
+   "listedB": "LaMICtal",
+   "page": 6,
+   "row": 73
+  },
+  {
+   "termA": "labetalol",
+   "termB": "lamotrigine",
+   "listedA": "labetalol",
+   "listedB": "lamoTRIgine",
+   "page": 6,
+   "row": 74
+  },
+  {
+   "termA": "lamictal",
+   "termB": "lamisil",
+   "listedA": "LaMICtal",
+   "listedB": "LamISIL",
+   "page": 6,
+   "row": 76
+  },
+  {
+   "termA": "lamivudine",
+   "termB": "lamotrigine",
+   "listedA": "lamiVUDine",
+   "listedB": "lamoTRIgine",
+   "page": 6,
+   "row": 78
+  },
+  {
+   "termA": "lamotrigine",
+   "termB": "levetiracetam",
+   "listedA": "lamoTRIgine",
+   "listedB": "levETIRAcetam",
+   "page": 6,
+   "row": 80
+  },
+  {
+   "termA": "lamotrigine",
+   "termB": "levothyroxine",
+   "listedA": "lamoTRIgine",
+   "listedB": "levothyroxine",
+   "page": 6,
+   "row": 81
+  },
+  {
+   "termA": "lanoxin",
+   "termB": "levothyroxine",
+   "listedA": "Lanoxin",
+   "listedB": "levothyroxine",
+   "page": 6,
+   "row": 83
+  },
+  {
+   "termA": "lanoxin",
+   "termB": "naloxone",
+   "listedA": "Lanoxin",
+   "listedB": "naloxone",
+   "page": 6,
+   "row": 84
+  },
+  {
+   "termA": "lanthanum",
+   "termB": "lithium",
+   "listedA": "lanthanum carbonate",
+   "listedB": "lithium carbonate",
+   "page": 7,
+   "row": 1
+  },
+  {
+   "termA": "lantus",
+   "termB": "latuda",
+   "listedA": "Lantus",
+   "listedB": "Latuda",
+   "page": 7,
+   "row": 2
+  },
+  {
+   "termA": "lantus",
+   "termB": "lente",
+   "listedA": "Lantus",
+   "listedB": "Lente",
+   "page": 7,
+   "row": 3
+  },
+  {
+   "termA": "lariam",
+   "termB": "levaquin",
+   "listedA": "Lariam",
+   "listedB": "Levaquin",
+   "page": 7,
+   "row": 4
+  },
+  {
+   "termA": "lasix",
+   "termB": "luvox",
+   "listedA": "Lasix",
+   "listedB": "Luvox",
+   "page": 7,
+   "row": 5
+  },
+  {
+   "termA": "lasix",
+   "termB": "wakix",
+   "listedA": "Lasix*",
+   "listedB": "Wakix*",
+   "page": 7,
+   "row": 6
+  },
+  {
+   "termA": "letairis",
+   "termB": "letaris",
+   "listedA": "Letairis",
+   "listedB": "Letaris [non-US product]",
+   "page": 7,
+   "row": 9
+  },
+  {
+   "termA": "leucovorin",
+   "termB": "leukeran",
+   "listedA": "leucovorin calcium",
+   "listedB": "Leukeran",
+   "page": 7,
+   "row": 11
+  },
+  {
+   "termA": "leucovorin",
+   "termB": "levoleucovorin",
+   "listedA": "leucovorin calcium",
+   "listedB": "LEVOleucovorin",
+   "page": 7,
+   "row": 12
+  },
+  {
+   "termA": "leukeran",
+   "termB": "myleran",
+   "listedA": "Leukeran",
+   "listedB": "Myleran",
+   "page": 7,
+   "row": 15
+  },
+  {
+   "termA": "levemir",
+   "termB": "lovenox",
+   "listedA": "Levemir",
+   "listedB": "Lovenox",
+   "page": 7,
+   "row": 18
+  },
+  {
+   "termA": "levetiracetam",
+   "termB": "levocarnitine",
+   "listedA": "levETIRAcetam",
+   "listedB": "levOCARNitine",
+   "page": 7,
+   "row": 20
+  },
+  {
+   "termA": "levetiracetam",
+   "termB": "levofloxacin",
+   "listedA": "levETIRAcetam",
+   "listedB": "levoFLOXacin",
+   "page": 7,
+   "row": 21
+  },
+  {
+   "termA": "levothyroxine",
+   "termB": "liothyronine",
+   "listedA": "levothyroxine",
+   "listedB": "liothyronine",
+   "page": 7,
+   "row": 27
+  },
+  {
+   "termA": "lexapro",
+   "termB": "loxitane",
+   "listedA": "Lexapro",
+   "listedB": "Loxitane",
+   "page": 7,
+   "row": 28
+  },
+  {
+   "termA": "lexiva",
+   "termB": "pexeva",
+   "listedA": "Lexiva",
+   "listedB": "Pexeva",
+   "page": 7,
+   "row": 29
+  },
+  {
+   "termA": "linaclotide",
+   "termB": "linagliptin",
+   "listedA": "linaCLOtide",
+   "listedB": "linaGLIPtin",
+   "page": 7,
+   "row": 30
+  },
+  {
+   "termA": "lipitor",
+   "termB": "loniten",
+   "listedA": "Lipitor",
+   "listedB": "Loniten",
+   "page": 7,
+   "row": 33
+  },
+  {
+   "termA": "lipitor",
+   "termB": "zyrtec",
+   "listedA": "Lipitor",
+   "listedB": "ZyrTEC",
+   "page": 7,
+   "row": 34
+  },
+  {
+   "termA": "lithium",
+   "termB": "ultram",
+   "listedA": "lithium",
+   "listedB": "Ultram",
+   "page": 7,
+   "row": 35
+  },
+  {
+   "termA": "lopressor",
+   "termB": "lyrica",
+   "listedA": "Lopressor",
+   "listedB": "Lyrica",
+   "page": 7,
+   "row": 40
+  },
+  {
+   "termA": "lorazepam",
+   "termB": "lovaza",
+   "listedA": "LORazepam",
+   "listedB": "Lovaza",
+   "page": 7,
+   "row": 43
+  },
+  {
+   "termA": "lotronex",
+   "termB": "protonix",
+   "listedA": "Lotronex",
+   "listedB": "Protonix",
+   "page": 7,
+   "row": 44
+  },
+  {
+   "termA": "loxitane",
+   "termB": "soriatane",
+   "listedA": "Loxitane",
+   "listedB": "Soriatane",
+   "page": 7,
+   "row": 49
+  },
+  {
+   "termA": "lunesta",
+   "termB": "neulasta",
+   "listedA": "Lunesta",
+   "listedB": "Neulasta",
+   "page": 7,
+   "row": 50
+  },
+  {
+   "termA": "lupron depot 3 month",
+   "termB": "lupron depot ped",
+   "listedA": "Lupron Depot-3 Month",
+   "listedB": "Lupron Depot-Ped",
+   "page": 7,
+   "row": 51
+  },
+  {
+   "termA": "maalox",
+   "termB": "maalox total stomach relief",
+   "listedA": "Maalox",
+   "listedB": "Maalox Total Stomach Relief",
+   "page": 7,
+   "row": 56
+  },
+  {
+   "termA": "malarone",
+   "termB": "mefloquine",
+   "listedA": "Malarone",
+   "listedB": "mefloquine",
+   "page": 7,
+   "row": 58
+  },
+  {
+   "termA": "materna",
+   "termB": "matulane",
+   "listedA": "Materna",
+   "listedB": "Matulane",
+   "page": 7,
+   "row": 59
+  },
+  {
+   "termA": "maxzide",
+   "termB": "microzide",
+   "listedA": "Maxzide",
+   "listedB": "Microzide",
+   "page": 7,
+   "row": 61
+  },
+  {
+   "termA": "medroxyprogesterone",
+   "termB": "methylprednisolone",
+   "listedA": "medroxyPROGESTERone",
+   "listedB": "methylPREDNISolone",
+   "page": 7,
+   "row": 63
+  },
+  {
+   "termA": "medroxyprogesterone",
+   "termB": "methyltestosterone",
+   "listedA": "medroxyPROGESTERone",
+   "listedB": "methylTESTOSTERone",
+   "page": 7,
+   "row": 64
+  },
+  {
+   "termA": "memantine",
+   "termB": "methadone",
+   "listedA": "memantine",
+   "listedB": "methadone",
+   "page": 7,
+   "row": 66
+  },
+  {
+   "termA": "menactra",
+   "termB": "menomune",
+   "listedA": "Menactra",
+   "listedB": "Menomune",
+   "page": 7,
+   "row": 67
+  },
+  {
+   "termA": "mephyton",
+   "termB": "methadone",
+   "listedA": "Mephyton",
+   "listedB": "methadone",
+   "page": 7,
+   "row": 69
+  },
+  {
+   "termA": "metadate",
+   "termB": "methadone",
+   "listedA": "Metadate",
+   "listedB": "methadone",
+   "page": 7,
+   "row": 70
+  },
+  {
+   "termA": "metadate cd",
+   "termB": "metadate er",
+   "listedA": "Metadate CD",
+   "listedB": "Metadate ER",
+   "page": 7,
+   "row": 71
+  },
+  {
+   "termA": "metadate er",
+   "termB": "methadone",
+   "listedA": "Metadate ER",
+   "listedB": "methadone",
+   "page": 7,
+   "row": 73
+  },
+  {
+   "termA": "metformin",
+   "termB": "metronidazole",
+   "listedA": "metFORMIN",
+   "listedB": "metroNIDAZOLE",
+   "page": 7,
+   "row": 74
+  },
+  {
+   "termA": "methadone",
+   "termB": "methylphenidate",
+   "listedA": "methadone",
+   "listedB": "methylphenidate",
+   "page": 7,
+   "row": 81
+  },
+  {
+   "termA": "methadone",
+   "termB": "metolazone",
+   "listedA": "methadone",
+   "listedB": "metOLazone",
+   "page": 7,
+   "row": 82
+  },
+  {
+   "termA": "methazolamide",
+   "termB": "methimazole",
+   "listedA": "methazolAMIDE",
+   "listedB": "methIMAzole",
+   "page": 7,
+   "row": 83
+  },
+  {
+   "termA": "methazolamide",
+   "termB": "metolazone",
+   "listedA": "methazolAMIDE",
+   "listedB": "metOLazone",
+   "page": 7,
+   "row": 84
+  },
+  {
+   "termA": "methimazole",
+   "termB": "metolazone",
+   "listedA": "methIMAzole",
+   "listedB": "metOLazone",
+   "page": 7,
+   "row": 87
+  },
+  {
+   "termA": "methotrexate",
+   "termB": "metolazone",
+   "listedA": "methotrexate",
+   "listedB": "metOLazone",
+   "page": 7,
+   "row": 88
+  },
+  {
+   "termA": "methotrexate",
+   "termB": "mtx patch",
+   "listedA": "methotrexate",
+   "listedB": "MTX Patch (lidocaine and menthol)",
+   "page": 8,
+   "row": 1
+  },
+  {
+   "termA": "methylene blue",
+   "termB": "visionblue",
+   "listedA": "methylene blue",
+   "listedB": "VisionBlue",
+   "page": 8,
+   "row": 2
+  },
+  {
+   "termA": "methylprednisolone",
+   "termB": "methyltestosterone",
+   "listedA": "methylPREDNISolone",
+   "listedB": "methylTESTOSTERone",
+   "page": 8,
+   "row": 5
+  },
+  {
+   "termA": "metyrapone",
+   "termB": "metyrosine",
+   "listedA": "metyraPONE",
+   "listedB": "metyroSINE",
+   "page": 8,
+   "row": 15
+  },
+  {
+   "termA": "micronase",
+   "termB": "microzide",
+   "listedA": "Micronase",
+   "listedB": "Microzide",
+   "page": 8,
+   "row": 18
+  },
+  {
+   "termA": "midodrine",
+   "termB": "midrin",
+   "listedA": "midodrine",
+   "listedB": "Midrin",
+   "page": 8,
+   "row": 21
+  },
+  {
+   "termA": "mifepristone",
+   "termB": "misoprostol",
+   "listedA": "miFEPRIStone",
+   "listedB": "miSOPROStol",
+   "page": 8,
+   "row": 23
+  },
+  {
+   "termA": "migalastat",
+   "termB": "miglustat",
+   "listedA": "migALAstat",
+   "listedB": "migLUstat",
+   "page": 8,
+   "row": 24
+  },
+  {
+   "termA": "miralax",
+   "termB": "mirapex",
+   "listedA": "Miralax",
+   "listedB": "Mirapex",
+   "page": 8,
+   "row": 26
+  },
+  {
+   "termA": "mitomycin",
+   "termB": "mitoxantrone",
+   "listedA": "mitoMYcin",
+   "listedB": "mitoXANTRONE",
+   "page": 8,
+   "row": 29
+  },
+  {
+   "termA": "mitoxantrone",
+   "termB": "mtx patch",
+   "listedA": "mitoXANTRONE",
+   "listedB": "MTX Patch (lidocaine and menthol)",
+   "page": 8,
+   "row": 31
+  },
+  {
+   "termA": "morphine non concentrated oral liquid",
+   "termB": "morphine oral liquid concentrate",
+   "listedA": "morphine - non-concentrated oral liquid",
+   "listedB": "morphine - oral liquid concentrate",
+   "page": 8,
+   "row": 33
+  },
+  {
+   "termA": "motrin",
+   "termB": "neurontin",
+   "listedA": "Motrin",
+   "listedB": "Neurontin",
+   "page": 8,
+   "row": 35
+  },
+  {
+   "termA": "ms contin",
+   "termB": "oxycontin",
+   "listedA": "MS Contin",
+   "listedB": "OxyCONTIN",
+   "page": 8,
+   "row": 36
+  },
+  {
+   "termA": "mucinex",
+   "termB": "mucomyst",
+   "listedA": "Mucinex",
+   "listedB": "Mucomyst",
+   "page": 8,
+   "row": 39
+  },
+  {
+   "termA": "mucinex",
+   "termB": "mucinex allergy",
+   "listedA": "Mucinex (guaiFENesin)",
+   "listedB": "Mucinex Allergy (fexofenadine)",
+   "page": 8,
+   "row": 40
+  },
+  {
+   "termA": "mucinex d",
+   "termB": "mucinex dm",
+   "listedA": "Mucinex D",
+   "listedB": "Mucinex DM",
+   "page": 8,
+   "row": 42
+  },
+  {
+   "termA": "nalbuphine",
+   "termB": "naloxone",
+   "listedA": "nalbuphine",
+   "listedB": "naloxone",
+   "page": 8,
+   "row": 47
+  },
+  {
+   "termA": "narcan",
+   "termB": "norcuron",
+   "listedA": "Narcan",
+   "listedB": "Norcuron",
+   "page": 8,
+   "row": 50
+  },
+  {
+   "termA": "navane",
+   "termB": "norvasc",
+   "listedA": "Navane",
+   "listedB": "Norvasc",
+   "page": 8,
+   "row": 52
+  },
+  {
+   "termA": "neratinib",
+   "termB": "nilotinib",
+   "listedA": "neratinib",
+   "listedB": "nilotinib",
+   "page": 8,
+   "row": 55
+  },
+  {
+   "termA": "neratinib",
+   "termB": "niraparib",
+   "listedA": "neratinib",
+   "listedB": "niraparib",
+   "page": 8,
+   "row": 56
+  },
+  {
+   "termA": "neulasta",
+   "termB": "neumega",
+   "listedA": "Neulasta",
+   "listedB": "Neumega",
+   "page": 8,
+   "row": 58
+  },
+  {
+   "termA": "neulasta",
+   "termB": "nuedexta",
+   "listedA": "Neulasta",
+   "listedB": "Nuedexta",
+   "page": 8,
+   "row": 59
+  },
+  {
+   "termA": "neumega",
+   "termB": "neupogen",
+   "listedA": "Neumega",
+   "listedB": "Neupogen",
+   "page": 8,
+   "row": 61
+  },
+  {
+   "termA": "neurontin",
+   "termB": "noroxin",
+   "listedA": "Neurontin",
+   "listedB": "Noroxin",
+   "page": 8,
+   "row": 64
+  },
+  {
+   "termA": "nexavar",
+   "termB": "nexium",
+   "listedA": "NexAVAR",
+   "listedB": "NexIUM",
+   "page": 8,
+   "row": 66
+  },
+  {
+   "termA": "nicardipine",
+   "termB": "nifedipine",
+   "listedA": "niCARdipine",
+   "listedB": "NIFEdipine",
+   "page": 8,
+   "row": 68
+  },
+  {
+   "termA": "nicardipine",
+   "termB": "nimodipine",
+   "listedA": "niCARdipine",
+   "listedB": "niMODipine",
+   "page": 8,
+   "row": 69
+  },
+  {
+   "termA": "nifedipine",
+   "termB": "nimodipine",
+   "listedA": "NIFEdipine",
+   "listedB": "niMODipine",
+   "page": 8,
+   "row": 71
+  },
+  {
+   "termA": "nilotinib",
+   "termB": "niraparib",
+   "listedA": "nilotinib",
+   "listedB": "niraparib",
+   "page": 8,
+   "row": 73
+  },
+  {
+   "termA": "nizatidine",
+   "termB": "tizanidine",
+   "listedA": "nizatidine*",
+   "listedB": "tiZANidine*",
+   "page": 8,
+   "row": 78
+  },
+  {
+   "termA": "normodyne",
+   "termB": "norpramin",
+   "listedA": "Normodyne",
+   "listedB": "Norpramin",
+   "page": 8,
+   "row": 80
+  },
+  {
+   "termA": "novolin",
+   "termB": "novolog",
+   "listedA": "NovoLIN",
+   "listedB": "NovoLOG",
+   "page": 9,
+   "row": 5
+  },
+  {
+   "termA": "novolin 70 30",
+   "termB": "novolog mix 70 30",
+   "listedA": "NovoLIN 70/30",
+   "listedB": "NovoLOG Mix 70/30",
+   "page": 9,
+   "row": 6
+  },
+  {
+   "termA": "novolog flexpen",
+   "termB": "novolog mix 70 30 flexpen",
+   "listedA": "NovoLOG Flexpen",
+   "listedB": "NovoLOG Mix 70/30 Flexpen",
+   "page": 9,
+   "row": 9
+  },
+  {
+   "termA": "occlusal hp",
+   "termB": "ocuflox",
+   "listedA": "Occlusal-HP",
+   "listedB": "Ocuflox",
+   "page": 9,
+   "row": 14
+  },
+  {
+   "termA": "olanzapine",
+   "termB": "quetiapine",
+   "listedA": "OLANZapine",
+   "listedB": "QUEtiapine",
+   "page": 9,
+   "row": 16
+  },
+  {
+   "termA": "opium tincture",
+   "termB": "paregoric",
+   "listedA": "opium tincture",
+   "listedB": "paregoric (camphorated tincture of opium)",
+   "page": 9,
+   "row": 19
+  },
+  {
+   "termA": "oracea",
+   "termB": "orencia",
+   "listedA": "Oracea",
+   "listedB": "Orencia",
+   "page": 9,
+   "row": 20
+  },
+  {
+   "termA": "ortho tri cyclen",
+   "termB": "ortho tri cyclen lo",
+   "listedA": "Ortho Tri-Cyclen",
+   "listedB": "Ortho Tri-Cyclen LO",
+   "page": 9,
+   "row": 23
+  },
+  {
+   "termA": "oxaprozin",
+   "termB": "oxcarbazepine",
+   "listedA": "oxaprozin",
+   "listedB": "OXcarbazepine",
+   "page": 9,
+   "row": 26
+  },
+  {
+   "termA": "oxybutynin",
+   "termB": "oxycodone",
+   "listedA": "oxyBUTYnin",
+   "listedB": "oxyCODONE",
+   "page": 9,
+   "row": 29
+  },
+  {
+   "termA": "oxybutynin",
+   "termB": "oxycontin",
+   "listedA": "oxyBUTYnin*",
+   "listedB": "OxyCONTIN*",
+   "page": 9,
+   "row": 30
+  },
+  {
+   "termA": "oxybutynin",
+   "termB": "oxymorphone",
+   "listedA": "oxyBUTYnin*",
+   "listedB": "oxyMORphone*",
+   "page": 9,
+   "row": 31
+  },
+  {
+   "termA": "oxycodone",
+   "termB": "oxycontin",
+   "listedA": "oxyCODONE",
+   "listedB": "OxyCONTIN",
+   "page": 9,
+   "row": 34
+  },
+  {
+   "termA": "oxycodone",
+   "termB": "oxymorphone",
+   "listedA": "oxyCODONE",
+   "listedB": "oxyMORphone",
+   "page": 9,
+   "row": 35
+  },
+  {
+   "termA": "oxycontin",
+   "termB": "oxymorphone",
+   "listedA": "OxyCONTIN",
+   "listedB": "oxyMORphone",
+   "page": 9,
+   "row": 39
+  },
+  {
+   "termA": "oxycontin",
+   "termB": "oxytocin",
+   "listedA": "OxyCONTIN*",
+   "listedB": "oxytocin*",
+   "page": 9,
+   "row": 40
+  },
+  {
+   "termA": "paclitaxel",
+   "termB": "paclitaxel protein bound particles",
+   "listedA": "PACLitaxel",
+   "listedB": "PACLitaxel protein-bound particles",
+   "page": 9,
+   "row": 47
+  },
+  {
+   "termA": "pamelor",
+   "termB": "panlor dc",
+   "listedA": "Pamelor",
+   "listedB": "Panlor DC",
+   "page": 9,
+   "row": 49
+  },
+  {
+   "termA": "pamelor",
+   "termB": "tambocor",
+   "listedA": "Pamelor",
+   "listedB": "Tambocor",
+   "page": 9,
+   "row": 50
+  },
+  {
+   "termA": "paroxetine",
+   "termB": "piroxicam",
+   "listedA": "PARoxetine",
+   "listedB": "piroxicam",
+   "page": 9,
+   "row": 55
+  },
+  {
+   "termA": "patanol",
+   "termB": "platinol",
+   "listedA": "Patanol",
+   "listedB": "Platinol",
+   "page": 9,
+   "row": 56
+  },
+  {
+   "termA": "pavulon",
+   "termB": "peptavlon",
+   "listedA": "Pavulon",
+   "listedB": "Peptavlon",
+   "page": 9,
+   "row": 57
+  },
+  {
+   "termA": "paxil",
+   "termB": "plavix",
+   "listedA": "Paxil",
+   "listedB": "Plavix",
+   "page": 9,
+   "row": 59
+  },
+  {
+   "termA": "paxil",
+   "termB": "taxol",
+   "listedA": "Paxil",
+   "listedB": "Taxol",
+   "page": 9,
+   "row": 60
+  },
+  {
+   "termA": "paxil",
+   "termB": "trexall",
+   "listedA": "Paxil*",
+   "listedB": "Trexall*",
+   "page": 9,
+   "row": 61
+  },
+  {
+   "termA": "pazopanib",
+   "termB": "ponatinib",
+   "listedA": "PAZOPanib",
+   "listedB": "PONATinib",
+   "page": 9,
+   "row": 62
+  },
+  {
+   "termA": "pemetrexed",
+   "termB": "pralatrexate",
+   "listedA": "PEMEtrexed",
+   "listedB": "PRALAtrexate",
+   "page": 9,
+   "row": 63
+  },
+  {
+   "termA": "penicillamine",
+   "termB": "penicillin",
+   "listedA": "penicillAMINE",
+   "listedB": "penicillin",
+   "page": 9,
+   "row": 64
+  },
+  {
+   "termA": "pentobarbital",
+   "termB": "phenobarbital",
+   "listedA": "PENTobarbital",
+   "listedB": "PHENobarbital",
+   "page": 9,
+   "row": 66
+  },
+  {
+   "termA": "percocet",
+   "termB": "procet",
+   "listedA": "Percocet",
+   "listedB": "Procet",
+   "page": 9,
+   "row": 69
+  },
+  {
+   "termA": "physostigmine",
+   "termB": "pyridostigminee",
+   "listedA": "PHYSostigmine*",
+   "listedB": "pyRIDostigminee*",
+   "page": 9,
+   "row": 73
+  },
+  {
+   "termA": "pitocin",
+   "termB": "pitressin",
+   "listedA": "Pitocin*",
+   "listedB": "Pitressin*",
+   "page": 9,
+   "row": 76
+  },
+  {
+   "termA": "plavix",
+   "termB": "pradax",
+   "listedA": "Plavix",
+   "listedB": "Pradax [Non-US Product]",
+   "page": 9,
+   "row": 80
+  },
+  {
+   "termA": "plavix",
+   "termB": "pradaxa",
+   "listedA": "Plavix",
+   "listedB": "Pradaxa",
+   "page": 9,
+   "row": 81
+  },
+  {
+   "termA": "pneumococcal 7 valent vaccine",
+   "termB": "pneumococcal polyvalent vaccine",
+   "listedA": "pneumococcal 7-valent vaccine",
+   "listedB": "pneumococcal polyvalent vaccine",
+   "page": 10,
+   "row": 2
+  },
+  {
+   "termA": "polyethylene glycol",
+   "termB": "propylene glycol",
+   "listedA": "polyethylene glycol",
+   "listedB": "propylene glycol",
+   "page": 10,
+   "row": 5
+  },
+  {
+   "termA": "potassium",
+   "termB": "sodium",
+   "listedA": "potassium acetate",
+   "listedB": "sodium acetate",
+   "page": 10,
+   "row": 7
+  },
+  {
+   "termA": "pralidoxime",
+   "termB": "pyridoxine",
+   "listedA": "pralidoxime*",
+   "listedB": "pyridoxine*",
+   "page": 10,
+   "row": 11
+  },
+  {
+   "termA": "precare",
+   "termB": "precose",
+   "listedA": "Precare",
+   "listedB": "Precose",
+   "page": 10,
+   "row": 13
+  },
+  {
+   "termA": "prednisolone",
+   "termB": "prednisone",
+   "listedA": "prednisoLONE",
+   "listedB": "predniSONE",
+   "page": 10,
+   "row": 15
+  },
+  {
+   "termA": "prenexa",
+   "termB": "ranexa",
+   "listedA": "Prenexa",
+   "listedB": "Ranexa",
+   "page": 10,
+   "row": 17
+  },
+  {
+   "termA": "prilosec",
+   "termB": "pristiq",
+   "listedA": "PriLOSEC",
+   "listedB": "Pristiq",
+   "page": 10,
+   "row": 18
+  },
+  {
+   "termA": "prilosec",
+   "termB": "prozac",
+   "listedA": "PriLOSEC",
+   "listedB": "PROzac",
+   "page": 10,
+   "row": 19
+  },
+  {
+   "termA": "probenecid",
+   "termB": "procanbid",
+   "listedA": "probenecid",
+   "listedB": "Procanbid",
+   "page": 10,
+   "row": 22
+  },
+  {
+   "termA": "procan sr",
+   "termB": "procanbid",
+   "listedA": "Procan SR",
+   "listedB": "Procanbid",
+   "page": 10,
+   "row": 23
+  },
+  {
+   "termA": "procardia xl",
+   "termB": "protain xl",
+   "listedA": "Procardia XL",
+   "listedB": "Protain XL",
+   "page": 10,
+   "row": 26
+  },
+  {
+   "termA": "prograf",
+   "termB": "proscar",
+   "listedA": "Prograf",
+   "listedB": "Proscar",
+   "page": 10,
+   "row": 28
+  },
+  {
+   "termA": "prograf",
+   "termB": "prozac",
+   "listedA": "Prograf",
+   "listedB": "PROzac",
+   "page": 10,
+   "row": 29
+  },
+  {
+   "termA": "propylthiouracil",
+   "termB": "purinethol",
+   "listedA": "propylthiouracil",
+   "listedB": "Purinethol",
+   "page": 10,
+   "row": 31
+  },
+  {
+   "termA": "proscar",
+   "termB": "provera",
+   "listedA": "Proscar",
+   "listedB": "Provera",
+   "page": 10,
+   "row": 33
+  },
+  {
+   "termA": "protamine",
+   "termB": "protonix",
+   "listedA": "protamine",
+   "listedB": "Protonix",
+   "page": 10,
+   "row": 35
+  },
+  {
+   "termA": "provera",
+   "termB": "prozac",
+   "listedA": "Provera",
+   "listedB": "PROzac",
+   "page": 10,
+   "row": 40
+  },
+  {
+   "termA": "pyridium",
+   "termB": "pyridoxine",
+   "listedA": "Pyridium",
+   "listedB": "pyridoxine",
+   "page": 10,
+   "row": 45
+  },
+  {
+   "termA": "pyridostigmine",
+   "termB": "physostigmine",
+   "listedA": "pyRIDostigmine*",
+   "listedB": "PHYSostigmine*",
+   "page": 10,
+   "row": 46
+  },
+  {
+   "termA": "pyridostigmine",
+   "termB": "pyridoxine",
+   "listedA": "pyRIDostigmine*",
+   "listedB": "pyridoxine*",
+   "page": 10,
+   "row": 47
+  },
+  {
+   "termA": "quinidine",
+   "termB": "quinine",
+   "listedA": "quiNIDine",
+   "listedB": "quiNINE",
+   "page": 10,
+   "row": 52
+  },
+  {
+   "termA": "ranitidine",
+   "termB": "rimantadine",
+   "listedA": "raNITIdine",
+   "listedB": "riMANTAdine",
+   "page": 10,
+   "row": 57
+  },
+  {
+   "termA": "rapaflo",
+   "termB": "rapamune",
+   "listedA": "Rapaflo",
+   "listedB": "Rapamune",
+   "page": 10,
+   "row": 58
+  },
+  {
+   "termA": "rasageline",
+   "termB": "repaglinide",
+   "listedA": "rasageline",
+   "listedB": "repaglinide",
+   "page": 10,
+   "row": 60
+  },
+  {
+   "termA": "razadyne",
+   "termB": "rozerem",
+   "listedA": "Razadyne",
+   "listedB": "Rozerem",
+   "page": 10,
+   "row": 61
+  },
+  {
+   "termA": "remeron",
+   "termB": "rozerem",
+   "listedA": "Remeron*",
+   "listedB": "Rozerem*",
+   "page": 10,
+   "row": 64
+  },
+  {
+   "termA": "reminyl",
+   "termB": "robinul",
+   "listedA": "Reminyl",
+   "listedB": "Robinul",
+   "page": 10,
+   "row": 66
+  },
+  {
+   "termA": "renagel",
+   "termB": "renvela",
+   "listedA": "Renagel",
+   "listedB": "Renvela",
+   "page": 10,
+   "row": 67
+  },
+  {
+   "termA": "reprexain",
+   "termB": "zyprexa",
+   "listedA": "Reprexain",
+   "listedB": "ZyPREXA",
+   "page": 10,
+   "row": 70
+  },
+  {
+   "termA": "restoril",
+   "termB": "risperdal",
+   "listedA": "Restoril",
+   "listedB": "RisperDAL",
+   "page": 10,
+   "row": 71
+  },
+  {
+   "termA": "retrovir",
+   "termB": "ritonavir",
+   "listedA": "Retrovir",
+   "listedB": "ritonavir",
+   "page": 10,
+   "row": 72
+  },
+  {
+   "termA": "ribavirin",
+   "termB": "riboflavin",
+   "listedA": "ribavirin",
+   "listedB": "riboflavin",
+   "page": 10,
+   "row": 73
+  },
+  {
+   "termA": "rifabutin",
+   "termB": "rifapentine",
+   "listedA": "rifabutin",
+   "listedB": "rifapentine",
+   "page": 10,
+   "row": 75
+  },
+  {
+   "termA": "rifadin",
+   "termB": "rifater",
+   "listedA": "Rifadin",
+   "listedB": "Rifater",
+   "page": 10,
+   "row": 76
+  },
+  {
+   "termA": "rifamate",
+   "termB": "rifampin",
+   "listedA": "Rifamate",
+   "listedB": "rifAMPin",
+   "page": 10,
+   "row": 77
+  },
+  {
+   "termA": "rifampin",
+   "termB": "rifaximin",
+   "listedA": "rifAMPin",
+   "listedB": "rifAXIMin",
+   "page": 10,
+   "row": 79
+  },
+  {
+   "termA": "risperdal",
+   "termB": "ropinirole",
+   "listedA": "RisperDAL",
+   "listedB": "rOPINIRole",
+   "page": 10,
+   "row": 85
+  },
+  {
+   "termA": "risperidone",
+   "termB": "ropinirole",
+   "listedA": "risperiDONE",
+   "listedB": "rOPINIRole",
+   "page": 10,
+   "row": 86
+  },
+  {
+   "termA": "ritalin",
+   "termB": "ritodrine",
+   "listedA": "Ritalin",
+   "listedB": "ritodrine",
+   "page": 11,
+   "row": 1
+  },
+  {
+   "termA": "ritalin la",
+   "termB": "ritalin sr",
+   "listedA": "Ritalin LA",
+   "listedB": "Ritalin SR",
+   "page": 11,
+   "row": 2
+  },
+  {
+   "termA": "rituxan",
+   "termB": "rituxan hycela",
+   "listedA": "Rituxan",
+   "listedB": "Rituxan Hycela",
+   "page": 11,
+   "row": 6
+  },
+  {
+   "termA": "rocuronium",
+   "termB": "romazicon",
+   "listedA": "rocuronium*",
+   "listedB": "Romazicon*",
+   "page": 11,
+   "row": 10
+  },
+  {
+   "termA": "romidepsin",
+   "termB": "romiplostim",
+   "listedA": "romiDEPsin",
+   "listedB": "romiPLOStim",
+   "page": 11,
+   "row": 12
+  },
+  {
+   "termA": "roxanol",
+   "termB": "roxicet",
+   "listedA": "Roxanol",
+   "listedB": "Roxicet",
+   "page": 11,
+   "row": 17
+  },
+  {
+   "termA": "roxanol",
+   "termB": "roxicodone intensol",
+   "listedA": "Roxanol",
+   "listedB": "Roxicodone Intensol",
+   "page": 11,
+   "row": 18
+  },
+  {
+   "termA": "salagen",
+   "termB": "selegiline",
+   "listedA": "Salagen",
+   "listedB": "selegiline",
+   "page": 11,
+   "row": 23
+  },
+  {
+   "termA": "sandimmune",
+   "termB": "sandostatin",
+   "listedA": "SandIMMUNE",
+   "listedB": "SandoSTATIN",
+   "page": 11,
+   "row": 24
+  },
+  {
+   "termA": "saquinavir",
+   "termB": "sinequan",
+   "listedA": "saquinavir",
+   "listedB": "Sinequan",
+   "page": 11,
+   "row": 26
+  },
+  {
+   "termA": "sarafem",
+   "termB": "serophene",
+   "listedA": "Sarafem",
+   "listedB": "Serophene",
+   "page": 11,
+   "row": 29
+  },
+  {
+   "termA": "saxagliptin",
+   "termB": "sitagliptin",
+   "listedA": "sAXagliptin",
+   "listedB": "SITagliptin",
+   "page": 11,
+   "row": 30
+  },
+  {
+   "termA": "seroquel",
+   "termB": "seroquel xr",
+   "listedA": "Seroquel",
+   "listedB": "Seroquel XR",
+   "page": 11,
+   "row": 34
+  },
+  {
+   "termA": "seroquel",
+   "termB": "serzone",
+   "listedA": "Seroquel",
+   "listedB": "Serzone",
+   "page": 11,
+   "row": 35
+  },
+  {
+   "termA": "seroquel",
+   "termB": "sinequan",
+   "listedA": "Seroquel",
+   "listedB": "Sinequan",
+   "page": 11,
+   "row": 36
+  },
+  {
+   "termA": "sertraline",
+   "termB": "soriatane",
+   "listedA": "sertraline",
+   "listedB": "Soriatane",
+   "page": 11,
+   "row": 39
+  },
+  {
+   "termA": "silodosin",
+   "termB": "sirolimus",
+   "listedA": "silodosin",
+   "listedB": "sirolimus",
+   "page": 11,
+   "row": 41
+  },
+  {
+   "termA": "sinequan",
+   "termB": "singulair",
+   "listedA": "Sinequan",
+   "listedB": "Singulair",
+   "page": 11,
+   "row": 45
+  },
+  {
+   "termA": "sinequan",
+   "termB": "zeniquin",
+   "listedA": "Sinequan",
+   "listedB": "Zeniquin [veterinary drug]",
+   "page": 11,
+   "row": 46
+  },
+  {
+   "termA": "sinequan",
+   "termB": "zonegran",
+   "listedA": "Sinequan",
+   "listedB": "Zonegran",
+   "page": 11,
+   "row": 47
+  },
+  {
+   "termA": "sitagliptin",
+   "termB": "sumatriptan",
+   "listedA": "SITagliptin",
+   "listedB": "SUMAtriptan",
+   "page": 11,
+   "row": 51
+  },
+  {
+   "termA": "slynd",
+   "termB": "syeda",
+   "listedA": "Slynd*",
+   "listedB": "Syeda*",
+   "page": 11,
+   "row": 52
+  },
+  {
+   "termA": "solu cortef",
+   "termB": "solu medrol",
+   "listedA": "Solu-CORTEF",
+   "listedB": "SOLU-Medrol",
+   "page": 11,
+   "row": 54
+  },
+  {
+   "termA": "sonata",
+   "termB": "soriatane",
+   "listedA": "Sonata",
+   "listedB": "Soriatane",
+   "page": 11,
+   "row": 57
+  },
+  {
+   "termA": "sorafenib",
+   "termB": "sunitinib",
+   "listedA": "SORAfenib",
+   "listedB": "SUNItinib",
+   "page": 11,
+   "row": 58
+  },
+  {
+   "termA": "sotalol",
+   "termB": "sudafed",
+   "listedA": "sotalol",
+   "listedB": "Sudafed",
+   "page": 11,
+   "row": 62
+  },
+  {
+   "termA": "spravato",
+   "termB": "steglatro",
+   "listedA": "Spravato*",
+   "listedB": "Steglatro*",
+   "page": 11,
+   "row": 65
+  },
+  {
+   "termA": "sudafed",
+   "termB": "sudafed pe",
+   "listedA": "Sudafed",
+   "listedB": "Sudafed PE",
+   "page": 11,
+   "row": 69
+  },
+  {
+   "termA": "sudafed 12 hour",
+   "termB": "sudafed 12 hour pressure pain",
+   "listedA": "Sudafed 12 Hour",
+   "listedB": "Sudafed 12 Hour Pressure + Pain",
+   "page": 11,
+   "row": 70
+  },
+  {
+   "termA": "sulfadiazine",
+   "termB": "sulfasalazine",
+   "listedA": "sulfADIAZINE",
+   "listedB": "sulfaSALAzine",
+   "page": 11,
+   "row": 75
+  },
+  {
+   "termA": "sulfadiazine",
+   "termB": "sulfisoxazole",
+   "listedA": "sulfADIAZINE",
+   "listedB": "sulfiSOXAZOLE",
+   "page": 11,
+   "row": 76
+  },
+  {
+   "termA": "sumatriptan",
+   "termB": "zolmitriptan",
+   "listedA": "SUMAtriptan",
+   "listedB": "ZOLMitriptan",
+   "page": 11,
+   "row": 81
+  },
+  {
+   "termA": "tacrolimus",
+   "termB": "tamsulosin",
+   "listedA": "tacrolimus",
+   "listedB": "tamsulosin",
+   "page": 11,
+   "row": 85
+  },
+  {
+   "termA": "tanzeum",
+   "termB": "toujeo",
+   "listedA": "Tanzeum",
+   "listedB": "Toujeo",
+   "page": 12,
+   "row": 2
+  },
+  {
+   "termA": "tanzeum",
+   "termB": "tradjenta",
+   "listedA": "Tanzeum",
+   "listedB": "Tradjenta",
+   "page": 12,
+   "row": 3
+  },
+  {
+   "termA": "tanzeum",
+   "termB": "tresiba",
+   "listedA": "Tanzeum",
+   "listedB": "Tresiba",
+   "page": 12,
+   "row": 4
+  },
+  {
+   "termA": "tanzeum",
+   "termB": "trulicity",
+   "listedA": "Tanzeum",
+   "listedB": "Trulicity",
+   "page": 12,
+   "row": 5
+  },
+  {
+   "termA": "tarceva",
+   "termB": "tresiba",
+   "listedA": "Tarceva",
+   "listedB": "Tresiba",
+   "page": 12,
+   "row": 6
+  },
+  {
+   "termA": "taxol",
+   "termB": "taxotere",
+   "listedA": "Taxol",
+   "listedB": "Taxotere",
+   "page": 12,
+   "row": 8
+  },
+  {
+   "termA": "tegretol",
+   "termB": "tegretol xr",
+   "listedA": "Tegretol",
+   "listedB": "Tegretol XR",
+   "page": 12,
+   "row": 10
+  },
+  {
+   "termA": "tegretol",
+   "termB": "tequin",
+   "listedA": "Tegretol",
+   "listedB": "Tequin",
+   "page": 12,
+   "row": 11
+  },
+  {
+   "termA": "tegretol",
+   "termB": "trental",
+   "listedA": "Tegretol",
+   "listedB": "Trental",
+   "page": 12,
+   "row": 12
+  },
+  {
+   "termA": "tenex",
+   "termB": "xanax",
+   "listedA": "Tenex",
+   "listedB": "Xanax",
+   "page": 12,
+   "row": 14
+  },
+  {
+   "termA": "tequin",
+   "termB": "ticlid",
+   "listedA": "Tequin",
+   "listedB": "Ticlid",
+   "page": 12,
+   "row": 16
+  },
+  {
+   "termA": "testoderm",
+   "termB": "testoderm tts",
+   "listedA": "Testoderm",
+   "listedB": "Testoderm TTS",
+   "page": 12,
+   "row": 17
+  },
+  {
+   "termA": "testoderm",
+   "termB": "testoderm with adhesive",
+   "listedA": "Testoderm",
+   "listedB": "Testoderm with Adhesive",
+   "page": 12,
+   "row": 18
+  },
+  {
+   "termA": "testoderm tts",
+   "termB": "testoderm with adhesive",
+   "listedA": "Testoderm TTS",
+   "listedB": "Testoderm with Adhesive",
+   "page": 12,
+   "row": 20
+  },
+  {
+   "termA": "tetanus diptheria toxoid",
+   "termB": "tuberculin purified protein derivative",
+   "listedA": "tetanus diptheria toxoid (Td)",
+   "listedB": "tuberculin purified protein derivative (PPD)",
+   "page": 12,
+   "row": 23
+  },
+  {
+   "termA": "thalomid",
+   "termB": "thiamine",
+   "listedA": "Thalomid",
+   "listedB": "Thiamine",
+   "page": 12,
+   "row": 25
+  },
+  {
+   "termA": "thrombate iii",
+   "termB": "thrombin topical",
+   "listedA": "Thrombate III*",
+   "listedB": "thrombin topical (recombinant)*",
+   "page": 12,
+   "row": 27
+  },
+  {
+   "termA": "tiagabine",
+   "termB": "tizanidine",
+   "listedA": "tiaGABine",
+   "listedB": "tiZANidine",
+   "page": 12,
+   "row": 29
+  },
+  {
+   "termA": "tiazac",
+   "termB": "ziac",
+   "listedA": "Tiazac",
+   "listedB": "Ziac",
+   "page": 12,
+   "row": 30
+  },
+  {
+   "termA": "tnkase",
+   "termB": "t pa",
+   "listedA": "TNKase",
+   "listedB": "t-PA",
+   "page": 12,
+   "row": 35
+  },
+  {
+   "termA": "tobradex",
+   "termB": "tobrex",
+   "listedA": "Tobradex",
+   "listedB": "Tobrex",
+   "page": 12,
+   "row": 36
+  },
+  {
+   "termA": "tolazamide",
+   "termB": "tolbutamide",
+   "listedA": "TOLAZamide",
+   "listedB": "TOLBUTamide",
+   "page": 12,
+   "row": 38
+  },
+  {
+   "termA": "topamax",
+   "termB": "toprol xl",
+   "listedA": "Topamax",
+   "listedB": "Toprol-XL",
+   "page": 12,
+   "row": 40
+  },
+  {
+   "termA": "toujeo",
+   "termB": "tradjenta",
+   "listedA": "Toujeo",
+   "listedB": "Tradjenta",
+   "page": 12,
+   "row": 44
+  },
+  {
+   "termA": "toujeo",
+   "termB": "tresiba",
+   "listedA": "Toujeo",
+   "listedB": "Tresiba",
+   "page": 12,
+   "row": 45
+  },
+  {
+   "termA": "toujeo",
+   "termB": "trulicity",
+   "listedA": "Toujeo",
+   "listedB": "Trulicity",
+   "page": 12,
+   "row": 46
+  },
+  {
+   "termA": "tracleer",
+   "termB": "tricor",
+   "listedA": "Tracleer",
+   "listedB": "Tricor",
+   "page": 12,
+   "row": 48
+  },
+  {
+   "termA": "tradjenta",
+   "termB": "tresiba",
+   "listedA": "Tradjenta",
+   "listedB": "Tresiba",
+   "page": 12,
+   "row": 51
+  },
+  {
+   "termA": "tradjenta",
+   "termB": "trulicity",
+   "listedA": "Tradjenta",
+   "listedB": "Trulicity",
+   "page": 12,
+   "row": 52
+  },
+  {
+   "termA": "tramadol",
+   "termB": "trazodone",
+   "listedA": "traMADol",
+   "listedB": "traZODone",
+   "page": 12,
+   "row": 53
+  },
+  {
+   "termA": "tresiba",
+   "termB": "trulicity",
+   "listedA": "Tresiba",
+   "listedB": "Trulicity",
+   "page": 12,
+   "row": 61
+  },
+  {
+   "termA": "tromethamine",
+   "termB": "trophamine",
+   "listedA": "tromethamine",
+   "listedB": "Trophamine",
+   "page": 12,
+   "row": 65
+  },
+  {
+   "termA": "tylenol",
+   "termB": "tylenol pm",
+   "listedA": "Tylenol",
+   "listedB": "Tylenol PM",
+   "page": 12,
+   "row": 73
+  },
+  {
+   "termA": "valacyclovir",
+   "termB": "valganciclovir",
+   "listedA": "valACYclovir",
+   "listedB": "valGANciclovir",
+   "page": 12,
+   "row": 78
+  },
+  {
+   "termA": "valcyte",
+   "termB": "valtrex",
+   "listedA": "Valcyte",
+   "listedB": "Valtrex",
+   "page": 12,
+   "row": 79
+  },
+  {
+   "termA": "varivax",
+   "termB": "vzig",
+   "listedA": "Varivax",
+   "listedB": "VZIG (varicella-zoster immune globulin)",
+   "page": 13,
+   "row": 2
+  },
+  {
+   "termA": "venofer",
+   "termB": "vfend",
+   "listedA": "Venofer",
+   "listedB": "Vfend",
+   "page": 13,
+   "row": 4
+  },
+  {
+   "termA": "venofer",
+   "termB": "vimpat",
+   "listedA": "Venofer",
+   "listedB": "Vimpat",
+   "page": 13,
+   "row": 5
+  },
+  {
+   "termA": "vesanoid",
+   "termB": "vesicare",
+   "listedA": "Vesanoid",
+   "listedB": "Vesicare",
+   "page": 13,
+   "row": 6
+  },
+  {
+   "termA": "vesicare",
+   "termB": "vessel care",
+   "listedA": "Vesicare",
+   "listedB": "Vessel Care (nutritional supplement)",
+   "page": 13,
+   "row": 8
+  },
+  {
+   "termA": "vexol",
+   "termB": "vosol",
+   "listedA": "Vexol",
+   "listedB": "Vosol",
+   "page": 13,
+   "row": 10
+  },
+  {
+   "termA": "vfend",
+   "termB": "vimpat",
+   "listedA": "Vfend",
+   "listedB": "Vimpat",
+   "page": 13,
+   "row": 12
+  },
+  {
+   "termA": "vicodin",
+   "termB": "visicol",
+   "listedA": "Vicodin",
+   "listedB": "Visicol",
+   "page": 13,
+   "row": 14
+  },
+  {
+   "termA": "vinblastine",
+   "termB": "vincristine",
+   "listedA": "vinBLAStine",
+   "listedB": "vinCRIStine",
+   "page": 13,
+   "row": 19
+  },
+  {
+   "termA": "viokase",
+   "termB": "viokase 8",
+   "listedA": "Viokase",
+   "listedB": "Viokase 8",
+   "page": 13,
+   "row": 21
+  },
+  {
+   "termA": "vioxx",
+   "termB": "zyvox",
+   "listedA": "Vioxx",
+   "listedB": "Zyvox",
+   "page": 13,
+   "row": 23
+  },
+  {
+   "termA": "viracept",
+   "termB": "viramune",
+   "listedA": "Viracept",
+   "listedB": "Viramune",
+   "page": 13,
+   "row": 24
+  },
+  {
+   "termA": "volumen",
+   "termB": "voluven",
+   "listedA": "Volumen",
+   "listedB": "Voluven",
+   "page": 13,
+   "row": 30
+  },
+  {
+   "termA": "wellbutrin sr",
+   "termB": "wellbutrin xl",
+   "listedA": "Wellbutrin SR",
+   "listedB": "Wellbutrin XL",
+   "page": 13,
+   "row": 35
+  },
+  {
+   "termA": "xanax",
+   "termB": "zantac",
+   "listedA": "Xanax",
+   "listedB": "Zantac",
+   "page": 13,
+   "row": 39
+  },
+  {
+   "termA": "xeloda",
+   "termB": "xenical",
+   "listedA": "Xeloda",
+   "listedB": "Xenical",
+   "page": 13,
+   "row": 40
+  },
+  {
+   "termA": "yasmin",
+   "termB": "yaz",
+   "listedA": "Yasmin",
+   "listedB": "Yaz",
+   "page": 13,
+   "row": 42
+  },
+  {
+   "termA": "zantac",
+   "termB": "zantac 360",
+   "listedA": "Zantac (raNITIdine) [no longer marketed in US]*",
+   "listedB": "Zantac 360 (famotidine)*",
+   "page": 13,
+   "row": 45
+  },
+  {
+   "termA": "zantac",
+   "termB": "zyrtec",
+   "listedA": "Zantac",
+   "listedB": "ZyrTEC",
+   "page": 13,
+   "row": 46
+  },
+  {
+   "termA": "zebeta",
+   "termB": "zetia",
+   "listedA": "Zebeta",
+   "listedB": "Zetia",
+   "page": 13,
+   "row": 51
+  },
+  {
+   "termA": "zegerid",
+   "termB": "zestril",
+   "listedA": "Zegerid",
+   "listedB": "Zestril",
+   "page": 13,
+   "row": 52
+  },
+  {
+   "termA": "zelapar",
+   "termB": "zyprexa zydis",
+   "listedA": "Zelapar (Zydis formulation)",
+   "listedB": "ZyPREXA Zydis",
+   "page": 13,
+   "row": 53
+  },
+  {
+   "termA": "zemplar",
+   "termB": "zemuron",
+   "listedA": "Zemplar*",
+   "listedB": "Zemuron*",
+   "page": 13,
+   "row": 54
+  },
+  {
+   "termA": "zerit",
+   "termB": "zyrtec",
+   "listedA": "Zerit",
+   "listedB": "ZyrTEC",
+   "page": 13,
+   "row": 57
+  },
+  {
+   "termA": "zestril",
+   "termB": "zetia",
+   "listedA": "Zestril",
+   "listedB": "Zetia",
+   "page": 13,
+   "row": 58
+  },
+  {
+   "termA": "zestril",
+   "termB": "zyprexa",
+   "listedA": "Zestril",
+   "listedB": "ZyPREXA",
+   "page": 13,
+   "row": 59
+  },
+  {
+   "termA": "zocor",
+   "termB": "zyrtec",
+   "listedA": "Zocor",
+   "listedB": "ZyrTEC",
+   "page": 13,
+   "row": 66
+  },
+  {
+   "termA": "zolpidem",
+   "termB": "zyloprim",
+   "listedA": "zolpidem",
+   "listedB": "Zyloprim",
+   "page": 13,
+   "row": 68
+  },
+  {
+   "termA": "zostrix",
+   "termB": "zovirax",
+   "listedA": "Zostrix",
+   "listedB": "Zovirax",
+   "page": 13,
+   "row": 70
+  },
+  {
+   "termA": "zovirax",
+   "termB": "zyvox",
+   "listedA": "Zovirax",
+   "listedB": "Zyvox",
+   "page": 13,
+   "row": 73
+  },
+  {
+   "termA": "zyprexa",
+   "termB": "zyrtec",
+   "listedA": "ZyPREXA",
+   "listedB": "ZyrTEC",
+   "page": 13,
+   "row": 79
+  },
+  {
+   "termA": "zyrtec",
+   "termB": "zyrtec d",
+   "listedA": "ZyrTEC",
+   "listedB": "ZyrTEC-D",
+   "page": 14,
+   "row": 6
+  },
+  {
+   "termA": "zyrtec",
+   "termB": "zyrtec itchy eye drops",
+   "listedA": "ZyrTEC (cetirizine)",
+   "listedB": "ZyrTEC Itchy Eye Drops (ketotifen fumarate)",
+   "page": 14,
+   "row": 7
+  }
+ ],
+ "sha256": "70cae7f3fe2bfe8a02185d8e49ea5cdcc3f43c6ce4476d00072e94d1d903f071"
+}

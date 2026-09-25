@@ -1,12 +1,8 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { FieldName } from "@/domain"
-import {
-  CANCELLING,
-  CONFIRMING,
-  DENYING,
-  normalizeAnswer,
-} from "@/features/read-back/answer-vocabulary"
+import { classifyCallerReply, classifyPlainAnswer } from "@/confirmation"
+import { AFFIRMATIONS, FieldName } from "@/domain"
+import { CANCELLING, normalizeAnswer } from "@/features/read-back/answer-vocabulary"
 import { FastPathAction, fastPathFor, NO_FAST_PATH } from "@/features/read-back/fast-path"
 import {
   classifyHeard,
@@ -15,108 +11,44 @@ import {
   reduceReadBack,
 } from "@/features/read-back/read-back-machine"
 
-const SERVER_ROUTE = "app/api/tools/read-back/route.ts"
-
-function serverList(name: string): readonly string[] {
-  const source = readFileSync(SERVER_ROUTE, "utf8")
-  const block = new RegExp(`const ${name} = \\[([^\\]]*)\\]`).exec(source)
-  expect(
-    block,
-    `${name} was not found in ${SERVER_ROUTE}; the browser cannot agree with a list it can no longer read, and a silently missing list would let this test pass while proving nothing`,
-  ).not.toBeNull()
-  return [...(block?.[1] ?? "").matchAll(/"([^"]*)"/g)].map((match) => match[1] ?? "")
-}
-
-describe("the two answer vocabularies cannot drift apart", () => {
-  it("holds exactly the server's confirming words, because a yes the server refuses must not show as a yes here", () => {
-    expect(
-      [...CONFIRMING].sort(),
-      "a word the browser accepts and the server does not renders a confirmation that never wrote anything",
-    ).toEqual([...serverList("CONFIRMING")].sort())
-  })
-
-  it("holds exactly the server's denying words", () => {
-    expect(
-      [...DENYING].sort(),
-      "a denial the browser misses leaves the screen waiting while the server has already moved on",
-    ).toEqual([...serverList("DENYING")].sort())
-  })
-
-  it("strips the same punctuation the server strips, comma included", () => {
-    const source = readFileSync(SERVER_ROUTE, "utf8")
-    expect(
-      source,
-      "a formatted transcript inserts a comma after yes; a browser that keeps it loses a genuine confirmation the server accepted",
-    ).toContain('.replace(/[.!?,]/g, "")')
-    expect(normalizeAnswer(" Yes, ")).toBe("yes")
-  })
-
-  it("agrees with the server's own classifier over a corpus of real recognizer output", () => {
-    const corpus = [
-      "yes",
-      "Yes,",
-      "yeah, that is the one",
-      "correct",
-      "that's right",
-      "confirmed",
-      "right",
-      "no",
-      "nope",
-      "wrong",
-      "not quite",
-      "negative",
-      "uh-huh",
-      "Aha",
-      "mhm",
-      "mm-hmm",
-      "hmm",
-      "Lisinopril, ten milligrams",
-      "it is 10 mg",
-      "",
-      "   ",
-      "that is incorrect",
-      "yes, Lisinopril, ten milligrams",
-    ]
-    const asServer: Readonly<Record<string, string>> = {
-      affirmed: "confirmed",
-      denied: "rejected",
-      cancelled: "unclear",
-      unclear: "unclear",
+describe("the browser reads answers with the server's own classifier", () => {
+  it("holds no confirming or refusing vocabulary of its own", () => {
+    const vocabulary = readFileSync("src/features/read-back/answer-vocabulary.ts", "utf8")
+    const machine = readFileSync("src/features/read-back/read-back-machine.ts", "utf8")
+    for (const source of [vocabulary, machine]) {
+      expect(source).not.toMatch(/AFFIRMATIONS|NEGATIONS|CORRECTIONS|BACKCHANNELS|FILLERS/)
     }
-    const browser = corpus.map((entry) => asServer[classifyHeard(entry)])
-    const confirming = serverList("CONFIRMING")
-    const denying = serverList("DENYING")
-    const server = corpus.map((entry) => {
-      const text = normalizeAnswer(entry)
-      if (confirming.some((c) => text === c || text.startsWith(`${c} `))) {
-        return "confirmed"
-      }
-      if (denying.some((d) => text === d || text.startsWith(`${d} `))) {
-        return "rejected"
-      }
-      return "unclear"
-    })
-    expect(
-      browser,
-      "every disagreement here is a screen that says one thing while the order holds another",
-    ).toEqual(server)
+    expect(machine).toContain('from "@/confirmation"')
   })
 
-  it("keeps cancellation out of the confirming and denying lists, so it can never read as consent", () => {
+  it("returns the shared classifier's verdict for everything that is not a cancellation", () => {
+    for (const phrase of ["yes", "Yes,", "no", "yeah, no", "uh-huh", "it is 10 mg", ""]) {
+      expect(classifyHeard(phrase), phrase).toBe(classifyPlainAnswer(phrase))
+    }
+  })
+
+  it("strips the same punctuation a formatted transcript inserts", () => {
+    expect(normalizeAnswer(" Yes, ")).toBe("yes")
+    expect(classifyHeard("Yes,")).toBe("affirmed")
+  })
+
+  it("keeps cancellation out of the confirming list, so it can never read as consent", () => {
     for (const word of CANCELLING) {
       expect(
-        CONFIRMING,
+        AFFIRMATIONS.has(word),
         `${word} cancels the read-back; treated as a yes it would write a value the caller was trying to withdraw`,
-      ).not.toContain(word)
+      ).toBe(false)
       expect(classifyHeard(word)).toBe("cancelled")
     }
   })
 
   it("does not let a cancellation reach the server as a confirmation", () => {
-    expect(
-      serverList("CONFIRMING").some((word) => CANCELLING.includes(word)),
-      "the server has no cancel vocabulary; a cancel that mapped onto a server confirming word would write the value",
-    ).toBe(false)
+    for (const word of CANCELLING) {
+      expect(
+        classifyCallerReply({ text: word, valueText: "Lisinopril" }).verdict,
+        "the server has no cancel vocabulary; a cancel it read as a yes would write the value",
+      ).not.toBe("confirmed")
+    }
   })
 })
 

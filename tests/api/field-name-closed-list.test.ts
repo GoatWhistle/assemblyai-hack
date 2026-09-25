@@ -3,8 +3,7 @@ import { POST as proposeField } from "@app/api/tools/propose-field/route"
 import { POST as readBack } from "@app/api/tools/read-back/route"
 import { beforeEach, describe, expect, it } from "vitest"
 import { FIELD_NAMES, FieldName } from "@/domain"
-import { intakeFor } from "@/tools"
-import { call, refusalText, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { call, intake, refusalText, resetToolEnvironment, seedTurn } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -25,7 +24,6 @@ type Body = Record<string, unknown>
 function proposeWith(field: string): Promise<Response> {
   return proposeField(
     call("propose-field", {
-      session_id: SESSION,
       field,
       value: "thirty",
       transcript_hint: "thirty",
@@ -36,7 +34,6 @@ function proposeWith(field: string): Promise<Response> {
 function readBackWith(field: string, candidateId: string): Promise<Response> {
   return readBack(
     call("read-back", {
-      session_id: SESSION,
       field,
       candidate_id: candidateId,
       utterance: "Confirming: thirty. Correct?",
@@ -47,7 +44,7 @@ function readBackWith(field: string, candidateId: string): Promise<Response> {
 
 describe("a field name is on the closed list or the write is refused", () => {
   it("refuses every prototype-bearing name at propose_field with a 400", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     for (const field of POLLUTING_NAMES) {
       const response = await proposeWith(field)
       expect(
@@ -63,7 +60,7 @@ describe("a field name is on the closed list or the write is refused", () => {
   })
 
   it("leaves Object.prototype untouched after the attempt", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     for (const field of POLLUTING_NAMES) {
       await proposeWith(field)
     }
@@ -78,13 +75,13 @@ describe("a field name is on the closed list or the write is refused", () => {
       "an own property on Object.prototype is the durable damage, and it survives the request that caused it",
     ).toBe(false)
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "no rejected name may leave a trace in the order either",
     ).toBe(0)
   })
 
   it("refuses unknown and near-miss names rather than storing them as text", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     for (const field of UNKNOWN_NAMES) {
       const response = await proposeWith(field)
       expect(
@@ -95,13 +92,13 @@ describe("a field name is on the closed list or the write is refused", () => {
   })
 
   it("keeps the order keyed only by names from the closed list", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     await proposeWith("quantity")
     for (const field of [...POLLUTING_NAMES, ...UNKNOWN_NAMES]) {
       await proposeWith(field)
     }
 
-    const state = intakeFor(SESSION)
+    const state = await intake()
     for (const candidate of state.candidates.values()) {
       expect(
         FIELD_NAMES.includes(candidate.field),
@@ -117,14 +114,13 @@ describe("a field name is on the closed list or the write is refused", () => {
   })
 
   it("refuses a read_back whose field disagrees with the candidate it names", async () => {
-    seedTurn("Jane Doe", 0.5)
+    await seedTurn("Jane Porter", 0.5)
     const proposal = (await (
       await proposeField(
         call("propose-field", {
-          session_id: SESSION,
           field: FieldName.PatientName,
-          value: "Jane Doe",
-          transcript_hint: "Jane Doe",
+          value: "Jane Porter",
+          transcript_hint: "Jane Porter",
         }),
       )
     ).json()) as Body
@@ -145,13 +141,13 @@ describe("a field name is on the closed list or the write is refused", () => {
       "the response reports the field the candidate was actually proved for, so the audit record cannot say one field while the write meant another",
     ).toBe(FieldName.PatientName)
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "nothing is written under either name when the two disagree",
     ).toBe(0)
   })
 
   it("refuses a read_back naming a field outside the closed list", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     const proposal = (await (await proposeWith("quantity")).json()) as Body
 
     for (const field of POLLUTING_NAMES) {
@@ -162,13 +158,13 @@ describe("a field name is on the closed list or the write is refused", () => {
       ).toBe(400)
     }
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "the order stays empty, which is the property that matters rather than the status code",
     ).toBe(0)
   })
 
   it("still lets a real field name through, so the closed list is not refusing everything", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     const response = await proposeWith("quantity")
 
     expect(
@@ -183,10 +179,9 @@ describe("a field name is on the closed list or the write is refused", () => {
   })
 
   it("commits an order whose keys all came from the closed list", async () => {
-    seedTurn("thirty", 0.99)
+    await seedTurn("thirty", 0.99)
     const response = await commitOrder(
       call("commit-order", {
-        session_id: SESSION,
         full_order_read_back: "Reading the whole order back.",
         caller_confirmed: true,
       }),

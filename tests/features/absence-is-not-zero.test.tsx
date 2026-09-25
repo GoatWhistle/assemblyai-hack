@@ -12,7 +12,6 @@ import { IntakeRail } from "@/features/intake/intake-rail"
 import { confidenceFigures, errorRateFigures } from "@/features/metrics/measured-figures"
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { Counted, NOT_OBSERVED } from "@/shared/ui/data-display/counted"
-import { FigureWithMethod, NOT_MEASURED } from "@/shared/ui/data-display/figure-with-method"
 
 const ABSENCE_NOTE = "Nothing has been observed, so this is absence rather than a clean run."
 
@@ -135,22 +134,6 @@ describe("the rail says nothing was proposed rather than counting zero", () => {
 })
 
 describe("a published figure over an empty set reads as not measured", () => {
-  it("renders a null value as words on the measurements page", () => {
-    render(
-      <FigureWithMethod
-        name="LASA catch rate"
-        value={null}
-        meaning="What the gate stopped."
-        command="make eval"
-        setDescription="the sealed held-out set"
-      />,
-    )
-    expect(
-      screen.getByText(NOT_MEASURED),
-      "a sealed set must not be reported as a measured zero",
-    ).toBeDefined()
-  })
-
   it("never publishes a ratio whose denominator is zero", () => {
     for (const figure of [...errorRateFigures(), ...confidenceFigures()]) {
       if (figure.value === null) {

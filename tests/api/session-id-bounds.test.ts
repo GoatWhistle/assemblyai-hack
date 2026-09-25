@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from "vitest"
 import { isUsableSessionId, MAX_SESSION_ID_CHARS, usableSessionId } from "@/domain"
 import { createBlobStore } from "@/sessions"
 import { POST as finalize } from "../../app/api/sessions/[id]/finalize/route"
-import { GET as readSession } from "../../app/api/sessions/[id]/route"
 import { POST as postTurn } from "../../app/api/sessions/[id]/turns/route"
 import { POST as commitOrder } from "../../app/api/tools/commit-order/route"
 import { call, refusalText, resetToolEnvironment } from "./harness"
@@ -41,8 +40,8 @@ const HOSTILE_IDS = [
 ]
 
 describe("a session id addresses storage, so it is validated before it is used", () => {
-  beforeEach(() => {
-    resetToolEnvironment()
+  beforeEach(async () => {
+    await resetToolEnvironment()
   })
 
   it("accepts the shape a real session uses", () => {
@@ -83,15 +82,22 @@ describe("a session id addresses storage, so it is validated before it is used",
     expect(response.status).toBe(400)
   })
 
-  it("refuses an empty prefix on the session read route, which would return a stranger's session", async () => {
-    const response = await readSession(
-      new Request("https://readback.example.com/x"),
-      params(""),
+  it("refuses a hostile session id in the tool URL with E_UNKNOWN_SESSION and creates nothing", async () => {
+    const response = await commitOrder(
+      call(
+        "commit-order",
+        { full_order_read_back: "the whole order", caller_confirmed: true },
+        undefined,
+        "../../public/owned",
+      ),
     )
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(404)
+    const body = await response.json()
+    expect(body.code).toBe("E_UNKNOWN_SESSION")
+    expect(body.written_to_order).toBe(false)
   })
 
-  it("refuses a hostile session_id inside a tool call", async () => {
+  it("never addresses a session through a session_id the model put in the body", async () => {
     const response = await commitOrder(
       call("commit-order", {
         session_id: "../../public/owned",
@@ -99,8 +105,12 @@ describe("a session id addresses storage, so it is validated before it is used",
         caller_confirmed: true,
       }),
     )
-    expect(response.status).toBe(400)
-    expect(refusalText(await response.json())).toContain("session_id")
+    const body = await response.json()
+    expect(
+      JSON.stringify(body),
+      "the session is bound by the tool URL; a body field naming another session must not reach storage or the reply",
+    ).not.toContain("public/owned")
+    expect(body.code).not.toBe("E_UNKNOWN_SESSION")
   })
 
   it("the blob store itself refuses an unsafe key, whoever the caller is", async () => {

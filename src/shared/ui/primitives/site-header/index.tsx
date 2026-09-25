@@ -4,7 +4,7 @@ import { Wordmark } from "../wordmark"
 import styles from "./styles.module.css"
 
 export type SiteHeaderProps = {
-  readonly current: "intake" | "how" | "demo" | "metrics" | "start"
+  readonly current: "home" | "live" | "how" | "compare" | "demo" | "metrics" | "order"
   readonly status?: ReactNode
 }
 
@@ -13,16 +13,21 @@ const LINKS: readonly {
   readonly href: string
   readonly label: string
 }[] = [
-  { key: "start", href: "/start", label: "Start here" },
+  { key: "live", href: "/live", label: "Live call" },
   { key: "how", href: "/how-it-works", label: "How it works" },
-  { key: "demo", href: "/demo", label: "Demonstration" },
+  { key: "compare", href: "/compare", label: "Compare" },
+  { key: "demo", href: "/demo", label: "Replay" },
   { key: "metrics", href: "/metrics", label: "Measurements" },
 ]
 
 export function SiteHeader({ current, status }: SiteHeaderProps) {
   return (
     <header className={styles.header}>
-      <Link className={styles.brand} href="/" aria-current={current === "intake" || undefined}>
+      <Link
+        className={styles.brand}
+        href="/"
+        aria-current={current === "home" ? "page" : undefined}
+      >
         <Wordmark />
         <span className={styles.name}>
           Read<span className={styles.nameBack}>back</span>

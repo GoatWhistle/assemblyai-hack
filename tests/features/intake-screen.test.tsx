@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest"
 import { FIELD_NAMES, type GateDecision, policyFor } from "@/domain"
 import { FIELD_LABEL, FIELD_PROOF_NOTE, INTAKE_ORDER } from "@/features/intake/field-language"
 import { IntakeScreen } from "@/features/intake/intake-screen"
-import { DISCLAIMER, PHASE_LABEL, SessionPhase } from "@/features/intake/session-status"
+import { PHASE_LABEL, SessionPhase } from "@/features/intake/session-status"
 import {
   LASA_CANDIDATE,
   LASA_DECISION,
@@ -13,6 +13,7 @@ import {
 } from "@/features/judge-demo/scenario"
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { callerEntry } from "@/features/transcript-view/transcript-entry"
+import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
 
 const decisions = new Map<string, GateDecision>([
   [NAME_DECISION.candidateId, NAME_DECISION],
@@ -84,7 +85,7 @@ describe("the intake screen", () => {
 
   it("carries the medical disclaimer, honestly worded", () => {
     renderScreen()
-    expect(screen.getByText(DISCLAIMER.title)).toBeDefined()
+    expect(screen.getByText(DISCLAIMER_TITLE)).toBeDefined()
     expect(screen.getByText(/Synthetic data only/)).toBeDefined()
     expect(screen.getByText(/No real patients, no real prescriptions/)).toBeDefined()
   })
@@ -92,7 +93,7 @@ describe("the intake screen", () => {
   it("carries the disclaimer before a call has started too", () => {
     renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
     expect(
-      screen.getByText(DISCLAIMER.title),
+      screen.getByText(DISCLAIMER_TITLE),
       "the first screen a judge lands on is the one that most needs the medical disclaimer; it must not live only inside the rail that appears after a session starts",
     ).toBeDefined()
   })
@@ -137,7 +138,7 @@ describe("the intake screen", () => {
     renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
     expect(screen.getByText(/say the patient, the drug/i)).toBeDefined()
     expect(
-      screen.getByRole("link", { name: /run the recorded session/i }),
+      screen.getByRole("link", { name: /run the replay/i }),
       "the recorded route is the one path that always works; offering it as a microphone fallback buries it",
     ).toBeDefined()
     expect(
@@ -156,7 +157,7 @@ describe("the intake screen", () => {
 
   it("links to the demonstration and the measurements exactly once each", () => {
     renderScreen()
-    expect(screen.getAllByRole("link", { name: /^Demonstration$/i })).toHaveLength(1)
+    expect(screen.getAllByRole("link", { name: /^Replay$/i })).toHaveLength(1)
     expect(screen.getAllByRole("link", { name: /^Measurements$/i })).toHaveLength(1)
     expect(screen.getByRole("link", { name: /How it works/i })).toBeDefined()
   })

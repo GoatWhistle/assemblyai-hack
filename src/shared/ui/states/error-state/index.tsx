@@ -6,9 +6,16 @@ export type ErrorStateProps = {
   readonly body: ReactNode
   readonly actions?: ReactNode
   readonly code?: string
+  readonly headingLevel?: "h2" | "h3" | "h4"
 }
 
-export function ErrorState({ title, body, actions, code }: ErrorStateProps) {
+export function ErrorState({
+  title,
+  body,
+  actions,
+  code,
+  headingLevel = "h2",
+}: ErrorStateProps) {
   return (
     <StateShell
       glyph="!"
@@ -16,6 +23,7 @@ export function ErrorState({ title, body, actions, code }: ErrorStateProps) {
       body={body}
       actions={actions}
       alarmed
+      headingLevel={headingLevel}
       note={code === undefined ? undefined : `Reported as ${code}.`}
     />
   )

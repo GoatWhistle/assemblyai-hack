@@ -1,6 +1,6 @@
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { glob } from "node:fs/promises"
-import { basename, dirname, relative, resolve } from "node:path"
+import { basename, dirname, join, relative, resolve } from "node:path"
 
 const TOKENS_DIR = "src/styles/tokens"
 const GLOBAL_SHEET = "src/styles/global.css"
@@ -35,13 +35,7 @@ for (const sheet of modules) {
   }
 
   const owner = folder.startsWith("app/") ? "page.tsx" : "index.tsx"
-  let hasOwner = false
-  for await (const candidate of glob(`${folder}/${owner}`)) {
-    if (candidate) {
-      hasOwner = true
-    }
-  }
-  if (!hasOwner) {
+  if (!existsSync(join(folder, owner))) {
     problems.push(`${sheet} has no ${owner} beside it, so nothing in that folder owns it`)
   }
 }

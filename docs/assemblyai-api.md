@@ -239,6 +239,14 @@ function flushPlayback() {
 ### Configuration parameters
 
 - `agent_id` and the inline fields (`system_prompt`, `greeting`, `tools`, `input`, `output`) are **mutually exclusive**. Either a binding to a stored agent from `POST /v1/agents`, or everything inline.
+- **Consequence for session binding, decided 24 September 2026 from the line above, not
+  from a paid run.** A stored agent cannot take a per-session prompt addition through
+  `session.update`, so the server cannot tell the model which order it is working on that
+  way. Readback therefore creates one stored agent per session, puts the session id in the
+  query string of every tool URL (`/api/tools/*?sid=`), and the token route returns that id
+  to the browser. The model never carries the id, so it cannot lose or invent it. The live
+  acceptance call (E2) is what confirms this end to end; until it is recorded, this is a
+  design decision, not an observation.
 - `greeting` and `output` are **immutable after `session.ready`**. The voice cannot be changed on the fly. The rest (`system_prompt`, `tools`, `input.keyterms`, `turn_detection`) can be re-sent with `session.update` in the middle of a conversation.
 - `session.resume` works for **30 seconds** after the connection drops.
 - `input.keyterms` — biasing the recognition towards the domain (names, SKUs, terms).
@@ -299,7 +307,9 @@ ws_app = websocket.WebSocketApp(f'{API_ENDPOINT_BASE_URL}?{urlencode(params_w_to
 - Supported `encoding` values: `pcm_s16le`, `pcm_mulaw`, `opus`, `ogg_opus`, `aac` (ADTS framing).
 - `sample_rate`: **8000–96000 Hz** (ignored for Opus/AAC — there the rate lives in the container).
 - Audio is sent as **binary WebSocket frames** (`OPCODE_BINARY`), not base64.
-- Chunk size: **50–1000 ms** of audio. The examples in the docs use 4096 bytes.
+- Chunk size: **50–1000 ms** of audio. The examples in the docs use 4096 bytes. This
+  rule is stated for Streaming STT; for the Voice Agent socket we have not measured it,
+  and four other submissions send that socket 3–20 ms frames without being closed.
 
 ### The protocol: events and messages
 
@@ -661,7 +671,7 @@ For Streaming STT it is the opposite, a **binary frame**: `ws.send(pcmArrayBuffe
 
 ### 2a. The echo loop: the agent hears itself and interrupts itself
 
-This is not theory. A hackathon entrant has already failed on it: the terminal client of claim-intake-agent warns that **without headphones the agent hears itself and interrupts every utterance** — there is no AEC there at all, and a judge on macOS simply will not get through that path (the claim-intake-agent breakdown).
+This is not theory. Another hackathon entrant has already failed on it: its terminal client warns that **without headphones the agent hears itself and interrupts every utterance** — there is no AEC there at all, and a judge on macOS simply will not get through that path.
 
 The mechanics of the failure: the agent speaks through the speakers → the microphone captures its own voice → `input.speech.started` fires on the agent's voice → playback is flushed → the agent falls silent because of itself. In our case it is worse: the STT socket will return a phantom `Turn`, and words the user never spoke enter the provenance.
 
@@ -680,7 +690,7 @@ const stream = await navigator.mediaDevices.getUserMedia({
 
 The first layer is the browser's AEC through `getUserMedia`. It is mandatory but not sufficient: it suppresses rather than eliminates, and on a loud speaker the residue gets through.
 
-The second layer is that **the capture node is not routed to the output**. `source.connect(worklet)` and nothing more; no `worklet.connect(audioCtx.destination)`. The mistake looks harmless (people add it so they can "hear themselves") and creates a direct loop. Exactly this is noted separately as done correctly in VoiceMed: their capture worklet is never routed to the speakers.
+The second layer is that **the capture node is not routed to the output**. `source.connect(worklet)` and nothing more; no `worklet.connect(audioCtx.destination)`. The mistake looks harmless (people add it so they can "hear themselves") and creates a direct loop. Another submission gets this right: its capture worklet is never routed to the speakers.
 
 The third layer is a **gate for the duration of the agent's speech**. While the agent is talking, audio still goes to the STT socket (otherwise we would lose real interruption), but turns arriving inside the playback window are marked as suspect and take no part in provenance if they match the text of the agent's own utterance. A cheap check: hold the last `transcript.agent` line and compare it with the incoming `Turn`.
 
@@ -743,7 +753,7 @@ Applied to the numbers about timings and closing:
 | Fact | Category | Source |
 |---|---|---|
 | `expires_in_seconds` 1–600, `max_session_duration_seconds` 60–10800 | **Documented** | The parameters of the token endpoints |
-| Chunks of 50–1000 ms, otherwise a close | **Documentation prose** | The text about the audio format; there is no table of codes |
+| Chunks of 50–1000 ms, otherwise a close (Streaming STT only) | **Documentation prose** | The text about the STT audio format; there is no table of codes. For the agent socket: **not measured by us**; four other submissions send 3–20 ms frames and are not closed |
 | Code 1000 on a normal close | **Measured by us** | All 60 sessions of the held-out run, at a 24-second interval |
 | Code 1008 on exceeding the new-session limit | **Measured by us** | A run at one-second intervals: **21 of 40 sockets closed with 1008**. The 3009 documented for this condition did not appear **even once** |
 | Code 3006 on a malformed `keyterms_prompt` format | **Another team's measurement** | A report from another team in the field |
@@ -751,7 +761,7 @@ Applied to the numbers about timings and closing:
 | A session closes after 3 hours | **Documentation prose** | The limits section; the automatic close is not confirmed by a run of ours |
 | The agent socket hangs for ~30 s after the client is lost | **Measured by us** | An observation on a forgotten tab; one measurement, not a series |
 | ~60 s to the socket closing with no audio | **Measured by us** | A single observation; **the exact value is not established and no interval was measured** |
-| `session.resume` lives for 30 s | **Documented** and confirmed externally | The vendor's reference plus an independent implementation: MockMate (`static/js/app.js`, lines 141 and 443) stores the `session_id` from `session.ready` and reuses it in `session.resume` on reconnect at two separate recovery points — the same window, fixed in someone else's code and not only in our reading of the doc |
+| `session.resume` lives for 30 s | **Documented** and confirmed externally | The vendor's reference plus an independent implementation in another submission stores the `session_id` from `session.ready` and reuses it in `session.resume` on reconnect at two separate recovery points — the same window, fixed in someone else's code and not only in our reading of the doc |
 | 5 new sessions per minute on the free tier | **Documentation prose** | The limits section; we did measure the violation — it closes with **1008** |
 | `min_silence`/`max_silence` turn off adaptive pacing and entity-aware waiting until the end of the session | **Documented** | turn-detection-and-interruptions, a verbatim quotation, read 17.09.2026 |
 | `min_turn_silence` 400 ms / `max_turn_silence` 1280 ms, the Streaming STT defaults | **Documented** | The same page, read 17.09.2026 |
@@ -773,7 +783,7 @@ found again, and every row is marked as unconfirmed.
 | `transcription_mode`: `max_accuracy` / `min_latency` | Another team's socket configuration | A direct knob for the accuracy/latency trade-off; we have no such knob |
 | `output.volume` | An agent configuration | Reply volume without rebuilding the graph |
 | `interrupt_response` plus `interruption_delay: 150` | An agent configuration | Controlled interruption instead of hard half-duplex |
-| `reply.done` with `status: "interrupted"` | An observation in someone else's log | Distinguishing a completed reply from an interrupted one; we do not currently distinguish them |
+| `reply.done` with `status: "interrupted"` | An observation in someone else's log | Distinguishing a completed reply from an interrupted one. Since 25 September the client reads `status` and posts it with every agent turn, and a read-back that was interrupted or played for less than its duration minus 300 ms cannot confirm a value. The field's name and values are still someone else's observation until our first live call shows them |
 | `voice_focus` and `voice_focus_threshold` | A socket configuration | We already use the first; not the threshold |
 | `dtmf_collected_arguments` plus `sensitive: true` | A tool configuration | Collecting digits by tone with a sensitivity flag; relevant for DEA and NPI |
 | `end_of_turn_confidence_threshold` | A socket configuration | A confidence threshold for the end of a turn, rather than silence alone |
@@ -818,8 +828,74 @@ session rather than a reconnect. The token for a new session also has to be fres
 
 - The full list of Voice Agent API `voice_id` values — the catalogue is mentioned, but was not found in full in the docs (confirmed: `anna` as the default, `ivy`, `james`, `sophie`, `diego`, `arjun`; the count of 18 EN plus 16 multilingual).
 - The exact schema of the `llm` field in `session.update` (choosing the LLM model for the built-in agent) — not detailed in the WebSocket reference; BYO-LLM is mentioned as supported through an OpenAI-compatible endpoint.
-- The schema of `POST /v1/agents` (the request body when creating a reusable agent) — the endpoint is confirmed, the fields are not documented on the pages studied.
+- The schema of `POST /v1/agents` was undocumented on the pages first studied; it has since been read in the create-agent API spec, see the section below. Whether the vendor accepts our definition built from it is still unconfirmed until a live call.
 - The default values of `vad_threshold` and `interruption_delay` for Streaming STT — the docs say "mode-dependent / model-dependent" with no concrete numbers. `min_turn_silence` and `max_turn_silence` for Streaming STT are documented: 400 ms and 1280 ms respectively — taken from the turn-detection-and-interruptions section, read 17.09.2026 together with the fact about the disabling of adaptive pacing above.
 - The latency of Universal-Streaming English/Multilingual and Whisper-Streaming in ms — not published (only ~150 ms P50 for Universal-3.5 Pro Realtime is confirmed).
 - The exact LLM Gateway rate limits (RPM) per model — only the principle is stated, "per model, per 60-second window".
 - The pages `/docs/voice-agents/tools`, `/docs/llm-gateway/models` and `/docs/speech-to-text/universal-streaming/supported-languages` returned 404 — the data on tool calling and languages was assembled from the API spec, pricing and the AssemblyAI blog.
+
+## The stored-agent schema, read 25 September 2026
+
+Read from the create-agent API spec and the session-configuration page, not from a live
+call. Nothing in this section has been confirmed against the running API yet; the first
+live call (E2) confirms or corrects it, and this section changes with it.
+
+- **A stored agent takes a required top-level `voice: { voice_id }`.** Our definition used
+  a different shape until this reading.
+- **A tool's HTTP method field is named `http_method`,** not `method`.
+- **`tools[].http.headers` is a list of `{ name, value }`, and the documentation says otherwise.**
+  Observed 25 September 2026 on the live API: the create-agent spec describes `headers` as an
+  object of string values, but `POST /v1/agents` answers **422** `"Input should be a valid
+  list"` to an object, **422** `"Field required"` for `name` to a list of `{ key, value }`, and
+  accepts a list of `{ name, value }`. The response masks each header as `{ name, last_set_at }`.
+  Every live session had failed at agent creation with a 502 from our token route until this
+  was found by the first live-smoke run, which is why the rule in this file is that the live
+  run wins over the documentation.
+- **The create response carries the agent's `id`.** `PUT /v1/agents/{id}` updates a stored
+  agent and `DELETE /v1/agents/{id}` removes it. We use the first to make `make agent`
+  idempotent and the second to delete the per-session agent when a session is finalised;
+  `make prune-agents` lists agents that outlived their session and removes them only with
+  `--apply`.
+- **`input.voice_focus` and `input.transcription_mode` exist, but not on a stored agent.**
+  The session-configuration page documents `voice_focus` (near-field by default,
+  far-field; set at connect only) and `transcription_mode` (balanced by default,
+  `min_latency`, `max_accuracy`). The create-agent schema lists only `format`,
+  `turn_detection` and `keyterms` under `input`, and a stored agent excludes inline
+  session fields, so neither can be set in our architecture. Near-field is the default and
+  the one we would choose for a handset; `transcription_mode` stays at the default until a
+  paid run compares it. `transcription_prompt` and `agent_context` are never sent, because
+  a prompt naming drugs biases the recognizer toward the names the LASA rule checks. The
+  reasoning lives in `AGENT_INPUT_NOTE` in `src/agent/session-config.ts`.
+- **The Sessions API, observed 25 September 2026 on a real session.**
+  `GET /v1/sessions?agent_id=<id>&limit=N` filters by agent, which is how our server finds
+  the one session of a per-session agent. The list returns `{ sessions: [{ id, agent_id,
+  status, public_close_reason, duration_seconds, created_at, ended_at }], has_more,
+  response_metadata.next_cursor }`. `GET /v1/sessions/{id}` returns the same fields plus
+  `config` and `artifacts: [{ type: audio | timeline | metadata, url, content_type }]`, where
+  `url` is pre-signed. **The transcript is not in that response**: it is in the timeline
+  JSON behind the pre-signed URL, `{ session_id, started_at_unix_ms, turns[],
+  config_changes[], ended }`, and each turn carries `trigger` (`greeting` or `user_speech`),
+  `user_transcript`, `user_confidence`, `user_speech_started_at_ms`,
+  `user_speech_ended_at_ms`, `agent_text`, `agent_reply_started_at_ms`,
+  `agent_reply_ended_at_ms`, `interrupted_at_ms` and `time_to_first_audio_ms`. **The
+  artifacts are not there at once**: `artifacts` was empty at 0 s and at 2 s after
+  `session.ended`, and present at 5 s. So the vendor witness runs at finalize, not inside a
+  call: `witnessOrder` retries at 0, 2, 3 and 4 s and seals per-field verdicts `witnessed`,
+  `not_witnessed` or `unavailable` into the stored session and the receipt, and finalize
+  never fails because the vendor record is late. The fixture
+  `eval/fixtures/witness/timeline-recorded-shape.json` is now the real shape from
+  `npx tsx scripts/report/probe-witness.ts` (one synthesised caller line, USD 0.0143).
+- **The vendor records pacing values we never sent.** Every product session's
+  vendor-side `config` shows `turn_detection.min_silence: 1000` and `max_silence: 3000`,
+  while our stored agent carries only `vad_threshold` and `interrupt_response`, and a session
+  with no agent records `turn_detection: null`. So the vendor fills these in itself. Whether
+  that means adaptive pacing and entity-aware waiting are off is **not known** and is not
+  claimed either way; the documentation's sentence is about setting them, not about defaults
+  appearing in the record.
+- **`universal-3-6-pro` is accepted on the STT socket, measured 25 September 2026.**
+  `npx tsx scripts/report/probe-stt.ts --model universal-3-6-pro`: `Begin` reported
+  `configuration.model: universal-3-6-pro`, six seconds of silence, close 1000, about
+  $0.001. The same probe with no model named reported `universal-3-5-pro`, so that is still
+  the server default. We stay on `universal-3-5-pro`, pinned: every figure in
+  `eval/REPORT.md` was measured on it, and switching models would leave the report
+  describing a recognizer the product no longer uses. Both probes are in the spend ledger.

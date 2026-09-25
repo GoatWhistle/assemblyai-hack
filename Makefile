@@ -19,6 +19,8 @@ VERIFY_STEPS := lint typecheck test file-length package-size import-cycles packa
 	lint format typecheck test e2e \
 	honest audit-checksums audit-catalog coverage-matrix calibration rarity \
 	ab-gate doctor spend live-runs measure \
+	live-set live-report keyterms-ablation eval-live eval-live-keyterms \
+	check-bundle prune-agents verify-receipt live-smoke deck-markdown \
 	eval eval-control eval-native16 eval-keyterms eval-heldout eval-repeat eval-units \
 	baseline seal-heldout clean
 
@@ -43,19 +45,25 @@ help:
 	@echo ""
 	@printf "  \033[1m%s\033[0m\n" "Evidence. No API key, no cost"
 	@printf "    \033[36m%-16s\033[0m %s\n" "honest" "Reproduce every offline figure, each with the command behind it"
-	@printf "    \033[36m%-16s\033[0m %s\n" "smoke" "Replay the recorded fixtures through the server pipeline"
+	@printf "    \033[36m%-16s\033[0m %s\n" "smoke" "Replay the synthesised fixtures through the server pipeline"
 	@printf "    \033[36m%-16s\033[0m %s\n" "audit-checksums" "Exhaustive coverage of the NPI and DEA checksums"
 	@printf "    \033[36m%-16s\033[0m %s\n" "audit-catalog" "Our own skeleton detector, pointed at the catalogue we ship"
-	@printf "    \033[36m%-16s\033[0m %s\n" "coverage-matrix" "Which mechanism catches which error, and its cost in false asks"
+	@printf "    \033[36m%-16s\033[0m %s\n" "coverage-matrix" "Which mechanism catches which error, and which question each correct value gets"
 	@printf "    \033[36m%-16s\033[0m %s\n" "calibration" "Observed accuracy per reported-confidence bin"
 	@printf "    \033[36m%-16s\033[0m %s\n" "rarity" "Entity error rate stratified by how established the drug is"
-	@printf "    \033[36m%-16s\033[0m %s\n" "ab-gate" "Scenario success and false-ask rate, gate on against gate off"
+	@printf "    \033[36m%-16s\033[0m %s\n" "ab-gate" "What a reflex yes writes: shipped gate, without the pair rule, threshold only"
 	@printf "    \033[36m%-16s\033[0m %s\n" "measure" "Gate decision latency over fixtures. Its live path is not implemented"
-	@printf "    \033[36m%-16s\033[0m %s\n" "doctor" "The stored agent and its tool webhooks answer. Opens no socket"
+	@printf "    \033[36m%-16s\033[0m %s\n" "doctor" "The reference agent matches the source and its tool webhooks answer. Opens no socket"
 	@printf "    \033[36m%-16s\033[0m %s\n" "spend" "What the paid API has cost, from the recorded run ledger"
 	@printf "    \033[36m%-16s\033[0m %s\n" "live-runs" "How many paid runs happened, including the discarded ones"
+	@printf "    \033[36m%-16s\033[0m %s\n" "live-set" "Build the human voice manifest from docs/voice-set.md"
+	@printf "    \033[36m%-16s\033[0m %s\n" "live-report" "The human voice stratum, or not measured when no run exists"
+	@printf "    \033[36m%-16s\033[0m %s\n" "keyterms-ablation" "Human voices with and without LASA names in keyterms, from recorded runs"
+	@printf "    \033[36m%-16s\033[0m %s\n" "verify-receipt" "Check an order receipt offline: make verify-receipt FILE=path"
+	@printf "    \033[36m%-16s\033[0m %s\n" "check-bundle" "No secret and no server module in the built client bundle"
+	@printf "    \033[36m%-16s\033[0m %s\n" "prune-agents" "List stored agents left behind by ended sessions. Dry run"
 	@echo ""
-	@printf "  \033[31m%s\033[0m\n" "These open real recognizer sockets and bill"
+	@printf "  \033[31m%s\033[0m\n" "These open real AssemblyAI sockets and bill"
 	@printf "    \033[36m%-16s\033[0m %s\n" "eval" "Entity Error Rate on the development corpus of LASA terms"
 	@printf "    \033[36m%-16s\033[0m %s\n" "eval-control" "The same, on the safe-drug control corpus"
 	@printf "    \033[36m%-16s\033[0m %s\n" "eval-native16" "The same, on audio synthesised natively at 16 kHz"
@@ -63,10 +71,14 @@ help:
 	@printf "    \033[36m%-16s\033[0m %s\n" "eval-heldout" "The sealed held-out set, opened once against a pre-registered rule"
 	@printf "    \033[36m%-16s\033[0m %s\n" "eval-repeat" "A second run of the development set, recorded beside the first"
 	@printf "    \033[36m%-16s\033[0m %s\n" "eval-units" "Whether milligrams survive recognition, a thousandfold error"
+	@printf "    \033[36m%-16s\033[0m %s\n" "live-smoke" "Six scripted calls, both sockets live. Needs LIVE_SMOKE_CONFIRM_PAID=1 and LIVE_SMOKE_URL"
+	@printf "    \033[36m%-16s\033[0m %s\n" "eval-live" "The human voice set through the recognizer"
+	@printf "    \033[36m%-16s\033[0m %s\n" "eval-live-keyterms" "The same, with LASA names in keyterms, for the ablation"
 	@echo ""
 	@printf "  \033[1m%s\033[0m\n" "Occasional"
 	@printf "    \033[36m%-16s\033[0m %s\n" "build" "Build the production bundle"
 	@printf "    \033[36m%-16s\033[0m %s\n" "fixtures" "Rebuild the socket fixtures the offline checks replay"
+	@printf "    \033[36m%-16s\033[0m %s\n" "deck-markdown" "Regenerate docs/slides.md from the deck in src/features/deck"
 	@printf "    \033[36m%-16s\033[0m %s\n" "corpus" "Build the audio corpora and the control term list"
 	@printf "    \033[36m%-16s\033[0m %s\n" "baseline" "Rewrite every ratchet baseline"
 	@printf "    \033[36m%-16s\033[0m %s\n" "seal-heldout" "Seal the held-out set once, after labelling it"
@@ -209,6 +221,36 @@ spend:
 
 live-runs:
 	$(RUN) "npx tsx scripts/report/live-run-count.ts"
+
+live-set:
+	$(RUN) "npx tsx scripts/build/live-set.ts"
+
+live-report:
+	$(RUN) "npx tsx scripts/report/live-report.ts"
+
+keyterms-ablation:
+	$(RUN) "npx tsx scripts/measure/keyterms-ablation.ts"
+
+verify-receipt:
+	$(RUN) "npx tsx scripts/verify-receipt.ts $(FILE)"
+
+check-bundle:
+	@bash scripts/checks/check-bundle.sh
+
+prune-agents:
+	$(RUN) "npx tsx scripts/report/prune-agents.ts"
+
+live-smoke:
+	$(RUN) "npx playwright test --config tests/live/playwright.config.ts"
+
+deck-markdown:
+	$(RUN) "npx tsx scripts/report/deck-markdown.ts"
+
+eval-live:
+	$(RUN) "npx tsx scripts/measure/measure-live.ts --confirm-paid"
+
+eval-live-keyterms:
+	$(RUN) "npx tsx scripts/measure/measure-live.ts --confirm-paid --lasa-keyterms"
 
 eval:
 	$(RUN) "npx tsx scripts/measure/measure-eer.ts --set eval/dev"

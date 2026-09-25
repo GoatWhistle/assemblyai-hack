@@ -2,239 +2,237 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { EchoGuard } from "@/audio/echo-guard"
-import {
-  type MicrophoneCapture,
-  MicrophoneFailureReason,
-  MicrophonePermissionError,
-  requestMicrophone,
-  startCapture,
-} from "@/audio/microphone"
+import { type MicrophoneCapture, requestMicrophone, startCapture } from "@/audio/microphone"
 import { encodeBase64 } from "@/audio/resample"
-import { type WordSpan, wordSpanFromTurnWord } from "@/domain"
 import { AgentClient } from "@/realtime/agent-client"
-import { closeBothSockets, installExitPath } from "@/realtime/exit-path"
-import {
-  agentPatiencePatch,
-  type Patience,
-  patienceFor,
-  sttPatiencePatch,
-} from "@/realtime/patience"
+import { installExitPath } from "@/realtime/exit-path"
+import { type FrameSink, tapTransport } from "@/realtime/frame-tap"
+import { patienceFor } from "@/realtime/patience"
 import { SttClient } from "@/realtime/stt-client"
-import { TokenMintError } from "@/realtime/tokens"
-import type { TransportFactory } from "@/realtime/transport"
+import { webSocketTransport } from "@/realtime/transport"
 import { createAgentAudioSink } from "./agent-audio"
-import { faultForClose, SessionFault, SessionPhase } from "./session-status"
-import { NOTHING_SOLICITED, type Solicited } from "./solicited-field"
+import { createAgentTurnAssembler } from "./agent-turns"
+import { levelThrottle } from "./level-throttle"
+import {
+  agentEventsFor,
+  releaseHalfDuplex,
+  type SessionWiring,
+  sttEventsFor,
+} from "./session-events"
+import type { FaultDetail, SessionHandles, UseSessionOptions } from "./session-options"
+import { SessionFault, SessionPhase } from "./session-status"
+import { useSessionLifecycle } from "./session-supervision"
+import { createReplyWatchdog } from "./session-timers"
+import { NOTHING_SOLICITED } from "./solicited-field"
+import {
+  abandon,
+  budgetRefusal,
+  detailOf,
+  faultForConnectError,
+  faultForMicrophoneError,
+} from "./start-faults"
+import { usePatienceSync } from "./use-patience-sync"
 
-export type SessionHandles = {
-  readonly phase: SessionPhase
-  readonly fault: SessionFault | null
-  readonly echoDiscards: number
-  readonly level: number
-  readonly agentSpeaking: boolean
-  readonly patience: Patience
-  readonly patienceSwitches: number
-  start: () => Promise<void>
-  stop: () => Promise<void>
-  finishAnswer: () => void
-}
-
-const FAULT_OF_REASON: Readonly<Record<MicrophoneFailureReason, SessionFault>> = Object.freeze({
-  [MicrophoneFailureReason.Denied]: SessionFault.MicrophoneDenied,
-  [MicrophoneFailureReason.NoDevice]: SessionFault.MicrophoneAbsent,
-  [MicrophoneFailureReason.DeviceBusy]: SessionFault.MicrophoneBusy,
-  [MicrophoneFailureReason.InsecureContext]: SessionFault.InsecureContext,
-  [MicrophoneFailureReason.Unknown]: SessionFault.MicrophoneDenied,
-})
-
-function faultForConnectError(error: unknown): SessionFault {
-  if (error instanceof TokenMintError && error.status === 429) {
-    return SessionFault.ConcurrencyReached
-  }
-  return SessionFault.TokenFailed
-}
-
-export type CallerTurn = {
-  readonly transcript: string
-  readonly turnOrder: number
-  readonly isFormatted: boolean
-  readonly words: readonly WordSpan[]
-}
-
-export type UseSessionOptions = {
-  readonly onTranscriptTurn?: (turn: CallerTurn, discarded: boolean) => void
-  readonly onAgentLine?: (text: string) => void
-  readonly onEchoDiscarded?: (overlap: number) => void
-  readonly solicited?: Solicited
-  readonly transport?: TransportFactory
-}
+export type { CallerTurn } from "./session-events"
+export type { FaultDetail, SessionHandles, UseSessionOptions } from "./session-options"
 
 export function useSession(options: UseSessionOptions = {}): SessionHandles {
-  const [phase, setPhase] = useState<SessionPhase>(SessionPhase.Idle)
-  const [fault, setFault] = useState<SessionFault | null>(null)
   const [echoDiscards, setEchoDiscards] = useState(0)
   const [level, setLevel] = useState(0)
   const [agentSpeaking, setAgentSpeaking] = useState(false)
-  const [patienceSwitches, setPatienceSwitches] = useState(0)
+  const [sttModel, setSttModel] = useState<string | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [faultDetail, setFaultDetail] = useState<FaultDetail | null>(null)
   const stt = useRef<SttClient | null>(null)
   const agent = useRef<AgentClient | null>(null)
   const capture = useRef<MicrophoneCapture | null>(null)
   const guard = useRef(new EchoGuard())
-  const applied = useRef<string | null>(null)
+  const bound = useRef<string | null>(null)
   const audioOut = useRef(createAgentAudioSink())
+  const latest = useRef(options)
+  latest.current = options
+
+  const closedSession = useCallback(() => {
+    const id = bound.current
+    bound.current = null
+    if (id !== null) {
+      latest.current.onSessionClosed?.(id)
+    }
+  }, [])
+
+  const life = useSessionLifecycle({
+    stt,
+    agent,
+    capture,
+    audio: audioOut,
+    onTeardown: () => {
+      guard.current.reset()
+      setLevel(0)
+      setAgentSpeaking(false)
+      closedSession()
+    },
+  })
+  const { phase, setPhase, fault, setFault } = life
 
   const solicited = options.solicited ?? NOTHING_SOLICITED
   const patience = patienceFor(solicited.field, solicited.awaitingConfirmation)
-
-  useEffect(() => {
-    const client = stt.current
-    if (phase !== SessionPhase.Live || client === null || !client.isOpen) {
-      return
-    }
-    if (applied.current === patience.name) {
-      return
-    }
-    applied.current = patience.name
-    client.updateConfiguration(sttPatiencePatch(patience))
-    agent.current?.updateTurnDetection(agentPatiencePatch(patience))
-    setPatienceSwitches((previous) => previous + 1)
-  }, [patience, phase])
+  const sync = usePatienceSync(stt, agent, phase, patience, (error) => {
+    setFault(SessionFault.SocketParamRefused)
+    setFaultDetail(detailOf(error))
+  })
 
   useEffect(
     () =>
       installExitPath(() => ({ stt: stt.current, agent: agent.current }), {
         onClosing: () => setPhase(SessionPhase.Closing),
-        onClosed: () => setPhase(SessionPhase.Closed),
+        onClosed: () => {
+          setPhase(SessionPhase.Closed)
+          closedSession()
+        },
       }),
-    [],
+    [setPhase, closedSession],
   )
 
-  const stop = useCallback(async () => {
-    setPhase(SessionPhase.Closing)
-    await closeBothSockets({ stt: stt.current, agent: agent.current })
-    await capture.current?.stop()
-    await audioOut.current.close()
-    capture.current = null
-    stt.current = null
-    agent.current = null
-    guard.current.reset()
-    applied.current = null
-    setLevel(0)
-    setAgentSpeaking(false)
-    setPhase(SessionPhase.Closed)
-  }, [])
-
   const finishAnswer = useCallback(() => {
-    const client = stt.current
-    if (client === null || !client.isOpen) {
-      return
+    if (stt.current?.isOpen === true) {
+      stt.current.forceEndpoint()
     }
-    client.forceEndpoint()
   }, [])
 
   const start = useCallback(async () => {
+    if (agent.current !== null || stt.current !== null) {
+      await life.stop()
+    }
     setFault(null)
+    setFaultDetail(null)
+    setSttModel(null)
+    setSessionId(null)
     setPhase(SessionPhase.RequestingMicrophone)
+    const refusal = await budgetRefusal()
+    if (refusal !== null) {
+      setFault(SessionFault.BudgetExhausted)
+      setFaultDetail(refusal)
+      setPhase(SessionPhase.Blocked)
+      return
+    }
     let stream: MediaStream
     try {
       stream = await requestMicrophone()
     } catch (error) {
-      setFault(
-        error instanceof MicrophonePermissionError
-          ? FAULT_OF_REASON[error.reason]
-          : SessionFault.MicrophoneDenied,
-      )
+      setFault(faultForMicrophoneError(error))
       setPhase(SessionPhase.Blocked)
       return
     }
 
     setPhase(SessionPhase.MintingTokens)
-    const agentClient = new AgentClient({
-      ...(options.transport === undefined ? {} : { transport: options.transport }),
-      events: {
-        onReplyStarted: () => {
-          guard.current.replyStarted()
-          capture.current?.setSttMuted(true)
-          setAgentSpeaking(true)
-        },
-        onReplyDone: () => {
-          guard.current.replyDone()
-          capture.current?.setSttMuted(false)
-          setAgentSpeaking(false)
-        },
-        onAgentTranscript: (text) => {
-          guard.current.noteAgentTranscript(text)
-          options.onAgentLine?.(text)
-        },
-        onReplyAudio: (base64) => audioOut.current.enqueue(base64),
-        onSpeechStarted: () => audioOut.current.interrupt(),
-        onClose: (explanation) => setFault(faultForClose(explanation)),
-      },
+    const epoch = life.epoch()
+    const turns = createAgentTurnAssembler((turn) => latest.current.onAgentTurn?.(turn))
+    const watchdog = createReplyWatchdog(() => {
+      releaseHalfDuplex(wiring)
+      setFault(SessionFault.ReplyStalled)
     })
-    const sttClient = new SttClient({
-      ...(options.transport === undefined ? {} : { transport: options.transport }),
-      events: {
-        onTurn: (turn) => {
-          if (!turn.end_of_turn) {
-            return
-          }
-          const caller: CallerTurn = {
-            transcript: turn.transcript,
-            turnOrder: turn.turn_order,
-            isFormatted: turn.turn_is_formatted,
-            words: turn.words.map((word) => wordSpanFromTurnWord(word)),
-          }
-          const verdict = guard.current.inspectTurn(turn.transcript)
-          if (verdict.discard) {
-            setEchoDiscards((previous) => previous + 1)
-            options.onEchoDiscarded?.(verdict.overlap)
-            options.onTranscriptTurn?.(caller, true)
-            return
-          }
-          options.onTranscriptTurn?.(caller, false)
-        },
-        onClose: (explanation) => setFault(faultForClose(explanation)),
+    const wiring: SessionWiring = {
+      guard: guard.current,
+      audio: audioOut.current,
+      turns,
+      watchdog,
+      activity: () => life.activity(),
+      setSttMuted: (muted) => capture.current?.setSttMuted(muted),
+      setAgentSpeaking,
+      onAgentLine: (text) => latest.current.onAgentLine?.(text),
+      onTranscriptTurn: (turn, discarded) => latest.current.onTranscriptTurn?.(turn, discarded),
+      onEchoDiscarded: (overlap) => {
+        setEchoDiscards((previous) => previous + 1)
+        latest.current.onEchoDiscarded?.(overlap)
       },
-    })
+      onClose: (socket, explanation, expected) => life.closed(socket, explanation, expected),
+      onBound: (binding) => {
+        bound.current = binding.sessionId
+        setSessionId(binding.sessionId)
+        latest.current.onSessionBound?.(binding)
+      },
+      onModel: (model) => {
+        setSttModel(model)
+        latest.current.onRecognizerModel?.(model)
+      },
+      onModelMismatch: (model) => {
+        setSttModel(model)
+        latest.current.onRecognizerModel?.(model)
+        void life.halt(SessionFault.ModelMismatch)
+      },
+      onAgentError: (code, message) => {
+        setFaultDetail({ code, message })
+        setFault(SessionFault.AgentReported)
+      },
+      onAgentAudio: (base64) => latest.current.onAgentAudio?.(base64),
+    }
+    const tap: FrameSink = (frame) => latest.current.onFrame?.(frame)
+    const transport = tapTransport(options.transport ?? webSocketTransport, tap)
+    const agentClient = new AgentClient({ transport, events: agentEventsFor(wiring) })
+    const sttClient = new SttClient({ transport, events: sttEventsFor(wiring) })
 
     try {
       await Promise.all([agentClient.connect(), sttClient.connect()])
     } catch (error) {
       setFault(faultForConnectError(error))
+      setFaultDetail(detailOf(error))
       setPhase(SessionPhase.Blocked)
-      for (const track of stream.getTracks()) {
-        track.stop()
-      }
+      await abandon(stream, agentClient, sttClient)
+      closedSession()
+      return
+    }
+    if (life.epoch() !== epoch) {
+      await abandon(stream, agentClient, sttClient)
       return
     }
 
     agent.current = agentClient
     stt.current = sttClient
-    capture.current = await startCapture(stream, {
-      onSttFrame: (bytes) => {
-        if (guard.current.shouldSendToStt()) {
-          sttClient.sendAudio(bytes)
-          return
-        }
-        sttClient.keepAlive()
-      },
-      onAgentFrame: (samples) => agentClient.sendAudio(samples, encodeBase64),
-      onLevel: (peak) => setLevel(peak),
-    })
-    applied.current = null
+    let opened: Awaited<ReturnType<typeof startCapture>>
+    try {
+      opened = await startCapture(stream, {
+        onSttFrame: (bytes) => {
+          if (guard.current.shouldSendToStt()) {
+            latest.current.onCallerAudio?.(bytes)
+            sttClient.sendAudio(bytes)
+            return
+          }
+          sttClient.keepAlive()
+        },
+        onAgentFrame: (samples) => agentClient.sendAudio(samples, encodeBase64),
+        onLevel: levelThrottle(setLevel),
+      })
+    } catch (error) {
+      setFault(SessionFault.CaptureFailed)
+      setFaultDetail(detailOf(error))
+      setPhase(SessionPhase.Blocked)
+      await abandon(stream, agentClient, sttClient)
+      closedSession()
+      return
+    }
+    if (life.epoch() !== epoch) {
+      await opened.stop()
+      return
+    }
+    capture.current = opened
+    sync.forget()
+    life.begin({ watchdog, releaseHalfDuplex: () => releaseHalfDuplex(wiring) })
     setPhase(SessionPhase.Live)
-  }, [options])
+  }, [options.transport, life, setFault, setPhase, sync.forget, closedSession])
 
   return {
     phase,
     fault,
+    faultDetail,
     echoDiscards,
     level,
     agentSpeaking,
     patience,
-    patienceSwitches,
+    patienceSwitches: sync.switches,
+    sttModel,
+    sessionId,
     start,
-    stop,
+    stop: life.stop,
     finishAnswer,
   }
 }

@@ -76,12 +76,15 @@ describe("the replay is a first-class entry point that never reads as live", () 
   })
 
   it("is offered as a primary action on the intake screen rather than as a microphone fallback", () => {
-    const screenSource = readFileSync("src/features/intake/intake-screen/index.tsx", "utf8")
+    const screenSource = readFileSync(
+      "src/features/intake/intake-screen/intake-prompt/index.tsx",
+      "utf8",
+    )
     expect(
       /No microphone\? Watch the recording/.test(screenSource),
       "framing the replay as what to do when the hardware fails buries the one path that always works",
     ).toBe(false)
-    expect(screenSource).toContain("Run the recorded session")
+    expect(screenSource).toContain("Run the replay")
     expect(screenSource).toContain('tone="primary"')
   })
 })
@@ -141,21 +144,29 @@ describe("one URL lands a judge in the state worth seeing", () => {
     ).toMatch(/highest certainty/i)
   })
 
-  it("has a page at /start that renders the autoplaying replay", () => {
-    const page = readFileSync("app/(pages)/start/page.tsx", "utf8")
+  it("renders the autoplaying replay at the root under ?judge=1, and /start sends old links there", () => {
+    const page = readFileSync("app/(pages)/page.tsx", "utf8")
     expect(page).toMatch(/<JudgeDemo\s[^>]*\bautoplay\b/)
+    expect(page, "the judge flag has to be what switches the replay on").toMatch(
+      /params\.judge === "1"/,
+    )
     expect(page, "an instant entry point that dead-ends is half an entry point").toContain(
       "InstantEntry",
+    )
+    const start = readFileSync("app/(pages)/start/page.tsx", "utf8")
+    expect(start, "an old /start link must still land on the replay").toContain(
+      'redirect("/?judge=1',
     )
   })
 })
 
 describe("the instant entry is rendered by a page, not stranded in the tree", () => {
-  it("offers the instant entry from the site header, so it is findable without the URL", () => {
+  it("offers the judge entry and the live call from the site header, so neither needs the URL", () => {
     const header = readFileSync("src/shared/ui/primitives/site-header/index.tsx", "utf8")
     expect(
       header,
       "a single URL a judge has to be told about is worse than a link they can see",
-    ).toContain('href: "/start"')
+    ).toContain('href="/"')
+    expect(header).toContain('href: "/live"')
   })
 })

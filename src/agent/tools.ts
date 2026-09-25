@@ -2,6 +2,11 @@ import { FIELD_NAMES } from "@/domain"
 
 type ToolExecutionMode = "interactive" | "hold"
 
+export type ToolHeader = {
+  readonly name: string
+  readonly value: string
+}
+
 export type AgentTool = {
   readonly type: "function"
   readonly name: string
@@ -11,22 +16,37 @@ export type AgentTool = {
   readonly timeout_seconds: number
   readonly http: {
     readonly url: string
-    readonly method: "POST"
-    readonly headers: Readonly<Record<string, string>>
+    readonly http_method: "POST"
+    readonly headers: readonly ToolHeader[]
   }
 }
 
 const FIELD_ENUM = [...FIELD_NAMES]
 
-function httpFor(baseUrl: string, path: string, secret: string): AgentTool["http"] {
+const TOOL_SESSION_PARAM = "sid"
+
+function httpFor(
+  baseUrl: string,
+  path: string,
+  secret: string,
+  sessionId: string | undefined,
+): AgentTool["http"] {
+  const url = new URL(`/api/tools/${path}`, baseUrl)
+  if (sessionId !== undefined) {
+    url.searchParams.set(TOOL_SESSION_PARAM, sessionId)
+  }
   return {
-    url: new URL(`/api/tools/${path}`, baseUrl).toString(),
-    method: "POST",
-    headers: { "x-readback-tool-secret": secret },
+    url: url.toString(),
+    http_method: "POST",
+    headers: [{ name: "x-readback-tool-secret", value: secret }],
   }
 }
 
-export function buildTools(baseUrl: string, secret: string): readonly AgentTool[] {
+export function buildTools(
+  baseUrl: string,
+  secret: string,
+  sessionId?: string,
+): readonly AgentTool[] {
   return [
     {
       type: "function",
@@ -54,7 +74,7 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       },
       execution_mode: "interactive",
       timeout_seconds: 10,
-      http: httpFor(baseUrl, "lookup-drug", secret),
+      http: httpFor(baseUrl, "lookup-drug", secret, sessionId),
     },
     {
       type: "function",
@@ -81,7 +101,7 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       },
       execution_mode: "interactive",
       timeout_seconds: 5,
-      http: httpFor(baseUrl, "validate-prescriber", secret),
+      http: httpFor(baseUrl, "validate-prescriber", secret, sessionId),
     },
     {
       type: "function",
@@ -91,11 +111,6 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       parameters: {
         type: "object",
         properties: {
-          session_id: {
-            type: "string",
-            description:
-              "The session id you were given at the start of this call. Every call in one conversation uses the same value.",
-          },
           field: {
             type: "string",
             enum: FIELD_ENUM,
@@ -112,26 +127,21 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
               "The contiguous stretch of the caller's last utterance that this value came from, copied verbatim. Used to locate the source words and their timings and confidence. If you cannot copy it verbatim, say so to the caller instead of guessing.",
           },
         },
-        required: ["session_id", "field", "value", "transcript_hint"],
+        required: ["field", "value", "transcript_hint"],
         additionalProperties: false,
       },
       execution_mode: "interactive",
       timeout_seconds: 15,
-      http: httpFor(baseUrl, "propose-field", secret),
+      http: httpFor(baseUrl, "propose-field", secret, sessionId),
     },
     {
       type: "function",
       name: "read_back",
       description:
-        "Register that you are about to read a value back to the caller and that their next utterance is the answer. Call this immediately before you speak the confirmation sentence, then speak it. The caller's yes or no is interpreted against this registration.",
+        "Register that you are about to read a value back to the caller and that their next utterance is the answer. Call this immediately before you speak the confirmation sentence, then speak it. The caller's yes or no is interpreted against this registration. For a value in a published sound-alike pair the sentence must name every drug of the pair, and only the caller saying one of the names confirms it; if your sentence does not, the result carries the sentence to say instead.",
       parameters: {
         type: "object",
         properties: {
-          session_id: {
-            type: "string",
-            description:
-              "The session id you were given at the start of this call. Every call in one conversation uses the same value.",
-          },
           field: { type: "string", enum: FIELD_ENUM },
           candidate_id: {
             type: "string",
@@ -153,15 +163,15 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
           caller_answer: {
             type: "string",
             description:
-              "Leave this out on the call that registers the read-back. Call read_back a SECOND time with the same candidate_id and the caller's reply copied verbatim once they have answered. That second call is the only path by which a value is ever written to the order, so a value the caller never answered aloud can never be recorded.",
+              "Leave this out on the call that registers the read-back. Call read_back a SECOND time with the same candidate_id and the caller's reply copied verbatim once they have answered. This text is a hint kept for the record, not evidence: the server judges the answer from the recorded speech of your read-back and of the caller's next turn, so a value the caller never answered aloud can never be recorded.",
           },
         },
-        required: ["session_id", "field", "candidate_id", "utterance"],
+        required: ["field", "candidate_id", "utterance"],
         additionalProperties: false,
       },
       execution_mode: "interactive",
       timeout_seconds: 5,
-      http: httpFor(baseUrl, "read-back", secret),
+      http: httpFor(baseUrl, "read-back", secret, sessionId),
     },
     {
       type: "function",
@@ -171,11 +181,6 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
       parameters: {
         type: "object",
         properties: {
-          session_id: {
-            type: "string",
-            description:
-              "The session id you were given at the start of this call. Every call in one conversation uses the same value.",
-          },
           full_order_read_back: {
             type: "string",
             description:
@@ -187,12 +192,12 @@ export function buildTools(baseUrl: string, secret: string): readonly AgentTool[
               "True only if the caller answered yes to the full read-back. Never set this true on your own judgement.",
           },
         },
-        required: ["session_id", "full_order_read_back", "caller_confirmed"],
+        required: ["full_order_read_back", "caller_confirmed"],
         additionalProperties: false,
       },
       execution_mode: "hold",
       timeout_seconds: 30,
-      http: httpFor(baseUrl, "commit-order", secret),
+      http: httpFor(baseUrl, "commit-order", secret, sessionId),
     },
   ]
 }

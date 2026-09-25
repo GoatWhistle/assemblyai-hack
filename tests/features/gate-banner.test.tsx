@@ -106,13 +106,13 @@ describe("the refusal carries its recovery path on the same screen", () => {
     expect(
       status.textContent,
       "the refusal and its recovery must be readable inside one landmark, not scattered across the page",
-    ).toContain("Answer which of the two names you said")
+    ).toContain("Say the drug name itself, not yes")
   })
 
   it("gives the LASA re-ask its own disambiguation instruction, not a generic confirm", () => {
     render(<GateBanner decision={decisionWith(ReasonCode.LasaHit)} />)
     expect(
-      screen.getByText("Answer which of the two names you said"),
+      screen.getByText("Say the drug name itself, not yes"),
       "collapsing the LASA recovery into a plain confirm hides the product's central distinction",
     ).toBeDefined()
   })

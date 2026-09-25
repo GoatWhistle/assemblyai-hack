@@ -1,93 +1,102 @@
 import { expect, test } from "@playwright/test"
 
-test.describe("judge-solo flow", () => {
-  test("the demonstration runs from a single click without a microphone", async ({ page }) => {
-    await page.goto("/demo")
-    await expect(
-      page.getByRole("heading", { name: /forty-second demonstration/i }),
-    ).toBeVisible()
-    await expect(page.getByText(/Ground truth for this recording/i)).toBeVisible()
-    await page.getByRole("button", { name: /Play the recorded session/i }).click()
-    await expect(page.getByRole("button", { name: /^Stop$/ })).toBeEnabled()
-    await expect(page.getByText("bisoprolol 10 mg")).toBeVisible({ timeout: 20000 })
-  })
-
-  test("both arms of the contrast are visible side by side", async ({ page }) => {
-    await page.goto("/demo")
-    await expect(page.getByRole("region", { name: "Gate on" })).toBeVisible()
-    await expect(page.getByRole("region", { name: "Gate off" })).toBeVisible()
-  })
-
-  test("the demonstration page carries the medical disclaimer", async ({ page }) => {
-    await page.goto("/demo")
-    await expect(page.getByText(/not a medical device/i)).toBeVisible()
-    await expect(page.getByText(/Synthetic data only/i)).toBeVisible()
-  })
-
-  test("the gate banner names the LASA reason code once the decision is reached", async ({
-    page,
-  }) => {
-    await page.goto("/demo")
-    await page.getByRole("button", { name: /Play the recorded session/i }).click()
-    await expect(page.getByText("E_LASA_HIT").first()).toBeVisible({ timeout: 20000 })
-    await expect(page.getByText(/Confidence does not decide this field/i)).toBeVisible()
-  })
-})
-
-test.describe("navigation between the three surfaces", () => {
-  test("the intake screen reaches the demonstration and the measurements", async ({ page }) => {
+test.describe("a judge alone, with no microphone and no key", () => {
+  test("the root is the first screen and names both ways in", async ({ page }) => {
     await page.goto("/")
-    await expect(page.getByText("Readback")).toBeVisible()
-    await page.getByRole("link", { name: /Measurements/i }).click()
-    await expect(page.getByRole("heading", { name: "Measurements" })).toBeVisible()
-    await page.getByRole("link", { name: /Recorded demonstration/i }).click()
-    await expect(
-      page.getByRole("heading", { name: /forty-second demonstration/i }),
-    ).toBeVisible()
-  })
-
-  test("every published figure carries the command that produced it", async ({ page }) => {
-    await page.goto("/metrics")
-    await expect(page.getByText("False-ask rate")).toBeVisible()
-    await expect(page.getByText("make eval").first()).toBeVisible()
-    await expect(
-      page.getByText(/A number without a method is not published here/i),
-    ).toBeVisible()
-  })
-
-  test("the close-code table lists the two alert-worthy codes", async ({ page }) => {
-    await page.goto("/metrics")
-    await expect(page.getByRole("cell", { name: /3008/ })).toBeVisible()
-    await expect(page.getByRole("cell", { name: /3009/ })).toBeVisible()
-  })
-})
-
-test.describe("the intake screen at phone width", () => {
-  test("does not scroll horizontally", async ({ page }) => {
-    await page.setViewportSize({ width: 400, height: 900 })
-    await page.goto("/")
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+    await expect(page.getByText(/who pays/i)).toBeVisible()
+    await expect(page.getByText(/who gets the order/i)).toBeVisible()
+    await expect(page.getByRole("link", { name: /watch the 40-second case/i })).toHaveAttribute(
+      "href",
+      "/?judge=1#replay",
     )
-    expect(overflow).toBeLessThanOrEqual(1)
+    await expect(page.getByRole("link", { name: /talk to it live/i })).toHaveAttribute(
+      "href",
+      "/live",
+    )
+    await expect(page.getByRole("region", { name: "Say these three things" })).toBeVisible()
+    await expect(page.getByText(/not a medical device/i).first()).toBeVisible()
   })
 
-  test("keeps the field card readable with its proof and certainty stacked", async ({
+  test("?judge=1 opens the replay, which reaches RE-ASK at certainty 1.00 on its own", async ({
     page,
   }) => {
-    await page.setViewportSize({ width: 400, height: 900 })
-    await page.goto("/")
-    await expect(page.getByText("What proves this value").first()).toBeVisible()
+    await page.goto("/?judge=1")
+    await expect(page.getByRole("region", { name: "Replay" }).first()).toBeVisible()
+    const replay = page.getByRole("region", { name: "Replay" }).first()
+    await expect(replay.getByText(/candidates: Hydromorphone \/ Morphine/).first()).toBeVisible(
+      {
+        timeout: 20000,
+      },
+    )
+    await expect(replay.getByText("RE-ASK").first()).toBeVisible()
+    await expect(replay.getByText("certainty 1.00").first()).toBeVisible()
+    await expect(replay.getByText("E_LASA_HIT").first()).toBeVisible()
+  })
+
+  test("the replay plays from one click; a yes writes the wrong drug and a spoken name the right one", async ({
+    page,
+  }) => {
+    await page.goto("/demo")
+    await page.getByRole("button", { name: /play the replay/i }).click()
+    await expect(page.getByRole("button", { name: /^Stop$/ }).first()).toBeEnabled()
     await expect(
-      page.getByText("What the recognizer claims about itself").first(),
+      page.getByText("morphine 2 mg/mL injection, intravenous", { exact: true }).first(),
+    ).toBeVisible({
+      timeout: 20000,
+    })
+    await expect(
+      page.getByText("hydromorphone 2 mg/mL injection, intravenous", { exact: true }).first(),
     ).toBeVisible()
+    await expect(page.getByRole("region", { name: "Pair rule on" })).toBeVisible()
+    await expect(page.getByRole("region", { name: "Pair rule off" })).toBeVisible()
+  })
+
+  test("old /start links land on the replay", async ({ page }) => {
+    await page.goto("/start")
+    await expect(page).toHaveURL(/\/\?judge=1/)
+  })
+
+  test("the live page opens without starting a call", async ({ page }) => {
+    await page.goto("/live")
+    await expect(page.getByRole("button", { name: "Start listening" })).toBeVisible()
+    await expect(page.getByRole("link", { name: /run the replay/i })).toBeVisible()
+  })
+})
+
+test.describe("with scripts disabled", () => {
+  test.use({ javaScriptEnabled: false })
+
+  test("both entry links are real links that navigate", async ({ page }) => {
+    await page.goto("/")
+    await page.getByRole("link", { name: /watch the 40-second case/i }).click()
+    await expect(page).toHaveURL(/\/\?judge=1#replay$/)
+    await expect(page.getByRole("region", { name: "Replay" }).first()).toBeVisible()
+    await page.goto("/")
+    await page.getByRole("link", { name: /talk to it live/i }).click()
+    await expect(page).toHaveURL(/\/live$/)
+  })
+
+  test("the three things to say and their reason codes are server-rendered", async ({
+    page,
+  }) => {
+    await page.goto("/")
+    const block = page.getByRole("region", { name: "Say these three things" })
+    await expect(block.getByText("E_LASA_HIT")).toBeVisible()
+    await expect(block.getByText("E_VALIDATOR_CHECKSUM")).toBeVisible()
   })
 })
 
 test.describe("keyboard reachability", () => {
-  test("the skip link leads to the order", async ({ page }) => {
+  test("the skip link is the first stop on the root", async ({ page }) => {
     await page.goto("/")
     await page.keyboard.press("Tab")
-    await expect(page.getByRole("link", { name: /Skip to the order/i })).toBeFocused()
+    await expect(page.getByRole("link", { name: /skip to the content/i })).toBeFocused()
+  })
+
+  test("the skip link leads to the order on the live page", async ({ page }) => {
+    await page.goto("/live")
+    await page.keyboard.press("Tab")
+    await expect(page.getByRole("link", { name: /skip to the order/i })).toBeFocused()
   })
 })

@@ -4,11 +4,14 @@ Every figure in this file carries the command that produced it and the size of t
 it came from. A number without both is not published here. A row that has not been
 measured says so; it does not carry a plausible placeholder.
 
-**Status: gate effectiveness is measured; everything that needs the paid API is not.**
-Gate effectiveness runs offline because the gate is a pure function. Entity Error
-Rate, latency and cost all need live sockets and are marked not measured until a key
-exists. The method for each was fixed in advance so a result cannot be chosen after
-seeing it.
+**Status:** Entity Error Rate, finalization delay and socket-open latency are measured on
+the live recognizer over synthesised speech (16 September 2026), and the degraded-audio
+stress set on 25 September 2026. Gate effectiveness is measured offline, because the gate is
+a pure function. Turn-to-turn latency, human voices and reproducibility are not measured.
+Cost is derived from the spend ledger for the 11 runs made since 25 September (`make spend`),
+6 of them live-smoke attempts that failed for local reasons; the seven earlier runs predate the
+ledger and are counted from their artefacts. The method for each was fixed in advance so a result
+cannot be chosen after seeing it.
 
 ## Every threshold in this report is a chosen default, not a measured optimum
 
@@ -18,10 +21,11 @@ never as "that number is correct". They were reasoned from the cost of an error 
 field before any audio existed, and **no run in this report searched for an optimum.**
 
 The distinction matters because the figures around them *are* measurements. The
-coverage matrix says a 0.95 threshold catches 17 of 21 recorded errors and adds 16
-false asks — that is measured, at that threshold. Whether 0.93 or 0.97 would do better
-is **not measured**, and a reader entitled to assume we tuned it would be assuming
-something we did not do.
+coverage matrix measures that 4 of the 21 recorded errors sit at or above 0.95, so a
+threshold alone would accept them, and that the threshold asks about 16 of 59 correct
+values once the pair rule is switched off — measured, at that threshold. Whether 0.93 or
+0.97 would do better is **not measured**, and a reader entitled to assume we tuned it
+would be assuming something we did not do.
 
 The same label applies to observed numbers we did not set: roughly 60 seconds before an
 idle socket closes, 30 seconds of agent-socket lingering, the three-hour STT cap. Those
@@ -32,11 +36,11 @@ appears.
 
 | Discipline | Rule |
 |---|---|
-| Held-out set | Labelled once, sealed, opened only for the final run. Thresholds are tuned on the development set and never on this one. |
+| Held-out set | Labelled once, sealed on 16 September, opened once for scoring on 16 September; its recognizer output is read again only by `ismp-coverage.ts`, for a rule never tuned on it. Thresholds are chosen defaults and were not tuned on any set, this one included. |
 | Repetition | Latency is reported over at least 30 runs, spaced at least 24 seconds apart, because the free tier allows 5 new sessions per minute and each run opens two sockets. |
 | Aggregation | Confidence is aggregated over a span by minimum, never by mean. A mean masks a single failed word, which is the case the product exists to catch. |
 | Negative results | A measurement that contradicts a claim is published with its method. An unverified number from a vendor is not a substitute for a measured one. |
-| Cost control | Entity Error Rate needs the STT socket only, not the agent. Running it through both would cost $12.75 instead of $1.50 and buys nothing. |
+| Cost control | Entity Error Rate needs the STT socket only, not the agent. The agent socket bills USD 4.50 an hour against USD 0.45 for STT (`make spend` prints the rate table), so running it through both would cost eleven times as much and buys nothing. |
 
 ## Entity Error Rate
 
@@ -50,6 +54,13 @@ Measures the recognizer before the gate ever runs.
 
 Measured 16 September 2026 against the live recognizer, `universal-3-5-pro`, 24 s
 between sessions, 100.7 s of audio, **204.2 s of socket time for $0.0255**.
+
+**The development set predates the pair correction of 25 September.** Its 40 terms are
+the 20 pairs as they stood on 16 September, including lisinopril and bisoprolol, which are
+not on the ISMP list (see LASA coverage below). The figures are left as measured: the set
+is a list of drug names read aloud, and its EER does not depend on which list a name is
+cited from. Re-recording it against the corrected table costs about $0.026 and has not
+been spent.
 
 **0.0% is a result about the corpus, not a boast about the recognizer.** Synthetic
 speech from a desktop synthesiser is cleaner than a prescriber on a phone, so this
@@ -68,9 +79,10 @@ report depends on the word-level detail of this particular set.
 
 **What the same run does establish, and it is the useful part:** four of the forty
 terms were heard *correctly* but below the 0.95 threshold for `drugName` —
-`metformin` 0.928, `klonopin` 0.936, `morphine` 0.939, `cefazolin` 0.949. That is a
-**measured false-ask rate of 10%** on recorded confidences rather than assigned ones,
-and it is the price of the threshold, paid on audio where nothing went wrong.
+`metformin` 0.928, `klonopin` 0.936, `morphine` 0.939, `cefazolin` 0.949, below the
+0.95 threshold. That is the threshold's own ask rate on audio where nothing went wrong,
+**4 of 40**, on recorded confidences rather than assigned ones; under the shipped policy
+each of these names is asked about anyway, contrastively, because it is on the list.
 
 **The 52.5% that was not published.** The first full pass reported 52.5% EER with 21
 items transcribing as nothing at confidence 0.000. Before publishing it I checked the
@@ -176,7 +188,9 @@ the gate now distinguishes them: **"morphine sulfate is Schedule II and 5 refill
 heard; a Schedule II prescription may carry none. Shall I record none?"**
 
 This adds no fourth reason to re-ask. It rides the existing validator branch, and
-`make gate-mutation` still kills 11 of 11.
+`make gate-mutation` kills every mutation declared in `scripts/checks/gate-mutations.txt`
+(11 at the time; 12 now). Run on 25 September 2026, it printed:
+`gate mutation: 12/12 branches killed by their own test`.
 
 ### The held-out set, opened once, against a rule fixed before opening it
 
@@ -191,7 +205,7 @@ which seven tests in `tests/eval/heldout-discipline.test.ts` enforce.
 
 **The hypothesis is not supported.** `npx tsx scripts/measure/analyse-rarity.ts --set eval/heldout
 --strata 3` reads the recorded run positionally — the first 20 items are `rare`, the
-next 20 `mid`, the last 20 `common`, exactly the order `scripts/build-heldout-set.ts`
+next 20 `mid`, the last 20 `common`, exactly the order `scripts/build/heldout-set.ts`
 draws them in — and reproduces this table from the committed `result-plain.json`
 without needing the sealed set reopened:
 
@@ -222,8 +236,9 @@ benchmarks untrustworthy, and because the set can only be opened once.
 **What replicated, and it is the part the product rests on.** Overall entity error rate
 **26.7% [17.1%, 39.0%]**, against 27.5% on the control corpus: the recognizer's
 difficulty with rare drug names generalises to names it had never been measured on.
-Four of the 16 errors sat at or above the 0.95 threshold, so a confidence check alone
-would have written them into an order.
+Four of the 16 scored errors sat at or above the 0.95 threshold; two of those four are
+our sampler's typos (next section), so two genuine recognizer errors, `oteseconazole` and
+`chlorthalidone`, would have passed a threshold alone.
 
 ### Our own corpus builder had a defect, and the held-out run exposed it
 
@@ -261,30 +276,30 @@ Our thesis is that recognizer confidence does not protect against homophony. Eve
 figure supporting it in this report is ours, which is the weakest possible position for
 a claim this load-bearing.
 
-A competing submission in the same hackathon published a live run that failed **their
-own** validation and froze the report rather than re-running it. Their caller said
-*HarborHome Repairs*; `universal-3-5-pro` returned **Harbour Rome Repairs**. The
-word-level confidences on the wrong words were **0.408 and 0.385**, while the
-**turn-level confidence was 0.882**.
+A competing submission in the same hackathon published a live run that failed their own
+validation and froze the report rather than re-running it. Their caller said a two-word
+business name; `universal-3-5-pro` returned a three-word homophone of it. The word-level
+confidences on the wrong words were **0.408 and 0.385**, while the **turn-level
+confidence was 0.882**.
 
 That is our argument stated by someone who was not trying to make it:
 
 * A turn can read as confident while the words that matter are not. A system thresholding
   on the turn accepts it; this is why our policy takes the **minimum** confidence across
   the source words and not the mean, and why `E_LOW_CONFIDENCE` names that choice.
-* The substitution is a proper-noun homophone — *Harbour Rome* for *HarborHome* — which
-  no amount of acoustic certainty distinguishes. In their domain it is a company name;
-  in ours it is a drug.
+* The substitution is a proper-noun homophone, which no amount of acoustic certainty
+  distinguishes. In their domain it is a company name; in ours it is a drug.
 
 **What it does not prove.** Their error was caught by low word confidence, so it is
-evidence for our first re-ask reason, not our third. The case our LASA rule exists
+evidence for our first re-ask reason, not our third. The case our pair rule exists
 for — high confidence on a wrong real drug name — remains supported only by our own
-four above-threshold errors across 100 recorded utterances. Naming that limit is the
-point of citing their run at all.
+four above-threshold errors across the 80 utterances of `eval/control` and
+`eval/native16`. Naming that limit is the point of citing their run at all.
 
-Source: EvidenTurn, AssemblyAI Voice Agent Hackathon, observed 17 September 2026. We
-did not reproduce their run and are not asserting their number; we are recording that
-an independent measurement of the same phenomenon exists and where it came from.
+Source: another submission's published run report, AssemblyAI Voice Agent Hackathon,
+observed 17 September 2026; the link is withheld because this report does not name other
+teams. We did not reproduce their run and are not asserting their number; we are
+recording that an independent measurement of the same phenomenon exists.
 
 ### Two of our own guarantees were bypassable, and we found it by attacking them
 
@@ -307,8 +322,8 @@ execution before and after: the same file now fails the check by name.
 Both are fixed, and both fixes were verified the same way — write the exploit, watch it
 pass, apply the fix, watch the same exploit fail. The exploits are kept as tests rather
 than deleted, and the key's absence is now checked against the **built bundle**: after
-`next build` the key appears in exactly `.next/server/app/api/tokens/{stt,agent}/route.js`
-and nowhere in `.next/static`.
+`next build` the key appears only under `.next/server/app/api/` (the two token routes and
+the finalize route, which deletes the per-session agent) and nowhere in `.next/static`.
 
 The secrets check also gained a property it lacked: it now **fails if the key is absent
 from `app/api` entirely**. Before, renaming the variable would have produced a green
@@ -324,7 +339,7 @@ what the checks now contain.
 ### We said DEA and NPI were equally provable. Exhaustive enumeration says otherwise
 
 `make audit-checksums`, every single-digit substitution and every adjacent
-transposition of 200 valid identifiers of each kind — 30 600 mutations, exact coverage
+transposition of 200 valid identifiers of each kind — 32 080 mutations, exact coverage
 rather than an estimate.
 
 | Identifier | Single-digit substitutions | Adjacent transpositions |
@@ -332,8 +347,8 @@ rather than an estimate.
 | NPI, Luhn over 80840 plus nine digits | **100.0%** (18000/18000) | 97.9% (822/840) |
 | DEA, mod-10 over seven digits | **95.2%** (12000/12600) | **100.0%** (640/640) |
 
-`CLAUDE.md` states that "NPI and DEA are provably checkable, so they carry
-`readBackAlways: false`" — one sentence covering both fields. **That is true of NPI and
+An earlier version of our working rules stated that "NPI and DEA are provably
+checkable, so they carry `readBackAlways: false`" — one sentence covering both fields. **That is true of NPI and
 4.8% false of DEA.** The DEA scheme weights alternating digits by 1 and 2 and sums mod
 10, so a substitution that changes a weight-2 digit by five is invisible to it. Luhn
 over the 80840 prefix has no such gap for substitutions, and its own weakness is
@@ -366,8 +381,8 @@ skeleton** — the word with vowels, `y`, `h` removed and `ph` folded to `f`:
 substitution inside an otherwise correct consonant frame, which is what a recognizer
 does when it hears the word but resolves an ambiguous vowel wrongly.
 
-Built into the catalogue as a skeleton index and measured over all **120 recorded
-utterances**:
+Built into the catalogue as a skeleton index and measured over the **80 utterances of
+the two control runs** (`eval/control`, `eval/native16`):
 
 | Figure | Value | Command |
 |---|---|---|
@@ -421,7 +436,9 @@ The last row is the exposed surface. Examples, all from the shipped file:
 | `mglstt` | `migalastat`, `miglustat` |
 | `trsmd` | `torsemide`, `etrasimod` |
 
-**None of these 32 pairs is in our curated ISMP table.** They are not published
+**None of these 32 pairs is in our curated ISMP table.** One of them, migalastat and
+miglustat, is a row of the full 2023 ISMP list (page 8, row 24), so the product rule does
+cover it and a dictated name is asked contrastively. The rest are not published
 look-alike pairs; they are pairs that our own vowel-substitution model says a
 recognizer could confuse, found by running our detector against our own catalogue
 rather than against a regulator's list. `sotalol` is an antiarrhythmic and `istalol`
@@ -442,7 +459,7 @@ What the audit does establish, without any policy change:
   corpus of wrong answers waiting for it.
 * The 32 real pairs bound the gap the previous section admits. The uncovered case is
   not hypothetical, and it is also not large: 32 pairs out of 3730 products.
-* Six tests in `tests/catalog/self-audit.test.ts` pin the classification, including one
+* Eight tests in `tests/catalog/self-audit.test.ts` pin the classification, including one
   that fails if a transposition is ever counted as a distinct drug — the mistake the
   first version of this audit made, which inflated the real-pair count from 32 to 38.
 
@@ -504,8 +521,8 @@ where the `drugName` threshold accepts, observed accuracy is **89.7%**, not 100%
 and 0.963, one occurrence of each pair from `eval/control` and one from
 `eval/native16`. A threshold set anywhere at or below 0.98 accepts all four.
 
-**Stated limitation, not a footnote:** the corpus is synthesised. No open English
-corpus of human speech reading drug names exists, so this measures the recognizer
+**Stated limitation, not a footnote:** the corpus is synthesised. We found no open English
+corpus of human speech reading drug names, so this measures the recognizer
 against synthetic speech, not against human speech. The figure is an indicator of
 relative difficulty, not a clinical accuracy claim.
 
@@ -570,8 +587,9 @@ original `make tokens` defect came from.
 
 ## Latency
 
-Measured in the browser for word-level timings, and server-side where the API reports
-it. The two are labelled separately because they are not the same claim.
+The browser word-to-gate path and the server-side session timings are not measured.
+What is measured: the gate's decision time offline, and the recognizer's own timings on
+live STT sockets. The two are labelled separately because they are not the same claim.
 
 | Metric | N | P50 | P95 | P99 | Source | Command |
 |---|---|---|---|---|---|---|
@@ -586,8 +604,8 @@ it. The two are labelled separately because they are not the same claim.
 | finalization delay | not measured | — | — | — | server | `make measure` |
 
 Word-level timings do not exist in the server-side session record, so word-to-gate
-latency is a browser measurement and is labelled as one rather than presented as
-server-verified.
+latency would be a browser measurement; it is not measured, and it will not be presented
+as server-verified when it is.
 
 **The 1027 ms socket-open P95 published earlier was measured over the control set
 alone (n=40).** Over all 80 recorded sessions — control plus native16, the same 40
@@ -615,8 +633,8 @@ the sending side, and it is not a turn-to-turn conversation figure — that need
 agent socket and a public host for the tool webhooks, neither of which exists here.
 
 **The decision function is not a source of delay**, and that is measurable without any
-socket: over the 18 word spans carried by the synthesised fixtures the gate decides in
-0.024-0.063 ms at the median across five runs, worst case 0.43 ms, after a warm-up
+socket: over the 18 word spans the synthesised fixtures carried when `make measure` was
+run, the gate decides in 0.024-0.063 ms at the median across five runs, worst case 0.43 ms, after a warm-up
 call so the first invocation does not distort the maximum. A range is published rather
 than one figure because a sub-millisecond measurement on a shared machine varies
 between runs by more than the quantity itself. The fixtures being synthesised rather
@@ -627,72 +645,116 @@ extra check slows the conversation: the check costs microseconds, and whatever l
 the product has comes from the recognizer and the model, not from the gate. It is
 explicitly **not** a turn-to-turn figure and does not stand in for one.
 
+The fixtures have since changed and now carry **17** word spans, not 18.
+`npx tsx scripts/measure/latency-budget.ts` times the gate over those 17 in one pass:
+0 of 17 over the 5 ms budget, worst case 0.235 ms. The two figures come from two sets and
+are named as such rather than merged.
+
 ## Gate effectiveness
 
 The two sides of the same mechanism. Publishing only the first would make the metric
 one-sided.
 
-Measured offline against the built pair table and catalogue. This needs no paid call:
-the gate is a pure function, so the comparison runs on a corpus with a known truth.
+### What the pair rule adds when every drug name is read back anyway
 
-| Metric | N | Value | Command |
-|---|---|---|---|
-| mishearings caught, gate on | 20 | **20 / 20** | `make ab-gate` |
-| wrong values written, gate on | 20 | **0** | `make ab-gate` |
-| wrong values written, gate off | 20 | **12** | `make ab-gate` |
-| **false-ask rate, gate on** | 20 | **40.0%** (8 / 20) | `make ab-gate` |
-| **false-ask rate, gate off** | 20 | **40.0%** (8 / 20) | `make ab-gate` |
-| caller repeat rate | not measured | — | `make measure` |
+The shipped policy reads back **every** drug name (`readBackAlways: true`,
+`src/domain/policy.ts`), because the Joint Commission already requires a verbal order to be
+read back in full. So the honest question is not "does the gate ask about a sound-alike
+name" — it asks about every name — but what the pair rule adds to a read-back that already
+happens.
 
-Corpus: 40 candidates on `drugName`, seed 20260916. Twenty carry a mishearing drawn
-from the built pair table; twenty carry the value the human actually said, with
-confidences spanning the 0.95 threshold, because a corpus where every correct value is
-confident cannot measure the cost of the idea at all. Five tests in
-`tests/eval/ab-gate.test.ts` fail if any of these figures stops holding.
+A plain read-back catches a recognizer mishearing only if the caller notices it. A
+caller who expects to hear the name they said can agree to what was read back by reflex,
+and a read-back naming one drug gives them nothing to notice. The pair rule therefore
+changes the **question and the evidence**, not the number of questions:
 
-**False-ask rate is the cost of the idea** — how often the gate asked when the value
-was already correct. It is the only answer to the obvious question of whether the
-agent re-asks constantly, and it is reported next to the catches, not beneath them.
+* For a value in a published pair, the read-back is **contrastive**: it names every drug of
+  the pair with the letters that tell them apart ("morphine, M-O-R, or hydromorphone,
+  H-Y-D" when morphine is heard), and a read-back naming only one of them cannot confirm
+  anything (`E_READBACK_NOT_CONTRASTIVE`).
+* A plain "yes", "correct" or "that's right" to that question writes nothing:
+  `E_LASA_NAMED_ANSWER_REQUIRED`. Only the caller **saying one of the names** confirms
+  (`C_CALLER_NAMED_VALUE`). Saying the partner is a correction: the value becomes the
+  partner, and its provenance is the caller's own words (`E_CALLER_NAMED_LASA_PARTNER`).
+* This is a condition on the confirmation evidence
+  (`src/sessions/confirmation-evidence.ts`, `src/confirmation/named-answer.ts`), not a new
+  branch of `decide()`: the gate keeps exactly three reasons to re-ask.
 
-**The number that matters is that both configurations pay the same 40%.** Those eight
-re-asks are caused by the confidence threshold, which every competing design also has;
-the pair check adds none of its own. What it adds is the twelve mishearings on the row
-above, which a threshold alone accepted at confidences up to 1.00. The cost of the
-idea, measured, is zero extra questions.
+`tests/sessions/contrastive-read-back.test.ts` and `tests/api/contrastive-read-back.test.ts`
+pin each reason code through the real `read_back` route, and `tests/sessions/demo-run.test.ts`
+pins that the two demo arms differ in exactly one policy key, the pair rule, with the
+standing read-back on in both.
+
+### The pair rule against the same policy without it
+
+`npx tsx scripts/measure/ab-gate.ts`, 40 candidates on `drugName`, seed 20260916: twenty
+carry a mishearing inside one of the 20 curated pairs, twenty carry the value the human
+actually said, with assigned confidences spanning the 0.95 threshold. Three arms through
+the same `decide()`:
+
+| Arm | Wrong values written unasked | Wrong values a reflex yes writes | Mishearings put to a contrastive question | Correct values asked | Contrastive asks on correct values | Threshold asks on correct values | Standing read-backs on correct values |
+|---|---|---|---|---|---|---|---|
+| shipped: pair rule, standing read-back, threshold | 0 | 0/20 | 20/20 | 20/20 | 4/20 | 6/20 | 10/20 |
+| without the pair rule: standing read-back, threshold | 0 | 20/20 | 0/20 | 20/20 | 0/20 | 8/20 | 12/20 |
+| threshold only: no pair rule, no standing read-back | 12 | 20/20 | 0/20 | 8/20 | 0/20 | 8/20 | 0/20 |
+
+**The first two rows differ by the pair rule alone.** Both read every drug name back, so
+neither writes a wrong value without asking. What differs is what a reflex "yes" would
+write: every one of the 20 pair mishearings without the rule, none with it. The cost is
+on the correct side: 4 of the 20 correct values are themselves names on the full ISMP
+list, so they get a contrastive question instead of a plain read-back.
+
+The third row is the configuration an earlier version of this table called "gate off":
+a confidence threshold alone, which writes 12 of the 20 mishearings without asking at all.
+**An earlier version compared a gate with the standing read-back switched off against
+that row and called the difference the pair check. That comparison was not the shipped
+gate, and it is withdrawn.**
 
 **Stated limitation:** these confidences are assigned, not recorded, so this table
-describes the decision function exactly and the recognizer not at all. The section
-below repeats the same question against **recorded** confidences from the live runs,
-which is the version that describes both.
+describes the decision function exactly and the recognizer not at all. "A reflex yes
+writes it" is a property of the question asked, not a measured caller behaviour; how
+often a real caller answers a plain read-back by reflex is not measured. The section below
+repeats the question against **recorded** confidences.
 
-### Which mechanism pays for which re-ask, over recorded confidences
+### Which mechanism pays for which ask, over recorded confidences
 
-`make coverage-matrix`, over all 80 utterances of the two live runs
+`npx tsx scripts/measure/coverage-matrix.ts`, over the 80 utterances of the two live runs
 (`eval/control/result-plain.json` and `eval/native16/result-plain.json`): 21 recognizer
 errors and 59 correct values, every confidence recorded from AssemblyAI rather than
-assigned.
+assigned. Each utterance is assigned to the **first** branch the shipped gate takes,
+because that is the order `decide()` evaluates: catalogue, then the pair rule, then the
+confidence threshold, then the standing read-back.
 
-Each utterance is assigned to the **first** mechanism that fires in the gate's own
-branch order, because that is the order `decide()` evaluates and any other assignment
-would be a story rather than a measurement: catalogue absence, then LASA membership,
-then the confidence threshold.
-
-| Mechanism | Errors caught | False asks on correct values |
+| Mechanism | Errors caught | Asks on correct values |
 |---|---|---|
-| catalogue absence | **21 / 21** | **0 / 59** |
-| LASA pair membership | 0 / 21 | 0 / 59 |
-| confidence below threshold | 0 / 21 | **16 / 59** |
-| nothing fired, value accepted | 0 / 21 | 43 / 59 |
+| catalogue absence | 21/21 | 0/59 |
+| another validator | 0/21 | 0/59 |
+| pair rule, contrastive read-back | 0/21 | 21/59 |
+| confidence below threshold | 0/21 | 13/59 |
+| standing read-back by regulation | 0/21 | 25/59 |
+| accepted without a question | 0/21 | 0/59 |
 
-Errors caught by some mechanism: **100.0% [84.5%, 100.0%]** (Wilson, n=21).
-Correct values re-asked: **27.1% [17.4%, 39.6%]** (Wilson, n=59).
+Errors caught before any plain read-back: **100.0% [84.5%, 100.0%]** (Wilson, n=21).
+Correct drug names the shipped gate asks about: **59/59**: 25 by the standing read-back,
+13 by the threshold, 21 by the pair rule. **An earlier version of this table labelled the
+standing read-backs "nothing fired, value accepted" and published 27.1% as the share of
+correct values the gate asked about. Under the shipped policy every correct drug name is
+asked about once; that label was wrong and is withdrawn.**
 
-**Every false ask in the system is charged to the confidence threshold.** Catalogue
-absence caught all 21 errors and asked about none of the 59 correct values, because
-every correct value was a real drug and every error was not. That is the cost
-structure of the idea, measured rather than argued: the mechanism that does the
-catching is free, and the mechanism that costs 16 questions caught nothing the other
-one missed.
+What the mechanisms cost on correct values, separately:
+
+* **The standing read-back** asks every drug name once, by regulation, whatever else fires.
+* **The threshold**, for a drug name, changes the wording of that one question rather than
+  adding one. With the pair rule switched off it takes 16 of the 59, as before.
+* **The pair rule** turns the question contrastive for **21 of 59 correct values,
+  35.6% [24.6%, 48.3%]**, because the rare names of the control corpus include many that
+  are on the full ISMP list (`sirolimus`, `tacrolimus`, `duloxetine`, `aripiprazole` and others).
+  That is the price of applying the rule to every published pair rather than to a list we
+  picked.
+
+The same corpus without the pair rule assigns 16 correct values to the threshold and 43 to
+the standing read-back; the errors are unchanged, because catalogue absence answers first
+for all 21.
 
 **Four of the 21 errors sat at or above the 0.95 threshold** and a confidence check
 alone would have written them into the order:
@@ -704,70 +766,126 @@ alone would have written them into the order:
 | glycopyrronium | glycopyrrhonium | 0.955 |
 | glycopyrronium | glycopyrrhonium | 0.963 |
 
-A threshold at 0.95 catches 17 of 21 and adds 16 false asks. The catalogue catches
-21 of 21 and adds none. This is the product's thesis stated as a table rather than a
-claim.
+**What a read-back costs in time**, printed by the same command: 5 of the 11 policy
+fields are read back by regulation (`drug_name`, `strength`, `quantity`, `sig`,
+`patient_name`). A plain drug-name read-back is 6.0 words on average over the 59 correct
+values, about 2.5 s; a contrastive one naming every published partner is 28.7 words on
+average over the 21 values the list asks about, about 11.8 s, or 9.4 s more. The seconds
+use 2.43 words per second, the desktop synthesiser's rate as the recognizer timed it over
+`eval/control`; **the agent's own voice has not been timed**, and each spelled letter of a
+cue counts as a word, so the contrastive figure overstates the letters.
 
-**Why the LASA row is zero, stated before anyone asks.** Both eval corpora are drawn
-from rare oncology and biologic names to stress the recognizer, and none of the 21
-errors landed on a published LASA pair. The row is zero because of what is in the
-corpus, not because the mechanism is inert: `make ab-gate` above exercises it on 20
-real pair mishearings and it catches 20 of 20 at confidences up to 1.00. The two
-sections measure different things and neither substitutes for the other. A corpus
-that could exercise all three mechanisms at once does not exist yet and is named in
-*What is not measured*.
+**Why the pair-rule row catches no error, stated before anyone asks.** Both eval corpora
+are drawn from rare names to stress the recognizer, and none of the 21 errors landed on a
+published pair: each misheard value is absent from the catalogue, so the catalogue answers
+first. The row is zero because of what is in the corpus, not because the mechanism is
+inert: `make ab-gate` above exercises it on 20 real pair mishearings. A corpus that
+exercises all mechanisms at once does not exist yet and is named in *What is not
+measured*.
 
 **The consonant skeleton names the drug actually spoken in 10 of the 21 errors.**
-This is the corrected figure; an earlier draft of this work said 8 of 11, which was
-wrong — it counted one corpus and mis-stated its size. Six tests in
-`tests/eval/coverage-matrix.test.ts` guard the claims above, including one that fails
-if no error ever sits above the threshold, since a zero there would mean our own data
-does not support the thesis.
+Seven tests in `tests/eval/coverage-matrix.test.ts` guard the claims above, including one
+that fails if no error ever sits above the threshold, since a zero there would mean our
+own data does not support the thesis.
+
+### A caller who corrects themselves inside one utterance
+
+"Lisinopril, no wait, losartan" used to give the agent two values with valid provenance:
+the retracted one was genuinely spoken, so nothing refused it. The value is now reconciled
+against the correction markers of its own turn (`src/confirmation/self-correction.ts`): "no
+wait", "sorry", "I mean", "actually", "scratch that", and "not X, Y". A value whose support
+precedes a marker followed, within four words, by another value of the same kind fails
+`spoken_support` with `E_RETRACTED_VALUE`, which enters the existing validator-failure
+branch (`E_VALIDATOR_COMBO`) rather than a fourth one. "Of the same kind" is a number for
+numeric fields and a catalogue or listed drug name for `drug_name`; for patient names, sig,
+form and route no kind test exists, so a retraction there is not detected, and that is the
+remaining limit. `tests/confirmation/self-correction.test.ts` pins every marker, four phrasings
+that must not fire ("lisinopril, not losartan", "sorry about that", a strength corrected
+after the drug, a name restated after its own retraction), and the route in
+`tests/api/self-correction.test.ts`.
 
 ## LASA coverage
 
-`npx tsx scripts/stitch-lasa.ts`, run directly against the built catalogue:
+### The full ISMP list is the product rule; the curated twenty are the evaluation core
 
-| Figure | Value | Command |
-|---|---|---|
-| pairs in the curated table | **20** | `make data` |
-| pairs with both terms found in the catalogue | **18 / 20** | `npx tsx scripts/stitch-lasa.ts` |
-| pairs with one term found | **2 / 20** | `npx tsx scripts/stitch-lasa.ts` |
-| pairs with neither term found | **0 / 20** | `npx tsx scripts/stitch-lasa.ts` |
-| term match rate, naive exact | **30 / 40 = 75.0%** | `npx tsx scripts/stitch-lasa.ts` |
-| term match rate, salt-stripped lookup (includes proprietary names) | **38 / 40 = 95.0%** | `npx tsx scripts/stitch-lasa.ts` |
+`npx tsx scripts/measure/ismp-coverage.ts`, over `data/lasa-pairs.json`, built by
+`npx tsx scripts/build/lasa.ts` from the 2023 ISMP PDF (URL and SHA-256 recorded in the
+file). `pdftotext -raw` gives the rows in reading order and `pdftotext -layout` gives the
+cell boundaries; a row spanning several lines is resolved by the list's own symmetry,
+since every pair is printed in both directions. Every pair keeps its page and row.
 
-Catalogue build, same command: **116 240** rows read from the FDA NDC file, **56 619**
-after keeping only `HUMAN PRESCRIPTION DRUG`, **11 309** after deduplicating by
-(name, strength, form, route), yielding **3 730** distinct drugs. Never hardcode these:
-the source file is rebuilt daily.
+| Figure | Value |
+|---|---|
+| rows parsed | **1056**, row groups left unresolved **0** |
+| distinct pairs in the full list | **514** |
+| distinct names the product rule checks | **754** |
+| pairs with both names in the catalogue | **204 of 514 (39.7%)** |
+| pairs with one name in the catalogue | 153 of 514 (29.8%) |
+| listed names found in the catalogue only as a brand, mapped to a generic through `proprietaryNames` | 124 |
+| catalogue drugs carrying a name on the list | **502 of 3730 (13.5%)** |
 
-**Corrected figures, and a corrected method.** An earlier version of this table
-reported three sequential stages — naive exact, then salt stripping, then proprietary
-names, at 72%, 92%, 95% — implying three scripted passes. `scripts/stitch-lasa.ts` has
-never had three stages: its single lookup calls `findDrug`, which normalises through
-`normalizeDrugName` (salt stripping) against an index built from
-`[nonproprietaryName, ...proprietaryNames]` (`src/catalog/store.ts`), so salt stripping
-and proprietary-name matching are one pass, not two. The true two-stage figures the
-script actually prints are 75.0% naive and 95.0% after the single stripped-and-proprietary
-lookup, a 20-point gain, not the 72%-to-92%-to-95% staircase the old text described.
-The end state, 95%, was already correct; the middle number and the three-stage
-narrative around it were not.
+The parse refuses to overwrite the committed snapshot below a 40-pair floor, and without
+the PDF `make data` keeps the snapshot rather than falling back.
 
-**Salt stripping plus proprietary matching is worth 20 percentage points here**
-(75.0% to 95.0%), because the catalogue stores `tramadol hydrochloride` where the pair
-says `tramadol`, and `klonopin`/`oxycontin` only appear as proprietary names. The
-figure differs from the 42%-to-52% range quoted for the full ISMP extraction because
-this table is the curated 20 pairs, not the ~960 raw ones.
+**The rule fires on every published pair.** The skeleton distance below is measured, not
+used as a filter: dropping pairs we judge phonetically distant would replace the published
+list with our own guess, which is the one thing the rule must not do.
 
-**Two one-sided pairs remain, not three.** `chlorpropamide` and `klonopin` are missing
-from both `nonproprietaryName` and `proprietaryNames` under the current catalogue
-build; `oxycontin` is not missing — `findDrug` resolves it through `proprietaryNames`,
-which the old text's "missing from `nonproprietaryName`" description was technically
-true of but presented as if it meant absent from the catalogue entirely. All pairs
-still fire regardless: the pair check reads the curated table, not the catalogue, so
-even the two genuinely absent terms fire with their partner and their ISMP row cited.
-Verified by execution, not by inspection.
+| Consonant-skeleton edit distance | Pairs |
+|---|---|
+| 0 | 14 (2.7%) |
+| 1 | 97 (18.9%) |
+| 2 | 174 (33.9%) |
+| 3 | 142 (27.6%) |
+| 4 to 5 | 58 (11.3%) |
+| 6 to 9 | 19 (3.7%) |
+| 10 or more | 10 (1.9%) |
+
+Median distance: 2.
+
+**The cost, measured on correct values:** the full list puts **21 of 59,
+35.6% [24.6%, 48.3%]**, correct values of the control corpus and **6 of 44,
+13.6% [6.4%, 26.7%]**, of the held-out corpus to a contrastive question. The control corpus was drawn to exclude the
+curated pairs, not the full list, so its rare names land on the list often; the held-out
+corpus, stratified by how established a drug is, is the better guide to a routine order.
+
+### Three curated pairs were not rows of the list
+
+Parsing the whole list found that three of the 20 curated pairs, each "checked against one
+line of the list text", were artefacts of `pdftotext -layout`, which draws the two columns
+of a page at slightly different heights: `rifAMPin - rifabutin`, `buprenorphine -
+buPROPion` and `levothyroxine - levETIRAcetam` sat on one line of that text without being
+one row of the list. The reading-order text shows the real rows (`rifabutin - rifapentine`,
+`buprenorphine - HYDROmorphone`, `levothyroxine - liothyronine`), and the list's symmetry
+confirms them. The three were replaced by `rifAMPin - rifAXIMin`, `buPROPion - busPIRone`
+and `levothyroxine - liothyronine`. `tests/lasa/pairs-sourced.test.ts` now requires every
+curated pair to be a row of the parsed list, with page and row, rather than two names on one
+line of the layout text — the check that let the three through.
+
+### The curated tier against the catalogue
+
+`npx tsx scripts/build/stitch-lasa.ts`:
+
+| Figure | Value |
+|---|---|
+| pairs in the curated table | **20** |
+| pairs with both terms found in the catalogue | **20 of 20 (100.0%)** |
+| term match rate, naive exact | **31 (77.5%)** of 40 |
+| term match rate, salt-stripped lookup (includes proprietary names) | **40 (100.0%)** of 40 |
+
+Catalogue build: **3730** distinct drug names in `data/catalog.json`, a committed snapshot
+with its build date, source URL and SHA-256.
+
+**The pair table was corrected on 25 September 2026.** Eight rows the table used to cite
+could not be found in the 2023 ISMP list: lisinopril - bisoprolol, azaTHIOprine -
+azithromycin and ceFAZolin - cefOTAXime are not rows of it at all, and five more
+(clonidine - Klonopin, vinBLAStine - vinCRIStine, sulfADIAZINE - sulfaSALAzine,
+predniSONE - prednisoLONE, CARBOplatin - CISplatin) could not be read as one row of the
+list's four-column layout. The demonstration pair is HYDROmorphone - morphine.
+
+**Salt stripping plus proprietary matching is worth 22.5 percentage points here**
+(77.5% to 100.0%), because the catalogue stores `tramadol hydrochloride` where the pair
+says `tramadol`, and `oxycontin` only appears as a proprietary name.
 
 ## Socket close codes
 
@@ -776,18 +894,27 @@ like a latency outlier.
 
 | Code | Meaning | Count |
 |---|---|---|
-| 1000 | normal | 215, over the 5 runs with a kept artefact (`make live-runs`) |
-| 1008 | rate limiter, billed regardless | 21, all in one discarded run measured at 1 s spacing (see below) |
+| 1000 | normal | 215 over all 7 runs: 192 from the 5 runs with a kept artefact, 23 from the two runs counted from this report's own account (`make live-runs`); 186 more in the 25 September stress run |
+| 1006 | abnormal closure, no close frame | 1, in the 25 September stress run, excluded from scoring |
+| 1008 | rate limiter, billed regardless | 22: 21 in one discarded run measured at 1 s spacing on 16 September (see below), 1 in the 25 September stress run, excluded from scoring |
 | 3007 | malformed audio chunks | not measured |
 | 3008 | three-hour cap reached | not measured |
 | 3009 | session limit exceeded | not measured; the documented condition for it has never produced this code in any run we have made |
 
 ## Honest count of live runs
 
-**command:** `npx tsx scripts/report/live-run-count.ts`. Counts every paid session from the
-artefact each run left behind, so a run cannot be omitted by forgetting to record it.
+**command:** `npx tsx scripts/report/live-run-count.ts`, then `npx tsx scripts/report/spend-report.ts`
+for the ledger. The first counts every paid session from the artefact each run left behind, so a
+run cannot be omitted by forgetting to record it; the second derives cost from
+`eval/spend-ledger.json`, where every paid run since 25 September is recorded when it happens.
+The two sets are disjoint: every artefact run was made on 16 September, before the ledger's first
+entry, so none of them is in the ledger and none of the ledger's runs is among them. The ledger is
+not "behind" the artefact count; it starts where that count stops.
 
-**7 runs left an artefact in this repository**, covering **236 paid sessions**:
+### Before the ledger: 7 runs, 236 sessions, counted from artefacts
+
+**5 left an artefact in this repository (192 sessions)**, and two are counted from this report's
+own account:
 
 | Run | Sessions | Closed 1000 | Closed 1008 |
 |---|---|---|---|
@@ -805,17 +932,49 @@ a 40-session run at 1 s spacing that produced the discarded 52.5% EER figure (19
 limiter explanation. Their socket duration was never recorded, so their cost is
 unknown rather than zero.
 
-**Totals: 236 sessions opened, 21 rate-limiter failures (1008), 0 sessions with any
-other close code.** Socket time is on record for 4 of the 7 runs, 943.2 s in total.
-At USD 0.45 per hour for one streaming socket, that recorded time alone costs
+**Totals over these seven runs: 236 sessions opened, 21 rate-limiter failures (1008), 0
+sessions with any other close code.** Socket time is on record for 4 of the 7 runs, 943.2 s in
+total. At USD 0.45 per hour for one streaming socket, that recorded time alone costs
 **USD 0.1179 — a floor, not a total**, because 56 sessions across the 3 runs with no
 recorded duration are not included and their true cost is higher by an amount nobody
 wrote down.
 
-`eval/spend-ledger.json` was added after these seven runs were made, so it currently
-holds 0 of them; that gap is stated rather than closed by back-filling entries whose
-socket clocks nobody kept. Runs made from now on are recorded by
-`scripts/report/record-spend.ts` at the time they happen, so this gap does not recur.
+### Since the ledger: 12 runs on 25 September, 8 of them failed and billed regardless
+
+`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 12**,
+**runs that did not complete, still billed: 8**, 4066.368 s of socket-open time and
+**derived total: USD 2.5032**, at
+the rates checked on 17 September. The figure is our arithmetic over our own recorded seconds,
+not an invoice. By command:
+
+| Command | Runs | Outcome | USD |
+|---|---|---|---|
+| `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 |
+| `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 |
+| `make live-smoke` | 6 | 6 failed | 2.0956 |
+| `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 |
+| reconciliation from the vendor session list | 1 | failed | 0.0783 |
+
+- **The two stress sweeps** were started 12 s apart by mistake; the second is recorded as failed
+  because two of its sessions closed 1006 and 1008 (see the stress section below).
+- **The six `make live-smoke` attempts failed for local reasons, not on the gate.** They found
+  three real defects in the local path, all since fixed, and then could not run at all, because
+  AudioWorklet does not start in any automated browser on this Windows machine: at most one
+  caller line reached the sockets in any attempt, and no order was committed. Each is kept as a
+  failed run in `eval/live/runs.json` with that diagnosis, because each was billed. Their socket
+  time is the harness wall clock across three sockets (agent, STT, medical), an upper bound.
+- **The reconciliation row** covers diagnostic agent sessions the coordinator opened by hand
+  while tracing the live-smoke failures. The vendor's own session list shows 14 agent sessions
+  on 25 September totalling 1546.0 s of agent socket time; the rows above account for 1490.7 s,
+  and the 55.3 s difference is recorded here at the three-socket rate, so no billed second is
+  left out of the ledger.
+- **The witness probe** opened one agent session with one synthesised caller line and read the
+  vendor's own timeline back (the S2 witness); the timeline it read is committed as
+  `eval/fixtures/witness/timeline-recorded-shape.json`.
+
+**Paid runs on record, artefacts plus ledger: 19.** The account balance a human last read off
+the vendor dashboard is USD 149.93 on 17 September; no later reading is recorded, so no
+vendor-verified figure covers the 25 September runs.
 
 ## Reproducibility: not measured, 0 of 3 sets run twice
 
@@ -869,17 +1028,90 @@ roughly USD 0.05 in total, on the already-recorded set, and has not been spent y
 **The drug-name arm — keyterms containing the LASA-checked names the rules check —
 is refused by name, not merely unrun.** Feeding the recognizer the exact strings the
 rules look for would make the observation depend on the verification: a recognizer
-biased toward `bisoprolol` and `lisinopril` no longer tells you anything independent
+biased toward `morphine` and `hydromorphone` no longer tells you anything independent
 about whether it would have heard either one on its own. If that arm is ever run at
 all, it is a diagnostic that sizes the sacrifice of biasing, never a candidate product
 configuration, and `make keyterms-purity` fails the build if a LASA-checked name ever
 reaches `keyterms_prompt` regardless.
 
+## Does degraded audio turn a name into its published partner
+
+`npx tsx scripts/measure/analyse-stress.ts`, over `eval/stress/result-plain.json`: every
+recording of `eval/dev` and `eval/control` whose spoken name is on the full 2023 ISMP list,
+47 utterances, re-recognized live by `universal-3-5-pro` on 25 September 2026 in five
+conditions: as recorded, through a telephone band (300 to 3400 Hz, 8 kHz mu-law), the same
+with white noise at 10 dB and at 5 dB SNR, and the same sped up by 1.1. The command to
+record it is `npx tsx scripts/measure/measure-eer.ts --set eval/stress`.
+
+**Two sweeps were started 12 s apart by mistake and ran concurrently.** Both are in the spend
+ledger: `...eval-stress-2026-09-25T17:33:10.955Z`, 1205.4 s of socket time, recorded as
+completed, and `...eval-stress-2026-09-25T17:33:23.290Z`, 1296.1 s, recorded as failed; USD
+0.3127 together. The published `eval/stress/result-plain.json` carries `measuredAt`
+2026-09-25T17:33:23.297Z, so it is the file written by the second run, the one the ledger
+marks failed. The concurrency is also the likely cause of the one 1008 below: two sweeps
+together open new sessions faster than the rate limiter allows.
+
+**Two sessions are excluded rather than scored as mishearings.** Of the 188 degraded
+utterances, 186 closed 1000 and are scored. Two closed on a transport error, both in
+phone-snr5, and the command prints them by name: metronidazole closed 1006 after 663 ms, and
+duloxetine closed 1008 after 144261 ms, the rate limiter. An empty transcript from a socket
+that closed on an error measures the transport, not the recognizer, which is the same rule
+that discarded the 52.5% run above.
+
+| Condition | N | Errors, 95% Wilson | Errors at or above threshold | Heard as a listed partner | Confident partner substitutions, 95% Wilson |
+|---|---|---|---|---|---|
+| clean, as recorded on 16 September | 47 | 1 (2.1% [0.4%, 11.1%]) | 0 | 0 | 0 (0.0% [0.0%, 7.6%]) |
+| phone | 47 | 0 (0.0% [0.0%, 7.6%]) | 0 | 0 | 0 (0.0% [0.0%, 7.6%]) |
+| phone-snr10 | 47 | 3 (6.4% [2.2%, 17.2%]) | 0 | 0 | 0 (0.0% [0.0%, 7.6%]) |
+| phone-snr5 | 45 | 14 (31.1% [19.5%, 45.7%]) | 0 | 0 | 0 (0.0% [0.0%, 7.9%]) |
+| phone-fast | 47 | 1 (2.1% [0.4%, 11.1%]) | 0 | 0 | 0 (0.0% [0.0%, 7.6%]) |
+| all degraded conditions | 186 | 18 (9.7% [6.2%, 14.8%]) | 0 | 0 | 0 (0.0% [0.0%, 2.0%]) |
+
+**Confident substitutions to a published partner under degradation:
+0 of 186, 0.0% [0.0%, 2.0%].** The hard claim of the product did not show up on this corpus, and we say so
+first. Noise did what noise does: at 5 dB SNR 14 of the 45 scored names were misheard. But every
+one of the 18 errors sat below the 0.95 field threshold, so the first reason to re-ask would
+have caught each of them, and none landed on a listed partner of the spoken name.
+
+What the run does show is the shape the pair rule exists for, one step short. The recognizer
+turned names into **other real drugs**: azacitidine into azithromycin at 0.783, sulfadiazine
+into thalidomide at 0.840, silodosin into thalidomide at 0.866, and apixaban into "abazaban" at
+0.905. A real, catalogue-valid drug in place of the one said is exactly the error that
+passes a catalogue check; these did not pass the threshold, and the pairs are not on the list.
+
+**What this n is not enough for.** Desktop TTS voices, 47 names, white noise rather than a
+room, and one run. It bounds the rate of confident partner substitutions on this corpus
+below about 2%, and it says nothing about human speech, accents or real telephone lines.
+The pair rule rests on the published list and on people mishearing these names, which ISMP
+documents, not on this corpus producing the error. The synthesised replay that stages
+hydromorphone heard as morphine at 1.00 is labelled as staged for that reason.
+
+## Human voices
+
+The corpus above is spoken by TTS. This stratum is spoken by three team members reading
+`docs/voice-set.md` once each, 25 lines per speaker. The manifest is built by
+`npx tsx scripts/build/live-set.ts`, which records a sha256 per WAV, and the paid pass is
+`npx tsx scripts/measure/measure-live.ts --confirm-paid` (about USD 0.10, human approval
+required). Until the audio exists, the command below prints exactly this:
+
+```
+human voices: not measured (0 of 75 audio files present)
+pauses between identifier digit groups: not measured
+keyterms ablation on human voices: not measured
+```
+
+Command: `npx tsx scripts/report/live-report.ts`. Once measured it prints the Wilson
+interval overall and one row per speaker with its n, every misheard line by id, the count
+of natural LASA mishearings (a zero is printed as zero), identifiers read back digit for
+digit, false confirmations on the two non-command lines, the pause distribution between
+identifier digit groups against the 400 ms streaming default (E8), and the keyterms
+ablation with LASA names in `keyterms_prompt` for that measurement only (E5).
+
 ## What is not measured, and why
 
 | Not measured | Reason |
 |---|---|
-| Accuracy on human speech | No open English corpus of drug-name speech exists. Synthesising it is the honest fallback, and the limitation is stated wherever the number appears. |
+| Accuracy on human speech | We found no open English corpus of drug-name speech. Synthesising it is the honest fallback, and the limitation is stated wherever the number appears. |
 | NPI existence against the live registry | Our NPI numbers are synthetic, generated to satisfy the checksum. Querying the real registry would return "not found" for arithmetically valid numbers and would only add noise. |
-| Threshold optima | Thresholds are initial values reasoned from the cost of an error per field. Tuning happens on the development set; the held-out set measures the result once. |
+| Threshold optima | Thresholds are chosen defaults reasoned from the cost of an error per field. They were not tuned on any set; the held-out set was sealed on 16 September and opened once. |
 | Keyterms with drug names included | Methodologically invalid as a product option, since it biases the recognizer toward the exact strings the rules look for. If run at all, it is a diagnostic that sizes the sacrifice, never an alternative configuration. |

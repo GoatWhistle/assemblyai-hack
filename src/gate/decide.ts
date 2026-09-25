@@ -6,9 +6,11 @@ import {
   type FieldPolicy,
   GateAction,
   type GateDecision,
+  type LasaRisk,
   ReasonCode,
   VerdictOutcome,
 } from "@/domain"
+import { lasaRiskFor } from "@/lasa"
 import {
   abortUtterance,
   acceptUtterance,
@@ -57,6 +59,15 @@ function emitter(c: FieldCandidate, policy: FieldPolicy): Emit {
       evidence: Object.freeze({ ...evidence, ...(input.extra ?? {}) }),
       confirmationMode: input.confirmationMode ?? null,
     })
+}
+
+function pairRisk(c: FieldCandidate): LasaRisk {
+  const value = c.normalizedValue
+  if (value === null) {
+    return c.lasa
+  }
+  const derived = lasaRiskFor(String(value))
+  return derived.hit ? derived : c.lasa
 }
 
 export function decide(c: FieldCandidate, policy: FieldPolicy): GateDecision {
@@ -120,22 +131,23 @@ export function decide(c: FieldCandidate, policy: FieldPolicy): GateDecision {
       return d({
         action: GateAction.AskWhichPart,
         reasonCode: ReasonCode.ValidatorCombo,
-        agentUtterance: comboUtterance(c.verdict.detail),
+        agentUtterance: comboUtterance(c.verdict.detail, c.verdict.evidence.partnersWithCombo),
         extra: { ...c.verdict.evidence },
       })
     default:
       break
   }
 
-  if (policy.lasaChecked && c.lasa.hit) {
+  const lasa = pairRisk(c)
+  if (policy.lasaChecked && lasa.hit) {
     return d({
       action: GateAction.AskDisambiguate,
       reasonCode: ReasonCode.LasaHit,
-      agentUtterance: lasaUtterance(c.lasa),
+      agentUtterance: lasaUtterance(lasa),
       extra: {
-        lasaSource: c.lasa.source,
-        lasaSourceRow: c.lasa.sourceRow,
-        confusableWith: [...c.lasa.confusableWith],
+        lasaSource: lasa.source,
+        lasaSourceRow: lasa.sourceRow,
+        confusableWith: [...lasa.confusableWith],
         note: "asked regardless of confidence by design",
       },
     })

@@ -1,15 +1,61 @@
+import { createReplyClock, type ReplyMeasure } from "./reply-clock"
 import { AGENT_SAMPLE_RATE, decodeBase64, pcm16ToFloat } from "./resample"
+
+const SETTLE_POLL_MS = 100
+const SETTLE_GRACE_MS = 2000
 
 export type PlaybackHandle = {
   enqueue: (base64: string) => void
   flush: () => void
   close: () => Promise<void>
+  beginReply: () => void
+  settleReply: () => Promise<ReplyMeasure>
   readonly scheduledCount: number
 }
 
 export function createPlayback(context: AudioContext): PlaybackHandle {
   let scheduled: AudioBufferSourceNode[] = []
   let cursor = 0
+  const clock = createReplyClock()
+  let settlers: (() => void)[] = []
+
+  const releaseSettlers = () => {
+    const pending = settlers
+    settlers = []
+    for (const settle of pending) {
+      settle()
+    }
+  }
+
+  const settleReply = (): Promise<ReplyMeasure> =>
+    new Promise<ReplyMeasure>((resolve) => {
+      let done = false
+      const remainingMs = Math.max(0, (clock.finishesAt() - context.currentTime) * 1000)
+      const giveUpAt = Date.now() + remainingMs + SETTLE_GRACE_MS
+      const finish = () => {
+        if (done) {
+          return
+        }
+        done = true
+        resolve(clock.measure(context.currentTime))
+      }
+      const check = () => {
+        if (done) {
+          return
+        }
+        if (
+          clock.stopped ||
+          context.currentTime >= clock.finishesAt() ||
+          Date.now() >= giveUpAt
+        ) {
+          finish()
+          return
+        }
+        setTimeout(check, SETTLE_POLL_MS)
+      }
+      settlers.push(finish)
+      check()
+    })
 
   const drop = (node: AudioBufferSourceNode) => {
     scheduled = scheduled.filter((existing) => existing !== node)
@@ -34,6 +80,7 @@ export function createPlayback(context: AudioContext): PlaybackHandle {
       }
       const floats = pcm16ToFloat(samples)
       const buffer = context.createBuffer(1, floats.length, AGENT_SAMPLE_RATE)
+      const seconds = floats.length / AGENT_SAMPLE_RATE
       buffer.getChannelData(0).set(floats)
       const node = context.createBufferSource()
       node.buffer = buffer
@@ -41,10 +88,15 @@ export function createPlayback(context: AudioContext): PlaybackHandle {
       const startAt = Math.max(cursor, context.currentTime)
       node.onended = () => drop(node)
       node.start(startAt)
-      cursor = startAt + buffer.duration
+      cursor = startAt + seconds
+      clock.schedule(startAt, seconds)
       scheduled.push(node)
     },
+    beginReply: () => clock.begin(),
+    settleReply,
     flush: () => {
+      clock.stopAt(context.currentTime)
+      releaseSettlers()
       for (const node of scheduled) {
         try {
           node.stop()
@@ -56,6 +108,8 @@ export function createPlayback(context: AudioContext): PlaybackHandle {
       cursor = context.currentTime
     },
     close: async () => {
+      clock.stopAt(context.currentTime)
+      releaseSettlers()
       for (const node of scheduled) {
         try {
           node.stop()

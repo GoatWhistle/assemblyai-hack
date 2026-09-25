@@ -21,7 +21,7 @@ describe("agent definition", () => {
         tool.http.url.startsWith("https://readback.example.com/api/tools/"),
         tool.name,
       ).toBe(true)
-      expect(tool.http.method).toBe("POST")
+      expect(tool.http.http_method).toBe("POST")
     }
   })
 
@@ -35,7 +35,9 @@ describe("agent definition", () => {
 
   it("puts the shared secret in a write only header, never in the url", () => {
     for (const tool of definition.tools) {
-      expect(tool.http.headers["x-readback-tool-secret"]).toBe("test-secret")
+      expect(tool.http.headers).toEqual([
+        { name: "x-readback-tool-secret", value: "test-secret" },
+      ])
       expect(tool.http.url).not.toContain("test-secret")
     }
   })
@@ -62,11 +64,11 @@ describe("agent definition", () => {
   })
 
   it("names no drug and no confidence threshold in the system prompt", () => {
-    const prompt = SYSTEM_PROMPT.toLowerCase()
+    const prompt = ` ${normalizeTerm(SYSTEM_PROMPT)} `
     for (const term of lasaCheckedTerms()) {
-      expect(prompt, `the prompt leaks the lasa term ${term}`).not.toContain(term)
+      expect(prompt, `the prompt leaks the lasa term ${term}`).not.toContain(` ${term} `)
     }
-    expect(prompt).not.toMatch(/0\.9\d/)
+    expect(SYSTEM_PROMPT).not.toMatch(/0\.9\d/)
   })
 
   it("tells the model that propose_field never writes", () => {

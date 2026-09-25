@@ -13,6 +13,12 @@ import {
   patientNameCandidate,
   quietRoomCandidate,
 } from "./candidates"
+import {
+  FLUENT_TURN,
+  fluentWrongPartnerCandidate,
+  UNKNOWN_NAME_HEARD,
+  unknownValueCandidate,
+} from "./probe-candidates"
 
 export const ScenarioId = {
   CleanOrder: "clean_order",
@@ -54,8 +60,8 @@ const DRAFTS: readonly Draft[] = [
     label: "A published look-alike name at full certainty",
     headerNote:
       "The recognizer reported 1.00 and every check passed. The published pair table is read before the threshold, so the gate asks anyway.",
-    spoken: "lisinopril",
-    heard: "bisoprolol",
+    spoken: "hydromorphone",
+    heard: "morphine",
     candidate: pairHitCandidate(),
     whyThisOne:
       "This is the scenario the product exists for. The ask happens at the ceiling of certainty, where raising a threshold could not have produced it.",
@@ -125,3 +131,93 @@ export function reasonCodesShown(): readonly ReasonCode[] {
 }
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = ScenarioId.PairHitAtCeiling
+
+export const ProbeId = {
+  UnsupportedValue: "unsupported_value",
+  UnknownValue: "unknown_value",
+  FluentWrongPartner: "fluent_wrong_partner",
+} as const
+
+export type ProbeId = (typeof ProbeId)[keyof typeof ProbeId]
+
+type ProbeText = {
+  readonly id: ProbeId
+  readonly label: string
+  readonly headerNote: string
+  readonly spoken: string
+  readonly heard: string
+  readonly whyThisOne: string
+}
+
+export type BrowserProbe = ProbeText & {
+  readonly runsOn: "browser"
+  readonly candidate: FieldCandidate
+  readonly decision: GateDecision
+}
+
+export type ServerProbe = ProbeText & {
+  readonly runsOn: "server"
+}
+
+export type Probe = BrowserProbe | ServerProbe
+
+function inBrowser(text: ProbeText, candidate: FieldCandidate): BrowserProbe {
+  return Object.freeze({
+    ...text,
+    runsOn: "browser" as const,
+    candidate,
+    decision: decide(candidate, policyFor(candidate.field)),
+  })
+}
+
+export const PROBES: readonly Probe[] = Object.freeze([
+  Object.freeze({
+    id: ProbeId.UnsupportedValue,
+    runsOn: "server" as const,
+    label: "The model proposes a value nobody said",
+    headerNote:
+      "The agent hands the server a value together with provenance that points at a real turn. The server reconciles the value against the words of that turn, and the gate refuses what the speech does not support.",
+    spoken: "shown from the server's evidence once it answers",
+    heard: "shown from the server's evidence once it answers",
+    whyThisOne:
+      "The reconciliation lives on the server, so this button asks the server rather than imitating it here. If the server does not answer, the page says so and shows no verdict.",
+  }),
+  inBrowser(
+    {
+      id: ProbeId.UnknownValue,
+      label: "A name the catalogue does not hold",
+      headerNote:
+        "The recognizer was sure of a name that exists nowhere in the built catalogue. The gate asks again and offers nothing in its place.",
+      spoken: UNKNOWN_NAME_HEARD.toLowerCase(),
+      heard: UNKNOWN_NAME_HEARD.toLowerCase(),
+      whyThisOne:
+        "Substituting the nearest real name is how a look-alike partner gets written without anyone saying it. The only honest move on a miss is to ask.",
+    },
+    unknownValueCandidate(),
+  ),
+  inBrowser(
+    {
+      id: ProbeId.FluentWrongPartner,
+      label: "A fluent answer naming a listed partner of the spoken drug",
+      headerNote:
+        "Every word of the turn arrived at certainty 1.00 with no pause between words, and the drug it names sits in a published pair. Fluency is not proof, so the gate asks.",
+      spoken: "hydralazine",
+      heard: FLUENT_TURN,
+      whyThisOne:
+        "A hesitation detector would have nothing to work with here, and a threshold would pass it. Only the published pair table objects.",
+    },
+    fluentWrongPartnerCandidate(),
+  ),
+])
+
+export function probeFor(id: ProbeId): Probe {
+  const found = PROBES.find((probe) => probe.id === id)
+  if (found === undefined) {
+    throw new RangeError(`unknown probe: ${id}`)
+  }
+  return found
+}
+
+export function isProbeId(id: string): id is ProbeId {
+  return PROBES.some((probe) => probe.id === id)
+}

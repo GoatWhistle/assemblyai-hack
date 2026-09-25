@@ -14,10 +14,20 @@ import {
   type WordSpan,
 } from "@/domain"
 import { decide } from "@/gate"
-import { intakeFor, recordTurn } from "@/tools"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { recordIntakeEvent, recordTurn } from "@/tools"
+import {
+  call,
+  intake,
+  registerSession,
+  resetToolEnvironment,
+  SESSION,
+  seedTurn,
+} from "./harness"
 
-beforeEach(resetToolEnvironment)
+beforeEach(async () => {
+  await resetToolEnvironment()
+  await registerSession(TURN_SESSION)
+})
 
 const TURN_SESSION = "unscored-confidence-session"
 
@@ -61,7 +71,7 @@ describe("a turn without confidence is not a turn without problems", () => {
         `words[] arrives from the browser, so ${String(confidence)} is a shape a client can really send; taking it and carrying on would mean the recognizer said nothing about this word and the pipeline read that as fine`,
       ).toBeGreaterThanOrEqual(400)
       expect(
-        intakeFor(TURN_SESSION).turns.length,
+        (await intake(TURN_SESSION)).turns.length,
         "an unscored turn is refused rather than stored, so no later proposal can point its provenance at it",
       ).toBe(0)
     }
@@ -79,13 +89,13 @@ describe("a turn without confidence is not a turn without problems", () => {
       "the gate compares the minimum confidence over the span, so one unscored word poisons the minimum; a per-turn check that only looked at the first word would let the drug name pass on the strength of the units",
     ).toBeGreaterThanOrEqual(400)
     expect(
-      intakeFor(TURN_SESSION).turns.length,
+      (await intake(TURN_SESSION)).turns.length,
       "the turn is refused whole, because a partially scored turn cannot be trusted to yield a minimum",
     ).toBe(0)
   })
 
-  it("refuses an unscored word at the store, not only at the route schema", () => {
-    const state = intakeFor(TURN_SESSION)
+  it("refuses an unscored word at the store, not only at the route schema", async () => {
+    const state = await intake(TURN_SESSION)
 
     expect(
       () =>
@@ -183,22 +193,24 @@ describe("a turn without confidence is not a turn without problems", () => {
   })
 
   it("keeps a raised low-confidence flag raised when the rest of the turn is certain", async () => {
-    const state = intakeFor(SESSION)
-    recordTurn(state, {
-      turnOrder: 1,
-      transcript: "lisinopril ten milligrams",
-      isFormatted: false,
-      words: [
-        makeWordSpan({ text: "lisinopril", startMs: 0, endMs: 400, confidence: 0.4 }),
-        makeWordSpan({ text: "ten", startMs: 420, endMs: 600, confidence: 1 }),
-        makeWordSpan({ text: "milligrams", startMs: 620, endMs: 900, confidence: 1 }),
-      ],
+    await recordIntakeEvent(SESSION, {
+      type: "caller_turn",
+      atMs: 0,
+      turn: {
+        turnOrder: 1,
+        transcript: "lisinopril ten milligrams",
+        isFormatted: false,
+        words: [
+          { ...makeWordSpan({ text: "lisinopril", startMs: 0, endMs: 400, confidence: 0.4 }) },
+          { ...makeWordSpan({ text: "ten", startMs: 420, endMs: 600, confidence: 1 }) },
+          { ...makeWordSpan({ text: "milligrams", startMs: 620, endMs: 900, confidence: 1 }) },
+        ],
+      },
     })
 
     const body = (await (
       await proposeField(
         call("propose-field", {
-          session_id: SESSION,
           field: FieldName.DrugName,
           value: "lisinopril",
           transcript_hint: "lisinopril ten milligrams",
@@ -217,10 +229,10 @@ describe("a turn without confidence is not a turn without problems", () => {
   })
 
   it("accepts a fully scored turn, so the check is not refusing every turn", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await seedTurn("lisinopril ten milligrams", 0.99)
 
     expect(
-      intakeFor(SESSION).turns.length,
+      (await intake()).turns.length,
       "the negative control: a guard that rejected scored turns too would empty the transcript the quotation invariant depends on",
     ).toBe(1)
     const response = await postTurn([

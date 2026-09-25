@@ -51,17 +51,6 @@ export function readArtefact(...segments: readonly string[]): Artefact {
   }
 }
 
-export function readScoredAcross(
-  setPaths: readonly string[],
-  fileName = "result-plain.json",
-): readonly Scored[] {
-  const all: Scored[] = []
-  for (const setPath of setPaths) {
-    all.push(...readArtefact(setPath, fileName).scored)
-  }
-  return all
-}
-
 export function cleanTimingsAcross(paths: readonly string[]): readonly RecordedTiming[] {
   const out: RecordedTiming[] = []
   for (const path of paths) {

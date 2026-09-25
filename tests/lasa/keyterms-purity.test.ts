@@ -2,7 +2,13 @@ import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 import { catalogFromFile, findDrug } from "@/catalog"
-import { buildKeyterms, KEYTERMS_MAX, lasaCheckedTerms, normalizeTerm } from "@/lasa"
+import {
+  buildKeyterms,
+  ISMP_PAIRS,
+  KEYTERMS_MAX,
+  lasaCheckedTerms,
+  normalizeTerm,
+} from "@/lasa"
 import fixture from "../../eval/fixtures/catalog-fixture.json"
 
 const catalog = catalogFromFile(fixture)
@@ -84,11 +90,15 @@ describe("keyterms purity", () => {
     expect(new Set(lowered).size).toBe(lowered.length)
   })
 
-  it("the lasa list is actually loaded", () => {
+  it("the lasa list is actually loaded, and it is the full ISMP list", () => {
     expect(
       lasaCheckedTerms().size,
       "an empty lasa table would make the leak test vacuously green",
     ).toBeGreaterThanOrEqual(40)
+    expect(
+      lasaCheckedTerms().size,
+      "the purity check must cover every name of the full list, not only the curated twenty",
+    ).toBe(new Set(ISMP_PAIRS.flatMap((pair) => [pair.termA, pair.termB])).size)
   })
 
   it("the keyterms list is actually populated", () => {

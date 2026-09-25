@@ -96,6 +96,10 @@ export function coverage(sample: number): readonly ChecksumCoverage[] {
   ]
 }
 
+function spaced(value: number): string {
+  return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+}
+
 function main(): void {
   const rows = coverage(SAMPLE)
   console.log(`checksum coverage, exhaustive over ${SAMPLE} valid identifiers of each kind`)
@@ -109,7 +113,12 @@ function main(): void {
       `| ${row.label} | ${row.identifiers} | ${row.substitutionsCaught}/${row.substitutionsTotal} = **${percent(row.substitutionsCaught, row.substitutionsTotal)}** | ${row.transpositionsCaught}/${row.transpositionsTotal} = **${percent(row.transpositionsCaught, row.transpositionsTotal)}** |`,
     )
   }
+  const substitutions = rows.reduce((sum, row) => sum + row.substitutionsTotal, 0)
+  const transpositions = rows.reduce((sum, row) => sum + row.transpositionsTotal, 0)
   console.log("")
+  console.log(
+    `${spaced(substitutions + transpositions)} mutations in total: ${spaced(substitutions)} single-digit substitutions and ${spaced(transpositions)} adjacent transpositions`,
+  )
   console.log(
     "every mutation of every sampled identifier was tried, so these are exact coverage figures rather than estimates",
   )

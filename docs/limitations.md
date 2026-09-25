@@ -75,46 +75,61 @@ Server-side numbers remain honest: `GET /v1/sessions/{id}` returns
 timings, so word-to-gate latency is a browser measurement and is labelled as one
 everywhere it appears.
 
-## A caller who corrects themselves inside one utterance is not detected
+## A caller who corrects themselves inside one utterance is detected only through six markers
 
-**Status: measured behaviour, pinned by tests, unfixed.**
+**Status: measured behaviour, pinned by tests; the gap is narrowed, not closed.**
 
-If someone says "Lisinopril, no wait, Losartan", the turn contains both words, so the
-matcher can prove either one was spoken. Nothing in the system knows the first was
-withdrawn. If the agent proposes the retracted value, that value acquires full
-provenance and a millisecond timecode: the evidence is real and the conclusion is
-wrong.
+If someone says "Lisinopril, no wait, Losartan", the server refuses lisinopril as a value
+the caller took back: reconciling the proposed value against the words of its turn fails
+`spoken_support` with `E_RETRACTED_VALUE`, and `propose_field` answers
+`E_VALIDATOR_COMBO`. That is the second reason to re-ask, not a fourth. Losartan, the
+value the caller settled on, goes on to its own checks.
 
-Four tests in `tests/realtime/self-correction.test.ts` pin this behaviour rather than
-leaving it to be found. The mitigation today is the read-back itself, since the value
-is spoken back and the caller can reject it. The fix belongs in candidate
-construction, not in the gate, which keeps exactly three reasons to re-ask.
+The markers are "no wait", "sorry", "I mean", "actually", "scratch that" and
+"not X, Y", and the replacement has to follow within four words.
+`tests/confirmation/self-correction.test.ts` pins each marker, a number corrected by a
+number, and the phrases that must not fire: "lisinopril, not losartan", "lisinopril sorry
+about that", a "sorry" followed by a value of another field, and a value said again after
+its own correction. `tests/api/self-correction.test.ts` drives the same through the tool
+route.
 
-## LASA coverage is partial and unquantified
+Still not detected: a correction without one of these markers, such as a pause and a
+different name, a correction spread across two turns, and markers in other words
+("rather", "make that"). There the read-back remains the mitigation. The provenance
+matcher still finds a span for the retracted word, because it was said; four tests in
+`tests/confirmation/retracted-span.test.ts` pin that, and the refusal is spoken support's.
 
-**Status: assumption, not result.**
+## The pair rule covers the 2023 ISMP list and nothing else
 
-The ISMP look-alike sound-alike list moved to ECRI and is no longer published at a
-stable public URL, so the automated extraction this project was designed around
-cannot run. `scripts/build-lasa.ts` falls back to a hand-curated table and records
-that fallback as the provenance of the built artefact: `data/lasa-pairs.json` says
-`curated table in src/lasa/pairs.ts (20 pairs)`.
+**Status: measured.**
 
-**Twenty pairs ship.** An earlier draft of our own documentation claimed about 240
-pairs survive matching; that was a design target, never a measurement, and it
-survived in our text as though it had been one. The gate's guarantee is about the
-pairs it holds, not about every pair ISMP names, and the fraction of the published
-list that represents is unknown to us.
+`data/lasa-pairs.json` is parsed from the ISMP List of Confused Drug Names, updated
+through February 2023, downloaded from ismp.org; the file records the URL and the PDF's
+sha256. It carries 514 pairs over 754 names with the page and row of each, and the
+product rule, `lasaRiskFor`, checks every one of them; `npx tsx
+scripts/measure/ismp-coverage.ts` prints the count. The curated table in
+`src/lasa/pairs.ts` holds 20 of those pairs, each checked by hand against its row, and it
+is the core of the demo and of the evaluation corpora.
 
-If the ECRI list becomes reachable, the parser has a 40-pair floor below which it
-refuses to overwrite the curated table, so a partial fetch cannot silently shrink
-coverage.
+An earlier version of this section said the list had moved to ECRI and was no longer at a
+stable public URL, so only the curated table could ship. That was wrong: the 2023 PDF is
+on ismp.org. Earlier still, a design target of about 240 pairs was written down as though
+it had been measured.
+
+What remains a limit: the rule knows only what the list publishes. Lisinopril and
+bisoprolol, AssemblyAI's own example of a confident mishearing, are on neither tier, so
+they get the standing read-back and nothing more. The list is from 2023; a newer edition
+means rebuilding with `make data`, and `scripts/build/lasa.ts` refuses to overwrite the
+snapshot when a parse yields fewer than 40 pairs. A brand name is recognised only when the
+catalogue lists it under `proprietaryNames`. And the rule has a price, measured rather
+than assumed: 502 of 3730 catalogue drugs carry a listed name, and 21 of the 59 correct
+values of the recorded corpus got a contrastive question.
 
 ## The evaluation corpus is synthesised
 
 **Status: measured against synthetic speech, and labelled everywhere.**
 
-No open English corpus of human speech reading drug names exists. Entity Error Rate
+We found no open English corpus of human speech reading drug names. Entity Error Rate
 in [eval/REPORT.md](../eval/REPORT.md) measures the recognizer against synthetic speech,
 not human speech. Every figure derived from it inherits that boundary.
 
@@ -122,9 +137,9 @@ Related things we deliberately do not measure:
 
 | Not measured | Reason |
 |---|---|
-| Accuracy on human speech | No open corpus exists; synthesising is the honest fallback and the limitation travels with the number |
+| Accuracy on human speech | We found no open corpus; synthesising is the honest fallback and the limitation travels with the number |
 | NPI existence against the live registry | Our NPI numbers are synthetic, generated to satisfy the checksum. The real registry would return "not found" for arithmetically valid numbers and add only noise |
-| Threshold optima | Thresholds are initial values reasoned from the cost of an error per field, tuned on the development set. The held-out set measures the result once |
+| Threshold optima | Thresholds are chosen defaults, reasoned from the cost of an error per field before any audio existed, and not tuned on any set. The held-out set, sealed on 16 September, measured the result once |
 | Keyterms including drug names | Methodologically invalid as a product option: it biases the recognizer toward the exact strings the rules check. If run at all it is a diagnostic that sizes the sacrifice, never an alternative configuration |
 | Market size in money | We have not estimated it. A TAM figure we cannot source would contradict the only rule this project is about |
 
@@ -133,8 +148,8 @@ Related things we deliberately do not measure:
 **Status: assumption, stated at the head of the report.**
 
 Every threshold in `eval/REPORT.md` is a chosen default. They are reasoned from the
-cost of an error in each field, tuned on the development set only, and reported
-against a set sealed before development started. Reporting a number obtained on the
+cost of an error in each field before any audio existed, were not tuned on any set, and
+are reported against a held-out set sealed on 16 September and opened once. Reporting a number obtained on the
 tuning set as a generalisation estimate is the specific failure the strongest
 competitor in this field honestly admitted to, and it is the one we take most care
 not to repeat.
@@ -157,9 +172,10 @@ failed is the practice that makes published benchmarks untrustworthy, and a seal
 set can only be opened once.
 
 What did replicate is the part the product rests on: an overall entity error rate of
-26.7% [17.1%, 39.0%] against 27.5% on the control corpus, with four of sixteen errors
-sitting at or above the 0.95 threshold, which are errors a confidence check alone
-would have written into an order.
+26.7% [17.1%, 39.0%] against 27.5% on the control corpus. Four of sixteen scored errors
+sat at or above the 0.95 threshold; two of those four are our sampler's typos, so two
+genuine recognizer errors (`oteseconazole`, `chlorthalidone`) would have passed a threshold
+alone and been written into an order by a confidence check.
 
 ## Two of our own guarantees were bypassable
 
@@ -181,6 +197,37 @@ success.** A check that passes when the thing it checks is missing is worse than
 check, because it produces confidence. Every ratchet now has a positive control in
 `tests/scripts/ratchet-positive-control.test.ts`.
 
+## Security hardening we recorded and did not do
+
+A security review on 25 September found no P0, two P1 (both fixed: tool URLs built from
+a request's own host, and one visitor able to spend the whole daily budget) and eleven
+P2, of which one was fixed. The other ten are here, because each is defensible for a
+demonstration on synthetic data and none would be for real orders.
+
+- **A session id is a bearer capability.** Whoever holds one can post turns to it,
+  finalize it and mint a reconnect token for it. Ids are random UUIDs, never listed by any
+  route, and reach only the owning browser and the `/order/{id}` link after a commit.
+- **Unknown session ids cost storage listings.** A lookup of an id that was never stored
+  makes up to three Blob `list` calls; it is anonymous and repeatable.
+- **Finalize trusts an explicit `?origin=`.** A missing or unknown label still defaults to
+  `live`, so nothing inflates a measured set by accident, but the session's holder can
+  label it on purpose.
+- **A misconfigured tool secret is named in the 401.** A wrong secret gets the generic
+  message; only a deployment with no secret, or one too short, says so.
+- **The agent's own hint is quoted back in `say_to_caller`.** The prompt marks tool
+  results as untrusted data, so this is a spoken echo, not an instruction channel.
+- **Store errors reach the client as text.** A Redis error reply appears in the 503 body;
+  a test pins that no token or URL is ever included.
+- **Bodies are parsed before bounds.** Size is limited by the platform, not by us; tool
+  routes authenticate first, `/turns` and `/api/demo/run` are public.
+- **`/api/metrics` is uncached,** so every view re-reads every stored session.
+- **Blob objects are public**, and the UUID in the path is the only secret.
+- **Six dependency advisories remain** after the non-breaking fix (four high, two
+  moderate, `npm audit --omit=dev` on 25 September), all reached through
+  `@vercel/blob` 1.x (`undici`) or `next` 15 (`postcss`, and `playwright` as an optional
+  peer that a production build does not install). Each fix is a major-version upgrade,
+  which we did not make during the submission week.
+
 ## Close codes are observations, not specification
 
 **Status: observed; the vendor documents none.**
@@ -188,7 +235,7 @@ check, because it produces confidence. Every ratchet now has a positive control 
 Verified 17 September 2026 against the streaming API reference: AssemblyAI documents
 **no WebSocket close codes at all**. Every entry in `src/realtime/close-codes.ts` is
 therefore an observation, and each records whose. We measured 1000 and 1008
-ourselves, where 1008 is what the rate limiter actually sends and we have never once
+ourselves, and 1006 once, in the 25 September stress run, where 1008 is what the rate limiter actually sends and we have never once
 observed the 3009 that the documented condition is supposed to produce. 3006 comes
 from another team's measurement. 3007, 3008 and 3009 come from vendor prose rather
 than from a close-code table.
@@ -253,12 +300,13 @@ Do not enter real patient data into this application.
 Three citations recur through this project, each with the clause that requires
 read-back rather than a paraphrase of one:
 
-- **ICAO Annex 11, §3.7.3** — requires a receiving station to repeat a received
-  message back to the transmitting station to obtain confirmation of correct
-  reception. It governs flight crews, not prescription intake; we cite it because
+- **ICAO Annex 11, §3.7.3.1 and §3.7.3.1.2** — §3.7.3.1 requires the flight crew to read
+  back safety-related parts of ATC clearances and instructions transmitted by voice, and
+  §3.7.3.1.2 requires the controller to correct any discrepancy the read-back reveals. It governs flight crews, not prescription intake; we cite it because
   medicine's own read-back requirement is documented as borrowed from aviation
   practice, not because this project is subject to it.
-- **Joint Commission National Patient Safety Goals, in force since 2003** — requires
+- **Joint Commission, a National Patient Safety Goal from 2003** (NPSG.02.01.01; ISMP
+  placed it at PC.02.01.03 EP 20 in 2017; its 2026 location is not verified by us) — requires
   verifying a complete verbal or telephone order, or a critical test result, by having
   the receiver read the complete order back. This is the clause that applies most
   directly to the domain this project simulates.

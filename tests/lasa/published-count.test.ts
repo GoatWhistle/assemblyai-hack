@@ -1,46 +1,38 @@
 import { existsSync, readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { LASA_PAIRS } from "@/lasa"
+import { ISMP_PAIRS, LASA_PAIRS } from "@/lasa"
 
 const BUILT = "data/lasa-pairs.json"
 const DOCS = ["README.md", "CLAUDE.md"] as const
 
 type BuiltFile = {
-  readonly provenance: string
+  readonly source: string
+  readonly sourceUrl: string
+  readonly sourcePdfSha256: string
+  readonly curated: readonly unknown[]
   readonly pairs: readonly unknown[]
 }
 
-function built(): BuiltFile | null {
-  if (!existsSync(BUILT)) {
-    return null
-  }
+function built(): BuiltFile {
   return JSON.parse(readFileSync(BUILT, "utf8")) as BuiltFile
 }
 
 describe("the number of pairs we claim is the number we ship", () => {
-  it("has the built file agree with the curated table it fell back to", () => {
+  it("has the built file carry both tiers the runtime uses", () => {
     const file = built()
-    if (file === null) {
-      return
-    }
-    if (file.provenance.includes("curated table")) {
-      expect(
-        file.pairs.length,
-        "the built file says it fell back to the curated table, so its pair count must be that table's",
-      ).toBe(LASA_PAIRS.length)
-    }
+    expect(file.curated.length).toBe(LASA_PAIRS.length)
+    expect(file.pairs.length).toBe(ISMP_PAIRS.length)
+    expect(
+      file.pairs.length,
+      "the parse refuses to write below its 40-pair floor, so a smaller committed file means the floor was bypassed",
+    ).toBeGreaterThanOrEqual(40)
   })
 
   it("states its own provenance rather than leaving the source to be assumed", () => {
     const file = built()
-    if (file === null) {
-      return
-    }
-    expect(file.provenance.length).toBeGreaterThan(0)
-    expect(
-      file.provenance,
-      "a built artefact whose provenance does not name either the PDF or the curated fallback cannot support any coverage claim",
-    ).toMatch(/curated table|pdftotext/)
+    expect(file.source).toContain("ISMP List of Confused Drug Names")
+    expect(file.sourceUrl).toMatch(/^https:\/\/www\.ismp\.org\//)
+    expect(file.sourcePdfSha256).toMatch(/^[0-9a-f]{64}$/)
   })
 
   it("does not let a document claim a pair count the code does not have", () => {
@@ -53,7 +45,7 @@ describe("the number of pairs we claim is the number we ship", () => {
       const claims = [...text.matchAll(/([0-9]{2,4})\s+(?:curated\s+)?pairs/gi)]
       for (const claim of claims) {
         const stated = Number(claim[1])
-        if (stated === actual || stated === 960) {
+        if (stated === actual || stated === ISMP_PAIRS.length || stated === 960) {
           continue
         }
         expect(

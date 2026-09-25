@@ -16,8 +16,11 @@ count_tree() {
     git ls-files -- "$@"
     git ls-files --others --exclude-standard -- "$@"
   } | sort -u \
-    | grep -E '\.(ts|tsx)$' \
+    | grep -E '\.(ts|tsx|mjs)$' \
     | grep -v '\.gen\.' \
+    | while IFS= read -r file; do
+        if [ -f "$file" ]; then printf '%s\n' "$file"; fi
+      done \
     | awk -v s="$limit" '
         {
           slash = $0
@@ -42,7 +45,7 @@ count_tree() {
 }
 
 current() {
-  count_tree "$SRC_LIMIT" 'src/**' 'app/**'
+  count_tree "$SRC_LIMIT" 'src/**' 'app/**' 'scripts/**'
   count_tree "$TEST_LIMIT" 'tests/**'
 }
 

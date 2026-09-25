@@ -100,7 +100,10 @@ describe("classifyHeard", () => {
     expect(classifyHeard("yes")).toBe("affirmed")
     expect(classifyHeard("correct")).toBe("affirmed")
     expect(classifyHeard("no")).toBe("denied")
-    expect(classifyHeard("that is incorrect")).toBe("unclear")
+    expect(
+      classifyHeard("that is incorrect"),
+      "the server reads incorrect as a negation, so the browser must not leave it waiting",
+    ).toBe("denied")
     expect(classifyHeard("nope")).toBe("denied")
   })
 

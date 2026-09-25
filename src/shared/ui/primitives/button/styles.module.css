@@ -118,7 +118,7 @@
   border-top-color: transparent;
   border-radius: var(--radius-pill);
   color: var(--button-ink);
-  animation: button-spin 620ms linear infinite;
+  animation: button-spin var(--dur-loop-spin) var(--ease-constant) infinite;
 }
 
 @keyframes button-spin {

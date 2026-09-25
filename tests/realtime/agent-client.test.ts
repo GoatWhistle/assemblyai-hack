@@ -19,7 +19,14 @@ beforeEach(() => {
   let counter = 0
   globalThis.fetch = vi.fn(async () => {
     counter += 1
-    return new Response(JSON.stringify({ token: `agent-token-${counter}` }), { status: 200 })
+    return new Response(
+      JSON.stringify({
+        token: `agent-token-${counter}`,
+        sessionId: "server-session-1",
+        agentId: "",
+      }),
+      { status: 200 },
+    )
   }) as unknown as typeof fetch
 })
 
@@ -51,24 +58,30 @@ describe("AgentClient session", () => {
   })
 
   it("mints a fresh token on reconnect", async () => {
-    const client = new AgentClient({ transport: factory })
+    const attempts: number[] = []
+    const client = new AgentClient({
+      transport: factory,
+      events: { onTokenMinted: (attempt) => attempts.push(attempt) },
+    })
     await client.connect()
     await client.reconnect()
-    expect(client.tokensMinted).toBe(2)
+    expect(attempts).toEqual([1, 2])
     expect(urls[1]).toContain("token=agent-token-2")
   })
 
-  it("keeps min_silence strictly below max_silence when turn detection is configured", async () => {
+  it("sends no silence bound on the agent socket even when turn detection is configured", async () => {
     const client = new AgentClient({
       transport: factory,
-      session: { turnDetection: { minSilence: 500, maxSilence: 2000, vadThreshold: 0.6 } },
+      session: { turnDetection: { vadThreshold: 0.6, interruptResponse: true } },
     })
     await client.connect()
     const update = sockets[0]?.sentJson()[0] as {
-      session: { input: { turn_detection: { min_silence: number; max_silence: number } } }
+      session: { input: { turn_detection: Record<string, unknown> } }
     }
-    const detection = update.session.input.turn_detection
-    expect(detection.min_silence).toBeLessThan(detection.max_silence)
+    expect(Object.keys(update.session.input.turn_detection).sort()).toEqual([
+      "interrupt_response",
+      "vad_threshold",
+    ])
   })
 })
 
@@ -150,11 +163,15 @@ describe("AgentClient messages", () => {
     expect(sockets[0]?.sentBinaryCount()).toBe(0)
   })
 
-  it("records the session id so a resume has something to resume with", async () => {
-    const client = new AgentClient({ transport: factory })
+  it("reports the session id through onReady, the path the product listens on", async () => {
+    const ready: string[] = []
+    const client = new AgentClient({
+      transport: factory,
+      events: { onReady: (sessionId) => ready.push(sessionId) },
+    })
     await client.connect()
     sockets[0]?.deliverJson({ type: "session.created", session_id: "sess-9" })
-    expect(client.currentSessionId).toBe("sess-9")
+    expect(ready).toEqual(["sess-9"])
   })
 
   it("implements no tool queue, because tools are server-side http webhooks", async () => {

@@ -12,36 +12,80 @@ it or a human confirmed it aloud.
 
 Built for the [AssemblyAI Voice Agent Hackathon](https://lablab.ai/ai-hackathons/assemblyai-voice-agent-hackathon).
 
+## If you are judging this
+
+**No clone, no key, no microphone.** Open the deployed application's root and press
+*Watch the 40-second case*, or go straight to `/?judge=1`, which opens the replay first.
+
+| Route | What it is |
+|---|---|
+| `/` | The first screen: the case in one line, the replay, the three things to say, and the tour below |
+| `/live` | The live intake. Needs a microphone, and spends AssemblyAI credit; when the daily budget is spent it says so and offers the replay |
+| `/compare` | Six moments side by side: said, heard, certainty, the gate's verdict, and what would have been written without it |
+| `/how-it-works` | The three reasons to re-ask, the one constructor, and an attack console to try to get a value past the gate |
+| `/metrics` | Every figure with its input, command, n and date; a dash where nothing was measured |
+| `/order/[id]` | A committed order's receipt, re-checked in your browser: hash, NPI, DEA and the pair rule, VALID or TAMPERED |
+| `/demo` | The replay with the pair rule on and off in two panels; both read the drug back |
+
+### The tour, ninety seconds
+
+Also on `/`, with a link per step. Only the last step needs a microphone.
+
+| Seconds | Do this | Expect this |
+|---|---|---|
+| 15 | Open the replay (`/?judge=1`) | It starts by itself. At the decision the banner reads RE-ASK with `E_LASA_HIT` at certainty 1.00, candidates hydromorphone and morphine |
+| 10 | Read the two panels side by side | The pair-rule arm refuses the caller's "yes" and writes hydromorphone only when the caller says the name. The same candidate with the pair rule switched off is read back plainly, the "yes" is accepted, and morphine is ordered |
+| 15 | Open `/compare` | Six moments: said, heard, certainty, verdict, and what would have been written without the gate |
+| 15 | Try to forge a value on `/how-it-works` | Every attempt is refused by the only constructor that can write a field |
+| 15 | Open `/metrics` | Every figure carries its input, command, n and date; what was not measured shows a dash, never a zero |
+| 20 | Start a live call on `/live` and say "Hydromorphone, two milligrams" | Expected, not yet observed on a recorded live call: the agent names hydromorphone and every drug the ISMP list pairs with it, spelling the start of each, and asks which; a "yes" is not accepted, only a name. The decision log gains `E_LASA_HIT` |
+
+**What the replay is.** The replay is built from **synthesised socket traffic**: messages
+generated in the documented shapes by `scripts/build/fixtures.ts`, not recorded from a
+live call. The gate, the validators and the pair table it runs through are the shipped
+ones. The recognizer figures in `eval/REPORT.md` (Entity Error Rate, calibration, the
+coverage matrix, socket latency, the stress set) are different: those come from real
+AssemblyAI sockets, over synthesised speech. The A/B table uses assigned confidences and the
+gate's own decision time runs on the synthesised fixtures, and both say so. A recorded live session, when we have one,
+replaces the synthesised replay and is labelled with its date.
+
 ## The problem
 
-A recognition error in prescription intake does not look like an error. "Lisinopril"
-becomes "Bisoprolol" — both drugs exist, both are plausible, and nothing signals a
-fault. As AssemblyAI puts it: *a voice agent is a chain, and the LLM has no way to
-know its input was wrong.*
+A recognition error in prescription intake does not look like an error. AssemblyAI's
+own example: *"A patient states an allergy to Lisinopril. The transcript reads
+Bisoprolol."* Both drugs exist, both are plausible, and nothing signals a fault. ISMP's
+survey of verbal orders records the same thing happening between people: *HYDROmorphone*
+heard as *morphine*. And, in AssemblyAI's words, *"A conversation isn't one transcription.
+It's a chain of them."* ([The Voice Agent Accuracy Problem Nobody Benchmarks](https://www.assemblyai.com/blog/voice-agent-accuracy-problem-benchmarks),
+8 September 2026.)
 
 Their numbers set the scale:
 
-| Fact | Value |
-|---|---|
-| Entity Error Rate, Universal-3.5 Pro Realtime | **15.31%** at 6.99% WER |
-| Errors on proper nouns, which drug names are | **16.92%** |
-| Five-turn task success at 84.69% per-turn entity capture | **43.6%** |
-| The same task with confirmation steps | **79.1%** |
+| Fact | Value | Source |
+|---|---|---|
+| Entity Error Rate, Universal-3.5 Pro Realtime | **15.31%** at 6.99% WER | [Universal-3.5 Pro Realtime](https://www.assemblyai.com/blog/universal-3-5-pro-realtime), 23 June 2026 |
+| Entity errors in the benchmark's *names* category | **16.92%** | the same page |
+| A five-turn conversation at 84.69% per-turn entity capture comes through clean | **43.6%** | the accuracy-problem article above |
+| The same, if the agent reads back every entity and the caller catches errors 70% of the time | **79.1%** | the same article; a model, not a measurement |
 
-The last two lines are the whole business case. A confirmation loop nearly doubles
-the share of transactions that complete, and AssemblyAI presents it as a technique
-rather than a feature — implementing and measuring it is the work.
+The last row is a projection, and its weak point is the caller: it assumes a person who
+hears the wrong value read back catches it seven times in ten. A caller who hears
+"morphine, correct?" and says "yes" out of habit is exactly how that assumption fails,
+and it is the case this product is built around.
 
 ## The hard claim
 
 **High recognizer confidence does not protect against homophony.** The model can be
-certain it heard Bisoprolol while the human said Lisinopril. Confidence proves
+certain it heard morphine while the human said hydromorphone. Confidence proves
 nothing there; a regulator-published look-alike sound-alike list does.
 
-So a drug name inside a published ISMP or FDA LASA pair triggers a **mandatory
-re-ask even at confidence 1.0**. Every other gate in this field fires on low
-confidence or a failed validator. This one fires on a name, regardless of how sure
-the recognizer is.
+So a drug name on the published ISMP List of Confused Drug Names triggers a **mandatory
+re-ask even at confidence 1.0**, and the re-ask is contrastive: the agent names the drug it
+heard and every drug the list pairs with it, and only a spoken name answers it. A "yes" is
+not counted, and naming a partner corrects the value. The gates we found in the 132 submissions listed on the hackathon page on 24 September
+2026, which we read, fire on low confidence, a failed validator, or a value missing from a known set.
+This one fires on a name that is valid and present in the catalogue, regardless of how
+sure the recognizer is.
 
 ## What is measured, what is derived, and what is assumed
 
@@ -63,24 +107,28 @@ Applied to the claims this project actually makes:
 | Claim | Status | Where |
 |---|---|---|
 | `ConfirmedValue` is unconstructible outside the gate | **Enforced** | `make gate-invariant`; a second type assertion, an `as unknown as`, or an angle-bracket cast fails the build |
-| Each gate branch has a test that fails by name when the branch breaks | **Enforced** | `make gate-mutation`, 11 of 11 mutations killed |
+| Each gate branch has a test that fails by name when the branch breaks | **Enforced** | `make gate-mutation`, 12 of 12 mutations killed |
 | A LASA hit re-asks at confidence 1.0 | **Enforced** | LASA is read before the threshold in `decide()`; a mutation reversing the order fails a named test |
 | The key never reaches the browser | **Enforced** | `make secrets` fails if `ASSEMBLYAI_API_KEY` appears outside `app/api/` |
 | Entity Error Rate on our corpus | **Measured** | `eval/REPORT.md`, with the command and the set size, Wilson intervals throughout |
-| Which of the three mechanisms pays for which re-ask | **Measured** | Coverage matrix over every recorded utterance, `scripts/measure/coverage-matrix.ts` |
-| False-ask rate | **Measured** | Published beside the catches, because hiding the cost side makes the metric one-sided |
+| Which of the three mechanisms pays for which re-ask | **Measured** | Coverage matrix over the 80 utterances of `eval/control` and `eval/native16`, `scripts/measure/coverage-matrix.ts` |
+| What the shipped gate asks about correct values | **Measured** | Every drug name is read back by policy, so 59 of 59 correct drug names are asked about: 25 by the standing read-back, 13 by the threshold, 21 by a contrastive question. The pair rule changes which question is asked, not whether one is: `npx tsx scripts/measure/coverage-matrix.ts` |
+| What the pair rule adds over a plain read-back | **Measured** | Without the pair rule a reflex yes writes 20 of 20 pair mishearings; with it, 0. The same candidates and the same read-back, one flag apart: `npx tsx scripts/measure/ab-gate.ts` |
 | Rare drug names are harder than common ones | **Assumption, not result** | Pre-registered in `eval/heldout-preregistration.md`, opened once, **not demonstrated**: the Wilson intervals overlap |
-| DEA and NPI are equally provable by arithmetic | **Measured, and 4.8% false of DEA** | 30 600 exhaustive mutations: NPI catches every single-digit substitution, DEA catches 95.2%. The policy stands; the sentence claiming equivalence did not |
-| Our LASA table covers the published ISMP list | **Assumption, not result** | 20 curated pairs ship; coverage is partial and unquantified, because the source moved off a stable URL |
+| DEA and NPI are equally provable by arithmetic | **Measured, and 4.8% false of DEA** | 32 080 exhaustive mutations: NPI catches every single-digit substitution, DEA catches 95.2%. The policy stands; the sentence claiming equivalence did not |
+| The pair rule covers the published ISMP list | **Measured** | The 2023 list, parsed from the ISMP PDF with the page and row of every pair kept, carries 514 pairs over 754 names; 502 of 3730 catalogue drugs carry a listed name, so every dictation of them gets a contrastive question: `npx tsx scripts/measure/ismp-coverage.ts`. The 20 curated pairs are the evaluation core and the demo |
+| The recognizer confidently turns a listed name into its published partner | **Measured, not observed** | 0 of 186 degraded utterances (telephone band, noise at 10 and 5 dB, speed-up; 188 recorded, two sessions that closed on a transport error excluded rather than scored as mishearings), and no error at all at or above the 0.95 threshold: `npx tsx scripts/measure/analyse-stress.ts`. TTS voices only; the rule rests on the published list, not on this corpus |
 | Provenance proves what was said | **False, and stated as false** | Provenance is computed in the browser; the gate proves a value traces to words the session reported, not that they were spoken |
 | Socket close codes mean what we log | **Observed** | The vendor documents no close codes at all, verified 17 September; every entry names whose observation it is |
-| A confirmation loop nearly doubles task completion | **Cited** | AssemblyAI's own published numbers, linked above, not re-measured by us |
+| A confirmation loop nearly doubles task completion | **Cited, and a projection** | AssemblyAI's own model (43.6% to 79.1%), linked in the table above; it assumes callers catch 70% of read-back errors, and we have not measured it |
 | Read-back is required by ICAO and the Joint Commission | **Cited** | Both quoted verbatim with the clause number |
 | Checksum behaviour on specific identifiers | **Verified by hand** | `AB1234563` passes, `BX1234567` fails, `1234567893` passes, `1234567890` fails |
 | The market size in money | **Assumption, not result** | We have not estimated it and do not publish a figure we cannot source |
 | A proposed value is supported by what was spoken | **Enforced** | The server reconciles the value against the words of its turn; a mismatch is a validator failure, not a fourth reason |
 | A value confirmed for one field cannot be written under another | **Enforced** | Found by attack the same day: the policy applied was the wrong field's while the write keyed off the candidate's |
 | A word the recognizer never scored cannot pass as a scored one | **Enforced** | Found by attack: `NaN < threshold` is false, so an unscored word was accepted outright on a field without mandatory read-back |
+| A spoken "yes" confirms only when bound to the words that were read back | **Enforced** in tests, not yet seen live | The model's `caller_answer` is a hint. A confirmation needs the agent's read-back turn, played to the end and naming the value, then a caller turn that is wholly affirmative. "Yeah, no", "yes but", a different value, "mhm" or "thank you" never confirm. For a drug on the ISMP list a "yes" never confirms at all: the read-back must name every listed partner (`E_READBACK_NOT_CONTRASTIVE` otherwise), the caller must say the name (`E_LASA_NAMED_ANSWER_REQUIRED` for a yes), and naming a partner corrects the value (`E_CALLER_NAMED_LASA_PARTNER`): `tests/sessions/confirmation-evidence.test.ts`, `tests/sessions/contrastive-read-back.test.ts`, `tests/api/confirmation-flow.test.ts`, `tests/api/contrastive-read-back.test.ts` |
+| Every curated pair is a row of the 2023 ISMP list | **Verified by hand**, then pinned | Checked 25 September against the list itself; `tests/lasa/pairs-sourced.test.ts` re-checks it whenever the list text is present |
 
 Two entries in that table are failures of our own hypotheses, and one says a claim we
 previously made was wrong. They are in the table for the same reason the rest are:
@@ -89,23 +137,26 @@ a scale that only ever grades its author highly is decoration.
 ## Sixty seconds, in order, with no microphone
 
 The demonstration does not require a working microphone, a second person, or a
-successful recognition. Every step below runs from a recorded session, so it produces
-the same result on a laptop in a quiet room and on a phone in a corridor.
+successful recognition. Every step below runs from a synthesised session, so it
+produces the same result on a laptop in a quiet room and on a phone in a corridor.
 
-**1. Open `/demo`.** Two panels, one recorded file. A human said *Lisinopril*; the
-recognizer returned *Bisoprolol* at confidence **1.0** — not a low score, not a
-hedge, the highest value the API can report.
+**1. Open `/demo`.** Two panels, one synthesised session. The staged caller says
+*hydromorphone*; the recognizer is made to return *morphine* at confidence **1.0** — not a
+low score, not a hedge, the highest value the API can report.
 
-**2. Read the left panel, where the pair check is on.** The order is **not written**.
-The agent names both drugs from the ISMP look-alike list and asks which one was
-meant. Note what did *not* cause this: the confidence is perfect and the validator
-passed, because Bisoprolol is a real drug at a real strength. The only thing that
-stopped it was membership in a published pair.
+**2. Read the left panel, where the pair rule is on.** The agent names both drugs from
+the ISMP list, spelling the start of each, and asks which one was meant. A "yes" is
+refused (`E_LASA_NAMED_ANSWER_REQUIRED`) and writes nothing; the caller says
+"hydromorphone", which corrects the recognizer, and that is what is ordered. Note what did
+*not* cause this: the confidence is perfect and the validator passed, because morphine is
+a real drug at a real strength. The only thing that stopped it was membership in a
+published pair.
 
-**3. Read the right panel, where the same file runs with the pair check disabled.**
-Same audio, same recognizer, same confidence. **The wrong drug is ordered.** This is
-the whole product in one side-by-side: the difference between the panels is one
-policy flag, not a better model.
+**3. Read the right panel, where the same file runs with the pair rule off.** Same
+input, same recognizer output, same confidence, and the drug is still read back, as policy
+requires: "morphine, correct?". The caller says "yes" by reflex and **the wrong drug is
+ordered**. Both panels read the drug back; the difference between them is one policy flag,
+`lasaChecked`, not a better model and not the presence of a read-back.
 
 **4. Now try to make the gate contradict itself.** The left panel shows high
 confidence *and* a mandatory re-ask at the same time. If that reads as a
@@ -151,26 +202,25 @@ playback that matches the agent's own last line is discarded. A phantom turn wou
 words the human never said into a field's provenance, which is worse than a stutter.
 
 **8. Then say a drug name and, in the same breath, correct yourself** — "Lisinopril,
-no wait, Losartan". **We do not detect this, and it is documented rather than hidden**
-([docs/limitations.md](docs/limitations.md)). Both words are in the turn, so the matcher can
-prove either was spoken. The read-back is the mitigation: the value is spoken back and
-you can reject it.
+no wait, Losartan". The server refuses the value you took back: `propose_field` answers
+`E_VALIDATOR_COMBO` with `support_code: E_RETRACTED_VALUE`, the second reason to re-ask and
+not a fourth, and losartan goes on to its own checks. It knows six markers: "no wait",
+"sorry", "I mean", "actually", "scratch that" and "not X, Y". A correction phrased any other
+way is not detected, and then the read-back is the mitigation
+([docs/limitations.md](docs/limitations.md)).
 
-Step 8 is in this list on purpose. A demo script that only contains the parts that
-work is a sales pitch; the failure is one command away from being found, so it is
-better pointed at than discovered.
+Step 8 used to point at a gap and now points at its fix, with the boundary of the fix
+beside it. A demo script that only contains the parts that work is a sales pitch.
 
-### The four screens that carry the argument
+### The five screens that carry the argument
 
-![A field card showing recognizer certainty of 1.00, the 0.95 field threshold cleared, and a mandatory re-ask beside it](public/screens/01-certainty-beside-reask.png)
+![A field card for morphine at recognizer certainty 1.00, above the 0.95 threshold, marked confusable with hydromorphone from the 2023 ISMP list and asking for the name, not a yes](public/screens/01-certainty-beside-reask.png)
 
-*The whole product in one card.* The recognizer reported **1.00** certainty — its
-highest possible value — and the field threshold of 0.95 is cleared on the same track.
-The value is still re-asked, because `bisoprolol` is named on a published look-alike
-pair with `lisinopril`. High confidence and a mandatory re-ask sit together without
-reading as a contradiction, which is the design requirement rather than an accident.
-Note the line the card carries about its own evidence: provenance is computed in the
-browser from the STT socket, so it is client-supplied.
+*The whole product in one card, from the synthesised replay.* The recognizer heard
+**morphine** at certainty **1.00**, above the field's 0.95 threshold, and the value is still
+not accepted: morphine is on the 2023 ISMP list with hydromorphone, so the card asks for the
+name, not a yes. High certainty and a mandatory re-ask sit together without reading as a
+contradiction; the certainty meter is marked as outranked by the published pair.
 
 ![The three refusal reasons listed separately with their reason codes](public/screens/02-three-reasons.png)
 
@@ -192,32 +242,31 @@ the verbatim string the gate raised, the sentence the agent says next, and the r
 comes from. Refusal and recovery on one screen; the citation is what makes it
 auditable rather than a judgement call.
 
-![The start page, already running the recorded session, labelled as simulated](public/screens/04-start-here.png)
+![The first screen: the case in one line with the hydromorphone and morphine example, two entry buttons, and three things to say with their expected outcomes](public/screens/04-start-here.png)
 
-*One URL, nothing to configure.* `/start` lands a judge inside the replay with it
-already running — no account, no microphone, no second person on the line. The panel
-above it says which case they are looking at, and the replay carries a standing
-**"Simulated session, not a live call"** label stating that the gate, the validators and
-the pair table are the shipped ones while no microphone is open. Twelve of forty-five
-submissions in this field lost points on a demo that would not run; this path exists so
-this one cannot.
+*One URL, nothing to configure.* The root is the judge's first screen: the case in one line,
+**Watch the 40-second case** with no microphone and no key, **Talk to it live**, and three
+things to say, each with the outcome and reason code to expect.
 
-![The seven numbered demonstration steps with microphone-required chips](public/screens/05-demo-script.png)
+![The ninety-second tour: six timed steps, each with a link](public/screens/05-demo-script.png)
 
-*The script is on the page, not only in this file.* Seven steps, each with an action
-and what to watch, including "show that nothing changed" and "interrupt the agent
-mid-sentence". The two steps that need a microphone are marked, so a judge without one
-knows which five still work.
+*The script is on the page, not only in this file.* Six timed steps with a link each; only
+the last needs a microphone.
 
 **What each artefact in this project actually is, stated once so it does not have to
-be guessed at.** The four images above are unedited screenshots of the running
-application. Every recognizer confidence and word timing in `eval/REPORT.md` and in
-the recorded-session demo comes from real AssemblyAI socket traffic against
+be guessed at.** The five images here are unedited screenshots of the running
+application, retaken on 25 September after the demo pair changed. Three earlier screenshots
+showed the withdrawn lisinopril-bisoprolol citation and a label calling the replay a live
+recording; both claims were wrong, and those images were replaced rather than captioned over. The recognizer confidences and word timings in the live
+sections of `eval/REPORT.md` come from real AssemblyAI socket traffic against
 synthesised speech (a desktop text-to-speech voice, named per item in the eval
 artefacts as `"voice": "Microsoft David Desktop"` or similar) — synthetic audio, real
-recognition. No step of the sixty-second walkthrough above is staged with invented
-numbers. The submission video, once recorded, carries the same labelling in its own
-description: which parts are a live screen recording, which play back a recorded
+recognition. The A/B table there uses assigned confidences and the gate's own decision time
+runs on the synthesised fixtures, and both say so. The replay behind the walkthrough is the
+other exception, and it is labelled as one: its
+socket messages are synthesised in the documented shapes, so it demonstrates the gate's
+decisions, not the recognizer's behaviour. The submission video, once recorded, carries the same labelling in its own
+description: which parts are a live screen recording, which play back a synthesised
 session rather than a live microphone, and whether any cut removes dead air or a
 retake rather than changing what the product did. A cut for pacing is disclosed as a
 cut for pacing; nothing in the video is permitted to imply a capability the running
@@ -227,14 +276,18 @@ application does not have.
 
 The name is the procedure, not a metaphor.
 
-**Aviation, ICAO Annex 11 §3.7.3:** *a procedure whereby the receiving station
-repeats a received message or an appropriate part thereof back to the transmitting
-station so as to obtain confirmation of correct reception.*
+**Aviation, ICAO Annex 11 §3.7.3.1:** *the flight crew shall read back to the air
+traffic controller safety-related parts of ATC clearances and instructions which are
+transmitted by voice*, and, in §3.7.3.1.2, the controller *shall take immediate action to
+correct any discrepancies revealed by the read-back.*
 
-**Clinical practice, Joint Commission National Patient Safety Goals, since 2003:**
-*for verbal or telephone orders or for telephonic reporting of critical test results,
-verify the complete order or test result by having the person receiving the order or
-test result read-back the complete order or test result.*
+**Clinical practice, Joint Commission, a National Patient Safety Goal from 2003**
+(NPSG.02.01.01 in the 2009 wording): *for verbal or telephone orders or for telephone
+reporting of critical test results, the individual giving the order or test result
+verifies the complete order or test result by having the person receiving the
+information record and "read back" the complete order or test result.* ISMP's 2017
+survey places the requirement in the standards at PC.02.01.03 EP 20. Where it sits in
+the 2026 manual, after the goals were restructured, we have not verified.
 
 Medicine borrowed the readback/hearback pair straight from aviation. We automate a
 step regulation already requires and practice routinely skips, which
@@ -245,8 +298,8 @@ step regulation already requires and practice routinely skips, which
 Not interchangeable, and enforced in code rather than in a prompt:
 
 1. **Confidence below the field threshold** — the minimum over the source words.
-2. **Validator failure** — DEA mod-10, NPI Luhn with the `80840` prefix, NDC format
-   plus existence in the catalogue, or an internally inconsistent
+2. **Validator failure** — DEA mod-10, NPI Luhn with the `80840` prefix, existence in
+   the catalogue, or an internally inconsistent
    drug × strength × form × route combination.
 3. **LASA pair membership** — fires regardless of confidence.
 
@@ -270,37 +323,6 @@ which "the model decided it was fine" writes a value — not a `force` flag, not
 convenience constructor, not an object literal. The check that enforces this was
 itself bypassable until we attacked it, which is the section below.
 
-### The same idea, said better by other teams in this field
-
-Quoted rather than paraphrased, because each states something this project also
-claims more sharply than we have stated it ourselves. **Status: Cited** — linked to
-the team, not re-measured by us.
-
-- *"No citation, no score."* — Brand Studio. The same rule this project applies to
-  every figure in `eval/REPORT.md`, in four words.
-- *"The recogniser is never biased toward the phrases the rules match, so a
-  mishearing cannot invent a disclosure."* — Saakshi. Exactly the reasoning behind
-  `make keyterms-purity`, which refuses a LASA-checked name in `keyterms_prompt` for
-  the same reason: biasing the recognizer toward what the rules check would make the
-  rules confirm themselves.
-- *"A threshold is a review heuristic, not a calibrated probability of truth."* —
-  EvidenTurn. States precisely why this report labels every threshold in
-  `src/domain/policy.ts` as a chosen default rather than a measured optimum.
-- *"The final urgency score is decided by deterministic local code — not the LLM."*
-  — a competing submission's framing of the same structural guarantee `ConfirmedValue`
-  gives this project: a value the model proposes and code alone can confirm.
-- *"Exact audited figures, not a model's guess."* — another submission, on why a
-  number needs a command behind it, which is the rule this report enforces on itself.
-- *"It works because it stops relying on the prompt holding."* — a competing
-  submission, on the same reason `ConfirmedValue` has no constructor a prompt could
-  reach: a rule enforced in the type system does not depend on the model reading it
-  correctly on a given turn.
-- *"The decision is made by deterministic code, not by the model."* — a third
-  submission independently converging on the same structural argument.
-- *"One intervention in 36 advisor turns."* — Saakshi, in the same shape as this
-  project's false-ask rate: an intervention count against a turn count, published
-  beside the catches rather than instead of them.
-
 ## What is proved by arithmetic and what is not
 
 Stated plainly, because the distinction matters and is easy to overclaim:
@@ -311,7 +333,7 @@ Stated plainly, because the distinction matters and is easy to overclaim:
   adding proof. Verified by hand: `AB1234563` passes and `BX1234567` is rejected;
   `1234567893` passes and `1234567890` is rejected. Then verified exhaustively, which
   corrected us: `make audit-checksums` mutates 200 valid identifiers of each kind in
-  every single-digit substitution and every adjacent transposition — 30 600 mutations,
+  every single-digit substitution and every adjacent transposition — 32 080 mutations,
   not a sample. **NPI catches 100% of substitutions, DEA catches 95.2%**, because the
   DEA scheme weights alternating digits by 1 and 2 and sums mod 10, so a substitution
   changing a weight-2 digit by five is invisible to it. The policy stands; the earlier
@@ -369,7 +391,8 @@ server.
 
 The browser holds both AssemblyAI sockets directly using short-lived tokens; our
 routes mint those tokens, serve the agent's server-side HTTP tools, and store
-finished sessions in Vercel Blob. AssemblyAI's docs state no proxy is required, and
+finished sessions in Vercel Blob; the shared daily budget and the session registry live in
+Upstash Redis from the Vercel Marketplace, a third-party resource. AssemblyAI's docs state no proxy is required, and
 the same shape is the documented Vercel pattern: mint on the server, hand the browser
 a token.
 
@@ -392,28 +415,22 @@ make verify
 ```
 
 `make data` builds the NDC catalogue and the LASA table into `data/`. `make agent`
-creates the stored agent once and prints the id to put in `.env.local`. `make dev`
+creates the reference agent that `make doctor` checks against the source and prints the id
+to put in `.env.local`; live sessions create their own. `make dev`
 serves on `http://localhost:3000`. `make verify` runs the linters, the type checker,
 the tests and every ratchet.
 
 `ASSEMBLYAI_API_KEY` is required for `make agent` and for any live session; the tests
-and the recorded-session demo run without it.
+and the synthesised replay run without it.
 
-**The stored agent is defined in one file, `src/agent/`, and `make agent` is the only
-intended way it reaches AssemblyAI.** `buildAgentDefinition()` produces the whole
-`POST /v1/agents` body — prompt, tools, `input`/`output` configuration — from source
-under version control, so the definition can be read, reviewed and diffed like any
-other code.
-
-**What this does not yet close: an edit made directly in AssemblyAI's own agent
-dashboard is invisible to this repository.** The vendor's own API supports reading an
-agent back (`GET /v1/agents/{id}`), so a script that fetches the live definition and
-diffs it against `buildAgentDefinition()`'s output is possible and does not exist yet.
-`make doctor` checks that the stored agent and its tool webhooks are *reachable*; it
-does not check that the stored agent's *content* still matches the source that built
-it. Until that diff exists, a playground edit to the prompt or the tool schema would
-not be caught by anything in `make verify`, and this paragraph is the disclosure of
-that gap rather than a claim that it is closed.
+**The agent is defined in one place, `src/agent/`, and every live session creates its
+own.** `buildAgentDefinition()` produces the whole `POST /v1/agents` body — prompt, tools,
+`input`/`output` configuration — from source under version control, so the definition can
+be read, reviewed and diffed like any other code. The agent token route POSTs that
+definition with the session id for every live session, and finalize deletes the agent
+again. `make agent` keeps a reference agent for `make doctor`, which checks that its
+tool webhooks are reachable and that its content matches the source
+(`scripts/report/agent-drift.ts`).
 
 ### Checking our numbers without a key
 
@@ -423,13 +440,15 @@ make honest
 
 Prints every figure in this repository that is derivable offline, each above the
 command that produced it and the size of the set it came from: the entity error rate
-on the control corpus, which mechanism catches which recorded error and what each
-costs in false asks, the gate run against itself with the pair check on and off,
-exhaustive checksum coverage, our own skeleton detector pointed at our own catalogue,
-the confidence calibration curve, the rarity stratification, latency against its
-budget, the recorded audio path replayed end to end, an honest count of every paid run
-including the discarded ones, reproducibility, the keyterms ablation, and what the
-paid API has actually cost. Thirteen blocks, no network call, no key —
+on the control corpus, which mechanism catches which recorded error and which question
+each asks of a correct value, the shipped gate run against itself with and without the
+pair rule, exhaustive checksum coverage, our own skeleton detector pointed at our own
+catalogue, the controlled-substance census, the confidence calibration curve, the rarity
+stratification, latency against its budget, how much of the published ISMP list the pair
+rule covers and what it costs, whether degraded audio turns a name into its published
+partner, the synthesised fixture path replayed end to end, the human-voice set, an honest
+count of every paid run including the discarded ones, and what the paid API has actually
+cost. Fifteen blocks, no network call, no key —
 `scripts/report/honest.ts` names the count itself at the end of its own output, so this
 sentence is checked against that rather than typed independently.
 
@@ -437,7 +456,7 @@ It deliberately does not fill in anything that needs a live socket. Those rows r
 as not measured in `eval/REPORT.md` and they read that way here too.
 
 Server-side tools need a publicly reachable HTTPS host, so they are debugged on a
-preview deployment rather than localhost.
+preview deployment or through a tunnel.
 
 ### Which path reaches the API and which reaches a fixture
 
@@ -450,21 +469,23 @@ claim and easy to violate by accident.
 | `make verify` | **no** | Every step is local; `VERIFY_STEPS` in the `Makefile` is the list |
 | `make honest` | **no** | Recorded corpora and the real validator and gate |
 | `make e2e` | **no** | Playwright with a fake microphone against a preview deployment |
-| `make doctor` | **no** | Ordinary HTTPS: the stored agent exists and every tool URL is reachable. Opens no socket, so it costs nothing, and it **exits non-zero** rather than printing a summary |
+| `make doctor` | **no** | Ordinary HTTPS: the reference agent exists and matches the source, and every tool URL is reachable. Opens no socket, so it costs nothing, and it **exits non-zero** rather than printing a summary |
 | `make spend` | **no** | Reads the recorded run ledger. With no run recorded it publishes **no figure at all** and says why, because a zero would be a number nobody measured |
 | `make measure` | **no** | Its live path is **not implemented**: it prints the gate's own decision latency from fixtures and then states which rows stay unmeasured. It refuses to fabricate the socket figures rather than opening a socket |
-| `make eval` | **yes** | The sealed held-out set, 60 sessions at 24-second spacing |
+| `make eval` | **yes** | The development set, 40 sessions at 24-second spacing |
+| `make eval-heldout` | **yes** | The sealed held-out set, opened once against a pre-registered rule |
+| `make eval-live` | **yes** | The human voice set from `docs/voice-set.md`; refuses to open a socket without `--confirm-paid`, which the target passes |
 
 The paid targets **refuse to run without a key rather than reporting a number they
 did not measure** — the error message says exactly that. A target that silently
 skipped would produce an absent figure indistinguishable from a measured zero, which
 is the defect class this project has been bitten by three times.
 
-In the other direction, the test suite never reads a real key: the only occurrences
-in `tests/` are `vi.stubEnv` with a placeholder and with an empty string, both in
-`tests/api/token-routes.test.ts`, which exercises the routes' own handling of a
-missing key. No test can reach AssemblyAI even if the environment holds a valid
-credential.
+In the other direction, the test suite never reads a real key: `tests/setup.ts` deletes
+`ASSEMBLYAI_API_KEY` and the other paid credentials before any test module loads and
+replaces `fetch` and `WebSocket` with refusing stubs; every test that needs the variable
+sets a placeholder with `vi.stubEnv`. No test can reach AssemblyAI even if the environment
+holds a valid credential.
 
 ## Engineering rules
 
@@ -509,7 +530,7 @@ Three workflows rather than one, split by what each protects and by how fast it 
 |---|---|---|
 | **code quality** | lint, types, the file and package ratchets, import cycles, the English-only rule, and the interface rules a screenshot cannot prove | about 10 minutes, two jobs in parallel |
 | **test suite** | the suite itself, then the offline evidence: the recorded pipeline, the latency budget, keyterm purity, the held-out seal, and every figure `make honest` reproduces | about 20 minutes |
-| **safety invariants** | the gate invariant, all eleven mutations, and the check that no secret reaches the built client bundle | about 25 minutes |
+| **safety invariants** | the gate invariant, all twelve mutations, and the check that no secret reaches the built client bundle | about 25 minutes |
 
 Every step inside a job carries `if: ${{ !cancelled() }}`, so a failing lint does not
 hide the state of the nine checks behind it. One red run should say everything that is
@@ -541,7 +562,7 @@ invariant, and would have reopened at the first `biome-ignore`. All three forms 
 by name now, and the exploits are kept as tests instead of being deleted.
 
 **The contrast with a secret is worth naming, because it is easy to mistake one for
-the other.** A competing submission's human-gate tool, OpsPilot, generates
+the other.** A human-gate design seen elsewhere in this field generates
 `secrets.token_urlsafe(10)` and **returns it in the tool result that goes back to the
 model** — so the human-approval code sits inside the context of the very agent it is
 meant to restrain. That is a defensible design for its purpose, and it works because
@@ -554,7 +575,7 @@ new one — the brand symbol that makes the type is module-private, so the only
 expression in the entire repository capable of producing the assertion lives inside
 `gate/confirm.ts`, and copying the string `"lisinopril"` into a hundred contexts does
 not copy the authority to write it. The difference is the one between a password and
-a lock with no keyhole: OpsPilot's human gate can be defeated by learning the right
+a lock with no keyhole: a token-based human gate can be defeated by learning the right
 string; ours cannot be defeated by learning anything, because there is no code path
 that accepts a string as proof.
 
@@ -563,8 +584,9 @@ that accepts a string as proof.
 It used `grep --exclude-dir=api`, which excludes *any* directory called `api` at
 *any* depth — so `src/features/api/leak.ts` reading the key passed cleanly. The same
 file now fails by name, and the key's absence is verified against the **built
-bundle** rather than the source tree: after `next build` the key appears in exactly
-`.next/server/app/api/tokens/{stt,agent}/route.js` and nowhere under `.next/static`.
+bundle** rather than the source tree: after `next build` the key appears only under
+`.next/server/app/api/` (the two token routes and the finalize route, which deletes the
+per-session agent) and nowhere under `.next/static`.
 
 **Absence must never read as success, and we had to learn this more than once.**
 The first version of `make gate-mutation` passed when the gate file was missing. That
@@ -580,7 +602,7 @@ check to fail. `tests/scripts/ratchet-positive-control.test.ts`.
 **Each gate branch is required to die to its own test.**
 `make gate-mutation` breaks one branch at a time, runs the suite, and requires the
 matching test to fail **by name** — then restores the file byte for byte. A mutation
-that survives is a defect in the test, not evidence about the code. Eleven of eleven
+that survives is a defect in the test, not evidence about the code. Twelve of twelve
 are killed. The script itself was hardened after it reported a count it derived from
 itself, which is a number that cannot disagree with reality.
 
@@ -597,19 +619,77 @@ removed.
 The full engineering account, with the commands and the set sizes, is in
 [eval/REPORT.md](eval/REPORT.md).
 
+## Security model
+
+- **The key never leaves the server.** The browser holds two short-lived, single-use
+  tokens; the routes clamp `expires_in_seconds` and `max_session_duration_seconds`
+  (`tests/api/tokens/token-routes.test.ts`), and `make secrets` fails if the key appears
+  outside `app/api/`. After a build, `make check-bundle` searches the client bundle for
+  secrets and server modules.
+- **Spend has a ceiling that is shared, not per instance.** A daily budget of
+  `READBACK_DAILY_BUDGET_SECONDS` (7 200 by default, a policy we chose, not a
+  measurement) is debited atomically in Redis when a token is minted and refunded when
+  the vendor fails; one client may spend at most half of it, so a single visitor cannot
+  end live calls for everyone. Two addresses still can: this is a ceiling, not a rate
+  limit (`tests/api/tokens/budget-health.test.ts`, `tests/sessions/budget-client-share.test.ts`).
+  The per-instance rate brake says in its own 429 body that it enforces no global cap.
+- **The tools trust only AssemblyAI and only for one session.** Every tool call carries a
+  shared secret in a write-only header, compared in constant time, and a `?sid=` that
+  must name a session the token route registered; an unknown id is refused and creates
+  nothing. Tool URLs are built from the configured deployment URL, never from a request's
+  own `Host` in production (`tests/agent/tool-base-url.test.ts`).
+- **Storage fails closed.** Without the Redis and Blob variables, production refuses to
+  start rather than keeping orders in the memory of one function
+  (`tests/sessions/store-fail-closed.test.ts`, `tests/tools/shared-store.test.ts`).
+- **Headers.** Production responses carry a content security policy limited to our own
+  origin and the two AssemblyAI hosts, `frame-ancestors 'none'`, and a permissions policy
+  that allows the microphone to this origin only (`next.config.ts`).
+- **What is not protected** is in the next section: provenance is posted by the browser,
+  so the gate proves a value traces to reported words, not that they were spoken.
+
 ## Honest limits
 
 Stated here rather than left to be discovered. The complete account, with nothing
 softened, is in [docs/limitations.md](docs/limitations.md).
 
-- **A caller who corrects themselves inside one utterance is not detected.** If someone
-  says "Lisinopril, no wait, Losartan", the turn contains both words, so the matcher can
-  prove either one was spoken. Nothing in the system knows the first was withdrawn: if
-  the agent proposes the retracted value, it acquires full provenance and a timecode.
-  Four tests in `tests/realtime/self-correction.test.ts` pin this behaviour rather than
-  leave it to be found. The mitigation today is the read-back itself — the value is
-  spoken back and the caller can reject it — and the fix belongs in candidate
-  construction, not in the gate, which keeps exactly three reasons to re-ask.
+- **A caller who corrects themselves inside one utterance is detected only through six
+  markers.** If someone says "Lisinopril, no wait, Losartan", the server refuses
+  lisinopril as a value the caller took back: `spoken_support` fails with
+  `E_RETRACTED_VALUE`, which is the second reason to re-ask, not a fourth. The markers are
+  "no wait", "sorry", "I mean", "actually", "scratch that" and "not X, Y";
+  `tests/confirmation/self-correction.test.ts` pins each of them and the phrases that must not
+  fire ("lisinopril, not losartan", "sorry about that"). A correction without a marker,
+  or one spread across two turns, is not detected, and the read-back is the mitigation.
+  Four tests in `tests/confirmation/retracted-span.test.ts` pin the provenance side: the
+  matcher still finds a span for the retracted word, because it was said, and the
+  refusal is spoken support's.
+
+- **We have not caught the recognizer making the mistake the product is built around.**
+  Every listed name in our TTS corpora, re-recognized live through a telephone band, white
+  noise and a speed-up, 188 utterances, 186 of them scored (two sessions closed on a
+  transport error, 1006 and 1008, and are excluded rather than counted as mishearings): none
+  came back as its published partner, and none of the 18 errors reached the 0.95 threshold. Some did become other real drugs (azacitidine as
+  azithromycin, silodosin as thalidomide), which is the shape of the error, one step short.
+  The replay that shows hydromorphone heard as morphine at 1.00 is staged and labelled so. The
+  pair rule rests on the published list and on people mishearing these names, not on our corpus.
+
+- **No live call is recorded yet, and the first attempts found four real defects.** Six
+  scripted calls (`make live-smoke`: a real browser, both real sockets, a synthesised caller)
+  failed on 25 September before any field was proposed, and each failure was a defect every
+  passing test had missed: a vendor schema that differs from its documentation, a session
+  message the vendor refuses, per-route memory in development, and a capture that could hang
+  with both sockets billing. All four are fixed and tested
+  ([docs/findings.md](docs/findings.md)). The calls themselves cannot run on the machine they
+  were written on, whose automated browsers never start an audio worklet, so they run in CI
+  against a deployed URL (`.github/workflows/live-smoke.yml`). Until that run is recorded, the
+  live path is proved by tests, not by a call.
+
+- **A published list only catches the pairs it publishes.** Lisinopril misheard as
+  bisoprolol is AssemblyAI's own example of the failure this product exists for, and it
+  is on no list we have found, the full 2023 ISMP list included. Our gate would not
+  re-ask it on the pair rule: it would pass on confidence and a valid catalogue entry, and
+  only the plain read-back, which a reflex "yes" passes, would stand between it and the
+  order. The pair rule is exactly as good as the list behind it.
 
 - **Provenance is computed in the browser, so the gate proves provenance, not truth.**
   With the browser holding the STT socket directly, `words[]` never passes through our
@@ -631,23 +711,30 @@ softened, is in [docs/limitations.md](docs/limitations.md).
   three-hour socket cap. Making provenance itself trustworthy would mean routing audio
   through our own host, which is the always-on process the architecture deliberately
   removed. Turn-level numbers from `GET /v1/sessions/{id}` are server-side and honest;
-  word-level timings are not available there, so word-to-gate latency is a browser
-  measurement and is labelled as one.
-- **The evaluation corpus is synthesised.** No open English corpus of human speech
-  reading drug names exists. Entity Error Rate here measures the recognizer against
+  word-level timings are not available there, so word-to-gate latency would be a browser
+  measurement, and it is not measured yet.
+- **A second channel now witnesses the words, after the call.** The agent socket recognizes
+  the caller on AssemblyAI's side. At finalize the server fetches that transcript with its own
+  key and marks every confirmed field `witnessed`, `not_witnessed` or `unavailable` in the
+  receipt, which `/order/[id]` shows. A browser that forges its turns cannot forge the vendor's
+  record. Two boundaries, stated: the timeline appears only seconds after the session ends,
+  so the witness cannot block a commit during the call; and it proves the vendor heard the
+  words, not that a person said them (`src/sessions/witness.ts`, `tests/sessions/finalize-witness.test.ts`).
+- **The evaluation corpus is synthesised.** We found no open English corpus of human
+  speech reading drug names. Entity Error Rate here measures the recognizer against
   synthetic speech, not human speech, and the report says so.
-- **The LASA table holds 20 pairs, hand-curated, and that is the real number.** The
-  ISMP list moved to ECRI and is no longer published at a stable public URL, so the
-  automated extraction this project was designed around cannot run. `make data` says so
-  in the built file itself: `data/lasa-pairs.json` records its provenance as
-  `curated table in src/lasa/pairs.ts (20 pairs)`. An earlier draft of this file
-  claimed about 240 pairs survive matching; that was the design target, never a
-  measurement, and 20 is what ships. Coverage of the published list is therefore
-  **partial and unquantified**, and the gate's guarantee is about the pairs it holds,
-  not about every pair ISMP names.
-- **Thresholds are initial values, not measured optima.** They are tuned on a
-  development set and reported against a held-out set that is sealed before
-  development starts.
+- **The pair rule is as good as the 2023 ISMP list, and no better.** `data/lasa-pairs.json`
+  is parsed from the ISMP PDF, whose URL and sha256 it records, and its full tier carries
+  514 pairs over 754 names with the page and row of each; the curated table holds 20 pairs,
+  each checked by hand against its row, for the demo and the evaluation. A pair the list
+  does not publish is not re-asked on the pair rule, and a pair we derived ourselves is
+  never added. The list is from 2023; a newer edition means rebuilding with `make data`.
+  The price is measured beside the catches: `npx tsx scripts/measure/ismp-coverage.ts`
+  prints the share of catalogue drugs on the list and the share of correct values it puts
+  to a contrastive question.
+- **Thresholds are initial values, not measured optima.** They are chosen defaults,
+  reasoned from the cost of an error per field before any audio existed. They were not
+  tuned on any set; the held-out set was sealed on 16 September and opened once.
 - Every figure in `eval/REPORT.md` carries the command that produced it and the size
   of the set it came from. Numbers without a method are not published.
 - **Voice audio goes to a third-party vendor, and consent to that is implied by using
@@ -669,7 +756,7 @@ complete rather than representative, because a section of this kind is only wort
 reading if its author had no say in what goes in it.
 
 **We accused a competitor of sloppiness, and the misreading was ours.** An earlier
-draft of our own working rules cited RevenueFlow as claiming "8 tests in the README and
+draft of our own working rules cited another submission as claiming "8 tests in the README and
 177 elsewhere", and used it as the justification for our own rule that numbers without a
 method are forbidden. Their README's Tests section is a table of **eight verification
 topics**, not a count of tests, and their repository holds sixteen test files. We had
@@ -677,12 +764,27 @@ spent weeks citing another team's supposed carelessness while misreading their
 document. The rule stands on its own reasoning; the example did not, and the
 correction is written where the accusation used to be rather than quietly deleted.
 
-**We overstated our own LASA coverage by a factor of twelve.** A design target of
-"about 240 surviving pairs" was written down before the ISMP list moved to ECRI and
-off a stable public URL. It was never measured, and it survived in our text as though
-it had been. The real number is **20 hand-curated pairs**, `data/lasa-pairs.json`
-records that provenance in the built artefact itself, and nothing is allowed to quote
-a remembered count — `LASA_PAIRS.length` or nothing.
+**We got our own LASA coverage wrong twice, in opposite directions.** A design target of
+"about 240 surviving pairs" was written down before any parse ran, and survived in our
+text as though it had been measured. We then wrote that the ISMP list had moved to ECRI
+and off a stable public URL, so that 20 hand-curated pairs were all that could ship; that
+was wrong too, because the 2023 PDF is on ismp.org. The product rule now reads the parsed
+list, and the curated tier keeps its 20 hand-curated pairs for the demo and the
+evaluation. Neither count is quoted from memory: `ismpPairCount()` and `LASA_PAIRS.length`,
+or nothing.
+
+**Our demo pair was not on the list we said it came from.** For weeks the whole product
+was demonstrated on lisinopril and bisoprolol, and `src/lasa/pairs.ts` cited a row
+"ISMP List of Confused Drug Names, February 2023: lisinopril - bisoprolol". Checked on
+25 September 2026 against the list itself, from ismp.org and from ECRI: **neither name
+appears anywhere in it.** Two more curated pairs cited rows that do not exist either,
+azathioprine with azithromycin and cefazolin with cefotaxime, and five more could not be
+confirmed as a single row of the list's layout. The lisinopril pair is
+AssemblyAI's own example of a mishearing, and somewhere between that example and our
+table it acquired a regulator's name it never had. All eight are replaced with pairs
+whose rows we found on one line of the list, the demo now uses hydromorphone and morphine, which the
+list does carry, and a test keeps the old pair out. The lesson is the product's own:
+a citation is a claim, and it needs the same check as a number.
 
 **We said a missing `Bearer` prefix would break token minting.** Measured on
 16 September 2026, all four combinations of host and prefix return a real token,
@@ -778,9 +880,9 @@ Placed here rather than left to the slides, because it is the criterion where th
 project is thinnest and pretending otherwise would contradict everything above.
 
 **The budget exists before the product does.** Read-back is not our idea and not an
-optional feature: ICAO Annex 11 §3.7.3 requires it of flight crews, and Joint
-Commission NPSG has required it of verbal orders and critical test results since
-2003. We automate a step regulation already mandates and practice routinely skips.
+optional feature: ICAO Annex 11 §3.7.3.1 requires it of flight crews, and the Joint
+Commission has required it of verbal orders and critical test results since it became
+a patient safety goal in 2003. We automate a step regulation already mandates and practice routinely skips.
 A regulatory requirement is a committed budget line, not a buyer to be convinced.
 
 **Who signs.** Primary: pharmacy chains and prescription delivery services taking
@@ -799,7 +901,7 @@ pharmacy and every delivery service taking prescriptions by voice has a finite n
 of them, and each one falls under the read-back requirement. The serviceable slice is
 whoever is already deploying voice agents into intake — this hackathon is itself
 evidence that the demand exists, with several dozen teams building medical voice
-intake right now and, on our reading of 69 submissions, none checking homophony.
+intake right now and, on our reading of the 132 submissions listed on the hackathon page on 24 September 2026, none overriding recognizer certainty with a published sound-alike list.
 
 **And here is the number we do not publish.** We have no figure of the form "a
 $X billion market", because we have not measured one. The project rule forbids a
@@ -821,9 +923,9 @@ The table points at the artefact rather than asking anyone to go looking.
 | Criterion, as published | Where this project answers it |
 |---|---|
 | **Application of Technology** — *"How effectively the chosen model(s) are integrated into the solution."* | Both AssemblyAI sockets are held directly by the browser on short-lived tokens, with no proxy: `src/realtime/`. Word-level timings and per-word confidence are the input to the gate, not decoration — `src/gate/decide.ts`. `keyterms_prompt` is spent deliberately and is forbidden from containing the drug names the rules check, because biasing the recognizer toward them would make the observation depend on the verification: a test fails if a forbidden term enters the list. Turn detection is treated as character, with per-field patience rather than one global setting. Model: `universal-3-5-pro`, named explicitly because `universal-3-pro` was retired on 2 September 2026 |
-| **Presentation** — *"The clarity and effectiveness of the project presentation."* | The forty-second demonstration: one recorded file where the human said Lisinopril and the recognizer confidently returns Bisoprolol. The agent refuses to write the order, names both alternatives from the ISMP list, and asks. Beside it, the same file with the gate disabled, ordering the wrong drug. A judge arriving alone without a microphone gets the same pipeline end to end from a recorded session — `src/features/judge-demo/` |
-| **Business Value** — *"The impact and practical value, considering how well it fits into business areas."* | AssemblyAI's own published numbers set the scale: 15.31% Entity Error Rate, 16.92% on proper nouns, and five-turn task success rising from 43.6% to 79.1% once confirmation steps exist. Read-back is already mandatory under Joint Commission NPSG and ICAO Annex 11 §3.7.3, so the compliance requirement precedes the product. **This is our weakest criterion and we say so**: we publish no TAM figure, because we have not measured one and will not source a number we cannot defend |
-| **Originality** — *"The uniqueness and creativity of the solution, highlighting approaches and ability to demonstrate behaviors."* | The claim no other submission in this field makes: **confidence is not evidence against homophony.** A drug name in a published LASA pair re-asks at confidence 1.0. Every other gate observed in 69 submissions fires on low confidence or a failed validator. And the guarantee is structural rather than promised — `ConfirmedValue` has no constructor outside the gate, so "the model decided it was fine" is not a code path that exists |
+| **Presentation** — *"The clarity and effectiveness of the project presentation."* | The forty-second demonstration: one synthesised session where the staged caller says hydromorphone and the recognizer is made to return morphine at confidence 1.0. The agent names hydromorphone and morphine from the ISMP list and asks which; a "yes" writes nothing, and the name the caller says is what is ordered. Beside it, the same session with only the pair rule switched off: a plain read-back, a reflex "yes", and morphine ordered. A judge arriving alone without a microphone gets the same pipeline end to end from a synthesised session — `src/features/judge-demo/` |
+| **Business Value** — *"The impact and practical value, considering how well it fits into business areas."* | AssemblyAI's own published numbers set the scale: 15.31% Entity Error Rate, 16.92% in the names category, and their own projection of five-turn success rising from 43.6% to 79.1% once every entity is read back and callers catch 70% of errors. Read-back is already required by the Joint Commission for verbal orders and by ICAO Annex 11 §3.7.3.1, so the compliance requirement precedes the product. **This is our weakest criterion and we say so**: we publish no TAM figure, because we have not measured one and will not source a number we cannot defend |
+| **Originality** — *"The uniqueness and creativity of the solution, highlighting approaches and ability to demonstrate behaviors."* | **Confidence is not evidence against homophony.** A regulator-published sound-alike list overrides confidence 1.0 for a value that is valid in the catalogue: a drug name in a published LASA pair re-asks even when the recognizer is certain and the drug exists. Of the 132 submissions listed on the hackathon page on 24 September 2026, which we read, the gates we found fire on low confidence, a failed validator, or a value missing from a known set — none on a confident, valid, wrong word. And the guarantee is structural rather than promised — `ConfirmedValue` has no constructor outside the gate, so "the model decided it was fine" is not a code path that exists |
 
 Two things worth saying about this table rather than leaving them implied. The
 supporting evidence for each row is a command, not a paragraph — `make verify` runs
@@ -837,6 +939,7 @@ contradict the only thing this project is actually about.
 [docs/](docs/) is flat and English. The index is [docs/README.md](docs/README.md).
 
 - [docs/limitations.md](docs/limitations.md) — everything this project cannot prove, at full strength
+- [docs/sources.md](docs/sources.md) — every outside figure we quote, with its exact wording and source
 - [docs/findings.md](docs/findings.md) — every defect found after the checks were already green, and what keeps each one fixed
 - [docs/evidence.md](docs/evidence.md) — each claim, what measured it, at what n, and what that n is not enough for
 - [docs/case.md](docs/case.md) — why this problem and this domain

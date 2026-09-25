@@ -26,7 +26,7 @@
 }
 
 .idle .trigger {
-  animation: var(--keyframes-breathe) 4200ms var(--ease-in-out) infinite;
+  animation: var(--keyframes-breathe) var(--dur-loop-breathe) var(--ease-in-out) infinite;
 }
 
 .trigger:hover:not(:disabled) {
@@ -64,7 +64,7 @@
   position: absolute;
   inset: 0;
   border-radius: var(--radius-pill);
-  animation: var(--keyframes-pulse-ring) 2600ms var(--ease-out-quart) infinite;
+  animation: var(--keyframes-pulse-ring) var(--dur-loop-pulse) var(--ease-out-quart) infinite;
   pointer-events: none;
 }
 

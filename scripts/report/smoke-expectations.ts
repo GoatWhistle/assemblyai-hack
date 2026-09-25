@@ -1,7 +1,8 @@
 import { FieldName, GateAction, ReasonCode } from "@/domain"
+import type { FieldContext } from "@/sessions"
 
 export const SMOKE_SCOPE =
-  "this exercises the server side of the audio path end to end: a recorded fixture's words, the provenance match against the turn they came from, the validator, the pair check and the gate decision. It does not touch src/audio: capture, the worklet, the two resample paths and the echo layers live in the browser and cannot be reached from a script"
+  "this exercises the server side of the audio path end to end: a synthesised fixture's words, the provenance match against the turn they came from, the validator, the pair check and the gate decision. It does not touch src/audio: capture, the worklet, the two resample paths and the echo layers live in the browser and cannot be reached from a script"
 
 export type Expectation = {
   readonly fixture: string
@@ -10,6 +11,7 @@ export type Expectation = {
   readonly hint: string
   readonly action: GateAction
   readonly reasonCode: ReasonCode
+  readonly context?: FieldContext
   readonly why: string
 }
 
@@ -19,18 +21,18 @@ export const EXPECTATIONS: readonly Expectation[] = [
     field: FieldName.DrugName,
     value: "lisinopril",
     hint: "Lisinopril",
-    action: GateAction.AskDisambiguate,
-    reasonCode: ReasonCode.LasaHit,
-    why: "lisinopril is in the curated pair table, so it is re-asked even on a clean dictation at confidence 0.97; a pass without the pair firing here would mean the central mechanism is inert on the happiest path we have",
+    action: GateAction.AskConfirm,
+    reasonCode: ReasonCode.ReadBackRequired,
+    why: "lisinopril is in no pair of the 2023 ISMP list, so a clean dictation at confidence 0.97 reaches the ordinary mandatory read-back and not the pair branch; a pair hit here would mean the table matches names it does not contain",
   },
   {
     fixture: "lasa-catch",
     field: FieldName.DrugName,
-    value: "bisoprolol",
-    hint: "Bisoprolol",
+    value: "morphine",
+    hint: "Morphine",
     action: GateAction.AskDisambiguate,
     reasonCode: ReasonCode.LasaHit,
-    why: "the recognizer returned Bisoprolol where the human said Lisinopril; this is the product's whole claim and the fixture exists to prove the gate refuses it",
+    why: "the recognizer returned Morphine at certainty 1.00 where the human said hydromorphone; this is the product's whole claim and the fixture exists to prove the gate refuses it",
   },
   {
     fixture: "low-confidence",
@@ -39,7 +41,7 @@ export const EXPECTATIONS: readonly Expectation[] = [
     hint: "quantity thirty",
     action: GateAction.AskConfirm,
     reasonCode: ReasonCode.LowConfidence,
-    why: "0.54 is below the 0.92 quantity threshold, so the confidence branch must fire on recorded words rather than only on assigned ones",
+    why: "0.54 is below the 0.92 quantity threshold, so the confidence branch must fire on fixture words rather than only on a value assigned in a unit test",
   },
   {
     fixture: "checksum-fail",
@@ -52,11 +54,12 @@ export const EXPECTATIONS: readonly Expectation[] = [
   },
   {
     fixture: "combo-invalid",
-    field: FieldName.DrugName,
-    value: "lisinopril",
-    hint: "Lisinopril",
-    action: GateAction.AskDisambiguate,
-    reasonCode: ReasonCode.LasaHit,
-    why: "the same pair check must fire on the fixture built for the combination failure, because the branch order puts the catalogue and the pair table ahead of the combination",
+    field: FieldName.Strength,
+    value: "80 mg",
+    hint: "eighty milligrams",
+    action: GateAction.AskWhichPart,
+    reasonCode: ReasonCode.ValidatorCombo,
+    context: { drugName: "lisinopril", dosageForm: "TABLET", route: "ORAL" },
+    why: "lisinopril is in no published pair, so nothing earlier in the branch order answers first and an 80 mg lisinopril tablet, which the catalogue does not hold, must reach the combination branch end to end",
   },
 ]

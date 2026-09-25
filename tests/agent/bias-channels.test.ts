@@ -4,7 +4,13 @@ import { describe, expect, it } from "vitest"
 import { buildAgentDefinition } from "@/agent"
 import { lasaCheckedTerms } from "@/lasa"
 
-const BIAS_PARAMETERS = ["transcription_prompt", "prompt", "word_boost", "custom_spelling"]
+const BIAS_PARAMETERS = [
+  "transcription_prompt",
+  "prompt",
+  "word_boost",
+  "custom_spelling",
+  "agent_context",
+]
 
 const COMPOSITION_VERBS = [
   "in your own words",

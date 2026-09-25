@@ -7,10 +7,11 @@ validator. A value cannot enter the order unless a validator passed it or a huma
 confirmed it aloud.
 
 The product's hard claim is that **high recogniser confidence does not protect against
-homophony**. The model can be certain it heard Bisoprolol while the human said
-Lisinopril. Confidence proves nothing there; a regulator-published look-alike
-sound-alike list does. So a drug name inside a published ISMP or FDA LASA pair triggers
-a mandatory re-ask **even at confidence 1.0**.
+homophony**. The model can be certain it heard morphine while the human said
+hydromorphone. Confidence proves nothing there; a regulator-published look-alike
+sound-alike list does. So a drug name on the 2023 ISMP List of Confused Drug Names
+triggers a mandatory re-ask **even at confidence 1.0**, and the re-ask is contrastive: only
+a spoken name answers it, never a yes.
 
 This folder is flat and English. Start with whichever question you have.
 
@@ -20,7 +21,7 @@ This folder is flat and English. Start with whichever question you have.
 |---|---|
 | [case.md](case.md) | What the product is, who it is for, why read-back is the right procedure, and what the competing approaches get wrong |
 | [spec.md](spec.md) | The engineering specification: data model, gate branches, tool schemas, system prompt, metric formulas. Written against a FastAPI/SQLite design that was dropped — the logic holds, the Python does not |
-| [slides.md](slides.md) | The presentation, twenty slides, speakable as written |
+| [slides.md](slides.md) | The presentation, speakable as written |
 
 ## What is true, and what is not
 
@@ -28,12 +29,13 @@ This folder is flat and English. Start with whichever question you have.
 |---|---|
 | [evidence.md](evidence.md) | Every claim the project makes, what it was measured with, at what n, and what that n is **not** enough for |
 | [limitations.md](limitations.md) | Everything the project cannot prove, at full strength, nothing softened. Measured, enforced, assumed, or false and admitted |
+| [sources.md](sources.md) | Every outside figure we quote, with the exact wording and the document it comes from, including the study that cuts against us |
 | [findings.md](findings.md) | Every defect found after the codebase already passed every check it declares. Eight audits, then a cleanup pass; not one came back empty |
 | [../eval/REPORT.md](../eval/REPORT.md) | The measurements themselves, each with the command that produced it and the size of the set it came from |
 
 Numbers without a method are forbidden here. Every figure in the report and on the
 metrics page carries its command and its set size, and
-`tests/scripts/report/honest-report-agreement.test.ts` runs those commands and requires the
+`tests/scripts/honest-report-agreement.test.ts` runs those commands and requires the
 printed figures to appear in the report — so a published number cannot go stale
 silently.
 
@@ -51,7 +53,7 @@ silently.
 ```bash
 npm run dev     # the Next.js development server
 make data       # build the NDC catalogue and the LASA table into data/
-make agent      # create the stored agent once, keep the id in the environment
+make agent      # create the reference agent make doctor checks; live sessions create their own
 make verify     # everything that must pass before a task counts as done
 make help       # every target, grouped
 ```

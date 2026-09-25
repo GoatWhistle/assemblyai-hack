@@ -1,4 +1,8 @@
-import { type SessionFault, SessionPhase } from "@/features/intake/session-status"
+import {
+  isAdvisoryFault,
+  type SessionFault,
+  SessionPhase,
+} from "@/features/intake/session-status"
 
 export const MicState = {
   Idle: "idle",
@@ -45,7 +49,7 @@ export const MIC_COPY: Readonly<Record<MicState, MicCopy>> = Object.freeze({
   },
   [MicState.Blocked]: {
     headline: "The line cannot open",
-    detail: "Nothing was recorded. The recorded demonstration runs without a microphone.",
+    detail: "Nothing was recorded. The replay demonstration runs without a microphone.",
     action: "Try again",
   },
 })
@@ -55,10 +59,14 @@ export function micStateFor(
   agentSpeaking: boolean,
   fault: SessionFault | null,
 ): MicState {
-  if (fault !== null || phase === SessionPhase.Blocked) {
+  if ((fault !== null && !isAdvisoryFault(fault)) || phase === SessionPhase.Blocked) {
     return MicState.Blocked
   }
-  if (phase === SessionPhase.RequestingMicrophone || phase === SessionPhase.MintingTokens) {
+  if (
+    phase === SessionPhase.RequestingMicrophone ||
+    phase === SessionPhase.MintingTokens ||
+    phase === SessionPhase.Reconnecting
+  ) {
     return MicState.Opening
   }
   if (phase === SessionPhase.Closing) {

@@ -67,7 +67,7 @@
   margin-top: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  animation: var(--keyframes-flag) var(--dur-slow) var(--ease-out-quart) both;
+  animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .refused {

@@ -1,3 +1,5 @@
+import { lasaUtterance } from "@/gate"
+import { lasaRiskFor } from "@/lasa"
 import type { SessionFixture } from "@/realtime/protocol"
 import { agentFrame, begin, created, ended, fixture, sttFrame, turn, userSaid } from "./frames"
 
@@ -10,12 +12,12 @@ export function echoPhantom(): SessionFixture {
     frames: [
       begin(0, id),
       created(10),
-      userSaid(1500, "Bisoprolol", 1),
-      sttFrame(1600, turn({ turnOrder: 1, startMs: 1500, specs: [["Bisoprolol", 1.0]] })),
+      userSaid(1500, "Hydromorphone", 1),
+      sttFrame(1600, turn({ turnOrder: 1, startMs: 1500, specs: [["Morphine", 1.0]] })),
       agentFrame(2400, { type: "reply.started" }),
       agentFrame(2440, {
         type: "transcript.agent",
-        text: "I heard Bisoprolol. That name is on the published confused-drug-names list together with lisinopril. To be certain: did you say Bisoprolol or lisinopril?",
+        text: lasaUtterance(lasaRiskFor("morphine")),
       }),
       sttFrame(
         3100,
@@ -24,18 +26,17 @@ export function echoPhantom(): SessionFixture {
           startMs: 3100,
           turnConfidence: 0.88,
           specs: [
-            ["did", 0.9],
-            ["you", 0.91],
-            ["say", 0.9],
-            ["Bisoprolol", 0.93],
-            ["or", 0.9],
-            ["lisinopril", 0.92],
+            ["morphine", 0.93],
+            ["and", 0.9],
+            ["hydromorphone", 0.92],
+            ["are", 0.91],
+            ["on", 0.9],
           ],
         }),
       ),
       agentFrame(5200, { type: "reply.done" }),
-      userSaid(6000, "Lisinopril", 3),
-      sttFrame(6100, turn({ turnOrder: 3, startMs: 6000, specs: [["Lisinopril", 0.98]] })),
+      userSaid(6000, "Hydromorphone", 3),
+      sttFrame(6100, turn({ turnOrder: 3, startMs: 6000, specs: [["Hydromorphone", 0.98]] })),
       ...ended(7500),
     ],
   })

@@ -1,21 +1,3 @@
-export const CONFIRMING: readonly string[] = Object.freeze([
-  "yes",
-  "yeah",
-  "correct",
-  "that's right",
-  "thats right",
-  "confirmed",
-  "right",
-])
-
-export const DENYING: readonly string[] = Object.freeze([
-  "no",
-  "nope",
-  "wrong",
-  "not quite",
-  "negative",
-])
-
 export const CANCELLING: readonly string[] = Object.freeze([
   "cancel",
   "cancel that",

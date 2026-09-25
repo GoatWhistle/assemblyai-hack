@@ -1,6 +1,6 @@
 import type { CatalogCombo, CatalogDrug } from "@/catalog"
 
-export const PRESCRIPTION_TYPE = "HUMAN PRESCRIPTION DRUG"
+const PRESCRIPTION_TYPE = "HUMAN PRESCRIPTION DRUG"
 
 export type ProductRow = Readonly<Record<string, string>>
 
@@ -30,7 +30,7 @@ export function parseTsv(text: string): readonly ProductRow[] {
   return rows
 }
 
-export function strengthOf(row: ProductRow): string {
+function strengthOf(row: ProductRow): string {
   const amount = (row.ACTIVE_NUMERATOR_STRENGTH ?? "").split(";")[0]?.trim() ?? ""
   const unit = (row.ACTIVE_INGRED_UNIT ?? "").split(";")[0]?.trim() ?? ""
   return `${amount} ${unit}`.trim()

@@ -44,8 +44,42 @@
   text-wrap: pretty;
 }
 
-.figures {
+.headline {
   display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+}
+
+.headlineFigure {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-tight);
+  color: var(--text-primary);
+}
+
+.headlineMethod {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.agreement {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.inlineCode {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  padding: 0.0625rem var(--space-2);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-sunken);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
 
 .closeTable {

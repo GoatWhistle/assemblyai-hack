@@ -16,11 +16,11 @@ import { lasaRiskFor } from "@/lasa"
 const SESSION = "fixture-lasa-001"
 
 const drugWords = [
-  makeWordSpan({ text: "Bisoprolol", startMs: 6800, endMs: 7620, confidence: 1 }),
+  makeWordSpan({ text: "Morphine", startMs: 6800, endMs: 7620, confidence: 1 }),
 ]
 
 const strengthWords = [
-  makeWordSpan({ text: "ten", startMs: 7640, endMs: 7860, confidence: 0.98 }),
+  makeWordSpan({ text: "two", startMs: 7640, endMs: 7860, confidence: 0.98 }),
   makeWordSpan({ text: "milligrams", startMs: 7880, endMs: 8320, confidence: 0.97 }),
 ]
 
@@ -30,8 +30,8 @@ const nameWords = [
 ]
 
 const quantityWords = [
-  makeWordSpan({ text: "thirty", startMs: 8340, endMs: 8640, confidence: 0.96 }),
-  makeWordSpan({ text: "tablets", startMs: 8660, endMs: 9080, confidence: 0.98 }),
+  makeWordSpan({ text: "ten", startMs: 11200, endMs: 11440, confidence: 0.96 }),
+  makeWordSpan({ text: "vials", startMs: 11460, endMs: 11900, confidence: 0.98 }),
 ]
 
 export function decisionFor(candidate: FieldCandidate): GateDecision {
@@ -41,23 +41,23 @@ export function decisionFor(candidate: FieldCandidate): GateDecision {
 export const LASA_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-drug-1",
   field: FieldName.DrugName,
-  rawValue: "Bisoprolol",
-  normalizedValue: "bisoprolol",
+  rawValue: "Morphine",
+  normalizedValue: "morphine",
   provenance: makeProvenance({
     words: drugWords,
     turnOrder: 2,
-    transcriptSlice: "Bisoprolol ten milligrams, thirty tablets.",
+    transcriptSlice: "Morphine two milligrams IV every four hours as needed.",
     sessionId: SESSION,
     sttTurnIsFormatted: true,
   }),
   verdict: makeVerdict({
     outcome: VerdictOutcome.Passed,
     validatorName: "ndc_catalog",
-    detail: "bisoprolol fumarate is present in the built catalogue as a nonproprietary name",
-    checkedValue: "bisoprolol",
-    evidence: { matchedColumn: "nonproprietary_name", saltStripped: "bisoprolol fumarate" },
+    detail: "morphine sulfate is present in the built catalogue as a nonproprietary name",
+    checkedValue: "morphine",
+    evidence: { matchedColumn: "nonproprietary_name", saltStripped: "morphine sulfate" },
   }),
-  lasa: lasaRiskFor("bisoprolol"),
+  lasa: lasaRiskFor("morphine"),
   status: CandidateStatus.ReadBackPending,
   attempt: 1,
   createdAt: "2026-09-15T09:00:08.400Z",
@@ -93,25 +93,25 @@ export const NAME_DECISION: GateDecision = decisionFor(NAME_CANDIDATE)
 export const QUANTITY_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-qty-1",
   field: FieldName.Quantity,
-  rawValue: "thirty tablets",
-  normalizedValue: 30,
+  rawValue: "ten vials",
+  normalizedValue: 10,
   provenance: makeProvenance({
     words: quantityWords,
-    turnOrder: 2,
-    transcriptSlice: "Bisoprolol ten milligrams, thirty tablets.",
+    turnOrder: 3,
+    transcriptSlice: "Dispense ten vials.",
     sessionId: SESSION,
     sttTurnIsFormatted: true,
   }),
   verdict: makeVerdict({
     outcome: VerdictOutcome.Passed,
     validatorName: "range_check",
-    detail: "30 is an integer within the documented 1-360 bound for quantity",
-    checkedValue: "30",
-    evidence: { lower: 1, upper: 360, value: 30 },
+    detail: "10 is an integer within the documented 1-360 bound for quantity",
+    checkedValue: "10",
+    evidence: { lower: 1, upper: 360, value: 10 },
   }),
   status: CandidateStatus.ReadBackPending,
   attempt: 1,
-  createdAt: "2026-09-15T09:00:09.080Z",
+  createdAt: "2026-09-15T09:00:11.900Z",
 })
 
 export const QUANTITY_DECISION: GateDecision = decisionFor(QUANTITY_CANDIDATE)
@@ -119,28 +119,69 @@ export const QUANTITY_DECISION: GateDecision = decisionFor(QUANTITY_CANDIDATE)
 export const STRENGTH_CANDIDATE: FieldCandidate = makeCandidate({
   candidateId: "cand-strength-1",
   field: FieldName.Strength,
-  rawValue: "ten milligrams",
-  normalizedValue: "10 mg",
+  rawValue: "two milligrams",
+  normalizedValue: "2 mg",
   provenance: makeProvenance({
     words: strengthWords,
     turnOrder: 2,
-    transcriptSlice: "Bisoprolol ten milligrams, thirty tablets.",
+    transcriptSlice: "Morphine two milligrams IV every four hours as needed.",
     sessionId: SESSION,
     sttTurnIsFormatted: true,
   }),
   verdict: makeVerdict({
     outcome: VerdictOutcome.Passed,
     validatorName: "combo_consistency",
-    detail: "bisoprolol fumarate x 10 mg x TABLET x ORAL exists in the built catalogue",
-    checkedValue: "10 mg",
+    detail:
+      "morphine sulfate x 2 mg/mL x INJECTION x INTRAVENOUS exists in the built catalogue",
+    checkedValue: "2 mg",
     evidence: {
-      drugName: "bisoprolol fumarate",
-      strength: "10 mg",
-      dosageForm: "TABLET",
-      route: "ORAL",
+      drugName: "morphine sulfate",
+      strength: "2 mg/mL",
+      dosageForm: "INJECTION",
+      route: "INTRAVENOUS",
     },
   }),
   status: CandidateStatus.ReadBackPending,
   attempt: 1,
   createdAt: "2026-09-15T09:00:08.320Z",
+})
+
+export const NAMED_ANSWER_AT_MS = 16200
+
+const answerWords = [
+  makeWordSpan({
+    text: "Hydromorphone",
+    startMs: NAMED_ANSWER_AT_MS,
+    endMs: NAMED_ANSWER_AT_MS + 900,
+    confidence: 0.97,
+  }),
+]
+
+export const NAMED_CANDIDATE: FieldCandidate = makeCandidate({
+  candidateId: "cand-drug-2",
+  field: FieldName.DrugName,
+  rawValue: "Hydromorphone",
+  normalizedValue: "hydromorphone",
+  provenance: makeProvenance({
+    words: answerWords,
+    turnOrder: 4,
+    transcriptSlice: "Hydromorphone.",
+    sessionId: SESSION,
+    sttTurnIsFormatted: true,
+  }),
+  verdict: makeVerdict({
+    outcome: VerdictOutcome.Passed,
+    validatorName: "ndc_catalog",
+    detail:
+      "hydromorphone hydrochloride is present in the built catalogue as a nonproprietary name",
+    checkedValue: "hydromorphone",
+    evidence: {
+      matchedColumn: "nonproprietary_name",
+      saltStripped: "hydromorphone hydrochloride",
+    },
+  }),
+  lasa: lasaRiskFor("hydromorphone"),
+  status: CandidateStatus.ReadBackPending,
+  attempt: 2,
+  createdAt: "2026-09-15T09:00:17.100Z",
 })

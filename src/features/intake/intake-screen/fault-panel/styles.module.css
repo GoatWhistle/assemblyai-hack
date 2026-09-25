@@ -1,0 +1,10 @@
+.fault {
+  margin-top: var(--space-5);
+  animation: var(--keyframes-flag) var(--dur-base) var(--ease-out-quart) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fault {
+    animation: none;
+  }
+}

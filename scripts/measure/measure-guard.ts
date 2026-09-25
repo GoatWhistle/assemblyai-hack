@@ -1,6 +1,6 @@
 import { ratePerHourFor } from "@/domain"
 
-export const SPACING_SECONDS = 24
+const SPACING_SECONDS = 24
 
 export type Preflight = {
   readonly ready: boolean
@@ -22,7 +22,7 @@ export function preflight(runs: number): Preflight {
   return { ready: true, reason: "" }
 }
 
-export const SECONDS_PER_RUN = 40
+const SECONDS_PER_RUN = 40
 
 export function costEstimate(runs: number): string {
   const hours = (runs * SECONDS_PER_RUN) / 3600

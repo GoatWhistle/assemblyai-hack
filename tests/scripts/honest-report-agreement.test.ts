@@ -20,24 +20,61 @@ type Anchor = {
 
 const ANCHORS: readonly Anchor[] = [
   {
+    step: "Does degraded audio turn a name into its published partner",
+    figures: ["0 of 186, 0.0% [0.0%, 2.0%]", "31.1% [19.5%, 45.7%]", "9.7% [6.2%, 14.8%]"],
+  },
+  {
     step: "What the recognizer got wrong",
     figures: ["27.5%"],
   },
   {
     step: "Which mechanism pays for which re-ask",
-    figures: ["100.0% [84.5%, 100.0%]", "27.1% [17.4%, 39.6%]"],
+    figures: [
+      "| catalogue absence | 21/21 | 0/59 |",
+      "| pair rule, contrastive read-back | 0/21 | 21/59 |",
+      "| confidence below threshold | 0/21 | 13/59 |",
+      "| standing read-back by regulation | 0/21 | 25/59 |",
+      "| accepted without a question | 0/21 | 0/59 |",
+      "100.0% [84.5%, 100.0%]",
+      "35.6% [24.6%, 48.3%]",
+      "59/59",
+      "2.43 words",
+      "28.7 words",
+    ],
   },
   {
     step: "The gate against itself",
-    figures: ["40.0%"],
+    figures: [
+      "| shipped: pair rule, standing read-back, threshold | 0 | 0/20 | 20/20 | 20/20 | 4/20 | 6/20 | 10/20 |",
+      "| without the pair rule: standing read-back, threshold | 0 | 20/20 | 0/20 | 20/20 | 0/20 | 8/20 | 12/20 |",
+      "| threshold only: no pair rule, no standing read-back | 12 | 20/20 | 0/20 | 8/20 | 0/20 | 8/20 | 0/20 |",
+    ],
+  },
+  {
+    step: "How much of the published confusion list the product rule covers",
+    figures: [
+      "1056",
+      "514",
+      "754",
+      "204 of 514 (39.7%)",
+      "153 of 514 (29.8%)",
+      "502 of 3730 (13.5%)",
+      "| 2 | 174 (33.9%) |",
+      "| 0 | 14 (2.7%) |",
+      "6 of 44",
+    ],
   },
   {
     step: "What the arithmetic validators actually catch",
-    figures: ["100.0%", "97.9%", "95.2%"],
+    figures: ["100.0%", "97.9%", "95.2%", "32 080 mutations"],
   },
   {
     step: "Our own detector, pointed at our own catalogue",
     figures: ["5707"],
+  },
+  {
+    step: "Which drugs the catalogue marks as controlled",
+    figures: ["193 drugs", "CII 74, CIII 40, CIV 64,", "CV 15"],
   },
   {
     step: "Is the reported confidence calibrated",
@@ -46,6 +83,32 @@ const ANCHORS: readonly Anchor[] = [
   {
     step: "Does the error rate depend on how established the drug is",
     figures: ["43.8%", "16.7%"],
+  },
+  {
+    step: "How many paid runs actually happened, including the discarded ones",
+    figures: [
+      "236",
+      "943.2 s",
+      "USD 0.1179",
+      "none of them is in the ledger",
+      "artefacts plus ledger: 19",
+    ],
+  },
+  {
+    step: "What the paid API has actually cost",
+    figures: [
+      "recorded paid runs: 12",
+      "runs that did not complete, still billed: 8",
+      "derived total: USD 2.5032",
+    ],
+  },
+  {
+    step: "Human voices, per speaker, with every failure named",
+    figures: [
+      "human voices: not measured (0 of 75 audio files present)",
+      "pauses between identifier digit groups: not measured",
+      "keyterms ablation on human voices: not measured",
+    ],
   },
 ]
 

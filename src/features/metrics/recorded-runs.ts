@@ -26,7 +26,7 @@ const FILES: readonly RecordedRun[] = [
     name: "Development set",
     setDescription:
       "40 drug names spoken by two synthetic voices, the set thresholds were tuned on",
-    command: "make eval-dev",
+    command: "make eval",
     scored: dev.scored as readonly Scored[],
     entityErrorRate: dev.entityErrorRate,
     measuredAt: dev.measuredAt,
@@ -58,6 +58,21 @@ export function recordedRuns(): readonly RecordedRun[] {
 
 export function allScored(): readonly Scored[] {
   return FILES.flatMap((run) => run.scored)
+}
+
+const COVERAGE_MATRIX_RUNS: readonly string[] = ["control", "native16"]
+
+export function coverageMatrixRuns(): readonly RecordedRun[] {
+  return FILES.filter((run) => COVERAGE_MATRIX_RUNS.includes(run.id))
+}
+
+export function coverageMatrixScored(): readonly Scored[] {
+  return coverageMatrixRuns().flatMap((run) => run.scored)
+}
+
+export function latestMeasuredOn(runs: readonly RecordedRun[]): string | null {
+  const dates = runs.map((run) => run.measuredAt.slice(0, 10)).sort()
+  return dates.at(-1) ?? null
 }
 
 export type CloseCodeCount = {

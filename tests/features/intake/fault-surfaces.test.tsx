@@ -54,9 +54,9 @@ describe("honest status surfaces", () => {
     })
   }
 
-  it("offers the recorded demonstration as the way past a blocked microphone", () => {
+  it("offers the replay demonstration as the way past a blocked microphone", () => {
     renderScreen({ fault: SessionFault.MicrophoneDenied, phase: SessionPhase.Blocked })
-    expect(screen.getByRole("link", { name: /watch the recording instead/i })).toBeDefined()
+    expect(screen.getByRole("link", { name: /run the replay instead/i })).toBeDefined()
   })
 
   it("drops the viewport-tall idle stage once a fault has to be read", () => {

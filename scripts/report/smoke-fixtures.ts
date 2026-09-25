@@ -3,6 +3,7 @@
 import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { catalogFromFile } from "@/catalog"
+import { matchProvenance, normalizeFieldValue, type TurnRecord } from "@/confirmation"
 import {
   GateAction,
   makeCandidate,
@@ -12,12 +13,8 @@ import {
 } from "@/domain"
 import { decide } from "@/gate"
 import { lasaRiskFor } from "@/lasa"
-import {
-  matchProvenance,
-  normalizeFieldValue,
-  type TurnRecord,
-  validateField,
-} from "@/sessions"
+import { validateField } from "@/sessions"
+import { smokeLiveRecordings } from "../fixtures/live-recording"
 import { EXPECTATIONS, type Expectation, SMOKE_SCOPE } from "./smoke-expectations"
 
 const CATALOG_FIXTURE = "eval/fixtures/catalog-fixture.json"
@@ -51,7 +48,7 @@ function loadFixture(name: string): Fixture {
   return JSON.parse(readFileSync(resolve(`eval/fixtures/${name}.json`), "utf8")) as Fixture
 }
 
-export function turnsOf(fixture: Fixture): readonly TurnRecord[] {
+function turnsOf(fixture: Fixture): readonly TurnRecord[] {
   const out: TurnRecord[] = []
   for (const frame of fixture.frames) {
     const message = frame.message
@@ -74,7 +71,7 @@ export type Outcome = {
   readonly detail: string
 }
 
-export function runExpectation(expectation: Expectation): Outcome {
+function runExpectation(expectation: Expectation): Outcome {
   const fixture = loadFixture(expectation.fixture)
   const turns = turnsOf(fixture)
   if (turns.length === 0) {
@@ -94,7 +91,7 @@ export function runExpectation(expectation: Expectation): Outcome {
     return {
       expectation,
       ok: false,
-      detail: `the quotation "${expectation.hint}" was not found in any recorded turn of ${expectation.fixture}, so provenance could not be established`,
+      detail: `the quotation "${expectation.hint}" was not found in any turn of ${expectation.fixture}, so provenance could not be established`,
     }
   }
 
@@ -103,7 +100,12 @@ export function runExpectation(expectation: Expectation): Outcome {
   )
   const policy = policyFor(expectation.field)
   const normalizedValue = normalizeFieldValue(expectation.field, expectation.value)
-  const verdict = validateField({ field: expectation.field, normalizedValue, catalog })
+  const verdict = validateField({
+    field: expectation.field,
+    normalizedValue,
+    catalog,
+    context: expectation.context,
+  })
   const candidate = makeCandidate({
     candidateId: `${fixture.name}-${expectation.field}`,
     field: expectation.field,
@@ -140,7 +142,7 @@ export function runExpectation(expectation: Expectation): Outcome {
       expectation,
       ok: false,
       detail:
-        "the gate accepted a value every one of these fixtures was recorded to have refused; an accept here is the defect the whole check exists to find",
+        "the gate accepted a value every one of these fixtures was built to have refused; an accept here is the defect the whole check exists to find",
     }
   }
   return {
@@ -152,7 +154,7 @@ export function runExpectation(expectation: Expectation): Outcome {
 
 function main(): void {
   process.stdout.write(
-    "SMOKE: the recorded audio path, replayed through the server pipeline\n\n",
+    "SMOKE: the synthesised fixture path, replayed through the server pipeline\n\n",
   )
   process.stdout.write("command: npx tsx scripts/report/smoke-fixtures.ts\n")
   process.stdout.write(`scope: ${SMOKE_SCOPE}\n\n`)
@@ -176,11 +178,30 @@ function main(): void {
     }
   }
 
-  const failed = outcomes.filter((outcome) => !outcome.ok)
+  const live = smokeLiveRecordings()
+  if (live.length === 0) {
+    process.stdout.write("live recordings: none in eval/fixtures yet (E3 not recorded)\n")
+  }
+  for (const recording of live) {
+    const problems = recording.problems.map((problem) => `     ${problem}\n`).join("")
+    process.stdout.write(
+      `${recording.ok ? "ok  " : "FAIL"} ${recording.file} ${recording.label}\n${problems}`,
+    )
+  }
+
+  const failed = [
+    ...outcomes.filter((outcome) => !outcome.ok),
+    ...live
+      .filter((recording) => !recording.ok)
+      .map((recording) => ({
+        detail: recording.problems.join("; "),
+        expectation: { fixture: recording.file },
+      })),
+  ]
   process.stdout.write("\n")
   if (failed.length > 0) {
     process.stderr.write(
-      `SMOKE FAILED: ${failed.length} of ${outcomes.length} recorded scenarios no longer produce the decision they were recorded to produce.\n`,
+      `SMOKE FAILED: ${failed.length} of ${outcomes.length} synthesised scenarios no longer produce the decision they were built to produce.\n`,
     )
     for (const outcome of failed) {
       process.stderr.write(`  ${outcome.expectation.fixture}: ${outcome.detail}\n`)
@@ -189,7 +210,7 @@ function main(): void {
     return
   }
   process.stdout.write(
-    `SMOKE PASSED: ${outcomes.length} recorded scenarios replayed through provenance matching, the validators, the pair table and the gate, each reaching the decision it was recorded to reach.\n`,
+    `SMOKE PASSED: ${outcomes.length} synthesised scenarios replayed through provenance matching, the validators, the pair table and the gate, each reaching the decision it was built to reach.\n`,
   )
   process.stdout.write(
     "what remains unreachable from here, named rather than implied: microphone capture, the AudioWorklet, both resample paths, the four echo layers and the two socket clients. Those are browser code and are covered by make e2e with a fake microphone.\n",

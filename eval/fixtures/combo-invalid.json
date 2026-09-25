@@ -11,7 +11,11 @@
       "message": {
         "type": "Begin",
         "id": "fixture-combo-invalid",
-        "expires_at": 1789000000
+        "expires_at": 1789000000,
+        "configuration": {
+          "model": "universal-3-5-pro",
+          "domain": "medical-v1"
+        }
       }
     },
     {
@@ -110,7 +114,7 @@
       "direction": "in",
       "message": {
         "type": "transcript.user",
-        "text": "Make it twenty milligrams",
+        "text": "Make it two milligrams",
         "turn_order": 2
       }
     },
@@ -123,7 +127,7 @@
         "turn_order": 2,
         "turn_is_formatted": false,
         "end_of_turn": true,
-        "transcript": "Make it twenty milligrams",
+        "transcript": "Make it two milligrams",
         "end_of_turn_confidence": 0.95,
         "words": [
           {
@@ -143,17 +147,17 @@
             "word_is_final": true
           },
           {
-            "text": "twenty",
+            "text": "two",
             "start": 6650,
-            "end": 7040,
+            "end": 6905,
             "confidence": 0.97,
             "speaker": "A",
             "word_is_final": true
           },
           {
             "text": "milligrams",
-            "start": 7110,
-            "end": 7680,
+            "start": 6975,
+            "end": 7545,
             "confidence": 0.98,
             "speaker": "A",
             "word_is_final": true
@@ -175,7 +179,7 @@
       "direction": "in",
       "message": {
         "type": "transcript.agent",
-        "text": "Confirming the strength: 20 mg. Correct?"
+        "text": "Confirming the strength: 2 mg. Correct?"
       }
     },
     {

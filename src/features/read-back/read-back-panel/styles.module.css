@@ -37,7 +37,8 @@
   background-color: var(--state-asking-surface);
   color: var(--state-asking-ink);
   font-weight: var(--weight-semibold);
-  animation: var(--keyframes-pulse-ring) 1800ms var(--ease-out-quart) infinite;
+  animation: var(--keyframes-pulse-ring) var(--dur-loop-pulse-urgent) var(--ease-out-quart)
+    infinite;
 }
 
 .stepFailed {

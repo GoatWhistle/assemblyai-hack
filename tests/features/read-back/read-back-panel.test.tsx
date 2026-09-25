@@ -53,9 +53,13 @@ describe("ReadBackPanel", () => {
           heard: "Yes, thirty.",
           attempts: 1,
         })}
-        fastPath={fastPathFor(ReadBackState.AwaitingConfirmation, "Yes, thirty.")}
+        fastPath={fastPathFor(ReadBackState.AwaitingConfirmation, "Yes, that's right.")}
       />,
     )
+    expect(
+      fastPathFor(ReadBackState.AwaitingConfirmation, "Yes, thirty.").action,
+      "a yes with a repeated value needs the server's repeat check, so the browser must not answer it locally",
+    ).toBe("none")
     expect(
       screen.getByText(/answered locally, no model round trip/i),
       "the fast path is optimistic display only; the label must say where the verdict came from",

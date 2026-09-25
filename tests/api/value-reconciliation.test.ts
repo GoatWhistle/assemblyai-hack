@@ -1,8 +1,7 @@
 import { POST as proposeField } from "@app/api/tools/propose-field/route"
 import { beforeEach, describe, expect, it } from "vitest"
 import { FieldName, ReasonCode } from "@/domain"
-import { intakeFor } from "@/tools"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { call, intake, resetToolEnvironment, seedTurn } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -15,7 +14,6 @@ type Proposal = {
 async function propose(input: Proposal): Promise<Record<string, unknown>> {
   const response = await proposeField(
     call("propose-field", {
-      session_id: SESSION,
       field: input.field,
       value: input.value,
       transcript_hint: input.hint,
@@ -26,7 +24,7 @@ async function propose(input: Proposal): Promise<Record<string, unknown>> {
 
 describe("a proposed value must be accounted for by the words that were spoken", () => {
   it("refuses bisoprolol when the human said lisinopril, even though the hint traces", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await seedTurn("lisinopril ten milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "bisoprolol",
@@ -42,13 +40,13 @@ describe("a proposed value must be accounted for by the words that were spoken",
       "a value nobody spoke must never reach the order under any action",
     ).toBe(false)
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "propose_field writes nothing at all, so the order stays empty regardless of the reason",
     ).toBe(0)
   })
 
   it("keeps the mismatch inside the validator-failure reason rather than inventing a fourth one", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await seedTurn("lisinopril ten milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "bisoprolol",
@@ -67,15 +65,15 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("says something different from the untraceable-hint refusal", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await seedTurn("lisinopril ten milligrams", 0.99)
     const untraceable = await propose({
       field: FieldName.DrugName,
       value: "warfarin",
       hint: "warfarin",
     })
 
-    resetToolEnvironment()
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await resetToolEnvironment()
+    await seedTurn("lisinopril ten milligrams", 0.99)
     const unsupported = await propose({
       field: FieldName.DrugName,
       value: "bisoprolol",
@@ -98,7 +96,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("accepts a normalized strength against the words that were spoken", async () => {
-    seedTurn("azithromycin two hundred milligrams", 0.99)
+    await seedTurn("azithromycin two hundred milligrams", 0.99)
     const body = await propose({
       field: FieldName.Strength,
       value: "200 mg",
@@ -113,7 +111,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("accepts a spelled-out NPI, because digits read aloud are still the digits", async () => {
-    seedTurn("one two four five three one nine five nine nine", 0.99)
+    await seedTurn("one two four five three one nine five nine nine", 0.99)
     const body = await propose({
       field: FieldName.PrescriberNpi,
       value: "1245319599",
@@ -128,7 +126,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("accepts a spelled-out DEA number the same way", async () => {
-    seedTurn("AB one two three four five six three", 0.99)
+    await seedTurn("AB one two three four five six three", 0.99)
     const body = await propose({
       field: FieldName.PrescriberDea,
       value: "AB1234563",
@@ -143,7 +141,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("accepts the drug name when the speaker added the salt", async () => {
-    seedTurn("tramadol hydrochloride fifty milligrams", 0.99)
+    await seedTurn("tramadol hydrochloride fifty milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "tramadol",
@@ -161,7 +159,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("accepts the salt in the value when the speaker said only the base name", async () => {
-    seedTurn("tramadol fifty milligrams", 0.99)
+    await seedTurn("tramadol fifty milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "tramadol hydrochloride",
@@ -175,7 +173,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("lets a value that really is in the words through, so the check is not refusing everything", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await seedTurn("lisinopril ten milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "lisinopril",
@@ -185,12 +183,13 @@ describe("a proposed value must be accounted for by the words that were spoken",
     expect(
       body.reason_code,
       "the negative control: a check that refused this too would be indistinguishable from a broken pipeline and the false-ask rate we publish would be one",
-    ).toBe(ReasonCode.LasaHit)
+    ).not.toBe(ReasonCode.ValidatorCombo)
+    expect(body.reason_code).toBe(ReasonCode.ReadBackRequired)
     expect(body.candidate_id).not.toBeNull()
   })
 
   it("tolerates the vowel drift a recognizer really produces", async () => {
-    seedTurn("venorelbine ten milligrams", 0.99)
+    await seedTurn("venorelbine ten milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "vinorelbine",
@@ -204,7 +203,7 @@ describe("a proposed value must be accounted for by the words that were spoken",
   })
 
   it("carries the words it heard as evidence, not just a refusal", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99)
+    await seedTurn("lisinopril ten milligrams", 0.99)
     const body = await propose({
       field: FieldName.DrugName,
       value: "bisoprolol",

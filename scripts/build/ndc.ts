@@ -6,6 +6,7 @@ import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import type { CatalogFile } from "@/catalog"
 import { buildDrugs, parseTsv } from "./ndc-parse"
+import { sealSnapshot } from "./snapshot"
 
 const SOURCE_URL = "https://www.accessdata.fda.gov/cder/ndctext.zip"
 const OUT_PATH = resolve("data/catalog.json")
@@ -57,14 +58,14 @@ function main(): void {
 
   const { drugs, stats } = buildDrugs(rows)
 
-  const file: CatalogFile = {
+  const file: CatalogFile = sealSnapshot({
     builtAt: new Date().toISOString(),
     sourceUrl: SOURCE_URL,
     rowsRead: stats.rowsRead,
     rowsAfterPrescriptionFilter: stats.rowsAfterPrescriptionFilter,
     rowsAfterDedup: stats.rowsAfterDedup,
     drugs,
-  }
+  })
 
   mkdirSync(resolve("data"), { recursive: true })
   writeFileSync(OUT_PATH, `${JSON.stringify(file)}\n`, "utf8")
@@ -83,6 +84,7 @@ function main(): void {
   console.log(`after dedup by name+combo      ${stats.rowsAfterDedup}`)
   console.log(`dedup removed                  ${dropped} rows (${dedupShare.toFixed(1)}%)`)
   console.log(`distinct drug names            ${drugs.length}`)
+  console.log(`sha256                         ${file.sha256}`)
   console.log(`written                        ${OUT_PATH}`)
 }
 

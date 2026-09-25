@@ -1,11 +1,20 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
+import { NOT_MEASURED_LABEL } from "@/features/metrics/benchmark-row"
 import { closeCodeRows } from "@/features/metrics/close-code-tally"
 import { confidenceFigures, errorRateFigures } from "@/features/metrics/measured-figures"
-import { GATE_METRICS, LATENCY_METRICS } from "@/features/metrics/metric-definitions"
+import {
+  GATE_METRICS,
+  LATENCY_METRICS,
+  NO_COMMAND,
+  ORDER_METRICS,
+} from "@/features/metrics/metric-definitions"
 import { MetricsDashboard } from "@/features/metrics/metrics-dashboard"
 import { allScored, closeCodeCounts } from "@/features/metrics/recorded-runs"
-import { NOT_MEASURED } from "@/shared/ui/data-display/figure-with-method"
+
+function valueCells(): readonly HTMLElement[] {
+  return [...document.querySelectorAll<HTMLElement>('td[data-column="value"]')]
+}
 
 describe("every metric carries a method", () => {
   it("gives each figure a command and a set description", () => {
@@ -16,17 +25,28 @@ describe("every metric carries a method", () => {
     }
   })
 
-  it("renders an unmeasured figure as not measured yet rather than as a zero", () => {
+  it("renders an unmeasured figure as a labelled dash rather than as a zero", () => {
     render(<MetricsDashboard />)
-    expect(screen.getAllByText(NOT_MEASURED).length).toBe(
-      GATE_METRICS.length + LATENCY_METRICS.length,
+    const absent = valueCells().filter(
+      (cell) => cell.querySelector(`[aria-label="${NOT_MEASURED_LABEL}"]`) !== null,
     )
+    expect(absent.length).toBe(
+      GATE_METRICS.length + LATENCY_METRICS.length + ORDER_METRICS.length,
+    )
+    for (const cell of absent) {
+      expect(cell.textContent, "an unmeasured value must never read as a digit").not.toMatch(
+        /[0-9]/,
+      )
+    }
   })
 
-  it("prints the command beside each figure", () => {
+  it("prints the command beside each figure, and says so when no command exists", () => {
     render(<MetricsDashboard />)
-    expect(screen.getAllByText("make eval").length).toBe(GATE_METRICS.length)
     expect(screen.getAllByText("make measure").length).toBe(LATENCY_METRICS.length)
+    expect(
+      screen.getAllByText(NO_COMMAND).length,
+      "a figure no script computes must not borrow the name of a target that measures something else",
+    ).toBe(GATE_METRICS.length + ORDER_METRICS.length)
   })
 })
 
@@ -131,8 +151,12 @@ describe("measured figures reach the screen", () => {
 
   it("renders those figures rather than leaving the page all placeholders", () => {
     render(<MetricsDashboard />)
-    expect(screen.getByText(/Why confidence is not the check/i)).toBeDefined()
-    expect(screen.getByText(/What the recognizer got wrong/i)).toBeDefined()
+    for (const figure of [...errorRateFigures(), ...confidenceFigures()]) {
+      expect(screen.getByText(figure.name)).toBeDefined()
+      if (figure.value !== null) {
+        expect(screen.getByText(figure.value)).toBeDefined()
+      }
+    }
   })
 })
 
@@ -147,20 +171,19 @@ describe("held-out discipline is stated on the page", () => {
     expect(screen.getByText(/A number without a method is not published here/i)).toBeDefined()
   })
 
-  it("says at section level why a blank section is blank", () => {
+  it("says why a dash is a dash", () => {
     render(<MetricsDashboard />)
     expect(
-      screen.getByText(/blank on purpose: the set is sealed, not unrun/i),
-      "five rows of not measured yet read as an unfinished page unless the section says the set is sealed, which is the discipline rather than a gap",
+      screen.getByText(/a named target means the run costs credit and has not been spent/i),
+      "a column of dashes reads as an unfinished page unless the page says what each one is waiting for",
     ).toBeDefined()
-    expect(screen.getByText(/blank until a paid run/i)).toBeDefined()
   })
 
-  it("distinguishes an unrun measurement from a sealed one in the lede", () => {
+  it("distinguishes an unspent paid run from a figure nothing computes in the lede", () => {
     render(<MetricsDashboard />)
     expect(
-      screen.getByText(/the run has not happened or the set is sealed/i),
-      "not measured yet covers two different states and a judge cannot tell them apart without being told",
+      screen.getByText(/no command yet means nothing computes the figure/i),
+      "not measured covers two different states and a judge cannot tell them apart without being told",
     ).toBeDefined()
   })
 })

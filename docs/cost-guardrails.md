@@ -26,14 +26,14 @@ the other — that is the main reason a single forgotten tab is expensive.
 |---|---|---|
 | Free credits on registration | **$50**, no card needed | Price list, verified 17.09 |
 | Our current available balance | **$149.93** as of 17.09 | Not from the price list: the actual account balance |
-| Spent as of 17.09 | **about $0.20** | Our own ledger of live runs |
+| Spent | **no figure here** | `make spend` derives it from the spend ledger at the published rates, for runs since 25 September. The seven earlier paid runs predate the ledger; `make live-runs` counts them and puts a floor, not a total, on their recorded socket time |
 | New sessions per minute, free tier | **5** | Price list. We measured the violation: it closes with **1008**, not the documented 3009 |
 | Interval between runs in a measurement sweep | **24 s** | Derived from the 5/min limit with margin; at a one-second interval 21 of 40 sockets closed with 1008 |
 | Maximum streaming session length | **3 hours**, auto-close | Price list, the prose of the limits section |
 
 ## Where the money goes and where it does not
 
-The project rule: **tests do not spend credits.** Paid calls live in exactly two commands.
+The project rule: **tests do not spend credits.** Paid calls live only in the `eval*` targets and `make live-smoke`, listed under "These open real AssemblyAI sockets and bill" in `make help`.
 
 | Command | Pays | Order of spend |
 |---|---|---|
@@ -41,7 +41,9 @@ The project rule: **tests do not spend credits.** Paid calls live in exactly two
 | `make verify` | **no** | $0. Every step is local; `VERIFY_STEPS` in the `Makefile` is the list |
 | `make e2e` | **no** | $0. Playwright with a fake microphone |
 | `make measure` | **no** | $0. Its live path is not implemented; it reports the gate's decision latency from fixtures and names the rows that stay unmeasured |
-| `make eval` | **yes** | A run over the held-out set, 60 sessions |
+| `make eval` | **yes** | The development set, 40 sessions |
+| `make eval-heldout` | **yes** | The sealed held-out set, 60 sessions |
+| `make live-smoke` | **yes** | Scripted calls with both sockets live; needs `LIVE_SMOKE_CONFIRM_PAID=1` |
 
 A mechanical guarantee matters more than discipline: a test that accidentally reaches a
 paid API is not found straight away but on the bill at the end. So the credentials are
@@ -59,7 +61,7 @@ Silence costs the same as speech.
 | An unclosed agent socket | lingers about **30 s** | $0.0375 at the $4.50/hr rate |
 | An unclosed STT socket up to auto-close | up to **3 hours** | **$1.35** at the $0.45/hr rate |
 | Both sockets, tab closed incorrectly | up to **3 hours** | **up to $15.30** at the combined $5.10/hr rate |
-| A day of live debugging | — | we observed **$7.65** |
+| A day of live debugging, estimated | about 1.5 h of both sockets | about **$7.65** at $5.10/hr, an estimate, not a ledger figure |
 
 Hence the exit rule: **`session.end`, then waiting for `session.ended`** on every path —
 the Stop button, the tab closing, an error. Not "fire and forget", but confirmation.
@@ -77,8 +79,10 @@ spend.
 
 **Code 1008 means the new-session limit, not a transport failure.** Reading it as a failure
 and starting to reconnect is a way to turn a measurement sweep into a fabricated error
-rate. A run in which even one 1008 occurred is not evaluated: it is discarded and repeated
-at a 24 s interval.
+rate. A run in which 1008 closes are systematic is not evaluated: it is discarded and
+repeated at a 24 s interval, as the 16 September run was. A single session that closed on
+1008 or another non-1000 code is excluded from scoring and named, never scored as a
+mishearing; the 25 September stress run excluded two this way.
 
 Tokens are single-use. A reconnect and a `session.resume` need a **fresh** token; reusing
 one fails quietly enough to cost an hour of searching.

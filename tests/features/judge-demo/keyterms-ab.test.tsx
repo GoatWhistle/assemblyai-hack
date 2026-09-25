@@ -180,6 +180,12 @@ describe("what the page tells a reader", () => {
     expect(screen.getAllByText(/not observed yet/i).length).toBeGreaterThan(0)
   })
 
+  it("leaves room for a one-off diagnostic instead of promising the arm is never measured", () => {
+    expect(WHY_NO_NUMBER).not.toMatch(/there will not be one/i)
+    expect(WHY_NO_NUMBER).toMatch(/one-off diagnostic/i)
+    expect(WHY_NO_NUMBER).toMatch(/never a product setting/i)
+  })
+
   it("remounts the panel on a switch, so the enter animation is not dead on arrival", async () => {
     const { container } = render(<KeytermsAb />)
     const before = container.querySelector('[role="tabpanel"]')

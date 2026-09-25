@@ -16,11 +16,11 @@ tracked_and_new() {
 }
 
 current() {
-  tracked_and_new -- '*.ts' '*.tsx' '*.css' \
+  tracked_and_new -- '*.ts' '*.tsx' '*.mjs' '*.css' \
     | grep -v '\.gen\.' \
     | grep -v '^data/' \
     | while IFS= read -r file; do
-        [ -f "$file" ] && printf '%s\n' "$file"
+        if [ -f "$file" ]; then printf '%s\n' "$file"; fi
       done \
     | xargs -d '\n' -r wc -l -- \
     | awk -v limit="$LIMIT" '

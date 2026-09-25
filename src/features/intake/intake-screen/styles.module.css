@@ -4,53 +4,19 @@
   padding: 0 var(--space-5) var(--space-6);
 }
 
-.stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-content: center;
-  justify-items: center;
-  gap: var(--space-5);
-  min-height: calc(100vh - 20rem);
-}
-
-.thesis {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  padding: var(--space-6) 0 0;
-  text-align: center;
-}
-
-.thesisTitle {
-  margin: 0;
-  max-width: var(--measure-prose);
-  font-size: var(--text-3xl);
-  font-weight: var(--weight-regular);
-  letter-spacing: var(--track-display);
-  line-height: var(--leading-tight);
-  color: var(--text-primary);
-  text-wrap: balance;
-}
-
-.thesisBody {
-  margin: 0;
-  max-width: 56ch;
-  font-size: var(--text-md);
+.alert {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--state-escalated-line);
+  border-radius: var(--radius-md);
+  background-color: var(--state-escalated-surface);
+  font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
-  letter-spacing: var(--track-tight);
-  color: var(--text-muted);
-  text-wrap: pretty;
+  color: var(--text-primary);
 }
 
-.waiting {
-  width: 100%;
-  max-width: var(--measure-prose);
-  margin: var(--space-5) auto 0;
-}
-
-.fault {
+.telemetry {
   margin-top: var(--space-5);
-  animation: var(--keyframes-flag) var(--dur-slow) var(--ease-out-quart) both;
 }
 
 .shell {
@@ -67,45 +33,6 @@
   min-width: 0;
 }
 
-.cards {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.prompt {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-5);
-  text-align: center;
-  animation: var(--keyframes-fade-rise) var(--dur-deliberate) var(--ease-out-quart) both;
-}
-
-.promptBody {
-  margin: 0;
-  max-width: 52ch;
-  font-size: var(--text-md);
-  line-height: var(--leading-relaxed);
-  letter-spacing: var(--track-tight);
-  color: var(--text-muted);
-  text-wrap: pretty;
-}
-
-.promptAside {
-  margin: 0;
-  max-width: var(--measure-prose);
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
-  color: var(--text-faint);
-  text-wrap: pretty;
-}
-
-.promptActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-3);
-}
-
 @media (max-width: 62rem) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
@@ -114,27 +41,6 @@
 
   .page {
     padding: 0 var(--space-4) var(--space-7);
-  }
-}
-
-@media (max-width: 40rem) {
-  .thesisTitle {
-    font-size: var(--text-2xl);
-  }
-}
-
-@media (max-height: 40rem) {
-  .thesis {
-    padding-top: var(--space-3);
-    gap: var(--space-2);
-  }
-
-  .thesisTitle {
-    font-size: var(--text-xl);
-  }
-
-  .thesisBody {
-    font-size: var(--text-base);
   }
 }
 

@@ -93,4 +93,10 @@ describe("the new judge surfaces are rendered by pages, not stranded in the tree
       "a step that says to attack the gate below has to actually come before the console",
     ).toBe(true)
   })
+
+  it("calls the mishearing on the replay link staged, because no recognizer run produced it", () => {
+    const page = readFileSync("app/(pages)/how-it-works/page.tsx", "utf8")
+    expect(page).toContain("Watch it catch a staged mishearing")
+    expect(page).not.toContain("Watch it catch a mishearing")
+  })
 })

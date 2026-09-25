@@ -4,11 +4,11 @@ import {
   FIELD_POLICIES,
   FieldName,
   GateAction,
-  isTerminal,
   LasaSource,
   makeLasaRisk,
   policyFor,
   ReasonCode,
+  TERMINAL_ACTIONS,
   VerdictOutcome,
 } from "@/domain"
 import { decide } from "@/gate"
@@ -210,7 +210,10 @@ describe("gate branches", () => {
 
       const decision = decide(candidate, policy)
 
-      expect(isTerminal(decision), `${policy.field} did not terminate`).toBe(true)
+      expect(
+        TERMINAL_ACTIONS.includes(decision.action),
+        `${policy.field} did not terminate`,
+      ).toBe(true)
       if (policy.criticality === Criticality.Critical) {
         expect(decision.action).toBe(GateAction.EscalateHuman)
         expect(decision.reasonCode).toBe(ReasonCode.EscalateAfterThirdFailure)

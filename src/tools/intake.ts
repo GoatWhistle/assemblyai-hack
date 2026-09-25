@@ -1,7 +1,8 @@
+import { matchesServerRecordedAgentLine, type TurnRecord } from "@/confirmation"
 import {
   abortField,
+  type ConfirmationEvidence,
   type ConfirmedValue,
-  CRITICAL_FIELDS,
   EchoTurnError,
   emptyOrder,
   type FieldCandidate,
@@ -10,24 +11,33 @@ import {
   InvalidWordSpanError,
   type MetricEvent,
   type MetricKind,
-  missingFields,
   type Order,
   type ReasonCode,
   setField,
   withdrawField,
   withStatus,
 } from "@/domain"
-import { matchesServerRecordedAgentLine, type TurnRecord } from "@/sessions"
+import type { TimelineEntry } from "@/sessions"
+import type { ToolPayload } from "./respond"
 
-type ReadBackRegistration = {
+export type ReadBackRegistration = {
   readonly field: FieldName
   readonly candidateId: string
   readonly utterance: string
   readonly style: "plain" | "spell_out"
+  readonly sinceMs: number
+  readonly answered: boolean
+}
+
+export type CommitRefusal = {
+  readonly atMs: number
+  readonly missing: readonly FieldName[]
+  readonly reasonCode: string
 }
 
 export type IntakeState = {
   sessionId: string
+  agentId: string
   order: Order
   turns: TurnRecord[]
   candidates: Map<string, FieldCandidate>
@@ -38,9 +48,22 @@ export type IntakeState = {
   startedAt: string
   gateEnabled: boolean
   lastAgentLine: string | null
+  nowMs: number
+  seq: number
+  timeline: TimelineEntry[]
+  proposalSeq: Map<string, number>
+  confirmations: Map<FieldName, ConfirmationEvidence>
+  outcomes: Map<number, IntakeOutcome>
+  committedSeq: number | null
+  committedAtMs: number | null
+  actualModel: string | null
+  commitRefusals: CommitRefusal[]
 }
 
-export const MAX_LIVE_SESSIONS = 64
+export type IntakeOutcome = {
+  readonly status: number
+  readonly payload: ToolPayload
+}
 
 export const MAX_TURNS_PER_SESSION = 400
 
@@ -48,9 +71,9 @@ export const MAX_CANDIDATES_PER_SESSION = 200
 
 export const MAX_DECISIONS_PER_SESSION = 400
 
-const MAX_EVENTS_PER_SESSION = 800
+const MAX_TIMELINE_ENTRIES = 800
 
-const states = new Map<string, IntakeState>()
+const MAX_EVENTS_PER_SESSION = 800
 
 export function recordEvent(
   state: IntakeState,
@@ -61,66 +84,63 @@ export function recordEvent(
     detail?: Readonly<Record<string, string | number | boolean | null>>
   } = {},
 ): void {
-  const event: MetricEvent = {
+  state.events.push({
     kind,
     sessionId: state.sessionId,
-    atMs: Date.now(),
+    atMs: state.nowMs,
     field: input.field ?? null,
     reasonCode: input.reasonCode ?? null,
     detail: input.detail ?? {},
-  }
-  state.events.push(event)
+  })
   if (state.events.length > MAX_EVENTS_PER_SESSION) {
     state.events = state.events.slice(-MAX_EVENTS_PER_SESSION)
   }
 }
 
-function evictOldest(): void {
-  while (states.size >= MAX_LIVE_SESSIONS) {
-    const oldest = states.keys().next()
-    if (oldest.done === true) {
-      return
-    }
-    states.delete(oldest.value)
-  }
-}
-
-export function liveSessionCount(): number {
-  return states.size
-}
-
-export function intakeFor(sessionId: string, gateEnabled = true): IntakeState {
-  const existing = states.get(sessionId)
-  if (existing !== undefined) {
-    states.delete(sessionId)
-    states.set(sessionId, existing)
-    return existing
-  }
-  evictOldest()
+export function createIntakeState(input: {
+  sessionId: string
+  agentId: string
+  gateEnabled: boolean
+  atMs: number
+}): IntakeState {
+  const startedAt = new Date(input.atMs).toISOString()
   const created: IntakeState = {
-    sessionId,
-    order: emptyOrder({ orderId: `order-${sessionId}`, sessionId }),
+    sessionId: input.sessionId,
+    agentId: input.agentId,
+    order: emptyOrder({
+      orderId: `order-${input.sessionId}`,
+      sessionId: input.sessionId,
+      createdAt: startedAt,
+    }),
     turns: [],
     candidates: new Map(),
     decisions: [],
     events: [],
     readBack: null,
     escalated: new Set(),
-    startedAt: new Date().toISOString(),
-    gateEnabled,
+    startedAt,
+    gateEnabled: input.gateEnabled,
     lastAgentLine: null,
+    nowMs: input.atMs,
+    seq: 1,
+    timeline: [],
+    proposalSeq: new Map(),
+    confirmations: new Map(),
+    outcomes: new Map(),
+    committedSeq: null,
+    committedAtMs: null,
+    actualModel: null,
+    commitRefusals: [],
   }
-  states.set(sessionId, created)
   recordEvent(created, "session_started")
   return created
 }
 
-export function resetIntake(sessionId?: string): void {
-  if (sessionId === undefined) {
-    states.clear()
-    return
+export function pushTimeline(state: IntakeState, entry: TimelineEntry): void {
+  state.timeline.push(entry)
+  if (state.timeline.length > MAX_TIMELINE_ENTRIES) {
+    state.timeline = state.timeline.slice(-MAX_TIMELINE_ENTRIES)
   }
-  states.delete(sessionId)
 }
 
 export function recordTurn(state: IntakeState, turn: TurnRecord): void {
@@ -199,40 +219,4 @@ export function markEscalated(state: IntakeState, field: FieldName): void {
 export function markAborted(state: IntakeState, field: FieldName): void {
   state.order = abortField(state.order, field)
   recordEvent(state, "order_refused", { field, detail: { cause: "aborted" } })
-}
-
-export function missingCritical(state: IntakeState): readonly FieldName[] {
-  return missingFields(state.order, CRITICAL_FIELDS)
-}
-
-export type FieldOutcome = "never_asked" | "refused_by_gate" | "abandoned"
-
-export function outcomeFor(state: IntakeState, field: FieldName): FieldOutcome {
-  if (state.order.abortedFields.includes(field)) {
-    return "abandoned"
-  }
-  const attempts = [...state.candidates.values()].filter((c) => c.field === field)
-  return attempts.length === 0 ? "never_asked" : "refused_by_gate"
-}
-
-export function missingByOutcome(
-  state: IntakeState,
-): Readonly<Record<FieldOutcome, readonly FieldName[]>> {
-  const grouped: Record<FieldOutcome, FieldName[]> = {
-    never_asked: [],
-    refused_by_gate: [],
-    abandoned: [],
-  }
-  for (const field of missingCritical(state)) {
-    grouped[outcomeFor(state, field)].push(field)
-  }
-  return Object.freeze({
-    never_asked: Object.freeze(grouped.never_asked),
-    refused_by_gate: Object.freeze(grouped.refused_by_gate),
-    abandoned: Object.freeze(grouped.abandoned),
-  })
-}
-
-export function hasEscalation(state: IntakeState): boolean {
-  return state.escalated.size > 0
 }

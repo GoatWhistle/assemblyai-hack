@@ -10,6 +10,8 @@ import {
   SPEND_UNVERIFIABLE_NOTE,
   totalSpend,
 } from "@/domain"
+import { readRegistry } from "../live/run-registry"
+import { reconcileRegistry, reconciles, renderReconciliation } from "./spend-reconcile"
 
 const LEDGER_PATH = "eval/spend-ledger.json"
 
@@ -101,6 +103,15 @@ function main(): void {
 
   process.stdout.write(`\nmethod: ${SPEND_METHOD_NOTE}\n`)
   process.stdout.write(`limit: ${SPEND_UNVERIFIABLE_NOTE}\n`)
+
+  const reconciliation = reconcileRegistry(readRegistry().runs, runs)
+  process.stdout.write(`\n${renderReconciliation(reconciliation)}`)
+  if (!reconciles(reconciliation)) {
+    process.stderr.write(
+      "the live run registry and the spend ledger disagree, so the spend figure above is not published as complete\n",
+    )
+    process.exit(1)
+  }
 }
 
 main()

@@ -1,11 +1,11 @@
-import type { AgentMessage } from "./protocol"
+import { type AgentMessage, type ReplyStatus, replyStatusOf } from "./protocol"
 
 export type AgentDispatchEvents = {
   onReady?: (sessionId: string) => void
   onUserTranscript?: (text: string) => void
-  onAgentTranscript?: (text: string) => void
-  onReplyStarted?: () => void
-  onReplyDone?: () => void
+  onAgentTranscript?: (text: string, replyId: string | null, interrupted: boolean) => void
+  onReplyStarted?: (replyId: string | null) => void
+  onReplyDone?: (status: ReplyStatus | null, replyId: string | null) => void
   onReplyAudio?: (base64: string) => void
   onSpeechStarted?: () => void
   onSpeechStopped?: () => void
@@ -26,10 +26,10 @@ function dispatchTyped(
       events.onSessionEnded?.()
       return
     case "reply.started":
-      events.onReplyStarted?.()
+      events.onReplyStarted?.(message.reply_id ?? null)
       return
     case "reply.done":
-      events.onReplyDone?.()
+      events.onReplyDone?.(replyStatusOf(message.status), message.reply_id ?? null)
       return
     case "input.speech.started":
       events.onSpeechStarted?.()
@@ -41,7 +41,11 @@ function dispatchTyped(
       events.onUserTranscript?.(message.text)
       return
     case "transcript.agent":
-      events.onAgentTranscript?.(message.text)
+      events.onAgentTranscript?.(
+        message.text,
+        message.reply_id ?? null,
+        message.interrupted === true,
+      )
       return
     case "audio":
       events.onReplyAudio?.(message.audio)
@@ -88,11 +92,12 @@ export function buildSessionUpdate(session: {
   readonly keyterms?: readonly string[]
   readonly turnDetection?: {
     readonly vadThreshold?: number
-    readonly minSilence?: number
-    readonly maxSilence?: number
     readonly interruptResponse?: boolean
   }
 }): Record<string, unknown> {
+  if (session.agentId !== undefined) {
+    return { agent_id: session.agentId }
+  }
   const turn = session.turnDetection
   const payload: Record<string, unknown> = {
     input: {
@@ -103,18 +108,12 @@ export function buildSessionUpdate(session: {
         : {
             turn_detection: {
               ...(turn.vadThreshold === undefined ? {} : { vad_threshold: turn.vadThreshold }),
-              ...(turn.minSilence === undefined ? {} : { min_silence: turn.minSilence }),
-              ...(turn.maxSilence === undefined ? {} : { max_silence: turn.maxSilence }),
               ...(turn.interruptResponse === undefined
                 ? {}
                 : { interrupt_response: turn.interruptResponse }),
             },
           }),
     },
-  }
-  if (session.agentId !== undefined) {
-    payload.agent_id = session.agentId
-    return payload
   }
   if (session.systemPrompt !== undefined) {
     payload.system_prompt = session.systemPrompt

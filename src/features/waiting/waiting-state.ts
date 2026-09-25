@@ -88,7 +88,8 @@ export function waitingOn(signals: WaitingSignals): WaitingOn {
   }
   if (
     signals.phase === SessionPhase.RequestingMicrophone ||
-    signals.phase === SessionPhase.MintingTokens
+    signals.phase === SessionPhase.MintingTokens ||
+    signals.phase === SessionPhase.Reconnecting
   ) {
     return WaitingOn.Opening
   }

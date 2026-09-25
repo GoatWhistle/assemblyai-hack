@@ -34,7 +34,7 @@ export type ThreeStratumRow = {
 export function threeStratumRows(scored: readonly Scored[]): readonly ThreeStratumRow[] {
   if (scored.length !== 3 * PER_STRATUM) {
     throw new Error(
-      `the pre-registered three-stratum table assumes ${3 * PER_STRATUM} items drawn ${PER_STRATUM} per stratum by scripts/build-heldout-set.ts; got ${scored.length}`,
+      `the pre-registered three-stratum table assumes ${3 * PER_STRATUM} items drawn ${PER_STRATUM} per stratum by scripts/build/heldout-set.ts; got ${scored.length}`,
     )
   }
   const groups: readonly { readonly label: string; readonly items: readonly Scored[] }[] = [
@@ -51,7 +51,7 @@ export function threeStratumRows(scored: readonly Scored[]): readonly ThreeStrat
 function printThreeStratumTable(scored: readonly Scored[]): void {
   const rows = threeStratumRows(scored)
   console.log(
-    "pre-registered three-stratum table (eval/heldout-preregistration.md): items are ordered rare, mid, common by scripts/build-heldout-set.ts and read positionally, never re-derived from a threshold at read time",
+    "pre-registered three-stratum table (eval/heldout-preregistration.md): items are ordered rare, mid, common by scripts/build/heldout-set.ts and read positionally, never re-derived from a threshold at read time",
   )
   console.log("")
   console.log("| Stratum | N | Errors | EER, 95% Wilson |")

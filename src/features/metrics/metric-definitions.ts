@@ -1,3 +1,7 @@
+export type BenchmarkInput = "live socket" | "tts" | "text" | "fixture"
+
+export const NO_COMMAND = "no command yet"
+
 export type MetricDefinition = {
   readonly id: string
   readonly name: string
@@ -5,8 +9,13 @@ export type MetricDefinition = {
   readonly command: string
   readonly setDescription: string
   readonly value: string | null
+  readonly input: BenchmarkInput
+  readonly n: number | null
+  readonly measuredOn: string | null
   readonly tone?: "neutral" | "alert"
 }
+
+const HELD_OUT_UNSCORED = "the held-out set; no script scores the gate on it yet"
 
 export const GATE_METRICS: readonly MetricDefinition[] = [
   {
@@ -14,44 +23,59 @@ export const GATE_METRICS: readonly MetricDefinition[] = [
     name: "LASA catch rate",
     meaning:
       "Of the held-out items where the recognizer returned the wrong member of a published pair, the share the gate stopped before the value entered the order.",
-    command: "make eval",
-    setDescription: "the held-out set, sealed until the final evaluation",
+    command: NO_COMMAND,
+    setDescription: HELD_OUT_UNSCORED,
     value: null,
+    input: "tts",
+    n: null,
+    measuredOn: null,
   },
   {
     id: "false-ask-rate",
     name: "False-ask rate",
     meaning:
       "How often the gate asked again when the value was already correct. This is the cost side of the idea and the only honest answer to whether the agent re-asks constantly.",
-    command: "make eval",
-    setDescription: "the held-out set, sealed until the final evaluation",
+    command: NO_COMMAND,
+    setDescription: HELD_OUT_UNSCORED,
     value: null,
+    input: "tts",
+    n: null,
+    measuredOn: null,
   },
   {
     id: "accepted-wrong",
     name: "Accepted-wrong count",
     meaning:
       "Values the gate let through that were in fact wrong. A single one is a safety failure and raises the threshold for that field.",
-    command: "make eval",
-    setDescription: "the held-out set, sealed until the final evaluation",
+    command: NO_COMMAND,
+    setDescription: HELD_OUT_UNSCORED,
     value: null,
+    input: "tts",
+    n: null,
+    measuredOn: null,
   },
   {
     id: "read-back-match-rate",
     name: "Read-back match rate",
     meaning: "Share of requested read-backs the caller confirmed on the first attempt.",
-    command: "make eval",
-    setDescription: "the held-out set, sealed until the final evaluation",
+    command: NO_COMMAND,
+    setDescription: "live sessions with a caller; none has been recorded",
     value: null,
+    input: "live socket",
+    n: null,
+    measuredOn: null,
   },
   {
     id: "escalation-rate",
     name: "Escalation rate",
     meaning:
       "Share of sessions where a critical field exhausted its attempts, so the order was refused and marked as needing a pharmacist.",
-    command: "make eval",
-    setDescription: "the held-out set, sealed until the final evaluation",
+    command: NO_COMMAND,
+    setDescription: "live sessions with a caller; none has been recorded",
     value: null,
+    input: "live socket",
+    n: null,
+    measuredOn: null,
   },
 ]
 
@@ -64,6 +88,9 @@ export const LATENCY_METRICS: readonly MetricDefinition[] = [
     command: "make measure",
     setDescription: "each live run, spaced about 24 seconds apart",
     value: null,
+    input: "live socket",
+    n: null,
+    measuredOn: null,
   },
   {
     id: "time-to-first-audio",
@@ -73,6 +100,24 @@ export const LATENCY_METRICS: readonly MetricDefinition[] = [
     command: "make measure",
     setDescription: "each live run, spaced about 24 seconds apart",
     value: null,
+    input: "live socket",
+    n: null,
+    measuredOn: null,
+  },
+]
+
+export const ORDER_METRICS: readonly MetricDefinition[] = [
+  {
+    id: "words-resaid-per-order",
+    name: "Words re-said per order",
+    meaning:
+      "How many words the caller had to say a second time, per finished order, because the gate asked again. The cost of the idea in the caller's own breath.",
+    command: NO_COMMAND,
+    setDescription: "finished live orders; none has been recorded",
+    value: null,
+    input: "live socket",
+    n: null,
+    measuredOn: null,
   },
 ]
 

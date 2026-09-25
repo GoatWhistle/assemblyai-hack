@@ -10,10 +10,18 @@ export type SttTurn = {
   words: TurnWord[]
 }
 
+export type SttBeginConfiguration = {
+  model?: string | null
+  mode?: string | null
+  domain?: string | null
+  voice_focus?: string | null
+}
+
 export type SttBegin = {
   type: "Begin"
   id: string
   expires_at: number
+  configuration?: SttBeginConfiguration
 }
 
 export type SttTermination = {
@@ -28,6 +36,8 @@ type AgentTranscript = {
   type: "transcript.user" | "transcript.agent"
   text: string
   turn_order?: number
+  reply_id?: string
+  interrupted?: boolean
 }
 
 type AgentAudio = {
@@ -40,10 +50,21 @@ type AgentLifecycle = {
     | "session.created"
     | "session.updated"
     | "session.ended"
-    | "reply.started"
-    | "reply.done"
     | "input.speech.started"
     | "input.speech.stopped"
+}
+
+export type ReplyStatus = "completed" | "interrupted"
+
+type AgentReplyStarted = {
+  type: "reply.started"
+  reply_id?: string
+}
+
+type AgentReplyDone = {
+  type: "reply.done"
+  reply_id?: string
+  status?: string
 }
 
 type AgentError = {
@@ -51,7 +72,13 @@ type AgentError = {
   error: { code: string; message: string }
 }
 
-export type AgentMessage = AgentTranscript | AgentAudio | AgentLifecycle | AgentError
+export type AgentMessage =
+  | AgentTranscript
+  | AgentAudio
+  | AgentLifecycle
+  | AgentReplyStarted
+  | AgentReplyDone
+  | AgentError
 
 export type FixtureFrame = {
   atMs: number
@@ -70,4 +97,11 @@ export type SessionFixture = {
 
 export function isSttTurn(message: SttMessage): message is SttTurn {
   return message.type === "Turn"
+}
+
+export function replyStatusOf(raw: unknown): ReplyStatus | null {
+  if (raw === "completed" || raw === "interrupted") {
+    return raw
+  }
+  return null
 }

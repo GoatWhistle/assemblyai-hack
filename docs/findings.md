@@ -167,7 +167,7 @@ and a raw colour literal lived in a component for an unknown period.
 
 **The meta-test could not fail.** The test that names any ratchet lacking a positive
 control asserted a quantity against itself. With it passing, the repository claimed every
-ratchet was guarded while **two of twenty** actually were. There are eleven now, plus five
+ratchet was guarded while **two of twenty** actually were. There are eleven now, plus ten
 excluded by name with a stated reason each.
 
 **A declared limit did not exist.** A constant setting the test-file limit per directory
@@ -225,9 +225,10 @@ reaches it. `make fixtures` now exists, and the README says synthesised.
 
 What this costs is bounded and worth stating: the fixtures exercise provenance matching,
 the validators, the pair table and the gate against message shapes taken from the vendor's
-documentation. They do not prove those shapes are what the sockets actually send. Every
-figure in `eval/REPORT.md` comes from live sockets instead, which is why the correction
-changes the README and no measurement.
+documentation. They do not prove those shapes are what the sockets actually send. The recognizer
+figures in `eval/REPORT.md` come from live sockets instead; the gate's own decision time
+is the one published figure a fixture feeds, and the A/B table uses assigned confidences,
+and both say so. That is why the correction changes the README and no measurement.
 
 ## A hundred exports nobody read, and two error classes nobody throws
 
@@ -250,13 +251,43 @@ unreachable:
   `explainClose`, so the duplicate could only ever drift out of agreement with it.
 - `bandCaveat`, a sentence qualifying a confidence interval, published nowhere.
 
-Two error classes in `src/domain/` are **declared and never thrown**: `NormalizationError`
-and `UpstreamError`. They are left in place rather than deleted, because that directory is
-the contract between the two halves of the project and removing from it is the owner's
-call, not a cleanup's. But they are leftovers of an earlier model: a normalisation failure
-is not an exception here, it is a **reason to re-ask**, returned as a value and read by the
-gate as one of its branches. Recording that is the point — an unthrown error class is a
-design decision whose only trace is that nothing reaches it.
+Two error classes in `src/domain/` were **declared and never thrown**: `NormalizationError`
+and `UpstreamError`. `UpstreamError` is thrown now, by the token routes and the per-session
+agent calls when the vendor refuses; `NormalizationError` was deleted on 25 September by the
+dead-code audit. A normalisation failure is not an exception here, it is a **reason to
+re-ask**, returned as a value and read by the gate as one of its branches.
+
+## Four defects every green test missed, found by the first live calls
+
+On 25 September the first scripted live calls (`make live-smoke`, a real browser, both real
+sockets, a tunnel to a local server) failed before a single field was proposed. Each failure
+was a real defect that a suite of more than two thousand passing tests had not seen, because
+each lived exactly where a test substitutes something.
+
+1. **The vendor refused every per-session agent.** `tools[].http.headers` was sent as an
+   object, as the create-agent specification describes; the live API answers 422 and wants a
+   list of `{ name, value }`. Our token route turned that into a 502, so no live session could
+   ever start. Tests had stubbed the vendor with the shape we believed in.
+2. **The browser's session update was refused.** With a stored agent bound, `session.update`
+   carried `agent_id` and our `input` block together; the vendor answers `agent_id is mutually
+   exclusive with other session fields` and closes 1008. The rule was already written in
+   `docs/assemblyai-api.md`; the code that assembled the message had not read it. A test now
+   requires the message to be `{ agent_id }` alone.
+3. **In development, each route had its own memory.** The token route registered a session in
+   one copy of an in-memory store and `/turns` looked in another, because `next dev` bundles
+   each route separately. Production uses Redis and would not have shown it; every local
+   rehearsal would have. The in-memory stores now live once per process.
+4. **A capture that never started hung the session with both sockets open.** When the audio
+   worklet did not load, `startCapture` never settled, nothing caught it, and the page sat on
+   "Minting short-lived tokens" while two sockets billed. The load now times out after ten
+   seconds into a named fault, and both sockets are ended.
+
+The fourth defect was found because the worklet never loads **on this machine**: in every
+automated Chromium, Chrome and Edge we tried here, even an empty worklet from a blob URL never
+settles, on our pages and on example.com alike. So the scripted calls cannot run locally, and
+`.github/workflows/live-smoke.yml` runs them in CI against a deployed URL, by hand, after an
+explicit confirmation that it spends credit. Until that run exists there is no recorded live
+call, and nothing in this repository says otherwise.
 
 ## What the audits could not verify, stated
 

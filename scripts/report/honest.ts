@@ -19,13 +19,13 @@ export const STEPS: readonly Step[] = [
     title: "Which mechanism pays for which re-ask",
     command: "npx tsx scripts/measure/coverage-matrix.ts",
     claim:
-      "every recorded error assigned to the first mechanism that fires in the gate's own branch order, with the false-ask cost of each",
+      "every recognizer result assigned to the first branch the shipped gate takes, the standing read-back of every drug name counted as an ask rather than hidden, the same corpus without the pair rule, and the read-back cost in words and estimated seconds",
   },
   {
     title: "The gate against itself",
     command: "npx tsx scripts/measure/ab-gate.ts",
     claim:
-      "the same corpus run with the pair check on and off, so the catches and the cost are printed together",
+      "the same corpus through the shipped policy, the same policy without the pair rule, and a threshold alone, counting what a reflex yes would write in each, so the catches and the cost are printed together",
   },
   {
     title: "What the arithmetic validators actually catch",
@@ -40,9 +40,16 @@ export const STEPS: readonly Step[] = [
       "how many pairs of genuinely different drugs in the shipped catalogue share a consonant skeleton, which bounds the gap the skeleton mechanism admits",
   },
   {
+    title: "Which drugs the catalogue marks as controlled",
+    command: "npx tsx scripts/measure/schedule-census.ts",
+    claim:
+      "every drug in the shipped catalogue carrying a DEA schedule, counted per schedule, which is the data the Schedule II refill refusal reads",
+  },
+  {
     title: "Is the reported confidence calibrated",
     command: "npx tsx scripts/measure/analyse-calibration.ts",
-    claim: "observed accuracy per reported-confidence bin over every recorded utterance",
+    claim:
+      "observed accuracy per reported-confidence bin over the 120 utterances of eval/control, eval/dev and eval/native16",
   },
   {
     title: "Does the error rate depend on how established the drug is",
@@ -53,13 +60,31 @@ export const STEPS: readonly Step[] = [
     title: "Latency against a budget, and how often it was exceeded",
     command: "npx tsx scripts/measure/latency-budget.ts",
     claim:
-      "every recorded latency counted against a budget that lives in code, with the vendor-published bar separated from the ones this deployment chose and only the former able to fail the build",
+      "every measured latency counted against a budget that lives in code, with the vendor-published bar separated from the ones this deployment chose and only the former able to fail the build",
   },
   {
-    title: "The recorded audio path, replayed end to end",
+    title: "How much of the published confusion list the product rule covers",
+    command: "npx tsx scripts/measure/ismp-coverage.ts",
+    claim:
+      "the full 2023 ISMP list parsed from its PDF with page and row kept, the pairs whose names the catalogue holds, the consonant-skeleton distance of every pair, and the cost: the share of catalogue drugs on the list and the share of correct values it puts to a contrastive question",
+  },
+  {
+    title: "Does degraded audio turn a name into its published partner",
+    command: "npx tsx scripts/measure/analyse-stress.ts",
+    claim:
+      "the listed names of the TTS corpora re-recognized live through a telephone band, white noise at 10 and 5 dB and a 1.1 speed-up, counting confident substitutions to a published partner with n and a Wilson interval, and printing zero as zero",
+  },
+  {
+    title: "The synthesised fixture path, replayed end to end",
     command: "npx tsx scripts/report/smoke-fixtures.ts",
     claim:
-      "each recorded scenario driven through provenance matching, the validators, the pair table and the gate, failing loudly when a fixture stops producing the decision it was recorded to produce",
+      "each synthesised scenario driven through provenance matching, the validators, the pair table and the gate, failing loudly when a fixture stops producing the decision it was built to produce",
+  },
+  {
+    title: "Human voices, per speaker, with every failure named",
+    command: "npx tsx scripts/report/live-report.ts",
+    claim:
+      "the entity error rate on three team members' voices with a row per speaker and n, every misheard line listed, natural LASA mishearings counted even when zero, false confirmations on non-commands, identifier pause distribution and the keyterms ablation, each printed as not measured until its recording exists",
   },
   {
     title: "How many paid runs actually happened, including the discarded ones",
@@ -103,12 +128,15 @@ function main(): void {
     "Every figure below is produced right now, on this machine, from files in this repository.\n",
   )
   process.stdout.write(
-    "No API key is needed and no network call is made: the recorded runs are committed, and the\n",
+    "No API key is needed and no network call is made: the measured runs are committed as\n",
   )
   process.stdout.write(
-    "gate, the validators and the catalogue are pure functions over them. Each block prints the\n",
+    "artefacts, the replay fixtures are synthesised rather than recorded, and the gate, the\n",
   )
-  process.stdout.write("command that produced it and the size of the set it came from.\n")
+  process.stdout.write(
+    "validators and the catalogue are pure functions over them. Each block prints the command\n",
+  )
+  process.stdout.write("that produced it and the size of the set it came from.\n")
   process.stdout.write(
     "\nWhat this cannot show is anything needing a live socket: turn-to-turn latency, the agent's\n",
   )

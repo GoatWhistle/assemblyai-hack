@@ -31,7 +31,7 @@ export default function HowItWorksPage() {
           </p>
           <div className={styles.actions}>
             <ActionLink href="/demo" tone="primary" size="large">
-              Watch it catch a mishearing
+              Watch it catch a staged mishearing
             </ActionLink>
             <ActionLink href="/" size="large">
               Take an order

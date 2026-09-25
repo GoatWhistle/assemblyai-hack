@@ -52,7 +52,7 @@
   width: 100%;
   transform-origin: left center;
   background-color: var(--action-rest);
-  transition: transform var(--dur-fast) linear;
+  transition: transform var(--dur-fast) var(--ease-constant);
 }
 
 .progressLabel {
@@ -67,117 +67,6 @@
   grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
   gap: var(--space-5);
   align-items: start;
-}
-
-.arm {
-  display: grid;
-  gap: var(--space-3);
-  padding: var(--space-5);
-  border: 1px solid var(--line-divider);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-panel);
-}
-
-.armGated {
-  border-color: var(--state-lasa-line);
-  border-width: 2px;
-}
-
-.armUngated {
-  border-color: var(--state-escalated-line);
-  border-width: 2px;
-  background-color: var(--surface-page);
-}
-
-.armHead {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.armTitle {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-}
-
-.armNote {
-  font-size: var(--text-xs);
-  line-height: var(--leading-snug);
-  color: var(--text-secondary);
-  text-wrap: pretty;
-}
-
-.outcome {
-  display: grid;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border: 1px solid var(--line-divider);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-sunken);
-}
-
-.outcomeGated {
-  border-color: var(--state-lasa-line);
-  background-color: var(--state-lasa-surface);
-}
-
-.outcomeUngated {
-  border-color: var(--state-escalated-line);
-  background-color: var(--state-escalated-surface);
-}
-
-.outcomeLabel {
-  font-size: var(--text-2xs);
-  color: var(--text-muted);
-}
-
-.outcomeValue {
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  line-height: var(--leading-tight);
-}
-
-.outcomeGated .outcomeValue {
-  color: var(--state-lasa-ink);
-}
-
-.outcomeUngated .outcomeValue {
-  color: var(--state-escalated-ink);
-}
-
-.outcomeBody {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-primary);
-  text-wrap: pretty;
-}
-
-.said {
-  display: grid;
-  gap: var(--space-1);
-  padding: var(--space-3);
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-sm);
-  background-color: var(--surface-panel);
-}
-
-.saidWho {
-  font-size: var(--text-2xs);
-  color: var(--text-muted);
-}
-
-.saidText {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-primary);
-}
-
-.reasonCode {
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  letter-spacing: var(--track-normal);
-  color: var(--text-faint);
 }
 
 .truth {
@@ -201,4 +90,17 @@
   font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
   text-wrap: pretty;
+}
+
+.resting {
+  border-radius: var(--radius-lg);
+  outline: 2px solid transparent;
+  outline-offset: var(--space-1);
+}
+
+.readingBack {
+  border-radius: var(--radius-lg);
+  outline: 2px solid var(--select-line);
+  outline-offset: var(--space-1);
+  transition: outline-color var(--dur-fast) var(--ease-out-quart);
 }

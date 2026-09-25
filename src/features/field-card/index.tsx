@@ -1,21 +1,33 @@
 "use client"
 
-import { type FieldCandidate, type GateDecision, policyFor, type WordSpan } from "@/domain"
+import {
+  type ConfirmationEvidence,
+  type FieldCandidate,
+  type GateDecision,
+  policyFor,
+  type WordSpan,
+} from "@/domain"
+import { ConfirmationReceipt } from "@/features/confirmation/confirmation-receipt"
 import { Certainty } from "@/shared/ui/data-display/certainty"
 import { VerdictBlock } from "@/shared/ui/data-display/verdict-block"
 import { WordSpanStrip } from "@/shared/ui/data-display/word-span-strip"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { describeReason } from "../gate-banner/reason-language"
 import { CRITICALITY_LABEL, FIELD_LABEL, FIELD_PROOF_NOTE } from "../intake/field-language"
+import { AnswerWait } from "./answer-wait"
+import { FieldHistory } from "./field-history"
 import {
   confidenceRankNote,
   isConfidenceOverruled,
+  nameAnswerState,
   STANCE_CHIP,
   STANCE_LABEL,
   stanceOf,
 } from "./field-status"
 import { LasaOverride } from "./lasa-override"
 import { priorAttemptOf, valueChanged } from "./prior-attempt"
+import { type ListenHandler, SaidRecorded } from "./said-recorded"
+import { sourceBadges } from "./source-badges"
 import styles from "./styles.module.css"
 import { ValueChange } from "./value-change"
 
@@ -31,6 +43,10 @@ export type FieldCardProps = {
   readonly siblings?: readonly FieldCandidate[]
   readonly selectedWordStartMs?: number | null
   readonly onSelectWord?: (word: WordSpan) => void
+  readonly evidence?: ConfirmationEvidence | null
+  readonly awaitingSinceMs?: number | null
+  readonly decisions?: ReadonlyMap<string, GateDecision>
+  readonly onListen?: ListenHandler
 }
 
 export function FieldCard({
@@ -39,6 +55,10 @@ export function FieldCard({
   siblings = [],
   selectedWordStartMs = null,
   onSelectWord,
+  evidence = null,
+  awaitingSinceMs = null,
+  decisions,
+  onListen,
 }: FieldCardProps) {
   const policy = policyFor(candidate.field)
   const stance = stanceOf(candidate, decision)
@@ -75,14 +95,24 @@ export function FieldCard({
         </div>
         <div className={styles.statuses}>
           <Chip tone={STANCE_CHIP[stance]}>{STANCE_LABEL[stance]}</Chip>
+          {sourceBadges(candidate, evidence).map((entry) => (
+            <Chip key={entry.id} tone={entry.tone}>
+              {entry.label}
+            </Chip>
+          ))}
         </div>
       </header>
+
+      <SaidRecorded candidate={candidate} {...(onListen === undefined ? {} : { onListen })} />
+      {awaitingSinceMs === null ? null : <AnswerWait sinceMs={awaitingSinceMs} />}
+      {evidence === null ? null : <ConfirmationReceipt evidence={evidence} />}
 
       {overruled && candidate.lasa.hit ? (
         <LasaOverride
           lasa={candidate.lasa}
           minConfidence={minConfidence}
           threshold={policy.autoAcceptThreshold}
+          nameState={nameAnswerState(evidence)}
         />
       ) : null}
 
@@ -131,6 +161,12 @@ export function FieldCard({
           onSelectWord={onSelectWord}
         />
       </div>
+
+      <FieldHistory
+        candidate={candidate}
+        siblings={siblings}
+        {...(decisions === undefined ? {} : { decisions })}
+      />
 
       {decision === null ? null : (
         <div className={styles.decision}>

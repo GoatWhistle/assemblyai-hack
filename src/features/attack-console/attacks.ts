@@ -107,7 +107,7 @@ export function runAttack(id: AttackId, confirmationMode: ConfirmationMode): Att
 
   if (id === AttackId.ThresholdToZero) {
     const candidate = candidateFor({
-      value: "bisoprolol",
+      value: "morphine",
       confidence: 1,
       outcome: VerdictOutcome.Passed,
       withWords: true,
@@ -119,7 +119,7 @@ export function runAttack(id: AttackId, confirmationMode: ConfirmationMode): Att
 
   if (id === AttackId.ClaimConfirmation) {
     const candidate = candidateFor({
-      value: "bisoprolol",
+      value: "morphine",
       confidence: 1,
       outcome: VerdictOutcome.Passed,
       withWords: true,

@@ -11,7 +11,11 @@
       "message": {
         "type": "Begin",
         "id": "fixture-socket-3007",
-        "expires_at": 1789000000
+        "expires_at": 1789000000,
+        "configuration": {
+          "model": "universal-3-5-pro",
+          "domain": "medical-v1"
+        }
       }
     },
     {

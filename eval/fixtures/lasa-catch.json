@@ -1,6 +1,6 @@
 {
   "name": "lasa-catch",
-  "description": "the human said Lisinopril, the recognizer returned Bisoprolol at confidence 1.0 and the validator passed it; the gate re-asks anyway because the name is in a published ISMP pair",
+  "description": "the human said hydromorphone, the recognizer returned Morphine at confidence 1.0 and the validator passed it; the gate re-asks anyway because HYDROmorphone - morphine is a row of the 2023 ISMP List of Confused Drug Names, the question names both drugs, a yes would not settle it, and the caller naming hydromorphone corrects the order",
   "recordedAt": "2026-09-15T12:00:00.000Z",
   "sessionId": "fixture-lasa-catch",
   "frames": [
@@ -11,7 +11,11 @@
       "message": {
         "type": "Begin",
         "id": "fixture-lasa-catch",
-        "expires_at": 1789000000
+        "expires_at": 1789000000,
+        "configuration": {
+          "model": "universal-3-5-pro",
+          "domain": "medical-v1"
+        }
       }
     },
     {
@@ -53,7 +57,7 @@
       "direction": "in",
       "message": {
         "type": "transcript.user",
-        "text": "Bisoprolol ten milligrams",
+        "text": "Hydromorphone two milligrams",
         "turn_order": 1
       }
     },
@@ -66,29 +70,29 @@
         "turn_order": 1,
         "turn_is_formatted": false,
         "end_of_turn": true,
-        "transcript": "Bisoprolol ten milligrams",
+        "transcript": "Morphine two milligrams",
         "end_of_turn_confidence": 0.99,
         "words": [
           {
-            "text": "Bisoprolol",
+            "text": "Morphine",
             "start": 4120,
-            "end": 4690,
+            "end": 4600,
             "confidence": 1,
             "speaker": "A",
             "word_is_final": true
           },
           {
-            "text": "ten",
-            "start": 4760,
-            "end": 5015,
+            "text": "two",
+            "start": 4670,
+            "end": 4925,
             "confidence": 0.99,
             "speaker": "A",
             "word_is_final": true
           },
           {
             "text": "milligrams",
-            "start": 5085,
-            "end": 5655,
+            "start": 4995,
+            "end": 5565,
             "confidence": 0.99,
             "speaker": "A",
             "word_is_final": true
@@ -110,7 +114,7 @@
       "direction": "in",
       "message": {
         "type": "transcript.agent",
-        "text": "I heard Bisoprolol. That name is on the published confused-drug-names list together with lisinopril. To be certain: did you say Bisoprolol or lisinopril?"
+        "text": "morphine and hydromorphone are on a published confused-drug-names list. Which: morphine, M-O-R, or hydromorphone, H-Y-D? Answer with a name."
       }
     },
     {
@@ -122,17 +126,17 @@
       }
     },
     {
-      "atMs": 6000,
+      "atMs": 7000,
       "socket": "agent",
       "direction": "in",
       "message": {
         "type": "transcript.user",
-        "text": "Lisinopril",
+        "text": "Hydromorphone",
         "turn_order": 2
       }
     },
     {
-      "atMs": 6100,
+      "atMs": 7100,
       "socket": "stt",
       "direction": "in",
       "message": {
@@ -140,13 +144,13 @@
         "turn_order": 2,
         "turn_is_formatted": false,
         "end_of_turn": true,
-        "transcript": "Lisinopril",
+        "transcript": "Hydromorphone",
         "end_of_turn_confidence": 0.95,
         "words": [
           {
-            "text": "Lisinopril",
-            "start": 6000,
-            "end": 6570,
+            "text": "Hydromorphone",
+            "start": 7000,
+            "end": 7705,
             "confidence": 0.98,
             "speaker": "A",
             "word_is_final": true
@@ -155,7 +159,7 @@
       }
     },
     {
-      "atMs": 6800,
+      "atMs": 7800,
       "socket": "agent",
       "direction": "in",
       "message": {
@@ -163,53 +167,20 @@
       }
     },
     {
-      "atMs": 6840,
+      "atMs": 7840,
       "socket": "agent",
       "direction": "in",
       "message": {
         "type": "transcript.agent",
-        "text": "Confirming the drug name: lisinopril. Correct?"
+        "text": "Thank you. hydromorphone, not morphine."
       }
     },
     {
-      "atMs": 7700,
+      "atMs": 8700,
       "socket": "agent",
       "direction": "in",
       "message": {
         "type": "reply.done"
-      }
-    },
-    {
-      "atMs": 8200,
-      "socket": "agent",
-      "direction": "in",
-      "message": {
-        "type": "transcript.user",
-        "text": "Yes",
-        "turn_order": 3
-      }
-    },
-    {
-      "atMs": 8300,
-      "socket": "stt",
-      "direction": "in",
-      "message": {
-        "type": "Turn",
-        "turn_order": 3,
-        "turn_is_formatted": false,
-        "end_of_turn": true,
-        "transcript": "Yes",
-        "end_of_turn_confidence": 0.95,
-        "words": [
-          {
-            "text": "Yes",
-            "start": 8200,
-            "end": 8455,
-            "confidence": 0.99,
-            "speaker": "A",
-            "word_is_final": true
-          }
-        ]
       }
     },
     {

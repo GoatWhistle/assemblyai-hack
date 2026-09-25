@@ -22,7 +22,7 @@ that replaced them is in `src/`, and a second copy in another language would onl
 
 **The discipline of numbers in this document.** No figure here is a measurement. Every
 threshold, timing and limit is an initial value, tuned on the dev set only. The
-AssemblyAI numbers that appear (15.31% EER, 43.6% → 79.1%) are the vendor's publications,
+AssemblyAI numbers that appear (15.31% EER; 43.6% → 79.1%, the second a projection under an assumed 70% caller catch rate) are the vendor's publications,
 not our measurements, and they carry that attribution everywhere they are used. Measured
 values live in [../eval/REPORT.md](../eval/REPORT.md) with the command that produced each
 one.
@@ -91,7 +91,7 @@ with structural types can do more, and [limitations.md](limitations.md) says so 
 **A value the speech does not support is a validator failure, not a fourth reason to
 re-ask.** The agent supplies the value to `propose_field` and can supply a name nobody
 said while quoting a hint that really does trace to a turn.
-`src/sessions/reconcile-value.ts` reconciles the two and returns a verdict named
+`src/confirmation/reconcile-value.ts` reconciles the two and returns a verdict named
 `spoken_support`, which enters the existing inconsistent-combination branch. The name is
 deliberately not a checksum's name: borrowing one would claim a proof that never ran.
 
@@ -119,8 +119,8 @@ spread from the highest threshold to the lowest, and re-asks are spent deliberat
 the error is expensive.
 
 **Second: recognition of proper nouns is the hard case, by the vendor's own numbers.**
-AssemblyAI publishes an EER of 15.31% at a WER of 6.99%, and 16.92% on proper nouns —
-their figures, not ours. A drug name is a proper noun. If roughly every sixth entity
+AssemblyAI publishes an EER of 15.31% at a WER of 6.99%, and 16.92% in the names
+category — their figures, not ours. A drug name is a name of the same kind. If roughly every sixth entity
 arrives wrong, the auto-accept threshold on that field has to be high enough that
 auto-accept is a rare event rather than the normal path. The drug-name threshold is a bet
 that read-back becomes the main path, which is why that field also carries
@@ -194,8 +194,8 @@ choice between two names when what was recognised does not exist at all.
 
 **LASA goes before the confidence threshold, and this is the product.** Put it after, and
 a candidate at confidence 0.99 is accepted and the LASA branch is never reached. That is
-precisely the scenario to catch: the recogniser is certain it heard Bisoprolol while the
-human said Lisinopril. The recogniser's certainty is certainty about the acoustics, not
+precisely the scenario to catch: the recogniser is certain it heard morphine while the
+human said hydromorphone. The recogniser's certainty is certainty about the acoustics, not
 about which word was spoken; homophony breaks straight through it, and no numerical value
 of confidence protects against it. The only protection is a regulator's published list,
 and it has to be applied before any numerical condition. A test pins the ask at confidence
@@ -276,13 +276,14 @@ Searches the built catalogue by spoken name and returns only combinations that e
 agent is instructed to call it before proposing a drug name, strength, dosage form or
 route, and never to propose a combination the tool did not return.
 
-The result carries a LASA warning when the matched name is in a curated pair. That is an
+The result carries a LASA warning when the matched name is on the full 2023 ISMP list
+(`lasaRiskFor`), with every listed partner in `confusable_with`. That is an
 optimisation, not a protection: it lets the model go straight to read-back instead of
 spending a round on `propose_field` returning a disambiguation. If the model ignores the
 warning, the gate returns `E_LASA_HIT` anyway. **The protection is in the code; the hint is
 in the prompt.**
 
-There is no network call at runtime. The catalogue is built offline by `scripts/build-ndc.ts`
+There is no network call at runtime. The catalogue is built offline by `scripts/build/ndc.ts`
 into `data/` and read through `src/catalog/`; openFDA is a build-time source only.
 
 ### 4.2 `validate_prescriber`
@@ -308,7 +309,7 @@ is not for the model — it is for the audit and for a judge, who can see from t
 up to the moment of acceptance the order held nothing.
 
 **The transcript hint is the most fragile part of the contract.** The model must copy a
-stretch of the caller's utterance verbatim; `src/sessions/provenance-match.ts` looks for
+stretch of the caller's utterance verbatim; `src/confirmation/provenance-match.ts` looks for
 that stretch among the words of the recent turns by a comparison over normalised tokens.
 When the match fails, the tool returns a re-ask rather than a decision, and the field
 cannot enter the order — which is the hallucination guard of section 1, arriving as an
@@ -553,8 +554,8 @@ figure shows the size of the sacrifice rather than an alternative worth adopting
 Four assertions, and the fourth is the one it is easiest not to write:
 
 1. **No keyterm is a forbidden name.** The direct check.
-2. **No keyterm hides a forbidden name inside it.** "Lisinopril 10 mg" and "take
-   Bisoprolol" are multi-word terms with a forbidden name buried in them, and a
+2. **No keyterm hides a forbidden name inside it.** "Hydromorphone 2 mg" and "take
+   morphine" are multi-word terms with a forbidden name buried in them, and a
    whole-string comparison passes both.
 3. **The list fits the documented limit.** `keyterms_prompt` accepts at most 100 terms and,
    per the documentation, **does not error** when given more — terms beyond the hundred are
@@ -747,7 +748,8 @@ contract.
 ### 7.6 The gate's effectiveness: the A/B
 
 The product's central comparison, and it reproduces the vendor's own experiment, in which
-adding confirmation steps moved task success from 43.6% to 79.1% — their numbers.
+reading back every entity is projected to move task success from 43.6% to 79.1%, assuming
+callers catch 70% of errors — their projection, not a measurement.
 
 **Task success is defined before the run.** An order counts as successful if it was
 committed **and** every field matches ground truth by the comparison rules of 7.2. An order

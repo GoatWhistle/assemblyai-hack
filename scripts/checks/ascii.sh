@@ -24,7 +24,7 @@ current() {
     git ls-files --others --exclude-standard
   } | sort -u \
     | grep -vE '^data/' \
-    | grep -vE '\.(pdf|png|jpg|jpeg|mp4|zip|parquet|csv|ico|svg|woff2?)$' \
+    | grep -vE '\.(pdf|png|jpg|jpeg|mp4|zip|parquet|csv|ico|svg|wav|woff2?)$' \
     | while IFS= read -r file; do
         [ -f "$file" ] && printf '%s\n' "$file"
       done > "$LIST"

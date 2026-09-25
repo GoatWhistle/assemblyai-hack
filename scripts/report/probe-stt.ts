@@ -2,6 +2,7 @@
 
 import WebSocket from "ws"
 import { ratePerHourFor } from "@/domain"
+import { modelFromArgs, modelVerdict, probeSocketUrl } from "./probe-model"
 import { appendPaidRun, paidRunOf } from "./record-spend"
 
 const SAMPLE_RATE = 16000
@@ -29,7 +30,11 @@ async function main(): Promise<void> {
     process.exit(1)
   }
 
-  const seconds = Number(process.argv[2] ?? 6)
+  const positional = process.argv[2]
+  const seconds =
+    positional === undefined || positional.startsWith("--") ? 6 : Number(positional)
+  const model = modelFromArgs(process.argv)
+  console.log(`requested speech_model: ${model ?? "(server default)"}`)
   console.log(`opening a real STT socket, sending ${seconds}s of silence`)
   const ratePerHour = ratePerHourFor(["stt"])
   console.log(
@@ -37,12 +42,12 @@ async function main(): Promise<void> {
   )
 
   const token = await mintToken(key)
-  const socket = new WebSocket(
-    `wss://streaming.assemblyai.com/v3/ws?token=${token}&sample_rate=${SAMPLE_RATE}&encoding=pcm_s16le&format_turns=true`,
-  )
+  const socket = new WebSocket(probeSocketUrl(token, model))
 
   const openedAt = Date.now()
   let sessionId = ""
+  let reportedModel: string | null = null
+  let sawBegin = false
   let framesSent = 0
   const events: string[] = []
 
@@ -70,6 +75,10 @@ async function main(): Promise<void> {
       events.push(type)
       if (type === "Begin") {
         sessionId = String(message.id ?? "")
+        sawBegin = true
+        const configuration = message.configuration as { model?: unknown } | undefined
+        reportedModel = typeof configuration?.model === "string" ? configuration.model : null
+        console.log(`Begin.configuration.model: ${reportedModel ?? "(absent)"}`)
         console.log(
           `Begin: session ${sessionId}, expires_at ${String(message.expires_at ?? "")}`,
         )
@@ -92,6 +101,9 @@ async function main(): Promise<void> {
     )
     console.log(`socket lifetime ${lifetime} ms, frames sent ${framesSent}`)
     console.log(`message types seen: ${[...new Set(events)].join(", ")}`)
+    console.log(
+      `model verdict: ${modelVerdict({ requested: model, reported: reportedModel, sawBegin, closeCode: code })}`,
+    )
     console.log(
       `billed lifetime cost about $${((lifetime / 3600000) * ratePerHour).toFixed(4)}`,
     )

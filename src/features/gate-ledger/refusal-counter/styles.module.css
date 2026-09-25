@@ -50,7 +50,7 @@
   border: 1px solid var(--state-lasa-line);
   border-radius: var(--radius-sm);
   background-color: var(--state-lasa-surface);
-  animation: var(--keyframes-flag) var(--dur-slow) var(--ease-out-quart) both;
+  animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .overrideTop {

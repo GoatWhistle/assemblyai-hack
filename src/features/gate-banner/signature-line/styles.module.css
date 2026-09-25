@@ -1,0 +1,72 @@
+.signature {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.outcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+}
+
+.gateLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--text-muted);
+}
+
+.outcomeWord {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-display);
+  line-height: var(--leading-tight);
+}
+
+.pass .outcomeWord {
+  color: var(--state-accepted-ink);
+}
+
+.reask .outcomeWord {
+  color: var(--state-lasa-ink);
+}
+
+.refused .outcomeWord {
+  color: var(--state-escalated-ink);
+}
+
+.code {
+  font-family: var(--font-data);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+.part {
+  overflow-wrap: anywhere;
+}
+
+.heard {
+  font-weight: var(--weight-semibold);
+}
+
+.certainty {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.arrow {
+  color: var(--text-muted);
+}

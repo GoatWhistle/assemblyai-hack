@@ -1,54 +1,52 @@
 import { beforeEach, describe, expect, it } from "vitest"
 import { FieldName } from "@/domain"
-import { intakeFor, markAborted, missingByOutcome, outcomeFor } from "@/tools"
+import { markAborted, missingByOutcome, outcomeFor } from "@/tools"
 import { POST as commitOrder } from "../../app/api/tools/commit-order/route"
 import { POST as proposeField } from "../../app/api/tools/propose-field/route"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { call, intake, resetToolEnvironment, seedTurn } from "./harness"
 
 describe("confirmed, refused and never-asked are three states, not one absence", () => {
-  beforeEach(() => {
-    resetToolEnvironment()
+  beforeEach(async () => {
+    await resetToolEnvironment()
   })
 
-  it("calls a field never-asked when no candidate for it exists", () => {
-    const state = intakeFor(SESSION)
+  it("calls a field never-asked when no candidate for it exists", async () => {
+    const state = await intake()
     expect(outcomeFor(state, FieldName.DrugName)).toBe("never_asked")
   })
 
   it("calls a field refused once the gate has seen a candidate and not accepted it", async () => {
-    seedTurn("venorelbine ten milligrams", 0.99)
+    await seedTurn("venorelbine ten milligrams", 0.99)
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: FieldName.DrugName,
         value: "venorelbine",
         transcript_hint: "venorelbine",
       }),
     )
-    const state = intakeFor(SESSION)
+    const state = await intake()
     expect(
       outcomeFor(state, FieldName.DrugName),
       "a value the gate examined and refused is not the same as a value nobody mentioned; reporting both as missing hides which one the agent should re-ask",
     ).toBe("refused_by_gate")
   })
 
-  it("calls a field abandoned once it was aborted for the pharmacy", () => {
-    const state = intakeFor(SESSION)
+  it("calls a field abandoned once it was aborted for the pharmacy", async () => {
+    const state = await intake()
     markAborted(state, FieldName.DaysSupply)
     expect(outcomeFor(state, FieldName.DaysSupply)).toBe("abandoned")
   })
 
   it("puts every missing critical field in exactly one bucket", async () => {
-    seedTurn("venorelbine ten milligrams", 0.99)
+    await seedTurn("venorelbine ten milligrams", 0.99)
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: FieldName.DrugName,
         value: "venorelbine",
         transcript_hint: "venorelbine",
       }),
     )
-    const state = intakeFor(SESSION)
+    const state = await intake()
     const grouped = missingByOutcome(state)
     const total =
       grouped.never_asked.length + grouped.refused_by_gate.length + grouped.abandoned.length
@@ -62,10 +60,9 @@ describe("confirmed, refused and never-asked are three states, not one absence",
   })
 
   it("tells the agent which fields are pointless to ask for again", async () => {
-    seedTurn("venorelbine ten milligrams", 0.99)
+    await seedTurn("venorelbine ten milligrams", 0.99)
     await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: FieldName.DrugName,
         value: "venorelbine",
         transcript_hint: "venorelbine",
@@ -73,7 +70,6 @@ describe("confirmed, refused and never-asked are three states, not one absence",
     )
     const response = await commitOrder(
       call("commit-order", {
-        session_id: SESSION,
         full_order_read_back: "Reading the whole order back.",
         caller_confirmed: true,
       }),
@@ -90,7 +86,6 @@ describe("confirmed, refused and never-asked are three states, not one absence",
   it("does not claim a field was refused when the conversation simply never reached it", async () => {
     const response = await commitOrder(
       call("commit-order", {
-        session_id: SESSION,
         full_order_read_back: "Reading the whole order back.",
         caller_confirmed: true,
       }),

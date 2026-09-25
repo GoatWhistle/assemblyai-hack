@@ -1,11 +1,6 @@
+import { classifyPlainAnswer } from "@/confirmation"
 import { ConfirmationMode, type FieldName, SpellOutStyle } from "@/domain"
-import {
-  CANCELLING,
-  CONFIRMING,
-  DENYING,
-  leadsWith,
-  normalizeAnswer,
-} from "./answer-vocabulary"
+import { CANCELLING, leadsWith, normalizeAnswer } from "./answer-vocabulary"
 
 export const ReadBackState = {
   Idle: "idle",
@@ -78,17 +73,10 @@ export function repeatsExpectedValue(heard: string, expected: string): boolean {
 export type HeardVerdict = "affirmed" | "denied" | "cancelled" | "unclear"
 
 export function classifyHeard(text: string): HeardVerdict {
-  const normalized = normalizeAnswer(text)
-  if (leadsWith(normalized, CONFIRMING)) {
-    return "affirmed"
-  }
-  if (leadsWith(normalized, DENYING)) {
-    return "denied"
-  }
-  if (leadsWith(normalized, CANCELLING)) {
+  if (leadsWith(normalizeAnswer(text), CANCELLING)) {
     return "cancelled"
   }
-  return "unclear"
+  return classifyPlainAnswer(text)
 }
 
 export const OPEN_TO_ANSWER: readonly ReadBackState[] = Object.freeze([

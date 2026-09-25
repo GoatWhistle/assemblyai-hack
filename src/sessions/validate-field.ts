@@ -13,7 +13,9 @@ import {
   type ValidatorVerdict,
   VerdictOutcome,
 } from "@/domain"
+import { lasaRiskFor } from "@/lasa"
 import {
+  type ComboSource,
   validateCombo,
   validateDea,
   validateNpi,
@@ -101,7 +103,11 @@ function comboVerdict(
       evidence: { field, awaiting: absent.join(", ") },
     })
   }
-  return validateCombo({ drugName, strength, dosageForm, route }, comboSourceFor(index))
+  const source: ComboSource = {
+    ...comboSourceFor(index),
+    partnersOf: (name) => lasaRiskFor(name).confusableWith,
+  }
+  return validateCombo({ drugName, strength, dosageForm, route }, source)
 }
 
 function refillVerdict(
@@ -168,4 +174,32 @@ export function validateField(input: {
     default:
       return notApplicableVerdict(checked)
   }
+}
+
+export const PLACEHOLDER_VALUE_CODE = "E_PLACEHOLDER_VALUE"
+
+const PLACEHOLDER_NAMES: ReadonlySet<string> = new Set([
+  "unknown",
+  "patient",
+  "the patient",
+  "n a",
+  "na",
+  "none",
+  "test",
+  "test patient",
+  "john doe",
+  "jane doe",
+  "anonymous",
+  "not given",
+  "not provided",
+  "no name",
+])
+
+export function isPlaceholderPatientName(value: string): boolean {
+  const folded = value
+    .toLowerCase()
+    .replace(/[^a-z\s]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+  return folded.length === 0 || PLACEHOLDER_NAMES.has(folded)
 }

@@ -1,4 +1,5 @@
 import type { TurnWord } from "@/domain"
+import { STT_MODEL } from "@/domain"
 import type { FixtureFrame, SessionFixture, SttTurn } from "@/realtime/protocol"
 
 export type WordSpec = readonly [text: string, confidence: number]
@@ -45,7 +46,12 @@ export function begin(atMs: number, sessionId: string): FixtureFrame {
     atMs,
     socket: "stt",
     direction: "in",
-    message: { type: "Begin", id: sessionId, expires_at: 1789000000 },
+    message: {
+      type: "Begin",
+      id: sessionId,
+      expires_at: 1789000000,
+      configuration: { model: STT_MODEL, domain: "medical-v1" },
+    },
   }
 }
 

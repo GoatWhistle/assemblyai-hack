@@ -10,6 +10,37 @@ import {
 const CAPTURE_SAMPLE_RATE = 48000
 const CHUNK_MS = 100
 const WORKLET_URL = "/worklets/capture-processor.js"
+const WORKLET_LOAD_TIMEOUT_MS = 10_000
+
+export class CaptureUnavailableError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "CaptureUnavailableError"
+  }
+}
+
+export async function loadCaptureModule(
+  worklet: Pick<AudioWorklet, "addModule">,
+  timeoutMs: number = WORKLET_LOAD_TIMEOUT_MS,
+): Promise<void> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const expired = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () =>
+        reject(
+          new CaptureUnavailableError(
+            `the audio processor did not load within ${timeoutMs} ms; this browser's audio engine is not running`,
+          ),
+        ),
+      timeoutMs,
+    )
+  })
+  try {
+    await Promise.race([worklet.addModule(WORKLET_URL), expired])
+  } finally {
+    clearTimeout(timer)
+  }
+}
 
 export const MIC_CONSTRAINTS: MediaStreamConstraints = {
   audio: {
@@ -113,7 +144,12 @@ export async function startCapture(
   sinks: CaptureSinks,
 ): Promise<MicrophoneCapture> {
   const context = new AudioContext({ sampleRate: CAPTURE_SAMPLE_RATE })
-  await context.audioWorklet.addModule(WORKLET_URL)
+  try {
+    await loadCaptureModule(context.audioWorklet)
+  } catch (error) {
+    await context.close()
+    throw error
+  }
   const source = context.createMediaStreamSource(stream)
   const node = new AudioWorkletNode(context, "capture-processor", {
     numberOfInputs: 1,

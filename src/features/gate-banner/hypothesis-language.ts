@@ -10,7 +10,7 @@ export const LASA_STANCE: Stance = Object.freeze({
   claim:
     "What is known: this name sits on a published pair of medicines that sound alike. That is a fact about the list, not about the caller.",
   notClaim:
-    "What is not known, and what this re-ask does not assert: which of the two the caller said. Nothing here suggests the wrong one was spoken, and most of the time it was not.",
+    "What is not known, and what this re-ask does not assert: which of the listed names the caller said. Nothing here suggests the wrong one was spoken, and most of the time it was not.",
   askedOf:
     "So the caller is asked to confirm, not corrected. The confirmation is the proof the pair makes unavailable any other way.",
 })

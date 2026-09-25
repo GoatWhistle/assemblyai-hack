@@ -18,22 +18,45 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-describe("AutoDegrade reaches the recorded demonstration without a second click, but never silently", () => {
+describe("AutoDegrade reaches the replay demonstration without a second click, but never silently", () => {
   it("renders nothing when there is no fault", () => {
     render(<AutoDegrade fault={null} />)
-    expect(screen.queryByText(/recorded demonstration/i)).toBeNull()
+    expect(screen.queryByText(/replay demonstration/i)).toBeNull()
   })
 
-  it("renders nothing for a non-microphone fault, since that degradation path is specific to getUserMedia", () => {
-    render(<AutoDegrade fault={SessionFault.TokenFailed} />)
-    expect(screen.queryByText(/recorded demonstration/i)).toBeNull()
+  it("renders nothing for a fault a retry can fix, such as the concurrency limit", () => {
+    render(<AutoDegrade fault={SessionFault.ConcurrencyReached} />)
+    expect(screen.queryByText(/replay demonstration/i)).toBeNull()
   })
 
-  it("labels the destination as recorded, never as a live session", () => {
+  for (const [fault, reason] of [
+    [SessionFault.MicrophoneDenied, /no microphone could be opened/i],
+    [
+      SessionFault.TokenFailed,
+      /did not issue a token, so no socket was opened and nothing was billed/i,
+    ],
+    [
+      SessionFault.BudgetExhausted,
+      /budget cap refused this call.*project's own credit, never yours/i,
+    ],
+  ] as const) {
+    it(`T6: moves to the replay on ${fault} and says why, including whose credit it is`, () => {
+      render(<AutoDegrade fault={fault} onNavigate={navigate} />)
+      expect(screen.getByText(reason)).toBeTruthy()
+      for (let second = 0; second < AUTO_DEGRADE_SECONDS; second += 1) {
+        act(() => {
+          vi.advanceTimersByTime(1000)
+        })
+      }
+      expect(navigate).toHaveBeenCalledWith(AUTO_DEGRADE_TARGET)
+    })
+  }
+
+  it("labels the destination as a synthesised replay, never as a live session", () => {
     render(<AutoDegrade fault={SessionFault.MicrophoneDenied} />)
     expect(
       screen.getByText(
-        /recorded session, clearly labelled as recorded, never presented as live/i,
+        /replays a synthesised session,\s+clearly labelled as a replay, never presented as live/i,
       ),
     ).not.toBeNull()
   })
@@ -73,7 +96,7 @@ describe("AutoDegrade reaches the recorded demonstration without a second click,
     vi.useRealTimers()
     render(<AutoDegrade fault={SessionFault.MicrophoneDenied} onNavigate={navigate} />)
     await userEvent.click(screen.getByRole("button", { name: /stay here/i }))
-    expect(screen.queryByText(/recorded demonstration/i)).toBeNull()
+    expect(screen.queryByText(/replay demonstration/i)).toBeNull()
     expect(
       navigate,
       "an operator who says stay here has overruled the automatic move; carrying on anyway would take the page away mid-decision",
@@ -82,7 +105,7 @@ describe("AutoDegrade reaches the recorded demonstration without a second click,
 
   it("announces the countdown through a live region rather than a silent redirect", () => {
     render(<AutoDegrade fault={SessionFault.MicrophoneDenied} />)
-    const note = screen.getByText(/moving to the recorded demonstration/i)
+    const note = screen.getByText(/moving to the replay demonstration/i)
     expect(note.closest("output")?.getAttribute("aria-live")).toBe("polite")
   })
 })

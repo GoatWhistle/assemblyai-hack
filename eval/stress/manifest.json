@@ -1,0 +1,1910 @@
+{
+  "builtAt": "2026-09-25T15:17:57.368Z",
+  "method": "every recording of eval/dev and eval/control whose spoken name is on the full 2023 ISMP list, degraded four ways: the telephone band alone (300 to 3400 Hz, 8 kHz mu-law, back to 16 kHz PCM for the socket), the same with Gaussian noise at 10 dB and at 5 dB SNR against the active speech level, and the same sped up by 1.1 with ffmpeg atempo; noise seed 20260925",
+  "caveat": "desktop TTS voices, not human speech; the noise is white, not a room; eval/native16 is left out because it repeats the 40 control terms and voices with only the resampler changed",
+  "conditions": [
+    {
+      "id": "phone",
+      "snrDb": null,
+      "tempo": 1
+    },
+    {
+      "id": "phone-snr10",
+      "snrDb": 10,
+      "tempo": 1
+    },
+    {
+      "id": "phone-snr5",
+      "snrDb": 5,
+      "tempo": 1
+    },
+    {
+      "id": "phone-fast",
+      "snrDb": null,
+      "tempo": 1.1
+    }
+  ],
+  "count": 188,
+  "items": [
+    {
+      "file": "eval/stress/audio/phone/dev-002-hydralazine.wav",
+      "spoken": "hydralazine",
+      "carrier": "The drug name is hydralazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/002-hydralazine.wav",
+      "sha256": "d0f489609f8f689483f94f2fee814e950620bf7f9304dddb22f9e0791dd100aa"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-003-hydroxyzine.wav",
+      "spoken": "hydroxyzine",
+      "carrier": "The drug name is hydroxyzine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/003-hydroxyzine.wav",
+      "sha256": "b2c90e3bcd3d916c2eb3bd814e6b5c2c8f194be37e71fc3f2d1be75a503dd96b"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-004-clonidine.wav",
+      "spoken": "clonidine",
+      "carrier": "The drug name is clonidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/004-clonidine.wav",
+      "sha256": "aa8522d238dc0a90053a6c5a9b734d0a3e2053ac909f378385b634efd3c3a51c"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-005-klonopin.wav",
+      "spoken": "klonopin",
+      "carrier": "The drug name is klonopin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/005-klonopin.wav",
+      "sha256": "10e5e3a34a2eae6dd7401d3219c2955420380bb0169b66808fc721976b635005"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-006-metformin.wav",
+      "spoken": "metformin",
+      "carrier": "The drug name is metformin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/006-metformin.wav",
+      "sha256": "ef1d01bb8ffeac7db3b5dc2938e06f46da73b38260b7959bc993ba83cc9d2ea8"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-007-metronidazole.wav",
+      "spoken": "metronidazole",
+      "carrier": "The drug name is metronidazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/007-metronidazole.wav",
+      "sha256": "f2a7555c885fb0894a788800d4c98006d9f50f3d010fb18b3c042ceedfc4fed5"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-008-tramadol.wav",
+      "spoken": "tramadol",
+      "carrier": "The drug name is tramadol.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/008-tramadol.wav",
+      "sha256": "5797dc175168ff5c10f3f47b0cc6b73ec1920e818b3adde717fb6159aa2f5beb"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-009-trazodone.wav",
+      "spoken": "trazodone",
+      "carrier": "The drug name is trazodone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/009-trazodone.wav",
+      "sha256": "a72851f7b2bbc35379c82e9e3062455fec564f6797894f78da76dfb8ef19e78c"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-010-vinblastine.wav",
+      "spoken": "vinblastine",
+      "carrier": "The drug name is vinblastine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/010-vinblastine.wav",
+      "sha256": "a9821a6b3f94b418f54087b1b2433f658f7901248cfb751982399259adf97948"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-011-vincristine.wav",
+      "spoken": "vincristine",
+      "carrier": "The drug name is vincristine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/011-vincristine.wav",
+      "sha256": "574377c0319472e95dff310d76b6b1f3b9f6c43baf913c90bd5fec21eb88e921"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-012-cycloserine.wav",
+      "spoken": "cycloserine",
+      "carrier": "The drug name is cycloserine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/012-cycloserine.wav",
+      "sha256": "1047abc2d522bc994f151c68754a205902e2dd5d99ddae8aa4a2ca07448e8e38"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-013-cyclosporine.wav",
+      "spoken": "cyclosporine",
+      "carrier": "The drug name is cyclosporine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/013-cyclosporine.wav",
+      "sha256": "af39d0353d552f6a58f54e51c09a196ac833f4df8fe84bf3dd5c8c732b47c5fe"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-014-chlorpromazine.wav",
+      "spoken": "chlorpromazine",
+      "carrier": "The drug name is chlorpromazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/014-chlorpromazine.wav",
+      "sha256": "7450cb7b882bc551c5ce3a0c409aadff0196aa0fa2e5a1740a7d6c83774639c7"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-015-chlorpropamide.wav",
+      "spoken": "chlorpropamide",
+      "carrier": "The drug name is chlorpropamide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/015-chlorpropamide.wav",
+      "sha256": "c04f4b6bc75366c96bc320aac31736c7e54350693ec13c740ed63045fdbbbe4c"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-016-glipizide.wav",
+      "spoken": "glipizide",
+      "carrier": "The drug name is glipizide.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/016-glipizide.wav",
+      "sha256": "7959fe69bcfe47ad72bbb3049bce38988ef3d214d674368a26bcc7986e2f1195"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-017-glyburide.wav",
+      "spoken": "glyburide",
+      "carrier": "The drug name is glyburide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/017-glyburide.wav",
+      "sha256": "b4797531c3af0a5508612a5ad8c92f37a05c8e4546bc495251c44f523b8f9734"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-018-sulfadiazine.wav",
+      "spoken": "sulfadiazine",
+      "carrier": "The drug name is sulfadiazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/018-sulfadiazine.wav",
+      "sha256": "94efe26f2faf7907bc4b37fc9e2da598f5f1dcd03cf758bee1191c4097e5409e"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-019-sulfasalazine.wav",
+      "spoken": "sulfasalazine",
+      "carrier": "The drug name is sulfasalazine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/019-sulfasalazine.wav",
+      "sha256": "a6ac9eebda9a0a9b416d7b4d819a915482668dc5fb1e8bf164193e412fad84df"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-020-hydromorphone.wav",
+      "spoken": "hydromorphone",
+      "carrier": "The drug name is hydromorphone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/020-hydromorphone.wav",
+      "sha256": "46f8eaa5058fd107c1292a9cfa0e640149086bce4fd6918d35b9b7fee8598b39"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-021-morphine.wav",
+      "spoken": "morphine",
+      "carrier": "The drug name is morphine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/021-morphine.wav",
+      "sha256": "f0c44626242f9da79be209118589509e010cea36217a394b0f102cde6787dc4f"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-022-oxycodone.wav",
+      "spoken": "oxycodone",
+      "carrier": "The drug name is oxycodone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/022-oxycodone.wav",
+      "sha256": "5a09774cee9bb53b14352be125ac1cfd00947d96ba6f1257cd1f88e9a5e0ecb5"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-023-oxycontin.wav",
+      "spoken": "oxycontin",
+      "carrier": "The drug name is oxycontin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/023-oxycontin.wav",
+      "sha256": "0000a4c865df4cfd1f4283a83dc573dec06fa7b856f686bbbd1c90666ac5c209"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-024-prednisone.wav",
+      "spoken": "prednisone",
+      "carrier": "The drug name is prednisone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/024-prednisone.wav",
+      "sha256": "9bdc1494915d9223aae98411b9842d40a5a2de98c815db9bf5c7bb07c2423fe8"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-025-prednisolone.wav",
+      "spoken": "prednisolone",
+      "carrier": "The drug name is prednisolone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/025-prednisolone.wav",
+      "sha256": "9c57919665db3a04d7e1afa183e54481860e955f06f49143511acc70f5ba4c6b"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-026-clobazam.wav",
+      "spoken": "clobazam",
+      "carrier": "The drug name is clobazam.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/026-clobazam.wav",
+      "sha256": "98377e0041b2edcc48231386925a8e6d20945267e4509a1d21f2e0b54e6961da"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-027-clonazepam.wav",
+      "spoken": "clonazepam",
+      "carrier": "The drug name is clonazepam.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/027-clonazepam.wav",
+      "sha256": "58141e48d7f49b8eaa8bab1abc96a598f8974b2a3a2461bb7d88329b69dab29d"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-028-lamotrigine.wav",
+      "spoken": "lamotrigine",
+      "carrier": "The drug name is lamotrigine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/028-lamotrigine.wav",
+      "sha256": "66d2dfa9dfd76c68d2096dc9db8a4286abc44b44c94cba421a02a522ce0d9dca"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-029-lamivudine.wav",
+      "spoken": "lamivudine",
+      "carrier": "The drug name is lamivudine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/029-lamivudine.wav",
+      "sha256": "170f941d107f0f5192dee34ed1b953a463d481552e82f0f55065a3f8a1ae12a0"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-030-carboplatin.wav",
+      "spoken": "carboplatin",
+      "carrier": "The drug name is carboplatin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/030-carboplatin.wav",
+      "sha256": "a306e71d3606f57cf3f08581dcdec52b8d5e30e2a86f94bc9cef4241e4a0c738"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-031-cisplatin.wav",
+      "spoken": "cisplatin",
+      "carrier": "The drug name is cisplatin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/031-cisplatin.wav",
+      "sha256": "7936205acbb4ae7b7f217d8a8fef23fe06cae54798184abdc0485dd129fd9c84"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-032-azathioprine.wav",
+      "spoken": "azathioprine",
+      "carrier": "The drug name is azathioprine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/032-azathioprine.wav",
+      "sha256": "266a118e7953bb6a0b049bc3b30bb6f7f80e06dd08217ad4cec984587c7ec067"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-034-dobutamine.wav",
+      "spoken": "dobutamine",
+      "carrier": "The drug name is dobutamine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/034-dobutamine.wav",
+      "sha256": "f9e01dc56e1557b4b6376937f14048b77dc66ed32e4ed7db70116e55589bb8fd"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-035-dopamine.wav",
+      "spoken": "dopamine",
+      "carrier": "The drug name is dopamine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/035-dopamine.wav",
+      "sha256": "c4f35f99740ea7ff2b8a5b87cd5cf9fa27fdd10c1d948f6c6812d79afb174577"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-036-nifedipine.wav",
+      "spoken": "nifedipine",
+      "carrier": "The drug name is nifedipine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/036-nifedipine.wav",
+      "sha256": "ff624bd3ecbf736c88c47c27793a50ebcc9b31ca3a00bec9d40c6aaee8ab2e33"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-037-nimodipine.wav",
+      "spoken": "nimodipine",
+      "carrier": "The drug name is nimodipine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/037-nimodipine.wav",
+      "sha256": "5f0dc9b22dc83914cb99980577677d1d3765588acfc2f56d242c2410356ccfe1"
+    },
+    {
+      "file": "eval/stress/audio/phone/dev-038-cefazolin.wav",
+      "spoken": "cefazolin",
+      "carrier": "The drug name is cefazolin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/dev/audio/038-cefazolin.wav",
+      "sha256": "4fdf2873f176c5cc1ec3688e9b863e9d3a51ba7f86b8e91df470b52a702e9935"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-002-hydralazine.wav",
+      "spoken": "hydralazine",
+      "carrier": "The drug name is hydralazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/002-hydralazine.wav",
+      "sha256": "f2a9e5d7b8fc348fa76a2e5370de7f068672755498e1cea1595b74f78ff3fbae"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-003-hydroxyzine.wav",
+      "spoken": "hydroxyzine",
+      "carrier": "The drug name is hydroxyzine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/003-hydroxyzine.wav",
+      "sha256": "30b4286a80c3d8c56a7111fe0e405c718a07e2e7ec929e5e219e608ddbcf5ed1"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-004-clonidine.wav",
+      "spoken": "clonidine",
+      "carrier": "The drug name is clonidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/004-clonidine.wav",
+      "sha256": "8cedd666f826610fae82e249b20723a6df278b43ac38ecd8bedb52c8da59d4f0"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-005-klonopin.wav",
+      "spoken": "klonopin",
+      "carrier": "The drug name is klonopin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/005-klonopin.wav",
+      "sha256": "cd0e69dacbac4f4f5648c740886d77e1d5e150e03ffc859c66c63788918e7dcd"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-006-metformin.wav",
+      "spoken": "metformin",
+      "carrier": "The drug name is metformin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/006-metformin.wav",
+      "sha256": "ee56802c75f8f06286abf37da31f63273cd1f8fc7c557d8e141ae9940a44b6f2"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-007-metronidazole.wav",
+      "spoken": "metronidazole",
+      "carrier": "The drug name is metronidazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/007-metronidazole.wav",
+      "sha256": "b590ab24b0fcf16fac1ca3cad49e67b23eb4f60d9c8f85bdc65071f42c7bdb36"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-008-tramadol.wav",
+      "spoken": "tramadol",
+      "carrier": "The drug name is tramadol.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/008-tramadol.wav",
+      "sha256": "e50f8ef490fb4f94016f686cb8f3a2465566c206fad6207bccbd57b264724f30"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-009-trazodone.wav",
+      "spoken": "trazodone",
+      "carrier": "The drug name is trazodone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/009-trazodone.wav",
+      "sha256": "2ab2d7855f6e865bc071ff17a447fae651bc6c430b484d8b2dd9d9895193313b"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-010-vinblastine.wav",
+      "spoken": "vinblastine",
+      "carrier": "The drug name is vinblastine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/010-vinblastine.wav",
+      "sha256": "e242462b7629cfcfd435a302b063ef5350222a5c7cc7e427ebc03058340870df"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-011-vincristine.wav",
+      "spoken": "vincristine",
+      "carrier": "The drug name is vincristine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/011-vincristine.wav",
+      "sha256": "1ce485f23df5fb3ec186173542a959567b580bad2f3a54982a0dd72074a7f9b8"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-012-cycloserine.wav",
+      "spoken": "cycloserine",
+      "carrier": "The drug name is cycloserine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/012-cycloserine.wav",
+      "sha256": "e69bf30f65b3c632afc6013d20f3a68e504bb584a0ccdad0e9747ae71858578c"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-013-cyclosporine.wav",
+      "spoken": "cyclosporine",
+      "carrier": "The drug name is cyclosporine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/013-cyclosporine.wav",
+      "sha256": "48c9f38ff37735e4be48fc3cad1757b4e211b9f7d0ac36962285191cb1767648"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-014-chlorpromazine.wav",
+      "spoken": "chlorpromazine",
+      "carrier": "The drug name is chlorpromazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/014-chlorpromazine.wav",
+      "sha256": "5f86cb35554c5ef7cfa284f552395dbf32d8e7ac0050cf2c321672a37e64965f"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-015-chlorpropamide.wav",
+      "spoken": "chlorpropamide",
+      "carrier": "The drug name is chlorpropamide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/015-chlorpropamide.wav",
+      "sha256": "0bff32a27d39a647612429edbd6173b06cc832caccdef3dbe58be771290a5a34"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-016-glipizide.wav",
+      "spoken": "glipizide",
+      "carrier": "The drug name is glipizide.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/016-glipizide.wav",
+      "sha256": "ce97b2ba6600a4deec3c62005ff3c5eaa8fa1813a290514d9a2091c113f8656c"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-017-glyburide.wav",
+      "spoken": "glyburide",
+      "carrier": "The drug name is glyburide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/017-glyburide.wav",
+      "sha256": "adabf182b1b907dff9ee9a783e253307e9a1bf2b71cd09faf764d6296b20ca06"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-018-sulfadiazine.wav",
+      "spoken": "sulfadiazine",
+      "carrier": "The drug name is sulfadiazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/018-sulfadiazine.wav",
+      "sha256": "69e882ab3e75e0b7b58f888c7c1aa78ff5c251f3ca2784146704d0259e206c9c"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-019-sulfasalazine.wav",
+      "spoken": "sulfasalazine",
+      "carrier": "The drug name is sulfasalazine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/019-sulfasalazine.wav",
+      "sha256": "63e0480b09cedaf1d590c67e7af03de1ee73f36394f35c7ea974d9d0f0a7b4e7"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-020-hydromorphone.wav",
+      "spoken": "hydromorphone",
+      "carrier": "The drug name is hydromorphone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/020-hydromorphone.wav",
+      "sha256": "86f825e296b787660d5e223b3b5f5bb5384503f7cb68e98a1f62786a5e63a9e6"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-021-morphine.wav",
+      "spoken": "morphine",
+      "carrier": "The drug name is morphine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/021-morphine.wav",
+      "sha256": "d8702147d05f6dbe94750daa8d2791b85dedc60137b7969595d1ad1fa9878fb9"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-022-oxycodone.wav",
+      "spoken": "oxycodone",
+      "carrier": "The drug name is oxycodone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/022-oxycodone.wav",
+      "sha256": "7a8dc20828c4773f2c9d44be7ed8e651e42a695ade359b033671a081c787e3e9"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-023-oxycontin.wav",
+      "spoken": "oxycontin",
+      "carrier": "The drug name is oxycontin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/023-oxycontin.wav",
+      "sha256": "8417f70c66da9522921c1547e9397dd0044221c591617d0c74ea264285241873"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-024-prednisone.wav",
+      "spoken": "prednisone",
+      "carrier": "The drug name is prednisone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/024-prednisone.wav",
+      "sha256": "f11309c904457d4ec8b6efeed36c8c12f1359d16537092ebb3aaf5c1829a44fa"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-025-prednisolone.wav",
+      "spoken": "prednisolone",
+      "carrier": "The drug name is prednisolone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/025-prednisolone.wav",
+      "sha256": "8b8a5ccca4a7a5e51a4fd1ec1d58f78199f5362d4d45d0a36d8a7065965a494e"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-026-clobazam.wav",
+      "spoken": "clobazam",
+      "carrier": "The drug name is clobazam.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/026-clobazam.wav",
+      "sha256": "b54e8c726223583d55fe3ff0e394507569e1d7d9042545c3cd9e7dad9d05e339"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-027-clonazepam.wav",
+      "spoken": "clonazepam",
+      "carrier": "The drug name is clonazepam.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/027-clonazepam.wav",
+      "sha256": "cb0a9bba0dd31e6c4e7234e8bc9bfb9ab1df7c2151284a1e669596df592c6884"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-028-lamotrigine.wav",
+      "spoken": "lamotrigine",
+      "carrier": "The drug name is lamotrigine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/028-lamotrigine.wav",
+      "sha256": "897484fb8153b39084797d23dc613d041cd1f76fd18b78d22956395b85b410a7"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-029-lamivudine.wav",
+      "spoken": "lamivudine",
+      "carrier": "The drug name is lamivudine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/029-lamivudine.wav",
+      "sha256": "f109238b1b878ca19de44d99c5b63065018990fbf040b4e9d7b7f950a092e2e0"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-030-carboplatin.wav",
+      "spoken": "carboplatin",
+      "carrier": "The drug name is carboplatin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/030-carboplatin.wav",
+      "sha256": "f25e21c5573ea6383486a3901093303a56845a7427887f8328894a751aaecf78"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-031-cisplatin.wav",
+      "spoken": "cisplatin",
+      "carrier": "The drug name is cisplatin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/031-cisplatin.wav",
+      "sha256": "4c329df8ff6268208f951d16c842d17bb6967b49d9ba4ea695f029b610f67e36"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-032-azathioprine.wav",
+      "spoken": "azathioprine",
+      "carrier": "The drug name is azathioprine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/032-azathioprine.wav",
+      "sha256": "2554ebedd60d2840b6b25e0e46c992f6e814ae3a20c922b72a09b0fb221881fb"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-034-dobutamine.wav",
+      "spoken": "dobutamine",
+      "carrier": "The drug name is dobutamine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/034-dobutamine.wav",
+      "sha256": "4508f6446e03407bafcc37a233828c2a4bd823745bd07b27030568c3fadd4617"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-035-dopamine.wav",
+      "spoken": "dopamine",
+      "carrier": "The drug name is dopamine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/035-dopamine.wav",
+      "sha256": "d885cb0850fb1f137bcee71701d94626234fd118ec9f18dda0cb089435ff9837"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-036-nifedipine.wav",
+      "spoken": "nifedipine",
+      "carrier": "The drug name is nifedipine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/036-nifedipine.wav",
+      "sha256": "9e08d51c4bd9e8f8abb55178fd66f39601ddc8579e96a923875e40601828e0cf"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-037-nimodipine.wav",
+      "spoken": "nimodipine",
+      "carrier": "The drug name is nimodipine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/037-nimodipine.wav",
+      "sha256": "58da08917112c814a28f11c9aacc246ae602b1f8b57ac898ea71587a1d7869af"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/dev-038-cefazolin.wav",
+      "spoken": "cefazolin",
+      "carrier": "The drug name is cefazolin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/dev/audio/038-cefazolin.wav",
+      "sha256": "00e45278847004d3801f0fd444ae2ae3eda55a1f1d62cd1535422a76a422be15"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-002-hydralazine.wav",
+      "spoken": "hydralazine",
+      "carrier": "The drug name is hydralazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/002-hydralazine.wav",
+      "sha256": "901a38cfc7d02fc95930a4fd78b53fb36ced7ba256048b93f4f362e11b1cf19a"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-003-hydroxyzine.wav",
+      "spoken": "hydroxyzine",
+      "carrier": "The drug name is hydroxyzine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/003-hydroxyzine.wav",
+      "sha256": "5ebef78e03e0af36686f44a1a17df7fd50da868481faac656c3bc62bdd64aa79"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-004-clonidine.wav",
+      "spoken": "clonidine",
+      "carrier": "The drug name is clonidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/004-clonidine.wav",
+      "sha256": "37844cb68fae2efebff976455ff9585bea96d1456bb3901914eddee57fba30fd"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-005-klonopin.wav",
+      "spoken": "klonopin",
+      "carrier": "The drug name is klonopin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/005-klonopin.wav",
+      "sha256": "495019d9ee10789b83049458c10338801875cd8743f4ea15b77a55c468dcbbbe"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-006-metformin.wav",
+      "spoken": "metformin",
+      "carrier": "The drug name is metformin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/006-metformin.wav",
+      "sha256": "0e79c342a94db70e748213f7a50bad4b6698264ff787aeb5bb022b5e2c594835"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-007-metronidazole.wav",
+      "spoken": "metronidazole",
+      "carrier": "The drug name is metronidazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/007-metronidazole.wav",
+      "sha256": "6cc0ed6a29e5de134921cea32297a47c3d8813b898c8ee057c9e37f2c3b59dc0"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-008-tramadol.wav",
+      "spoken": "tramadol",
+      "carrier": "The drug name is tramadol.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/008-tramadol.wav",
+      "sha256": "cb754abbf6f92fcf57a9b527d7aed7d871af5295120e6a4e41fdf1d87d21c06e"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-009-trazodone.wav",
+      "spoken": "trazodone",
+      "carrier": "The drug name is trazodone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/009-trazodone.wav",
+      "sha256": "4b036e788df695ab2a3304b459f4c72f7f0baa816e1c6299fc297de13bd6f546"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-010-vinblastine.wav",
+      "spoken": "vinblastine",
+      "carrier": "The drug name is vinblastine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/010-vinblastine.wav",
+      "sha256": "ae5f05be09a93407f541294b2277f245e85f979c39e4d1f1d66212d1ac6cc374"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-011-vincristine.wav",
+      "spoken": "vincristine",
+      "carrier": "The drug name is vincristine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/011-vincristine.wav",
+      "sha256": "924dc122288be2f8cf97a442d3daf16885c610f4a637e985bccf8f132e75c39b"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-012-cycloserine.wav",
+      "spoken": "cycloserine",
+      "carrier": "The drug name is cycloserine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/012-cycloserine.wav",
+      "sha256": "feba42481e6bcc89345db29ae531c19dfb9cbb9c628d5e6e53f22a591d6afa37"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-013-cyclosporine.wav",
+      "spoken": "cyclosporine",
+      "carrier": "The drug name is cyclosporine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/013-cyclosporine.wav",
+      "sha256": "1184f58acd8242df4747cd396edb2eec74df6a4f4e3ed1a529f7530e860518f3"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-014-chlorpromazine.wav",
+      "spoken": "chlorpromazine",
+      "carrier": "The drug name is chlorpromazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/014-chlorpromazine.wav",
+      "sha256": "01671cafb11c311ddc89fbac31f99f9e85baf859e06825da43dab8fc61e566f4"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-015-chlorpropamide.wav",
+      "spoken": "chlorpropamide",
+      "carrier": "The drug name is chlorpropamide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/015-chlorpropamide.wav",
+      "sha256": "f9a4be8906b4ff29f43b142f196d8a933f7c643518da2ba6a585a0a91f697b5c"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-016-glipizide.wav",
+      "spoken": "glipizide",
+      "carrier": "The drug name is glipizide.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/016-glipizide.wav",
+      "sha256": "ee42f3ca834e61d3647120c763f38071fe0cc5cfb9e038a1ebaae6a6cae63bff"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-017-glyburide.wav",
+      "spoken": "glyburide",
+      "carrier": "The drug name is glyburide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/017-glyburide.wav",
+      "sha256": "9abbbe30936ee51389021328a96d14a3eb4240549d911927a2ee31046be76cde"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-018-sulfadiazine.wav",
+      "spoken": "sulfadiazine",
+      "carrier": "The drug name is sulfadiazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/018-sulfadiazine.wav",
+      "sha256": "8734513430450d3a1c540ac4e359db91eaed6b22a80a99115d1964fbdfd4da92"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-019-sulfasalazine.wav",
+      "spoken": "sulfasalazine",
+      "carrier": "The drug name is sulfasalazine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/019-sulfasalazine.wav",
+      "sha256": "be746ff3eb410a719c3ec943242b50872d193333bef36f55b4b91ec360d12d8b"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-020-hydromorphone.wav",
+      "spoken": "hydromorphone",
+      "carrier": "The drug name is hydromorphone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/020-hydromorphone.wav",
+      "sha256": "a6f2fadb9a61ac434d74979dc8571a736b32040bb4f9456d5bf814f6a05418a9"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-021-morphine.wav",
+      "spoken": "morphine",
+      "carrier": "The drug name is morphine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/021-morphine.wav",
+      "sha256": "7ab862dc5e6b4e178516d1325a6860d83fd57b9e3c9d71a3c2feaaf6816c5ae6"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-022-oxycodone.wav",
+      "spoken": "oxycodone",
+      "carrier": "The drug name is oxycodone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/022-oxycodone.wav",
+      "sha256": "13e3a37b9ce2e68667db4d3a72b8201b9b2f5f55ee44e3321ec9e6e5bdde51b4"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-023-oxycontin.wav",
+      "spoken": "oxycontin",
+      "carrier": "The drug name is oxycontin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/023-oxycontin.wav",
+      "sha256": "981a71a6a1db0d6d9d343e5773b136b4bfe8eef105bb849680b41452279fdfb2"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-024-prednisone.wav",
+      "spoken": "prednisone",
+      "carrier": "The drug name is prednisone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/024-prednisone.wav",
+      "sha256": "3ebdaf32cba0c9870d3c5b6fe0b71ed55fe7a7a6ad59ded8e3a4a7c9aa8c9a4b"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-025-prednisolone.wav",
+      "spoken": "prednisolone",
+      "carrier": "The drug name is prednisolone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/025-prednisolone.wav",
+      "sha256": "49a7c3352abc3ec0ca60da602e4297a9f11e25e9399e41972b677c2968c1dffc"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-026-clobazam.wav",
+      "spoken": "clobazam",
+      "carrier": "The drug name is clobazam.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/026-clobazam.wav",
+      "sha256": "f6823ccecc4c0fa336a67eeba410b619d747312203b2eed85d6c2c90d3971766"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-027-clonazepam.wav",
+      "spoken": "clonazepam",
+      "carrier": "The drug name is clonazepam.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/027-clonazepam.wav",
+      "sha256": "060c7ccbc556d5f12a29dd18f669922749b0ff13eeaf78b7c26a072eee9926ad"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-028-lamotrigine.wav",
+      "spoken": "lamotrigine",
+      "carrier": "The drug name is lamotrigine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/028-lamotrigine.wav",
+      "sha256": "39b6d9211eb302017f9e4c3417d8026e6dfe50f68edb3afefbeefbc4a11361d2"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-029-lamivudine.wav",
+      "spoken": "lamivudine",
+      "carrier": "The drug name is lamivudine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/029-lamivudine.wav",
+      "sha256": "a215688f76eeb73b26d0918176eb8f93653a9acfe24337d1e82f7cd56fb2199a"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-030-carboplatin.wav",
+      "spoken": "carboplatin",
+      "carrier": "The drug name is carboplatin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/030-carboplatin.wav",
+      "sha256": "8b230870fa3c69c1e1d5dac278b0c378038ab6ccb8966bcdaaaca95cc24f59ef"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-031-cisplatin.wav",
+      "spoken": "cisplatin",
+      "carrier": "The drug name is cisplatin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/031-cisplatin.wav",
+      "sha256": "1090136e3107bed83ac1bc86fc15968520e2b2edc6611412d1b31e93ce1dc1ed"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-032-azathioprine.wav",
+      "spoken": "azathioprine",
+      "carrier": "The drug name is azathioprine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/032-azathioprine.wav",
+      "sha256": "f3b0a3cb22bf92dcabfdc14321c136b4862780082640ff647e28a02cf9b75e1d"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-034-dobutamine.wav",
+      "spoken": "dobutamine",
+      "carrier": "The drug name is dobutamine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/034-dobutamine.wav",
+      "sha256": "118b5bf2512ae6643fc06c76eb78fa238912ff71726cc22baf349a7a1311933d"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-035-dopamine.wav",
+      "spoken": "dopamine",
+      "carrier": "The drug name is dopamine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/035-dopamine.wav",
+      "sha256": "c213d82e85df281f8da8c2391c0a01db0a94cc742076e1db23a056893ffa54b9"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-036-nifedipine.wav",
+      "spoken": "nifedipine",
+      "carrier": "The drug name is nifedipine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/036-nifedipine.wav",
+      "sha256": "ce39a96ac4a5d7d06a8d26d1054e6a24e2ad0acb05731edd236e1b8e53e7e0b9"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-037-nimodipine.wav",
+      "spoken": "nimodipine",
+      "carrier": "The drug name is nimodipine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/037-nimodipine.wav",
+      "sha256": "1dc0d341a5b07b9564dfccc85f2bd7b1e163f063ddab963a8d057c974fa8eaaa"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/dev-038-cefazolin.wav",
+      "spoken": "cefazolin",
+      "carrier": "The drug name is cefazolin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/dev/audio/038-cefazolin.wav",
+      "sha256": "86fff4f9a69f72328664fbde546f38e17712bbd9de6ad4d1689f37e0f8840476"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-002-hydralazine.wav",
+      "spoken": "hydralazine",
+      "carrier": "The drug name is hydralazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/002-hydralazine.wav",
+      "sha256": "11c9564a98b805fe9906229586acc8dbd67dc0a1323693d3334bd84a6287fd4b"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-003-hydroxyzine.wav",
+      "spoken": "hydroxyzine",
+      "carrier": "The drug name is hydroxyzine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/003-hydroxyzine.wav",
+      "sha256": "d1d7fc865469bc20bd9d6b198ac523009fcc1b51deb45e380c63a9624478443d"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-004-clonidine.wav",
+      "spoken": "clonidine",
+      "carrier": "The drug name is clonidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/004-clonidine.wav",
+      "sha256": "2f45c4bd9f23735c27345252e55b41e6cbc5790029ecc110a3ebb830c7d54387"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-005-klonopin.wav",
+      "spoken": "klonopin",
+      "carrier": "The drug name is klonopin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/005-klonopin.wav",
+      "sha256": "1633705735b4009c6ff930187de0f8e04e3c0a08745ef21313006afe718221b7"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-006-metformin.wav",
+      "spoken": "metformin",
+      "carrier": "The drug name is metformin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/006-metformin.wav",
+      "sha256": "6b8769be75091ee2c9066fe344caf9fb07f4cede910259648c02fcc79b1170f8"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-007-metronidazole.wav",
+      "spoken": "metronidazole",
+      "carrier": "The drug name is metronidazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/007-metronidazole.wav",
+      "sha256": "1073228ad58a6a61199cbe9f7d314d98abb46b95313d67f084974d33a66208f2"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-008-tramadol.wav",
+      "spoken": "tramadol",
+      "carrier": "The drug name is tramadol.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/008-tramadol.wav",
+      "sha256": "b220d8c3b04d7bc741a37d883539e524328db905bfae9e5703a196acdb3bb093"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-009-trazodone.wav",
+      "spoken": "trazodone",
+      "carrier": "The drug name is trazodone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/009-trazodone.wav",
+      "sha256": "0c6f1db3041a94c68a8bc87d1245e1e8dae2386d0d499159fb6463549fc13f3e"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-010-vinblastine.wav",
+      "spoken": "vinblastine",
+      "carrier": "The drug name is vinblastine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/010-vinblastine.wav",
+      "sha256": "f3b910455d51a6596a7565737126d9129d7330064c24c4044a54f029bdfb65c4"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-011-vincristine.wav",
+      "spoken": "vincristine",
+      "carrier": "The drug name is vincristine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/011-vincristine.wav",
+      "sha256": "67c3f716a7e514b4db99aa3229f7206df2e79ee98ebee8a539895ff91df2ff4a"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-012-cycloserine.wav",
+      "spoken": "cycloserine",
+      "carrier": "The drug name is cycloserine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/012-cycloserine.wav",
+      "sha256": "f4d477a0841c49ee9c13269a546d4079caf0de10a5ab132896cbd31bdeeb907d"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-013-cyclosporine.wav",
+      "spoken": "cyclosporine",
+      "carrier": "The drug name is cyclosporine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/013-cyclosporine.wav",
+      "sha256": "469727511a8f7fb54b294bb8da26bcd03590af1679fba3481a3cb71c7d7e48a4"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-014-chlorpromazine.wav",
+      "spoken": "chlorpromazine",
+      "carrier": "The drug name is chlorpromazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/014-chlorpromazine.wav",
+      "sha256": "e9b83921b76f414b3bcbbed14b518bb65ca23c0663e206d1f6dda92e0cd6d4c2"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-015-chlorpropamide.wav",
+      "spoken": "chlorpropamide",
+      "carrier": "The drug name is chlorpropamide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/015-chlorpropamide.wav",
+      "sha256": "e812a00d520d2a905de101d6d1989ace4b2fda44d5fe605e4c9ef59775131517"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-016-glipizide.wav",
+      "spoken": "glipizide",
+      "carrier": "The drug name is glipizide.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/016-glipizide.wav",
+      "sha256": "8fb9e6e41c178778bf70150ea53f5a7759c6b22ea77f96c5ed62d6002e9cba17"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-017-glyburide.wav",
+      "spoken": "glyburide",
+      "carrier": "The drug name is glyburide.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/017-glyburide.wav",
+      "sha256": "3689faab13e4900490e13c01f79fcc44d1e681d054daf20c575b972fbf122a33"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-018-sulfadiazine.wav",
+      "spoken": "sulfadiazine",
+      "carrier": "The drug name is sulfadiazine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/018-sulfadiazine.wav",
+      "sha256": "35c7729c1b266173afc9d682164bbdc4d163acd33bb0dbfcacb72c8a7a8d5075"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-019-sulfasalazine.wav",
+      "spoken": "sulfasalazine",
+      "carrier": "The drug name is sulfasalazine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/019-sulfasalazine.wav",
+      "sha256": "d57327a50f4c67aa135385de25947bcd8b72cc0d697732ca89d71b936f7e7a8d"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-020-hydromorphone.wav",
+      "spoken": "hydromorphone",
+      "carrier": "The drug name is hydromorphone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/020-hydromorphone.wav",
+      "sha256": "d195f3dcdf59b37c6d2a316743fd4c717305a33654e5c5ca86969b2a3e989460"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-021-morphine.wav",
+      "spoken": "morphine",
+      "carrier": "The drug name is morphine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/021-morphine.wav",
+      "sha256": "a6156b6abfda0b63a707b3680e11ba29e960df993842145c10066f93beebc77a"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-022-oxycodone.wav",
+      "spoken": "oxycodone",
+      "carrier": "The drug name is oxycodone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/022-oxycodone.wav",
+      "sha256": "96d15e2287431b90e81186b16d149f187bb2f24378e3474e8721daa299c9e6ee"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-023-oxycontin.wav",
+      "spoken": "oxycontin",
+      "carrier": "The drug name is oxycontin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/023-oxycontin.wav",
+      "sha256": "d8813a72d44ddd7d4eda7f4bb162b5103a74ea91cfbaeeca481bc3a6a24a9f96"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-024-prednisone.wav",
+      "spoken": "prednisone",
+      "carrier": "The drug name is prednisone.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/024-prednisone.wav",
+      "sha256": "256eac5f99016ee20515a4ce5fe795f0504422444bbe7052158c95254349a9e6"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-025-prednisolone.wav",
+      "spoken": "prednisolone",
+      "carrier": "The drug name is prednisolone.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/025-prednisolone.wav",
+      "sha256": "30c2ce10b5abce78b4f7ed8f4495a29a89838427069322cbe702c4c43d4b8d08"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-026-clobazam.wav",
+      "spoken": "clobazam",
+      "carrier": "The drug name is clobazam.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/026-clobazam.wav",
+      "sha256": "c9363c8e084d6033f6bd562a873b2ccd53593d762d8420f19ef540968d579431"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-027-clonazepam.wav",
+      "spoken": "clonazepam",
+      "carrier": "The drug name is clonazepam.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/027-clonazepam.wav",
+      "sha256": "ed8ecd939ab2a62c8072f88240ca9cc505acf6faeaacb8945d10a431a934c322"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-028-lamotrigine.wav",
+      "spoken": "lamotrigine",
+      "carrier": "The drug name is lamotrigine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/028-lamotrigine.wav",
+      "sha256": "e01af86d813c33afaccee35a29c7a9fd889ecf65ac11f74f29139d9e17f359c6"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-029-lamivudine.wav",
+      "spoken": "lamivudine",
+      "carrier": "The drug name is lamivudine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/029-lamivudine.wav",
+      "sha256": "6b25c265c3f7e8a1cf769b9d83c30e69bf666a209c3fdcb6e024c22b4266a683"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-030-carboplatin.wav",
+      "spoken": "carboplatin",
+      "carrier": "The drug name is carboplatin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/030-carboplatin.wav",
+      "sha256": "b4ccd2e9939ef9a71a34b79628256babc907f4ee1717c6c2e7866e06c76e966f"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-031-cisplatin.wav",
+      "spoken": "cisplatin",
+      "carrier": "The drug name is cisplatin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/031-cisplatin.wav",
+      "sha256": "12e18e5cc1a0dcb346d3d97dea00884cc4309a9940affc523efa9fcaceecb1f3"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-032-azathioprine.wav",
+      "spoken": "azathioprine",
+      "carrier": "The drug name is azathioprine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/032-azathioprine.wav",
+      "sha256": "9037d375d2cd9a3771a746989da2dbaac26e3f1b04995bf500efc47381a2e0dc"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-034-dobutamine.wav",
+      "spoken": "dobutamine",
+      "carrier": "The drug name is dobutamine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/034-dobutamine.wav",
+      "sha256": "fbfb919df2229dc06f18c08e3f9dd1b503545257efb5ef1365aa7e6639639c15"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-035-dopamine.wav",
+      "spoken": "dopamine",
+      "carrier": "The drug name is dopamine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/035-dopamine.wav",
+      "sha256": "c4b090c75403c5c416bce9a158e998d863ae2cced142c13bb08e1c40352525ec"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-036-nifedipine.wav",
+      "spoken": "nifedipine",
+      "carrier": "The drug name is nifedipine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/036-nifedipine.wav",
+      "sha256": "3182502502607f94dc1cd4b3ff8320f7c5f04e28c00b40baaf7b712e420c9759"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-037-nimodipine.wav",
+      "spoken": "nimodipine",
+      "carrier": "The drug name is nimodipine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/037-nimodipine.wav",
+      "sha256": "79e636d2edba94acecae18495db6b9da2395d72451cb9e71c1bdc86942dab4a5"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/dev-038-cefazolin.wav",
+      "spoken": "cefazolin",
+      "carrier": "The drug name is cefazolin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/dev/audio/038-cefazolin.wav",
+      "sha256": "22bc41fc5cf7a027a09df5278c5f4ea94d862bd188f5b9e42b52d0e74e520fe1"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-003-sirolimus.wav",
+      "spoken": "sirolimus",
+      "carrier": "The drug name is sirolimus.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/003-sirolimus.wav",
+      "sha256": "eacf7886f6af7fe8b18b56d21cb592dae046cb4a6d061add25fd432269256c9b"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-005-bupivacaine.wav",
+      "spoken": "bupivacaine",
+      "carrier": "The drug name is bupivacaine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/005-bupivacaine.wav",
+      "sha256": "beb420b59a7661e5d9a8c6cc4cba53c552f61aa112f92850e4eed061195868e4"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-006-methimazole.wav",
+      "spoken": "methimazole",
+      "carrier": "The drug name is methimazole.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/006-methimazole.wav",
+      "sha256": "1fef573aa6954480dee0db18120d9f23ef570f02f512c56e10af0bd24717265b"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-008-tacrolimus.wav",
+      "spoken": "tacrolimus",
+      "carrier": "The drug name is tacrolimus.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/008-tacrolimus.wav",
+      "sha256": "927d4fbcc85beea3f96c841a75d4ba14710a0cde612fd194d0ae6dbf470fabff"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-018-azacitidine.wav",
+      "spoken": "azacitidine",
+      "carrier": "The drug name is azacitidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/018-azacitidine.wav",
+      "sha256": "d97e209ee04372995bd1af32e43336b4101a9b8558d0c77c2f300cec0ffb98c0"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-023-duloxetine.wav",
+      "spoken": "duloxetine",
+      "carrier": "The drug name is duloxetine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/023-duloxetine.wav",
+      "sha256": "860c5ab7b083f21577f447ef8c868a0a2c89432a4c180e37d1ede66e10b9619e"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-025-aripiprazole.wav",
+      "spoken": "aripiprazole",
+      "carrier": "The drug name is aripiprazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/025-aripiprazole.wav",
+      "sha256": "85bbb3a7a6276609cdab1d7ae4e0b11ac60a1b49328a80683c402b0efdc4345f"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-027-apixaban.wav",
+      "spoken": "apixaban",
+      "carrier": "The drug name is apixaban.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/027-apixaban.wav",
+      "sha256": "8bbb10debfb8d137ae5993a64b29d002799a34f1f27f316473625f4ba7d5ce4f"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-030-ribavirin.wav",
+      "spoken": "ribavirin",
+      "carrier": "The drug name is ribavirin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/030-ribavirin.wav",
+      "sha256": "212c3ef9137e8fc43eb99a174490396d17aec3880008fb4f6ae4b8a2e3331550"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-035-silodosin.wav",
+      "spoken": "silodosin",
+      "carrier": "The drug name is silodosin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/035-silodosin.wav",
+      "sha256": "c38261b56002b44bf2f222f1b34b9acd5adc2077c8139bbfef771e1f7dc037f3"
+    },
+    {
+      "file": "eval/stress/audio/phone/control-039-levocarnitine.wav",
+      "spoken": "levocarnitine",
+      "carrier": "The drug name is levocarnitine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone",
+      "source": "eval/control/audio/039-levocarnitine.wav",
+      "sha256": "5ef4982f65a42022bbbc4ff54b60ec97af305bd70624c5b8526d15cff77619bf"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-003-sirolimus.wav",
+      "spoken": "sirolimus",
+      "carrier": "The drug name is sirolimus.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/003-sirolimus.wav",
+      "sha256": "884f44cf4ce82f3c749d8d594b0dc385c4524b722c0c13334f13fc2aa27e6a5a"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-005-bupivacaine.wav",
+      "spoken": "bupivacaine",
+      "carrier": "The drug name is bupivacaine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/005-bupivacaine.wav",
+      "sha256": "551955884c8792cc802256a73748dee2015a4a905b82679e1c176d440afa5ed2"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-006-methimazole.wav",
+      "spoken": "methimazole",
+      "carrier": "The drug name is methimazole.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/006-methimazole.wav",
+      "sha256": "80aac754e12e6eb88fcb449a2cd0ac6c2a54f3e1232c0665478c642d757299f0"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-008-tacrolimus.wav",
+      "spoken": "tacrolimus",
+      "carrier": "The drug name is tacrolimus.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/008-tacrolimus.wav",
+      "sha256": "ed517d06f32e9da68721816c5b939727447f61e795d10031cdef2d1567148ef1"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-018-azacitidine.wav",
+      "spoken": "azacitidine",
+      "carrier": "The drug name is azacitidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/018-azacitidine.wav",
+      "sha256": "5733031a21acde9cf97b66b1b0c31d99d22cbf87e9ff3d43d7721f36eec75749"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-023-duloxetine.wav",
+      "spoken": "duloxetine",
+      "carrier": "The drug name is duloxetine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/023-duloxetine.wav",
+      "sha256": "a4ab6026a6b2a174adeed5e429fc54510f6e02b8d175ff466b85380cc96d2ab6"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-025-aripiprazole.wav",
+      "spoken": "aripiprazole",
+      "carrier": "The drug name is aripiprazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/025-aripiprazole.wav",
+      "sha256": "2b61ca2ebe351b13040c3e900661a02f4ef7c986f5bb57db4d27caa7691e466c"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-027-apixaban.wav",
+      "spoken": "apixaban",
+      "carrier": "The drug name is apixaban.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/027-apixaban.wav",
+      "sha256": "ae2a241f87b70c2b56f5e9b5a69adaa6f58753e8b2314d95a4186749f0829b07"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-030-ribavirin.wav",
+      "spoken": "ribavirin",
+      "carrier": "The drug name is ribavirin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/030-ribavirin.wav",
+      "sha256": "626a845f55d2ac4c607521f2c83c9fcbb6b019a2d8dff61a2f2f0162b3169a7d"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-035-silodosin.wav",
+      "spoken": "silodosin",
+      "carrier": "The drug name is silodosin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/035-silodosin.wav",
+      "sha256": "90c0c9562a92b38ea643d42f0deb37a0965c706044e24a1a6cd0d638798d7e17"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr10/control-039-levocarnitine.wav",
+      "spoken": "levocarnitine",
+      "carrier": "The drug name is levocarnitine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr10",
+      "source": "eval/control/audio/039-levocarnitine.wav",
+      "sha256": "a02305ddf0c5359ab68070f773110eb117613d56a8ee10f51f53a867264c6818"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-003-sirolimus.wav",
+      "spoken": "sirolimus",
+      "carrier": "The drug name is sirolimus.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/003-sirolimus.wav",
+      "sha256": "95e36609271a86d7a12ee905b9bfafa3114a9f4012ab21282340db98073f0603"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-005-bupivacaine.wav",
+      "spoken": "bupivacaine",
+      "carrier": "The drug name is bupivacaine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/005-bupivacaine.wav",
+      "sha256": "8205e6e3c063731744752187a218084dd93847719d15d337208ab901b1de422a"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-006-methimazole.wav",
+      "spoken": "methimazole",
+      "carrier": "The drug name is methimazole.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/006-methimazole.wav",
+      "sha256": "7d0532808ffad8c844c3b68c90a573b6b8e33da2976a0e87697323c019634ebc"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-008-tacrolimus.wav",
+      "spoken": "tacrolimus",
+      "carrier": "The drug name is tacrolimus.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/008-tacrolimus.wav",
+      "sha256": "0d65119c2ce42f533832a2b94ec4cf0ff1ace492ad586bc2f5733369ea69f973"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-018-azacitidine.wav",
+      "spoken": "azacitidine",
+      "carrier": "The drug name is azacitidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/018-azacitidine.wav",
+      "sha256": "498d82f117fb51fc10940a491ebebc00c22d1ba73ed129e8b5a92cfac429419f"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-023-duloxetine.wav",
+      "spoken": "duloxetine",
+      "carrier": "The drug name is duloxetine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/023-duloxetine.wav",
+      "sha256": "d252dac3498b21627a1acf1d5bad275762cf9e3c15fd164c1287069a56e917ec"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-025-aripiprazole.wav",
+      "spoken": "aripiprazole",
+      "carrier": "The drug name is aripiprazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/025-aripiprazole.wav",
+      "sha256": "9aa6945aa0d7576f079a642033c7b45169aaea89b8a438d8a470879280a2cc8b"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-027-apixaban.wav",
+      "spoken": "apixaban",
+      "carrier": "The drug name is apixaban.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/027-apixaban.wav",
+      "sha256": "487e67e1dd0a6bded0e6a14b82416ad79c3c06d415c8ff124216d611666de818"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-030-ribavirin.wav",
+      "spoken": "ribavirin",
+      "carrier": "The drug name is ribavirin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/030-ribavirin.wav",
+      "sha256": "2b4a756a8346142ff6b2a82c052f1612bf8396296031e1371aa2c17579f78b8b"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-035-silodosin.wav",
+      "spoken": "silodosin",
+      "carrier": "The drug name is silodosin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/035-silodosin.wav",
+      "sha256": "29e78b50e46356db3f83ac8cac8f3c1ebc17dbd3b2166cbd392fde7357a368c5"
+    },
+    {
+      "file": "eval/stress/audio/phone-snr5/control-039-levocarnitine.wav",
+      "spoken": "levocarnitine",
+      "carrier": "The drug name is levocarnitine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-snr5",
+      "source": "eval/control/audio/039-levocarnitine.wav",
+      "sha256": "0b04e84b1fabd663562b700e12428e82c8e1c0b9fb2980101cc0811f62905e89"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-003-sirolimus.wav",
+      "spoken": "sirolimus",
+      "carrier": "The drug name is sirolimus.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/003-sirolimus.wav",
+      "sha256": "e285bf486a3c65d22c2317d3821a336305ac858174db5919ed0665b54f3d2e48"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-005-bupivacaine.wav",
+      "spoken": "bupivacaine",
+      "carrier": "The drug name is bupivacaine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/005-bupivacaine.wav",
+      "sha256": "f178e4d9b96812be1832ddaeed7f2dacf651d98b680d073f6de45c024994b653"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-006-methimazole.wav",
+      "spoken": "methimazole",
+      "carrier": "The drug name is methimazole.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/006-methimazole.wav",
+      "sha256": "33f96462ec7aa43c24228e1a3c3c33989061e53ac992a06855965c997fa1236c"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-008-tacrolimus.wav",
+      "spoken": "tacrolimus",
+      "carrier": "The drug name is tacrolimus.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/008-tacrolimus.wav",
+      "sha256": "c13a77e7bb12333b4ad589ca485b35c3350fd896dd68a3d746b9c569c11d44ea"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-018-azacitidine.wav",
+      "spoken": "azacitidine",
+      "carrier": "The drug name is azacitidine.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/018-azacitidine.wav",
+      "sha256": "b1f1a506759c8e48719528082c560dce5a9a93469898c0c1eb6fff69f5117e8f"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-023-duloxetine.wav",
+      "spoken": "duloxetine",
+      "carrier": "The drug name is duloxetine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/023-duloxetine.wav",
+      "sha256": "5d53ef75aa307af97fa586e06db07460991f3ea6308ce4cab85abfc1644dac85"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-025-aripiprazole.wav",
+      "spoken": "aripiprazole",
+      "carrier": "The drug name is aripiprazole.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/025-aripiprazole.wav",
+      "sha256": "0deec0e566503f8e1a83505e55ad5cad67cd3328e1c969e8ca1416fe70aa2063"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-027-apixaban.wav",
+      "spoken": "apixaban",
+      "carrier": "The drug name is apixaban.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/027-apixaban.wav",
+      "sha256": "0cefe393b75d63cfb68221b3b5e9832b409a90b438be69082af0519d4169620a"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-030-ribavirin.wav",
+      "spoken": "ribavirin",
+      "carrier": "The drug name is ribavirin.",
+      "voice": "Microsoft David Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/030-ribavirin.wav",
+      "sha256": "35058fe5011e1eb17690f44664c3908d37094d82bdfd6e915a78c76d71b94418"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-035-silodosin.wav",
+      "spoken": "silodosin",
+      "carrier": "The drug name is silodosin.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/035-silodosin.wav",
+      "sha256": "8a1b205d672d5a2cebdb69bdda14d373506bae6d2b7831acb8a4d47b199009ac"
+    },
+    {
+      "file": "eval/stress/audio/phone-fast/control-039-levocarnitine.wav",
+      "spoken": "levocarnitine",
+      "carrier": "The drug name is levocarnitine.",
+      "voice": "Microsoft Zira Desktop",
+      "entityType": "drug_name",
+      "condition": "phone-fast",
+      "source": "eval/control/audio/039-levocarnitine.wav",
+      "sha256": "3ad11e9666895f3ef29d9cc07650ecf6d9b7c67df59f49afb52bfeeb455ef695"
+    }
+  ]
+}

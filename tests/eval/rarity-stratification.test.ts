@@ -35,7 +35,7 @@ describe("the pre-registered three-stratum table has a command that reproduces i
     ])
   })
 
-  it("orders items rare, mid, common by position, matching how build-heldout-set.ts draws them", () => {
+  it("orders items rare, mid, common by position, matching how scripts/build/heldout-set.ts draws them", () => {
     const scored = heldoutScored()
     if (scored === null) {
       return

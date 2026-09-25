@@ -21,14 +21,14 @@
   --banner-surface: var(--state-asking-surface);
   --banner-line: var(--state-asking-line);
   --banner-ink: var(--state-asking-ink);
-  animation: var(--keyframes-flag) var(--dur-deliberate) var(--ease-out-expo) both;
+  animation: var(--keyframes-verdict) var(--dur-fast) var(--ease-out-quart) both;
 }
 
 .lasa {
   --banner-surface: var(--surface-panel);
   --banner-line: var(--state-lasa-line);
   --banner-ink: var(--state-lasa-ink);
-  animation: var(--keyframes-flag-emphatic) var(--dur-emphatic) var(--ease-out-expo) both;
+  animation: var(--keyframes-verdict-emphatic) var(--dur-base) var(--ease-out-expo) both;
 }
 
 .escalated {
@@ -36,7 +36,7 @@
   --banner-line: var(--state-escalated-line);
   --banner-ink: var(--state-escalated-ink);
   border-width: 2px;
-  animation: var(--keyframes-flag) var(--dur-deliberate) var(--ease-out-expo) both;
+  animation: var(--keyframes-verdict) var(--dur-fast) var(--ease-out-quart) both;
 }
 
 .aborted {
@@ -105,7 +105,7 @@
   border: 1px solid var(--banner-line);
   border-radius: var(--radius-sm);
   background-color: var(--surface-raised);
-  animation: var(--keyframes-fade-rise) var(--dur-slow) var(--ease-out-quart) both;
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
   animation-delay: var(--dur-fast);
 }
 

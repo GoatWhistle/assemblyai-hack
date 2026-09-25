@@ -2,8 +2,7 @@ import { POST as proposeField } from "@app/api/tools/propose-field/route"
 import { POST as readBack } from "@app/api/tools/read-back/route"
 import { beforeEach, describe, expect, it } from "vitest"
 import { FieldName } from "@/domain"
-import { intakeFor } from "@/tools"
-import { call, resetToolEnvironment, SESSION, seedTurn } from "./harness"
+import { call, intake, resetToolEnvironment, seedTurn } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -16,7 +15,6 @@ function evidenceOf(body: Body): Record<string, unknown> {
 async function propose(field: FieldName, value: string, quotation: string): Promise<Body> {
   const response = await proposeField(
     call("propose-field", {
-      session_id: SESSION,
       field,
       value,
       transcript_hint: quotation,
@@ -27,7 +25,7 @@ async function propose(field: FieldName, value: string, quotation: string): Prom
 
 describe("a value is refused when its quotation is absent from the transcript the server holds", () => {
   it("refuses a value whose quotation appears in no recorded turn", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99, 1)
+    await seedTurn("lisinopril ten milligrams", 0.99, 1)
     const body = await propose(FieldName.DrugName, "metformin", "metformin five hundred")
 
     expect(
@@ -39,18 +37,17 @@ describe("a value is refused when its quotation is absent from the transcript th
       "a value with no quotation never becomes a candidate, so there is no id a later read_back could confirm it under",
     ).toBeNull()
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "the invariant is about the write, not about the wording of the refusal: the order must stay empty",
     ).toBe(0)
   })
 
   it("cannot be written even by attempting read_back against the refused proposal", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99, 1)
+    await seedTurn("lisinopril ten milligrams", 0.99, 1)
     const refused = await propose(FieldName.DrugName, "metformin", "metformin five hundred")
 
     const response = await readBack(
       call("read-back", {
-        session_id: SESSION,
         field: FieldName.DrugName,
         candidate_id: "forged-candidate-id",
         utterance: "Confirming drug name: metformin. Correct?",
@@ -68,14 +65,14 @@ describe("a value is refused when its quotation is absent from the transcript th
       "attempting the write is the proof: an unquotable value must not reach the order through the one route that does write, no matter what the caller answered",
     ).toBe(false)
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "ConfirmedValue is constructible only inside the gate and the gate needs a candidate; with no candidate there is no code path to a written field",
     ).toBe(0)
   })
 
   it("names the quotation it could not find and the turns it searched", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99, 1)
-    seedTurn("thirty tablets", 0.99, 2)
+    await seedTurn("lisinopril ten milligrams", 0.99, 1)
+    await seedTurn("thirty tablets", 0.99, 2)
     const body = await propose(FieldName.DrugName, "metformin", "metformin five hundred")
     const evidence = evidenceOf(body)
 
@@ -102,7 +99,7 @@ describe("a value is refused when its quotation is absent from the transcript th
   })
 
   it("records the verbatim span, not just indices, when the quotation does trace", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99, 1)
+    await seedTurn("lisinopril ten milligrams", 0.99, 1)
     const body = await propose(FieldName.DrugName, "lisinopril", "lisinopril")
     const evidence = evidenceOf(body)
 
@@ -125,10 +122,10 @@ describe("a value is refused when its quotation is absent from the transcript th
   })
 
   it("carries the verbatim words onto the candidate the gate decided over", async () => {
-    seedTurn("azithromycin two hundred fifty milligrams", 0.99, 1)
+    await seedTurn("azithromycin two hundred fifty milligrams", 0.99, 1)
     await propose(FieldName.Strength, "250 mg", "two hundred fifty milligrams")
 
-    const candidate = [...intakeFor(SESSION).candidates.values()].at(-1)
+    const candidate = [...(await intake()).candidates.values()].at(-1)
 
     expect(
       candidate?.provenance.transcriptSlice,
@@ -141,7 +138,7 @@ describe("a value is refused when its quotation is absent from the transcript th
   })
 
   it("refuses a quotation whose words exist but not contiguously in that order", async () => {
-    seedTurn("lisinopril ten milligrams by mouth", 0.99, 1)
+    await seedTurn("lisinopril ten milligrams by mouth", 0.99, 1)
     const body = await propose(FieldName.DrugName, "lisinopril", "milligrams lisinopril")
 
     expect(
@@ -149,16 +146,16 @@ describe("a value is refused when its quotation is absent from the transcript th
       "a quotation is a contiguous stretch of speech; letting a reordered bag of words match would mean the server accepts a phrase nobody uttered and the invariant becomes a word-presence check",
     ).toBe("E_PROVENANCE_NOT_FOUND")
     expect(
-      intakeFor(SESSION).order.fields.size,
+      (await intake()).order.fields.size,
       "a reordered quotation must not open a path to a written field",
     ).toBe(0)
   })
 
   it("searches only the recent window, so an old turn cannot supply a quotation forever", async () => {
-    seedTurn("lisinopril ten milligrams", 0.99, 1)
-    seedTurn("thirty tablets", 0.99, 2)
-    seedTurn("by mouth", 0.99, 3)
-    seedTurn("twice daily", 0.99, 4)
+    await seedTurn("lisinopril ten milligrams", 0.99, 1)
+    await seedTurn("thirty tablets", 0.99, 2)
+    await seedTurn("by mouth", 0.99, 3)
+    await seedTurn("twice daily", 0.99, 4)
     const body = await propose(FieldName.DrugName, "lisinopril", "lisinopril")
 
     expect(

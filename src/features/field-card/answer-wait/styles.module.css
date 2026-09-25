@@ -1,0 +1,8 @@
+.wait {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-data);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--state-asking-ink);
+}

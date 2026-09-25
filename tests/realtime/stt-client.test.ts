@@ -36,9 +36,13 @@ afterEach(() => {
 
 describe("SttClient tokens", () => {
   it("mints a token before opening and carries it in the query string", async () => {
-    const client = new SttClient({ transport: factory })
+    const attempts: number[] = []
+    const client = new SttClient({
+      transport: factory,
+      events: { onTokenMinted: (attempt) => attempts.push(attempt) },
+    })
     await client.connect()
-    expect(client.tokensMinted).toBe(1)
+    expect(attempts).toEqual([1])
     expect(minted[0]).toContain("token=token-1")
     expect(minted[0]).toContain("wss://streaming.assemblyai.com/v3/ws")
   })
@@ -60,11 +64,15 @@ describe("SttClient tokens", () => {
   })
 
   it("mints a fresh token on every reconnect, because a token is single-use", async () => {
-    const client = new SttClient({ transport: factory })
+    const attempts: number[] = []
+    const client = new SttClient({
+      transport: factory,
+      events: { onTokenMinted: (attempt) => attempts.push(attempt) },
+    })
     await client.connect()
     await client.reconnect()
     await client.reconnect()
-    expect(client.tokensMinted).toBe(3)
+    expect(attempts).toEqual([1, 2, 3])
     expect(minted[0]).toContain("token=token-1")
     expect(minted[1]).toContain("token=token-2")
     expect(minted[2]).toContain("token=token-3")

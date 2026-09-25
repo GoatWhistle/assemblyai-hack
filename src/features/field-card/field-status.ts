@@ -1,5 +1,7 @@
 import {
   CandidateStatus,
+  type ConfirmationEvidence,
+  ConfirmationReason,
   type FieldCandidate,
   GateAction,
   type GateDecision,
@@ -63,4 +65,15 @@ export function confidenceRankNote(stance: FieldStance, aboveThreshold: boolean)
     return "Reading order on this card: the validator proved it first, and the recognizer agreed."
   }
   return "Reading order on this card: proof comes first, the recognizer's own certainty second."
+}
+
+export type NameAnswerState = "pending" | "yes-refused" | "named"
+
+export function nameAnswerState(evidence: ConfirmationEvidence | null): NameAnswerState {
+  if (evidence === null || evidence.verdict === "unclear") {
+    return evidence?.reasonCode === ConfirmationReason.LasaNamedAnswerRequired
+      ? "yes-refused"
+      : "pending"
+  }
+  return "named"
 }

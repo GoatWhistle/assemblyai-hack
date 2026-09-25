@@ -1,0 +1,49 @@
+.thesis {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) 0 0;
+  text-align: center;
+}
+
+.thesisTitle {
+  margin: 0;
+  max-width: var(--measure-prose);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--track-display);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.thesisBody {
+  margin: 0;
+  max-width: 56ch;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--track-tight);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 40rem) {
+  .thesisTitle {
+    font-size: var(--text-2xl);
+  }
+}
+
+@media (max-height: 40rem) {
+  .thesis {
+    padding-top: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .thesisTitle {
+    font-size: var(--text-xl);
+  }
+
+  .thesisBody {
+    font-size: var(--text-base);
+  }
+}

@@ -78,7 +78,7 @@ describe("the function that names the product is reachable from the product", ()
   })
 
   it("does not pin the read-back state to a constant", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(
       /state:\s*ReadBackState\.Idle/.test(client),
       "a read-back frozen at Idle renders an empty panel forever, which is how this went unnoticed",
@@ -112,7 +112,7 @@ describe("the two socket controls have callers in the product, not only in tests
   })
 
   it("hands the intake client a solicited field rather than a constant", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(client).toContain("solicitedField")
     expect(
       /solicited:\s*NOTHING_SOLICITED/.test(client),
@@ -123,12 +123,12 @@ describe("the two socket controls have callers in the product, not only in tests
 
 describe("the live order screen renders what the server decided", () => {
   it("does not hold an empty candidate constant", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(/NO_CANDIDATES/.test(client)).toBe(false)
   })
 
   it("sends every caller turn to the gate and reads the answer back", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(client).toContain("recordTurn")
     expect(
       client,
@@ -150,7 +150,7 @@ describe("the public refusal counter and the waiting indicator ship, not merely 
   })
 
   it("feeds the counter the decision history rather than the latest decision alone", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(
       client,
       "keying decisions by candidate loses every earlier refusal, so the counter would undercount the gate",
@@ -166,7 +166,7 @@ describe("the public refusal counter and the waiting indicator ship, not merely 
   })
 
   it("hands the indicator a real in-flight signal rather than a constant", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
     expect(client).toContain("turnInFlight")
     expect(
       /turnInFlight=\{false\}/.test(client),

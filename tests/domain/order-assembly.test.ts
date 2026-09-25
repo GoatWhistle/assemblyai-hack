@@ -51,7 +51,12 @@ describe("the order is assembled from confirmed fields, never from the model's p
   })
 
   it("commitOrder assembles fields.<name>.value from ConfirmedValue.value, and full_order_read_back is inert", () => {
-    const commitSource = sourceOf("app/api/tools/commit-order/route.ts")
+    const routeSource = sourceOf("app/api/tools/commit-order/route.ts")
+    expect(
+      routeSource.includes("order.fields.set") || routeSource.includes("setField("),
+      "the commit route records an event and never writes a field itself",
+    ).toBe(false)
+    const commitSource = sourceOf("src/tools/apply-commit.ts")
     expect(commitSource.includes("value: value.value,")).toBe(true)
     expect(
       commitSource.includes("state.order.fields.set") ||

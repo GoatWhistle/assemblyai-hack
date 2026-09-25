@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
-import { ECHO_MATCH_THRESHOLD, EchoGuard, utteranceOverlap } from "@/audio/echo-guard"
+import { EchoGuard } from "@/audio/echo-guard"
 import { MIC_CONSTRAINTS } from "@/audio/microphone"
+import { ECHO_MATCH_THRESHOLD, utteranceOverlap } from "@/confirmation"
 
 const AGENT_LINE =
   "I heard Bisoprolol. That name is on the published confused-drug-names list together with Lisinopril."

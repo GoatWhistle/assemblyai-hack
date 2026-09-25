@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 import { FieldName, GateAction } from "@/domain"
 import { MAX_WORDS_PER_TURN, POST as postTurn } from "../../app/api/sessions/[id]/turns/route"
 import { POST as proposeField } from "../../app/api/tools/propose-field/route"
-import { call, resetToolEnvironment } from "./harness"
+import { call, registerSession, resetToolEnvironment } from "./harness"
 
 const SESSION = "live-loop-session"
 
@@ -28,8 +28,11 @@ function words(text: string, confidence: number) {
 }
 
 describe("the browser turn reaches the server, which is what closes the live loop", () => {
-  beforeEach(() => {
-    resetToolEnvironment()
+  beforeEach(async () => {
+    await resetToolEnvironment()
+    await registerSession(SESSION)
+    await registerSession("session-a")
+    await registerSession("session-b")
   })
 
   it("accepts a turn with word timings and holds it", async () => {
@@ -60,12 +63,16 @@ describe("the browser turn reaches the server, which is what closes the live loo
     )
 
     const response = await proposeField(
-      call("propose-field", {
-        session_id: SESSION,
-        field: FieldName.DrugName,
-        value: "lisinopril",
-        transcript_hint: "lisinopril",
-      }),
+      call(
+        "propose-field",
+        {
+          field: FieldName.DrugName,
+          value: "lisinopril",
+          transcript_hint: "lisinopril",
+        },
+        undefined,
+        SESSION,
+      ),
     )
     const body = await response.json()
     expect(
@@ -89,7 +96,6 @@ describe("the browser turn reaches the server, which is what closes the live loo
 
     const response = await proposeField(
       call("propose-field", {
-        session_id: SESSION,
         field: FieldName.DrugName,
         value: "warfarin",
         transcript_hint: "warfarin",
@@ -189,16 +195,25 @@ describe("the browser turn reaches the server, which is what closes the live loo
       params("session-a"),
     )
 
-    const response = await proposeField(
-      call("propose-field", {
-        session_id: "session-b",
-        field: FieldName.DrugName,
-        value: "lisinopril",
-        transcript_hint: "lisinopril",
-      }),
-    )
-    const body = await response.json()
-    expect(body.reason_code).toBe("E_PROVENANCE_NOT_FOUND")
+    const proposal = {
+      field: FieldName.DrugName,
+      value: "lisinopril",
+      transcript_hint: "lisinopril",
+    }
+    const other = await (
+      await proposeField(call("propose-field", proposal, undefined, "session-b"))
+    ).json()
+    expect(
+      other.reason_code,
+      "session-b's tool URL must not see a word spoken under session-a",
+    ).toBe("E_PROVENANCE_NOT_FOUND")
+    const own = await (
+      await proposeField(call("propose-field", proposal, undefined, "session-a"))
+    ).json()
+    expect(
+      own.reason_code,
+      "the same call bound to session-a must find the word, or the refusal above proves nothing",
+    ).not.toBe("E_PROVENANCE_NOT_FOUND")
   })
 
   it("does not require the tool secret, because the browser must never hold it", async () => {

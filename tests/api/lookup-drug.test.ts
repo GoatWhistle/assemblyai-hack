@@ -34,10 +34,10 @@ describe("lookup_drug", () => {
   })
 
   it("warns about a sound alike pair before the agent proposes anything", async () => {
-    const body = await (await lookupDrug(call("lookup-drug", { query: "Bisoprolol" }))).json()
+    const body = await (await lookupDrug(call("lookup-drug", { query: "Morphine" }))).json()
 
     expect(body.lasa_warning.hit).toBe(true)
-    expect(body.lasa_warning.confusable_with).toContain("lisinopril")
+    expect(body.lasa_warning.confusable_with).toContain("hydromorphone")
     expect(body.note).toContain("read_back")
   })
 

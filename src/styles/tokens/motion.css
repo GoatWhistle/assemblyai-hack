@@ -2,6 +2,7 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-constant: linear;
 
   --dur-instant: 70ms;
   --dur-fast: 130ms;
@@ -9,6 +10,11 @@
   --dur-slow: 260ms;
   --dur-deliberate: 420ms;
   --dur-emphatic: 620ms;
+  --dur-loop-spin: 620ms;
+  --dur-loop-shimmer: 1400ms;
+  --dur-loop-pulse-urgent: 1800ms;
+  --dur-loop-pulse: 2600ms;
+  --dur-loop-breathe: 4200ms;
 
   --transition-control:
     color var(--dur-fast) var(--ease-out-quart), background-color var(--dur-fast)
@@ -21,8 +27,9 @@
   --keyframes-shimmer: readback-shimmer;
   --keyframes-enter: readback-enter;
   --keyframes-flag: readback-flag;
-  --keyframes-flag-emphatic: readback-flag-emphatic;
   --keyframes-settle: readback-settle;
+  --keyframes-verdict: readback-verdict;
+  --keyframes-verdict-emphatic: readback-verdict-emphatic;
 }
 
 @keyframes readback-fade-rise {
@@ -91,20 +98,27 @@
   }
 }
 
-@keyframes readback-flag-emphatic {
+@keyframes readback-verdict {
   from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.995);
-  }
-
-  45% {
     opacity: 0.7;
-    transform: translateY(-1px) scale(0.999);
+    transform: translateY(-2px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: none;
+  }
+}
+
+@keyframes readback-verdict-emphatic {
+  from {
+    opacity: 0.7;
+    transform: scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -126,6 +140,11 @@
     --dur-slow: 1ms;
     --dur-deliberate: 1ms;
     --dur-emphatic: 1ms;
+    --dur-loop-spin: 1ms;
+    --dur-loop-shimmer: 1ms;
+    --dur-loop-pulse-urgent: 1ms;
+    --dur-loop-pulse: 1ms;
+    --dur-loop-breathe: 1ms;
   }
 
   *,

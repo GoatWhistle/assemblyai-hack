@@ -46,10 +46,13 @@ beforeEach(() => {
   sockets = []
   globalThis.fetch = vi.fn(
     async () =>
-      new Response(JSON.stringify({ token: "token-1" }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      }),
+      new Response(
+        JSON.stringify({ token: "token-1", sessionId: "server-session-1", agentId: "agent-1" }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        },
+      ),
   ) as unknown as typeof fetch
 })
 

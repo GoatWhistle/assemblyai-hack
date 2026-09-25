@@ -33,9 +33,9 @@ export const RECOVERY_STEP: Readonly<Record<ReasonCode, RecoveryStep | null>> = 
       "Each part passed on its own, but the combination does not exist in the catalogue. The agent asks which single part to correct.",
   },
   [ReasonCode.LasaHit]: {
-    label: "Answer which of the two names you said",
+    label: "Say the drug name itself, not yes",
     detail:
-      "The agent names both drugs from the published pair and waits for you to pick one aloud. Nothing is written until you answer.",
+      "The agent names the drug it heard and every drug the published list pairs with it, and waits for you to say one of them aloud. A yes does not answer the question, and nothing is written until a name is said.",
   },
   [ReasonCode.LowConfidence]: {
     label: "Confirm the value aloud",
