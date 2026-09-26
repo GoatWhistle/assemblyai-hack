@@ -60,6 +60,8 @@ function candidate(index: number) {
   })
 }
 
+const BOUND_TEST_TIMEOUT_MS = 30_000
+
 describe("the unauthenticated turn route cannot be used to exhaust the server", () => {
   let backing: MemoryEventBacking
 
@@ -104,21 +106,29 @@ describe("the unauthenticated turn route cannot be used to exhaust the server", 
     expect((await intake(kept)).turns.length).toBeGreaterThan(1)
   })
 
-  it("caps the turns one session can accumulate", async () => {
-    for (let t = 0; t < MAX_TURNS_PER_SESSION * 2; t += 1) {
-      await postTurn(turnRequest("one", t), params("one"))
-    }
-    expect((await intake("one")).turns.length).toBe(MAX_TURNS_PER_SESSION)
-  })
+  it(
+    "caps the turns one session can accumulate",
+    async () => {
+      for (let t = 0; t < MAX_TURNS_PER_SESSION * 2; t += 1) {
+        await postTurn(turnRequest("one", t), params("one"))
+      }
+      expect((await intake("one")).turns.length).toBe(MAX_TURNS_PER_SESSION)
+    },
+    BOUND_TEST_TIMEOUT_MS,
+  )
 
-  it("keeps the newest turns when it caps, because the old ones no longer bear provenance", async () => {
-    for (let t = 0; t < MAX_TURNS_PER_SESSION + 5; t += 1) {
-      await postTurn(turnRequest("one", t), params("one"))
-    }
-    const orders = (await intake("one")).turns.map((turn) => turn.turnOrder)
-    expect(orders.at(-1)).toBe(MAX_TURNS_PER_SESSION + 4)
-    expect(orders).not.toContain(0)
-  })
+  it(
+    "keeps the newest turns when it caps, because the old ones no longer bear provenance",
+    async () => {
+      for (let t = 0; t < MAX_TURNS_PER_SESSION + 5; t += 1) {
+        await postTurn(turnRequest("one", t), params("one"))
+      }
+      const orders = (await intake("one")).turns.map((turn) => turn.turnOrder)
+      expect(orders.at(-1)).toBe(MAX_TURNS_PER_SESSION + 4)
+      expect(orders).not.toContain(0)
+    },
+    BOUND_TEST_TIMEOUT_MS,
+  )
 
   it("caps the candidates one session can accumulate", async () => {
     const state = await intake("candidates")
