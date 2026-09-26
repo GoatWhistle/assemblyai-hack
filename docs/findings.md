@@ -289,6 +289,31 @@ settles, on our pages and on example.com alike. So the scripted calls cannot run
 explicit confirmation that it spends credit. Until that run exists there is no recorded live
 call, and nothing in this repository says otherwise.
 
+## Three production defects the first completed live calls found, and one the gate had all along
+
+The live calls on 26 September 2026 were the first to reach a committed order on production,
+and the path there found three defects that no local test could:
+
+1. **Stored agents live in one AssemblyAI region.** The unqualified `agents.assemblyai.com`
+   routes each client to its nearest region, so a server in the US created the agent in one
+   store and a browser in Europe looked for it in another: every European call answered
+   `agent_not_found`. Server and browser now name `agents.us.assemblyai.com`
+   (`src/domain/live/agent-region.ts`).
+2. **The drug catalogue never reached the Vercel functions.** It is read from disk, the bundler
+   cannot see a `readFileSync` path, and every catalogue lookup answered 500 in production while
+   passing locally. It is traced explicitly, and a test fails for any runtime data file that is not.
+3. **The agent's `model` field selected nothing.** The create-agent schema has no such field;
+   sessions ran the vendor's managed model (`llm: []`). The field is gone, and what made the
+   calls complete was the prompt and the tool responses (`eval/REPORT.md`).
+
+The fourth was in the gate's own evidence chain. The drug, strength, form and route were
+checked as a combination only when a field was proposed **after** the other three were already
+confirmed. A caller who named the drug last left every combination check `NotApplicable`, and
+nothing checked the confirmed set again, so an order for a strength the drug does not come in
+could commit with every field individually confirmed. `commit_order` now checks the confirmed
+combination as a whole and refuses with `COMMIT_REFUSED_INCONSISTENT_COMBINATION`;
+`tests/api/commit-combination.test.ts` fails with the check removed and passes with it.
+
 ## What the audits could not verify, stated
 
 No screen reader was available, so everything described as announced is verified through

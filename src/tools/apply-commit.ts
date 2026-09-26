@@ -1,4 +1,8 @@
-import { type FieldName, referenceNumberFor, withStatus } from "@/domain"
+import { comboSourceFor } from "@/catalog"
+import { FieldName, referenceNumberFor, VerdictOutcome, withStatus } from "@/domain"
+import { lasaRiskFor } from "@/lasa"
+import { validateCombo } from "@/validators"
+import { toolCatalog } from "./catalog-access"
 import { hasEscalation, missingByOutcome, missingCritical } from "./field-outcomes"
 import { type IntakeState, recordEvent } from "./intake"
 import type { IntakeEvent } from "./intake-events"
@@ -50,6 +54,41 @@ function noteRefusal(
     ...state.commitRefusals,
     { atMs: state.nowMs, missing: [...missing], reasonCode },
   ].slice(-MAX_COMMIT_REFUSALS)
+}
+
+const COMBINATION_FIELDS: readonly FieldName[] = [
+  FieldName.DrugName,
+  FieldName.Strength,
+  FieldName.DosageForm,
+  FieldName.Route,
+]
+
+function confirmedText(state: IntakeState, field: FieldName): string | undefined {
+  const value = state.order.fields.get(field)?.value
+  return typeof value === "string" ? value : undefined
+}
+
+function inconsistentCombination(state: IntakeState): string | null {
+  const drugName = confirmedText(state, FieldName.DrugName)
+  const strength = confirmedText(state, FieldName.Strength)
+  const dosageForm = confirmedText(state, FieldName.DosageForm)
+  const route = confirmedText(state, FieldName.Route)
+  if (
+    drugName === undefined ||
+    strength === undefined ||
+    dosageForm === undefined ||
+    route === undefined
+  ) {
+    return null
+  }
+  const verdict = validateCombo(
+    { drugName, strength, dosageForm, route },
+    {
+      ...comboSourceFor(toolCatalog()),
+      partnersOf: (name) => lasaRiskFor(name).confusableWith,
+    },
+  )
+  return verdict.outcome === VerdictOutcome.InconsistentCombo ? verdict.detail : null
 }
 
 export function applyCommit(state: IntakeState, event: CommitEvent, seq: number): ToolPayload {
@@ -104,6 +143,19 @@ export function applyCommit(state: IntakeState, event: CommitEvent, seq: number)
       }),
       gate_note:
         "Order.setField accepts ConfirmedValue only. Confirmed, refused and never-asked are three states, and reporting them as one absence would put a lie in the record.",
+    }
+  }
+
+  const combination = inconsistentCombination(state)
+  if (combination !== null) {
+    noteRefusal(state, "COMMIT_REFUSED_INCONSISTENT_COMBINATION", [...COMBINATION_FIELDS])
+    return {
+      committed: false,
+      reason_code: "COMMIT_REFUSED_INCONSISTENT_COMBINATION",
+      inconsistent_fields: [...COMBINATION_FIELDS],
+      say_to_caller:
+        "I cannot place this order yet. The drug, strength, form and route I have do not go together as one product, so let me check them with you again.",
+      gate_note: `each field was confirmed on its own, but the confirmed combination is checked as a whole before anything is written: ${combination}`,
     }
   }
 
