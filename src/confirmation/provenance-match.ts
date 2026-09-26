@@ -38,6 +38,28 @@ function findSpan(turn: TurnRecord, hint: readonly string[]): readonly WordSpan[
   return null
 }
 
+function findJoinedSpan(turn: TurnRecord, hint: readonly string[]): readonly WordSpan[] | null {
+  const wanted = hint.join("")
+  const words = turn.words
+  const normalized = words.map((w) => normalizeToken(w.text))
+  for (let start = 0; start < normalized.length; start += 1) {
+    if (normalized[start] === "" || !wanted.startsWith(String(normalized[start]))) {
+      continue
+    }
+    let joined = ""
+    for (let end = start; end < normalized.length; end += 1) {
+      joined += normalized[end]
+      if (joined === wanted) {
+        return words.slice(start, end + 1)
+      }
+      if (!wanted.startsWith(joined)) {
+        break
+      }
+    }
+  }
+  return null
+}
+
 export type ProvenanceMatch = {
   readonly provenance: Provenance
   readonly turnOrder: number
@@ -59,7 +81,7 @@ export function matchProvenance(input: {
   const recent = [...input.turns].sort((a, b) => b.turnOrder - a.turnOrder).slice(0, window)
 
   for (const turn of recent) {
-    const span = findSpan(turn, hint)
+    const span = findSpan(turn, hint) ?? findJoinedSpan(turn, hint)
     if (span !== null && span.length > 0) {
       return {
         provenance: makeProvenance({

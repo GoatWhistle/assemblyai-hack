@@ -6,7 +6,7 @@ import { POST as readBack } from "@app/api/tools/read-back/route"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { catalogFromFile } from "@/catalog"
 import { type AgentTokenResponse, UNKNOWN_SESSION_CODE } from "@/domain"
-import { setConfirmationWait, setToolCatalog } from "@/tools"
+import { setConfirmationWait, setQuotationWait, setToolCatalog } from "@/tools"
 import fixture from "../../../eval/fixtures/catalog-fixture.json"
 import {
   agentTokenRequest,
@@ -26,6 +26,7 @@ beforeEach(() => {
   freshServerState()
   setToolCatalog(catalogFromFile(fixture))
   setConfirmationWait({ timeoutMs: 0, pollMs: 1 })
+  setQuotationWait({ timeoutMs: 0, pollMs: 1 })
   vendor = stubVendor()
 })
 

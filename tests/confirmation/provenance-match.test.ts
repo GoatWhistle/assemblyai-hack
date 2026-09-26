@@ -35,6 +35,22 @@ describe("provenance matching", () => {
     expect(matchProvenance({ hint: "LISINOPRIL", turns, sessionId: "s1" })).not.toBeNull()
   })
 
+  it("matches digits the two recognizers grouped differently, and only the same digits", () => {
+    const grouped = [turn(3, "NPI 1234567893. The patient")]
+    const spaced = [turn(3, "NPI 1 2 3 4 5 6 7 8 9 3 the patient")]
+    const spacedHint = matchProvenance({
+      hint: "1 2 3 4 5 6 7 8 9 3",
+      turns: grouped,
+      sessionId: "s1",
+    })
+    const groupedHint = matchProvenance({ hint: "1234567893", turns: spaced, sessionId: "s1" })
+
+    expect(spacedHint?.provenance.words.map((w) => w.text)).toEqual(["1234567893."])
+    expect(groupedHint?.provenance.words).toHaveLength(10)
+    expect(matchProvenance({ hint: "1234567890", turns: spaced, sessionId: "s1" })).toBeNull()
+    expect(matchProvenance({ hint: "12345", turns: grouped, sessionId: "s1" })).toBeNull()
+  })
+
   it("returns null when the model paraphrased the hint", () => {
     const turns = [turn(2, "lisinopril ten milligrams")]
     expect(matchProvenance({ hint: "twenty milligrams", turns, sessionId: "s1" })).toBeNull()

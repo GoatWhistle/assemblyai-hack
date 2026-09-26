@@ -63,4 +63,20 @@ describe("value normalization", () => {
       expect(normalizeFieldValue(field, "   "), field).toBeNull()
     }
   })
+
+  it("reads a quantity spoken with its dispensing unit, the way a prescriber says it", () => {
+    expect(normalizeFieldValue(FieldName.Quantity, "30 tablets")).toBe(30)
+    expect(normalizeFieldValue(FieldName.Quantity, "thirty tablets.")).toBe(30)
+    expect(normalizeFieldValue(FieldName.Quantity, "10 vials")).toBe(10)
+    expect(normalizeFieldValue(FieldName.DaysSupply, "30 days supply")).toBe(30)
+    expect(normalizeFieldValue(FieldName.Quantity, "30 bananas")).toBeNull()
+  })
+
+  it("maps a spoken route onto the catalogue vocabulary, so by mouth can pass the combination check", () => {
+    expect(normalizeFieldValue(FieldName.Route, "By mouth")).toBe("ORAL")
+    expect(normalizeFieldValue(FieldName.Route, "orally")).toBe("ORAL")
+    expect(normalizeFieldValue(FieldName.Route, "Intravenous.")).toBe("INTRAVENOUS")
+    expect(normalizeFieldValue(FieldName.Route, "IV")).toBe("INTRAVENOUS")
+    expect(normalizeFieldValue(FieldName.Route, "nasal")).toBe("NASAL")
+  })
 })
