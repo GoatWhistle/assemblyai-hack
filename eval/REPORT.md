@@ -947,11 +947,11 @@ total. At USD 0.45 per hour for one streaming socket, that recorded time alone c
 recorded duration are not included and their true cost is higher by an amount nobody
 wrote down.
 
-### Since the ledger: 18 runs on 25 and 26 September, 13 of them failed and billed regardless
+### Since the ledger: 37 runs on 25 and 26 September, 29 of them failed and billed regardless
 
-`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 18**,
-**runs that did not complete, still billed: 13**, 5160.468 s of socket-open time and
-**derived total: USD 4.0532**, at
+`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 37**,
+**runs that did not complete, still billed: 29**, 10236.468 s of socket-open time and
+**derived total: USD 11.2439**, at
 the rates checked on 17 September. The figure is our arithmetic over our own recorded seconds,
 not an invoice. By command:
 
@@ -959,11 +959,14 @@ not an invoice. By command:
 |---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 |
-| `make live-smoke` | 10 | 10 failed | 3.4898 |
+| `make live-smoke` | 18 | 2 completed, 16 failed | 6.7227 |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 |
 | ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 |
 | ad-hoc region and tool diagnosis | 1 | completed | 0.0850 |
+| text-driven managed-model probe | 3 | 3 failed | 0.6835 |
+| audio-driven managed-model probe | 7 | 7 failed | 2.8295 |
+| tool-call probes | 1 | completed | 0.4448 |
 
 - **The two stress sweeps** were started 12 s apart by mistake; the second is recorded as failed
   because two of its sessions closed 1006 and 1008 (see the stress section below).
@@ -995,6 +998,47 @@ not an invoice. By command:
   answered with real catalogue rows, but the model then asked again for fields it had heard
   instead of calling `propose_field`, so the gate never received a value and no order was
   committed. These three runs fail on the language model's tool use, not on the gate.
+- **The eleventh to eighteenth `make live-smoke` attempts, on 26 September, are the first to
+  complete.** `clean-order` committed at 14:52 UTC and `lasa-named` at 15:06 UTC, both on the
+  production deployment in Firefox. What was real: the page, both AssemblyAI sockets, the vendor's
+  recognizer and language model, our production server, the gate and the order store. What was
+  synthesised: the caller. Every caller line is Windows SAPI speech from `tests/live/lines/`,
+  injected into the page's microphone track through WebAudio, and which line answers which agent
+  question is chosen by a regular expression over the agent's own words
+  (`tests/live/responder.ts`): the harness answers the field the agent asks for, says yes to a
+  read-back and names hydromorphone when the agent names the sound-alike pair. No human spoke.
+  In `lasa-named` the drug was written by the second `read_back` call with
+  `C_CALLER_NAMED_VALUE` after the caller said the name; the vendor's recognizer once heard the
+  same synthesised "Hydromorphone" as "Oxymorphone", and the server, which judges from our own
+  recognizer's turn and not from the agent's hint, wrote nothing on that answer. The six failures
+  before them, each with its cause: the page could not mint a recognizer token and ended the call
+  after the greeting, while the harness waited out its budget (a local network failure, 485 s
+  recorded for about 17 s of vendor time); the harness read Next.js's empty route announcer as a
+  fault and stopped at once; our recognizer never closed a caller turn, because the half-duplex
+  mute stopped its audio mid-turn, so the server held one turn and refused every proposal as
+  untraceable (fixed: the browser now sends `ForceEndpoint` when the agent takes the turn); the
+  order reached its full read-back and the model never called `commit_order` (isolated by the
+  tool-call probes below and fixed: the model no longer copies the read-back into an argument,
+  the server records it from the recorded agent line); the harness answered a question about the
+  instructions with the drug line and then fell silent when a tool-only reply cancelled its
+  answer; and a `lasa-named` run the harness stopped on a recoverable `reply_stalled` fault,
+  which also showed "2 milligrams per milliliter" refused against a recognizer's "2 mg/mL".
+  Socket time for every live-smoke run is the harness wall clock across three sockets, an upper
+  bound.
+- **The managed-model probe rows** are scratch drivers, not committed code, that took an agent
+  issued by the production token route, spoke to it over the agent socket alone (text through
+  `conversation.message`, or SAPI audio through `input.audio`) and posted the caller's words to
+  the production turns route as text, standing in for our recognizer. They let the prompt and the
+  tool responses be tried against the vendor's language model without a deploy or a browser. The
+  agent socket alone bills USD 4.50 per hour; they are recorded at the three-socket rate, an
+  upper bound. The `model` field our agent definition sends is not part of the create-agent
+  schema and selects nothing: the session configuration shows `llm: []`, the vendor's managed
+  model, and this account has no access to the LLM Gateway models that could replace it.
+- **The tool-call probes row** is eleven short sessions with a one-tool agent that isolated why
+  `commit_order` never fired: the model calls a two-argument `commit_order` in both `hold` and
+  `interactive` mode, and emits nothing at all, with no error, when asked to copy the full
+  read-back sentence into `full_order_read_back`. The seconds are the vendor's own session
+  durations.
 - **The region and tool diagnosis row** covers about thirty short agent sockets opened from
   scripts to find those two defects, each under two seconds, recorded as 60 s, an upper bound.
 - **The reconciliation row** covers diagnostic agent sessions the coordinator opened by hand
@@ -1006,7 +1050,7 @@ not an invoice. By command:
   vendor's own timeline back (the S2 witness); the timeline it read is committed as
   `eval/fixtures/witness/timeline-recorded-shape.json`.
 
-**Paid runs on record, artefacts plus ledger: 25.** The account balance a human last read off
+**Paid runs on record, artefacts plus ledger: 44.** The account balance a human last read off
 the vendor dashboard is USD 149.93 on 17 September; no later reading is recorded, so no
 vendor-verified figure covers the 25 September runs.
 

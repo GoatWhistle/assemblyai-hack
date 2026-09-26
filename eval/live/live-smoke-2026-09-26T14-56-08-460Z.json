@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T14:56:08.460Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "5253812d-5703-4c05-98b6-a445b6960118",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 153.2,
+    "stt": 153.2
+  },
+  "costUsd": 0.217,
+  "outcome": "failed",
+  "reason": "live smoke lasa-named: not observed: the order committed; 5 caller lines played; last agent line: hydromorphone and morphine, buprenorphine, hydralazine, hydroxyzine, oxymorphone are on a published confused-drug-names list. Which: hydromorphone, H-Y-D-R-O-M, or morphine, M-O-R, or buprenorphine, B-U-P, or hydralazine, H-Y-D-R-A, or hydroxyzine, H-Y-D-R-O-X, or oxymorphone, O-X-Y? Answer with a name.; the page stopped the call: The agent's reply never finished Your microphone is muted towards the recognizer while the agent speaks, so it cannot hear itself. The end of that reply did not arrive within 20 seconds, so the microphone was reopened rather than left deaf. What to do Keep talking; if the agent stays silent, stop and start again. Technical reason Reported as reply_stalled.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

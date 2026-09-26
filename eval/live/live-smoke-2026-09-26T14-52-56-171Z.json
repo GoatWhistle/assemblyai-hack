@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-09-26T14:52:56.171Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "01f38dc9-ea68-49e3-b8a7-454becd2ecb8",
+  "vendorSessionIds": [],
+  "actualModel": "universal-3-5-pro",
+  "order": {
+    "orderId": "order-01f38dc9-ea68-49e3-b8a7-454becd2ecb8",
+    "receiptSha256": "359898d979a983d4dbe33ff3e1a19f437b850010b7cbb4f03a019d27480a4c35",
+    "fields": [
+      {
+        "field": "dosage_form",
+        "value": "TABLET",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "drug_name",
+        "value": "lisinopril",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "patient_name",
+        "value": "Maria Lopez",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "prescriber_dea",
+        "value": "AB1234563",
+        "confirmationMode": "validator",
+        "confirmation": "unclear"
+      },
+      {
+        "field": "prescriber_npi",
+        "value": "1234567893",
+        "confirmationMode": "validator",
+        "confirmation": "unclear"
+      },
+      {
+        "field": "quantity",
+        "value": 30,
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "route",
+        "value": "ORAL",
+        "confirmationMode": "validator",
+        "confirmation": "unclear"
+      },
+      {
+        "field": "sig",
+        "value": "Once daily",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "strength",
+        "value": "10 mg",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      }
+    ]
+  },
+  "socketSeconds": {
+    "agent": 269.4,
+    "stt": 269.4
+  },
+  "costUsd": 0.3816,
+  "outcome": "completed",
+  "reason": "live smoke clean-order: the order committed; socket time is the harness wall clock, an upper bound",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

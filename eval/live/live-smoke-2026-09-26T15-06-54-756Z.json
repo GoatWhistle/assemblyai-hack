@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-09-26T15:06:54.756Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "c3fbadda-53c9-42e5-92db-f23957d5ab6e",
+  "vendorSessionIds": [],
+  "actualModel": "universal-3-5-pro",
+  "order": {
+    "orderId": "order-c3fbadda-53c9-42e5-92db-f23957d5ab6e",
+    "receiptSha256": "f5f93eb49d5b45ef8a946ed5185497cbe76864faa56e407d838eced909b9dde7",
+    "fields": [
+      {
+        "field": "dosage_form",
+        "value": "INJECTION",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "drug_name",
+        "value": "hydromorphone",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "patient_name",
+        "value": "Maria Lopez",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "prescriber_dea",
+        "value": "AB1234563",
+        "confirmationMode": "validator",
+        "confirmation": "unclear"
+      },
+      {
+        "field": "prescriber_npi",
+        "value": "1234567893",
+        "confirmationMode": "validator",
+        "confirmation": "unclear"
+      },
+      {
+        "field": "quantity",
+        "value": 10,
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "route",
+        "value": "INTRAVENOUS",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "sig",
+        "value": "Every 4 hours as needed",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      },
+      {
+        "field": "strength",
+        "value": "2 mg/ml",
+        "confirmationMode": "read_back",
+        "confirmation": "confirmed"
+      }
+    ]
+  },
+  "socketSeconds": {
+    "agent": 289.4,
+    "stt": 289.4
+  },
+  "costUsd": 0.41,
+  "outcome": "completed",
+  "reason": "live smoke lasa-named: hydromorphone is in the order, the order committed; socket time is the harness wall clock, an upper bound",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

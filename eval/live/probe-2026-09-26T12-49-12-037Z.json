@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T12:49:12.037Z",
+  "kind": "probe",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "038e1123-7536-4808-9858-7334f224c73f",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 334.6,
+    "stt": 0
+  },
+  "costUsd": 0.4183,
+  "outcome": "failed",
+  "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_17511cda15a244838b75489cc624bd36; the receipt route answered 404",
+  "boundaries": [
+    "one call by one member of the team, not a sample of prescribers",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

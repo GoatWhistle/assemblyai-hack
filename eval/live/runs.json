@@ -228,6 +228,367 @@
         "the recognizer model is the one the browser reported from Begin, not one the server observed",
         "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
       ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:01:20.915Z",
+      "recordedAt": "2026-09-26T12:01:20.915Z",
+      "kind": "probe",
+      "command": "text-driven managed-model probe (conversation.message, no STT socket)",
+      "outcome": "failed",
+      "reason": "text-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_c9a14f3bc2ae429fb626de370d42101c; the receipt route answered 404",
+      "socketSeconds": 162.6,
+      "costUsd": 0.2304,
+      "sessionIds": [
+        "9b95777b-9a45-4c7f-8c44-02623017d914"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:04:43.806Z",
+      "recordedAt": "2026-09-26T12:04:43.806Z",
+      "kind": "probe",
+      "command": "text-driven managed-model probe (conversation.message, no STT socket)",
+      "outcome": "failed",
+      "reason": "text-driven clean probe of the managed LLM with the rewritten prompt; driver crashed on a network timeout after 41 s; vendor sess_461e68ebb5b0478b82dbae16da528dcc; agent seconds include the 30 s resume grace; the receipt route answered 404",
+      "socketSeconds": 75,
+      "costUsd": 0.1062,
+      "sessionIds": [
+        "3264ec24-b9be-4abe-b405-cc2df2715717"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:09:19.017Z",
+      "recordedAt": "2026-09-26T12:09:19.017Z",
+      "kind": "probe",
+      "command": "text-driven managed-model probe (conversation.message, no STT socket)",
+      "outcome": "failed",
+      "reason": "text-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_62358828374d4703abc142b32648f723; the receipt route answered 404",
+      "socketSeconds": 244.9,
+      "costUsd": 0.3469,
+      "sessionIds": [
+        "81dba0bd-9207-4dd3-b8a5-bd1bcdf72faf"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:15:24.108Z",
+      "recordedAt": "2026-09-26T12:15:24.108Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_2c3fb30dd88b4fbe8264f49d5f99f2bc; the receipt route answered 404",
+      "socketSeconds": 245.2,
+      "costUsd": 0.3474,
+      "sessionIds": [
+        "7b9646ba-b9b9-4d95-8269-a0b04362799b"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:25:40.705Z",
+      "recordedAt": "2026-09-26T12:25:40.705Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor null; the receipt could not be fetched: fetch failed",
+      "socketSeconds": 17.4,
+      "costUsd": 0.0246,
+      "sessionIds": [
+        "eebf05b6-0ae1-400e-a5f4-c423b5cbc967"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:31:42.395Z",
+      "recordedAt": "2026-09-26T12:31:42.395Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_d2b921cd289f4b83bd4f9cddd886c59c; the receipt could not be fetched: fetch failed",
+      "socketSeconds": 281.6,
+      "costUsd": 0.3989,
+      "sessionIds": [
+        "df7b12d7-9b5f-486d-a80e-35a6012094d7"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T12:49:12.037Z",
+      "recordedAt": "2026-09-26T12:49:12.037Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_17511cda15a244838b75489cc624bd36; the receipt route answered 404",
+      "socketSeconds": 334.6,
+      "costUsd": 0.474,
+      "sessionIds": [
+        "038e1123-7536-4808-9858-7334f224c73f"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T13:05:31.251Z",
+      "recordedAt": "2026-09-26T13:05:31.251Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_3adb75a43cb44efdb97ea8709f077bda; the receipt route answered 404",
+      "socketSeconds": 333,
+      "costUsd": 0.4717,
+      "sessionIds": [
+        "fe504949-125c-461e-9e3e-d67a3ba019f8"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T13:18:18.754Z",
+      "recordedAt": "2026-09-26T13:18:18.754Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_f64fe09145334e88ba0affbdaef5ab04; the receipt route answered 404",
+      "socketSeconds": 333,
+      "costUsd": 0.4717,
+      "sessionIds": [
+        "f16b508c-ed07-4c47-820f-0ec68492f13b"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T13:29:38.225Z",
+      "recordedAt": "2026-09-26T13:29:38.225Z",
+      "kind": "probe",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "outcome": "failed",
+      "reason": "audio-driven clean probe of the managed LLM; caller turns synthesised as text; vendor sess_edca8ae2e2534845b12b432bd89fbb74; the receipt route answered 404",
+      "socketSeconds": 452.6,
+      "costUsd": 0.6412,
+      "sessionIds": [
+        "b33f5309-5aa4-45e8-8a50-bed0c91d754d"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T13:49:01.711Z",
+      "recordedAt": "2026-09-26T13:49:01.711Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 1 caller lines played; last agent line: Pharmacy intake, this line is recorded for verification. Go ahead with the prescription.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 485,
+      "costUsd": 0.6871,
+      "sessionIds": [
+        "591e933e-4985-4ea0-b960-28f238051fae"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T13:53:37.508Z",
+      "recordedAt": "2026-09-26T13:53:37.508Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 0 caller lines played; last agent line: none; the page stopped the call: ; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 7.3,
+      "costUsd": 0.0103,
+      "sessionIds": [
+        "d523f964-16be-48a8-996f-2eff9d30d818"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T14:03:04.701Z",
+      "recordedAt": "2026-09-26T14:03:04.701Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 19 caller lines played; last agent line: I am very sorry, but I am still unable to record the patient's name. Could you please try saying it again?; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 485.4,
+      "costUsd": 0.6877,
+      "sessionIds": [
+        "b51e81c5-bca0-41d4-9e84-b23781ec7036"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T14:16:10.557Z",
+      "recordedAt": "2026-09-26T14:16:10.557Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 13 caller lines played; last agent line: Reading the whole order back. Lisinopril 10 mg tablet, oral, quantity 30, sig Once daily, prescriber NPI 1 2 3 4 5 6 7 8 9 3, prescriber DEA AB1234563, patient Maria Lopez, refills 0. Is all of that correct?; the page stopped the call: The line was closed after 90 seconds of silence Nobody spoke and the agent did not reply for 90 seconds. Both sockets bill for as long as they are open, so an idle line is closed rather than left running. What to do Start again when you are ready to dictate. Try again Watch the replay Technical reason Reported as idle_ended.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 322.3,
+      "costUsd": 0.4566,
+      "sessionIds": [
+        "f0dedd09-5ee1-4548-a326-eb01638b9057"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T14:44:45.185Z",
+      "recordedAt": "2026-09-26T14:44:45.185Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke clean-order: not observed: the order committed; 12 caller lines played; last agent line: I'm sorry, I didn't catch the instructions for how to take the medication. Could you please repeat the sig?; the page stopped the call: The line was closed after 90 seconds of silence Nobody spoke and the agent did not reply for 90 seconds. Both sockets bill for as long as they are open, so an idle line is closed rather than left running. What to do Start again when you are ready to dictate. Try again Watch the replay Technical reason Reported as idle_ended.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 270.1,
+      "costUsd": 0.3826,
+      "sessionIds": [
+        "a4e1dcb2-c519-4184-9065-16d55c7537b6"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T14:47:29.299Z",
+      "recordedAt": "2026-09-26T14:47:29.299Z",
+      "kind": "probe",
+      "command": "tool-call probes: a one-tool stored agent spoken to over the agent socket (SAPI audio or conversation.message), no STT socket",
+      "outcome": "completed",
+      "reason": "11 short vendor sessions (sess_0683d3ec, 43f29ab7, ff6bb751, 19974077, 8842e60c, 881a8129, 8733d2ae, 1b1bb142, e641afc2, 8da1d86e, 1f0c99cd) isolating why commit_order never fired: a two-argument commit_order is called in both hold and interactive mode, but asking the model to copy the full read-back sentence into full_order_read_back suppresses the call with no error; seconds are the vendor-reported session durations; the receipt route answered 404",
+      "socketSeconds": 314,
+      "costUsd": 0.4448,
+      "sessionIds": [
+        "probe-tool-call-2026-09-26"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T14:52:56.171Z",
+      "recordedAt": "2026-09-26T14:52:56.171Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "completed",
+      "reason": "live smoke clean-order: the order committed; socket time is the harness wall clock, an upper bound",
+      "socketSeconds": 269.4,
+      "costUsd": 0.3816,
+      "sessionIds": [
+        "01f38dc9-ea68-49e3-b8a7-454becd2ecb8"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T14:56:08.460Z",
+      "recordedAt": "2026-09-26T14:56:08.460Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke lasa-named: not observed: the order committed; 5 caller lines played; last agent line: hydromorphone and morphine, buprenorphine, hydralazine, hydroxyzine, oxymorphone are on a published confused-drug-names list. Which: hydromorphone, H-Y-D-R-O-M, or morphine, M-O-R, or buprenorphine, B-U-P, or hydralazine, H-Y-D-R-A, or hydroxyzine, H-Y-D-R-O-X, or oxymorphone, O-X-Y? Answer with a name.; the page stopped the call: The agent's reply never finished Your microphone is muted towards the recognizer while the agent speaks, so it cannot hear itself. The end of that reply did not arrive within 20 seconds, so the microphone was reopened rather than left deaf. What to do Keep talking; if the agent stays silent, stop and start again. Technical reason Reported as reply_stalled.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 153.2,
+      "costUsd": 0.217,
+      "sessionIds": [
+        "5253812d-5703-4c05-98b6-a445b6960118"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T15:06:54.756Z",
+      "recordedAt": "2026-09-26T15:06:54.756Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "completed",
+      "reason": "live smoke lasa-named: hydromorphone is in the order, the order committed; socket time is the harness wall clock, an upper bound",
+      "socketSeconds": 289.4,
+      "costUsd": 0.41,
+      "sessionIds": [
+        "c3fbadda-53c9-42e5-92db-f23957d5ab6e"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
     }
   ]
 }

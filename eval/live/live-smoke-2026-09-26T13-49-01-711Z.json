@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T13:49:01.711Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "591e933e-4985-4ea0-b960-28f238051fae",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 485,
+    "stt": 485
+  },
+  "costUsd": 0.6871,
+  "outcome": "failed",
+  "reason": "live smoke clean-order: not observed: the order committed; 1 caller lines played; last agent line: Pharmacy intake, this line is recorded for verification. Go ahead with the prescription.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

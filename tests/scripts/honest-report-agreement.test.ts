@@ -99,15 +99,15 @@ const ANCHORS: readonly Anchor[] = [
       "943.2 s",
       "USD 0.1179",
       "none of them is in the ledger",
-      "artefacts plus ledger: 25",
+      "artefacts plus ledger: 44",
     ],
   },
   {
     step: "What the paid API has actually cost",
     figures: [
-      "recorded paid runs: 18",
-      "runs that did not complete, still billed: 13",
-      "derived total: USD 4.0532",
+      "recorded paid runs: 37",
+      "runs that did not complete, still billed: 29",
+      "derived total: USD 11.2439",
     ],
   },
   {

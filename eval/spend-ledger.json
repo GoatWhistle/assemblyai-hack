@@ -214,6 +214,234 @@
       ],
       "openSeconds": 60,
       "outcome": "completed"
+    },
+    {
+      "runId": "text-driven-managed-model-probe-conversation-message-no-STT-socket--2026-09-26T12:01:20.915Z",
+      "at": "2026-09-26T12:01:20.915Z",
+      "command": "text-driven managed-model probe (conversation.message, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 162.6,
+      "outcome": "failed"
+    },
+    {
+      "runId": "text-driven-managed-model-probe-conversation-message-no-STT-socket--2026-09-26T12:04:43.806Z",
+      "at": "2026-09-26T12:04:43.806Z",
+      "command": "text-driven managed-model probe (conversation.message, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 75,
+      "outcome": "failed"
+    },
+    {
+      "runId": "text-driven-managed-model-probe-conversation-message-no-STT-socket--2026-09-26T12:09:19.017Z",
+      "at": "2026-09-26T12:09:19.017Z",
+      "command": "text-driven managed-model probe (conversation.message, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 244.9,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T12:15:24.108Z",
+      "at": "2026-09-26T12:15:24.108Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 245.2,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T12:25:40.705Z",
+      "at": "2026-09-26T12:25:40.705Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 17.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T12:31:42.395Z",
+      "at": "2026-09-26T12:31:42.395Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 281.6,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T12:49:12.037Z",
+      "at": "2026-09-26T12:49:12.037Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 334.6,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T13:05:31.251Z",
+      "at": "2026-09-26T13:05:31.251Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 333,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T13:18:18.754Z",
+      "at": "2026-09-26T13:18:18.754Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 333,
+      "outcome": "failed"
+    },
+    {
+      "runId": "audio-driven-managed-model-probe-SAPI-caller-audio-on-the-agent-socket-no-STT-socket--2026-09-26T13:29:38.225Z",
+      "at": "2026-09-26T13:29:38.225Z",
+      "command": "audio-driven managed-model probe (SAPI caller audio on the agent socket, no STT socket)",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 452.6,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T13:49:01.711Z",
+      "at": "2026-09-26T13:49:01.711Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 485,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T13:53:37.508Z",
+      "at": "2026-09-26T13:53:37.508Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 7.3,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T14:03:04.701Z",
+      "at": "2026-09-26T14:03:04.701Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 485.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T14:16:10.557Z",
+      "at": "2026-09-26T14:16:10.557Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 322.3,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T14:44:45.185Z",
+      "at": "2026-09-26T14:44:45.185Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 270.1,
+      "outcome": "failed"
+    },
+    {
+      "runId": "tool-call-probes-a-one-tool-stored-agent-spoken-to-over-the-agent-socket-SAPI-audio-or-conversation-message-no-STT-socket-2026-09-26T14:47:29.299Z",
+      "at": "2026-09-26T14:47:29.299Z",
+      "command": "tool-call probes: a one-tool stored agent spoken to over the agent socket (SAPI audio or conversation.message), no STT socket",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 314,
+      "outcome": "completed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T14:52:56.171Z",
+      "at": "2026-09-26T14:52:56.171Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 269.4,
+      "outcome": "completed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T14:56:08.460Z",
+      "at": "2026-09-26T14:56:08.460Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 153.2,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T15:06:54.756Z",
+      "at": "2026-09-26T15:06:54.756Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 289.4,
+      "outcome": "completed"
     }
   ]
 }
