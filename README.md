@@ -740,8 +740,9 @@ softened, is in [docs/limitations.md](docs/limitations.md).
 - Every figure in `eval/REPORT.md` carries the command that produced it and the size
   of the set it came from. Numbers without a method are not published.
 - **Voice audio goes to a third-party vendor, and consent to that is implied by using
-  the app rather than asked for explicitly.** Both sockets connect to AssemblyAI's
-  global endpoints with no data-residency selection in this codebase; their retention
+  the app rather than asked for explicitly.** The recognizer uses AssemblyAI's global
+  endpoint and the voice agent its US region (pinned because stored agents are regional,
+  not as a data-residency choice), with no data-residency selection made; their retention
   policy governs what happens to that audio, and we have not verified its terms
   closely enough to summarise them here rather than link to them.
 

@@ -14,7 +14,7 @@ export const OPERATIONS_LIMITATIONS: readonly Limitation[] = [
     group: "operations",
     title: "Voice audio leaves this application for a third-party vendor",
     status: "Disclosed, not independently verified",
-    body: "Both sockets stream the caller's voice to AssemblyAI's global endpoints, with no data-residency selection; its region-pinned endpoints are not used or evaluated here. What the vendor retains, and for how long, is governed by its own terms, which we have not summarised because a summary we had not verified would be an unsourced claim. No consent screen names the vendor before a session starts. Every demonstration and evaluation run in this project used synthetic speech.",
+    body: "Both sockets stream the caller's voice to AssemblyAI: the recognizer to its global endpoint and the voice agent to its US region, pinned because stored agents live in one region and the global host sent a US server and a European browser to different stores. No data-residency choice was made or evaluated; the EU endpoints are not used. What the vendor retains, and for how long, is governed by its own terms, which we have not summarised because a summary we had not verified would be an unsourced claim. No consent screen names the vendor before a session starts. Every demonstration and evaluation run in this project used synthetic speech.",
   },
   {
     id: "emergency",

@@ -247,12 +247,15 @@ None of them may be presented to a reviewer as specification.
 **Status: disclosed, not independently verified.**
 
 Both AssemblyAI sockets are held directly by the browser, so the caller's voice is
-streamed to `wss://streaming.assemblyai.com` and `wss://agents.assemblyai.com` — the
-global endpoints, with no explicit data-residency selection in this codebase.
-AssemblyAI separately publishes region-pinned endpoints
-(`streaming.us.assemblyai.com`, `streaming.eu.assemblyai.com`, and a `.eu.` LLM
-Gateway host), which this project does not use and has not evaluated for this
-purpose.
+streamed to `wss://streaming.assemblyai.com`, the global recognizer endpoint, and to
+`wss://agents.us.assemblyai.com`, the voice agent's US region. The agent is pinned to
+one region for a functional reason, not a data-residency one: stored agents live in one
+region, and the global host sent a US server and a European browser to two different
+stores (`src/domain/live/agent-region.ts`, measured 26 September 2026). So the agent
+audio of every caller, wherever they are, goes to the US region. No data-residency
+choice was made or evaluated for either socket; the EU endpoints
+(`streaming.eu.assemblyai.com`, `agents.eu.assemblyai.com`, and a `.eu.` LLM Gateway
+host) are not used.
 
 What AssemblyAI retains from a session, for how long, and under what policy is
 governed by AssemblyAI's own terms and privacy policy, not by this repository. We
