@@ -286,8 +286,10 @@ The fourth defect was found because the worklet never loads **on this machine**:
 automated Chromium, Chrome and Edge we tried here, even an empty worklet from a blob URL never
 settles, on our pages and on example.com alike. So the scripted calls cannot run locally, and
 `.github/workflows/live-smoke.yml` runs them in CI against a deployed URL, by hand, after an
-explicit confirmation that it spends credit. Until that run exists there is no recorded live
-call, and nothing in this repository says otherwise.
+explicit confirmation that it spends credit. Firefox is the exception: the fake-media
+preferences let it start the worklet, and `--project firefox-fake-caller` is how the first
+completed calls were recorded on 26 September 2026 (see the next section). Those callers were
+synthesised speech; no call with a human voice is recorded, and nothing here says otherwise.
 
 ## Three production defects the first completed live calls found, and one the gate had all along
 

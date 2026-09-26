@@ -40,7 +40,7 @@ Also on `/demo`, with a link per step. Only the last step needs a microphone.
 | 15 | Open `/compare` | Six moments: said, heard, certainty, verdict, and what would have been written without the gate |
 | 15 | Try to forge a value on `/how-it-works` | Every attempt is refused by the only constructor that can write a field |
 | 15 | Open `/metrics` | Every figure carries its input, command, n and date; what was not measured shows a dash, never a zero |
-| 20 | Start a live call on `/` and say "Hydromorphone, two milligrams" | Expected, not yet observed on a recorded live call: the agent names hydromorphone and every drug the ISMP list pairs with it, spelling the start of each, and asks which; a "yes" is not accepted, only a name. The decision log gains `E_LASA_HIT` |
+| 20 | Start a live call on `/` and say "Hydromorphone, two milligrams" | Observed on production on 26 September 2026 with a synthesised caller, not yet with a human voice (`eval/live/runs.json`): the agent names hydromorphone and every drug the ISMP list pairs with it, spelling the start of each, and asks which; a "yes" is not accepted, only a name. The decision log gains `E_LASA_HIT` |
 
 **What the replay is.** The replay is built from **synthesised socket traffic**: messages
 generated in the documented shapes by `scripts/build/fixtures.ts`, not recorded from a
