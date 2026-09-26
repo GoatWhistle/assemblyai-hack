@@ -21,6 +21,17 @@ vi.mock("@/audio/microphone", async () => {
   }
 })
 
+vi.mock("@/audio/playback", () => ({
+  createPlayback: () => ({
+    enqueue: () => undefined,
+    flush: () => undefined,
+    close: async () => undefined,
+    beginReply: () => undefined,
+    settleReply: async () => ({ playedMs: 0, durationMs: 0 }),
+    scheduledCount: 0,
+  }),
+}))
+
 const { useSession } = await import("@/features/intake/use-session")
 
 let sockets: MemoryTransport[] = []
@@ -69,6 +80,7 @@ function Harness({ field, awaitingConfirmation = false }: HarnessProps) {
 }
 
 beforeEach(() => {
+  globalThis.AudioContext = class {} as unknown as typeof AudioContext
   sockets = []
   finish = null
   switches = 0
@@ -213,7 +225,7 @@ describe("ForceEndpoint is sent by the product, not merely callable", () => {
 })
 
 describe("the caller's turn closes on our recognizer when the agent takes the turn", () => {
-  it("sends ForceEndpoint before the half-duplex mute, so the words already heard become a turn", async () => {
+  it("sends ForceEndpoint when the agent becomes audible, so the words already heard become a turn", async () => {
     render(<Harness field={FieldName.PatientName} />)
     await openTheLine()
     const agent = sockets.find((socket) =>
@@ -222,6 +234,13 @@ describe("the caller's turn closes on our recognizer when the agent takes the tu
     expect(agent, "the agent socket never configured its session").toBeDefined()
     await act(async () => {
       agent?.deliverJson({ type: "reply.started", reply_id: "reply-1" })
+    })
+    expect(
+      framesOfType("ForceEndpoint"),
+      "tool calls are silent; the caller may go on",
+    ).toHaveLength(0)
+    await act(async () => {
+      agent?.deliverJson({ type: "audio", audio: "AAAA" })
     })
     expect(framesOfType("ForceEndpoint")).toHaveLength(1)
   })

@@ -51,9 +51,6 @@ export function agentEventsFor(wiring: SessionWiring): AgentClientEvents {
     onBound: (binding) => wiring.onBound(binding),
     onReplyStarted: (replyId) => {
       wiring.activity()
-      wiring.guard.replyStarted()
-      wiring.setSttMuted(true)
-      wiring.setAgentSpeaking(true)
       wiring.watchdog.replyStarted()
       wiring.audio.beginReply()
       wiring.turns.started(replyId)
@@ -74,6 +71,11 @@ export function agentEventsFor(wiring: SessionWiring): AgentClientEvents {
     },
     onUserTranscript: () => wiring.activity(),
     onReplyAudio: (base64) => {
+      if (!wiring.guard.isAgentSpeaking) {
+        wiring.guard.replyStarted()
+        wiring.setSttMuted(true)
+        wiring.setAgentSpeaking(true)
+      }
       wiring.watchdog.replyProgress()
       wiring.onAgentAudio?.(base64)
       wiring.audio.enqueue(base64)

@@ -29,6 +29,17 @@ vi.mock("@/audio/microphone", async () => {
   }
 })
 
+vi.mock("@/audio/playback", () => ({
+  createPlayback: () => ({
+    enqueue: () => undefined,
+    flush: () => undefined,
+    close: async () => undefined,
+    beginReply: () => undefined,
+    settleReply: async () => ({ playedMs: 0, durationMs: 0 }),
+    scheduledCount: 0,
+  }),
+}))
+
 const { useSession } = await import("@/features/intake/use-session")
 
 let rig: SessionRig
@@ -46,11 +57,26 @@ afterEach(() => {
 })
 
 describe("T9: a reply that never finishes cannot leave the microphone deaf", () => {
-  it("unmutes capture and surfaces a fault 20 s after reply.started with no reply.done", async () => {
+  it("keeps the recognizer open through a reply's silent tool calls and mutes at its first audio", async () => {
     renderSession(useSession, rig)
     await openTheLine()
     await act(async () => {
       latestSocket(rig, "agents").deliverJson({ type: "reply.started", reply_id: "r1" })
+    })
+    expect(mic.muted, "the caller may still be talking while the agent calls tools").toEqual([])
+    await act(async () => {
+      latestSocket(rig, "agents").deliverJson({ type: "audio", audio: "AAAA" })
+      latestSocket(rig, "agents").deliverJson({ type: "audio", audio: "AAAA" })
+    })
+    expect(mic.muted, "muted once, when the agent became audible").toEqual([true])
+  })
+
+  it("unmutes capture and surfaces a fault 20 s after the last reply audio with no reply.done", async () => {
+    renderSession(useSession, rig)
+    await openTheLine()
+    await act(async () => {
+      latestSocket(rig, "agents").deliverJson({ type: "reply.started", reply_id: "r1" })
+      latestSocket(rig, "agents").deliverJson({ type: "audio", audio: "AAAA" })
     })
     expect(mic.muted).toEqual([true])
     await settle(REPLY_STALL_MS - 1)

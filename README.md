@@ -199,8 +199,11 @@ reviewer the tools to disprove the claim than ask them to take it on the strengt
 a paragraph.
 
 **7. If you do have a microphone, interrupt the agent mid-sentence.** Nothing is sent
-to the recognizer between `reply.started` and `reply.done`, and a turn arriving during
-playback that matches the agent's own last line is discarded. A phantom turn would put
+to the recognizer from the first audio of a reply until `reply.done`, and a turn arriving
+during playback that matches the agent's own last line is discarded. The mute waits for
+sound rather than for `reply.started`: a reply opens with tool calls that can run for
+seconds, and muting there once cut a dictated DEA number out of the recognizer's turns
+while the caller was still talking. A phantom turn would put
 words the human never said into a field's provenance, which is worse than a stutter.
 
 **8. Then say a drug name and, in the same breath, correct yourself** — "Lisinopril,
