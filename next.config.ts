@@ -32,8 +32,13 @@ const PRODUCTION_HEADERS = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ]
 
+export const SERVER_DATA_FILES = {
+  "/api/**/*": ["./data/catalog.json"],
+}
+
 const config: NextConfig = {
   reactStrictMode: true,
+  outputFileTracingIncludes: SERVER_DATA_FILES,
   poweredByHeader: false,
   typedRoutes: true,
   experimental: {
