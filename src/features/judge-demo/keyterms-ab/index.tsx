@@ -13,6 +13,7 @@ import {
   KEYTERMS_AB_SUMMARY,
   KEYTERMS_AB_TITLE,
   KEYTERMS_ARMS,
+  KEYTERMS_COUNT_SOURCE,
   type KeytermsArmId,
   keytermsArmFor,
   MEASURED_ARM_NOTE,
@@ -83,7 +84,7 @@ export function KeytermsAb() {
                 {entry.runnable ? (
                   <Chip tone="accepted">shipped and measured</Chip>
                 ) : (
-                  <Chip tone="escalated">described, never run</Chip>
+                  <Chip tone="plain">described, never run</Chip>
                 )}
               </span>
             </button>
@@ -121,9 +122,10 @@ export function KeytermsAb() {
               count={arm.lasaTermsPresent.length}
               label="of those terms sit on the published pair table"
               absenceNote={WHY_NO_NUMBER}
-              tone={arm.lasaTermsPresent.length === 0 ? "accepted" : "lasa"}
+              tone={arm.lasaTermsPresent.length === 0 ? "neutral" : "lasa"}
             />
           </div>
+          <p className={styles.measured}>{KEYTERMS_COUNT_SOURCE}</p>
           {arm.lasaTermsPresent.length === 0 ? null : (
             <p className={styles.leaked}>
               Pair members in this list:{" "}

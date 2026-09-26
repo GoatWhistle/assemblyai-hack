@@ -11,11 +11,79 @@ const VERDICT_SHEETS = [
   "src/features/field-card/lasa-override/styles.module.css",
   "src/features/attack-console/styles.module.css",
   "src/features/gate-ledger/refusal-counter/styles.module.css",
+  "src/features/gate-banner/contrast-question/styles.module.css",
+  "src/features/gate-banner/signature-line/styles.module.css",
+  "src/features/judge-demo/verdict-strip/styles.module.css",
+  "src/features/judge-demo/demo-arm/styles.module.css",
 ] as const
 
 const VERDICT_DURATIONS = new Set(["--dur-instant", "--dur-fast", "--dur-base"])
 
+const EMPHASIS_KEYFRAMES = new Set(["--keyframes-sweep"])
+
 const FIRST_FRAME_FLOOR = 0.5
+
+const SETTLED_BY_MS = 200
+
+type RuleBlock = { readonly selector: string; readonly body: string }
+
+function ruleBlocks(source: string): RuleBlock[] {
+  return [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => ({
+    selector: (m[1] ?? "").trim(),
+    body: m[2] ?? "",
+  }))
+}
+
+function tokenMs(token: string): number {
+  const base = MOTION.split("@media (prefers-reduced-motion: reduce)")[0] ?? ""
+  const value = base.match(new RegExp(`${token}:\\s*(\\d+)ms`))?.[1]
+  if (value === undefined) {
+    throw new Error(`${token} is not a millisecond token in motion.css`)
+  }
+  return Number(value)
+}
+
+function worstDelayMs(body: string): number {
+  const delay = body.match(/animation-delay:\s*([^;]+);/)?.[1] ?? ""
+  return [...delay.matchAll(/var\((--(?:dur|stagger)-[a-z-]+)\)/g)].reduce(
+    (sum, m) => sum + tokenMs(m[1] ?? ""),
+    0,
+  )
+}
+
+function settlesLate({ selector, body }: RuleBlock): string[] {
+  const animation = body.match(
+    /animation:\s*var\((--keyframes-[a-z-]+)\)\s*var\((--dur-[a-z-]+)\)/,
+  )
+  if (animation === null || EMPHASIS_KEYFRAMES.has(animation[1] ?? "")) {
+    return []
+  }
+  const total = tokenMs(animation[2] ?? "") + worstDelayMs(body)
+  return total > SETTLED_BY_MS ? [`${selector}: settles at ${total} ms`] : []
+}
+
+function fadesIn({ selector, body }: RuleBlock): string[] {
+  if (!transitionsOpacity(body)) {
+    return []
+  }
+  const found: string[] = []
+  if (/transition-delay:/.test(body)) {
+    found.push(`${selector}: delays an opacity transition`)
+  }
+  if (/(^|[;\s])opacity:\s*1\s*;/.test(body)) {
+    found.push(`${selector}: fades the incoming verdict in from a hidden value`)
+  }
+  return found
+}
+
+function heldBack(block: RuleBlock): string[] {
+  return [...settlesLate(block), ...fadesIn(block)]
+}
+
+function transitionsOpacity(body: string): boolean {
+  const transition = body.match(/(?:^|[;\s])transition:\s*([^;]+);/)?.[1] ?? ""
+  return /(^|,|\s)opacity\s/.test(transition)
+}
 
 async function stylesheets(): Promise<string[]> {
   const files: string[] = []
@@ -115,6 +183,9 @@ describe("AU11: motion never delays a verdict", () => {
         `${sheet} no longer animates; drop it from the list`,
       ).toBeGreaterThan(0)
       for (const [, keyframes = "", duration = ""] of animations) {
+        if (EMPHASIS_KEYFRAMES.has(keyframes)) {
+          continue
+        }
         expect(VERDICT_DURATIONS.has(duration), `${keyframes} runs for ${duration}`).toBe(true)
         expect(
           keyframeStartOpacity(keyframes),
@@ -122,7 +193,27 @@ describe("AU11: motion never delays a verdict", () => {
         ).toBeGreaterThanOrEqual(FIRST_FRAME_FLOOR)
       }
     })
+
+    it(`${sheet} delays no verdict past ${SETTLED_BY_MS} ms and fades none in by transition`, () => {
+      const late = ruleBlocks(readFileSync(sheet, "utf8")).flatMap(heldBack)
+      expect(late, "motion holds a verdict back from the first frame").toEqual([])
+    })
   }
+
+  it("keeps the reduced-motion fade visible from its first frame and off finished elements", () => {
+    const reduced = MOTION.slice(MOTION.indexOf("@media (prefers-reduced-motion: reduce)"))
+    const rule = reduced.match(/\[data-motion="fade"\]\s*\{([^}]*)\}/)?.[1] ?? ""
+    const name = rule.match(/animation-name:\s*([a-z-]+)/)?.[1] ?? ""
+    const block = MOTION.match(new RegExp(`@keyframes ${name} \\{[\\s\\S]*?\\n\\}`))?.[0] ?? ""
+    const start = Number(block.match(/from\s*\{[^}]*opacity:\s*([\d.]+)/)?.[1] ?? "0")
+    expect(start).toBeGreaterThanOrEqual(FIRST_FRAME_FLOOR)
+    expect(rule).toMatch(/animation-fill-mode:\s*none/)
+  })
+
+  it("draws the sweep to a real end, so the underline sweeps instead of popping", () => {
+    const sweep = MOTION.match(/@keyframes readback-sweep \{[\s\S]*?\n\}/)?.[0] ?? ""
+    expect(sweep).toMatch(/to\s*\{\s*clip-path:\s*inset\(/)
+  })
 
   it("does not animate running transcript text", () => {
     const source = readFileSync(

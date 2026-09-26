@@ -167,7 +167,9 @@ describe("U6: the pharmacist's view of the order", () => {
   it("prints the confirmation with both turns and their timecodes", () => {
     const groups = groupOrder({ candidates: [], decisions: new Map(), snapshot: snapshot() })
     render(<OrderPanel groups={groups} snapshot={snapshot()} />)
-    const receipt = screen.getByText("CONFIRMED_ALOUD").closest("div") as HTMLElement
+    const receipt = screen
+      .getByText("Confirmed aloud by the caller")
+      .closest("div") as HTMLElement
     expect(within(receipt).getByText(/One tablet by mouth at night/)).toBeTruthy()
     expect(within(receipt).getByText("0:18.20–0:18.50")).toBeTruthy()
     expect(within(receipt).getAllByText("0:02.40")).toHaveLength(2)

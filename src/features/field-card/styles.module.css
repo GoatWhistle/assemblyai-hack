@@ -22,6 +22,10 @@
   --card-line: var(--state-escalated-line);
 }
 
+.refusedCard {
+  --card-line: var(--reason-validator-line);
+}
+
 .acceptedCard {
   --card-line: var(--state-accepted-line);
   animation: var(--keyframes-commit) var(--dur-base) var(--ease-out-quart) both;

@@ -1,8 +1,11 @@
+import Link from "next/link"
 import type { LasaRisk } from "@/domain"
 import { LASA_NOT_AN_ACCUSATION } from "@/features/gate-banner/hypothesis-language"
 import { Chip } from "@/shared/ui/primitives/chip"
 import type { NameAnswerState } from "../field-status"
 import styles from "./styles.module.css"
+
+export const LIST_SOURCE_HREF = "/docs/glossary"
 
 const NAME_HEAD: Readonly<Record<NameAnswerState, string>> = Object.freeze({
   pending: "Needs the name, not a yes",
@@ -36,14 +39,14 @@ export function LasaOverride({
     <div className={styles.override}>
       <p className={styles.overrideHead}>
         <Chip tone="lasa" glyph="?">
-          Look-alike sound-alike pair
+          Look-alike pair
         </Chip>
         <span>{NAME_HEAD[nameState]}</span>
       </p>
       <p className={styles.overrideBody}>{NAME_BODY[nameState]}</p>
       <p className={styles.overrideBody}>
         {aboveThreshold
-          ? `The recognizer reported ${minConfidence.toFixed(2)} certainty, at or above this field's ${threshold.toFixed(2)} threshold, and that does not settle which name was spoken. Certainty describes the acoustics it received, not which of the listed similar-sounding medicines the caller chose. The published list is why the value is confirmed rather than written.`
+          ? `The recognizer reported ${minConfidence.toFixed(2)} certainty, at or above this field's ${threshold.toFixed(2)} threshold, and that does not settle which name was spoken. Certainty describes the acoustics it received, not which of the listed similar-sounding medicines the caller chose. ${nameState === "named" ? "The published list is why it was written only after the caller said the name." : "The published list is why the value is asked about instead of written."}`
           : `The recognizer reported ${minConfidence.toFixed(2)} certainty, below this field's ${threshold.toFixed(2)} threshold. Even at 1.00 this value would still be confirmed: the name sits on a published list of confused names, and no number resolves which of them was said.`}
       </p>
       <p className={styles.overrideBody}>{LASA_NOT_AN_ACCUSATION}</p>
@@ -58,7 +61,7 @@ export function LasaOverride({
         ))}
       </div>
       <p className={styles.source}>
-        source {lasa.source}
+        source <Link href={LIST_SOURCE_HREF}>{lasa.source}</Link>
         {lasa.sourceRow === null ? "" : ` · ${lasa.sourceRow}`}
       </p>
     </div>

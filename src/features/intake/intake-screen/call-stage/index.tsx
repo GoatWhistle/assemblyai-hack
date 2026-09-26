@@ -5,16 +5,32 @@ import { WaitingIndicator } from "@/features/waiting/waiting-indicator"
 import type { Patience } from "@/realtime/patience"
 import { FIELD_SPOKEN } from "../../field-language"
 import type { FaultDetail } from "../../session-options"
-import { isRestartable, type SessionFault, type SessionPhase } from "../../session-status"
+import { isRestartable, type SessionFault, SessionPhase } from "../../session-status"
 import type { Solicited } from "../../solicited-field"
-import { FaultPanel } from "../fault-panel"
+import { BudgetPaused, FaultPanel } from "../fault-panel"
 import { IntakePrompt } from "../intake-prompt"
 import styles from "./styles.module.css"
+
+function noticeFor(
+  paused: FaultDetail | null,
+  fault: SessionFault | null,
+  faultDetail: FaultDetail | null,
+  onStart: (() => void) | undefined,
+) {
+  if (paused !== null) {
+    return <BudgetPaused detail={paused} />
+  }
+  if (fault === null) {
+    return undefined
+  }
+  return <FaultPanel key={fault} fault={fault} faultDetail={faultDetail} onStart={onStart} />
+}
 
 export type CallStageProps = {
   readonly phase: SessionPhase
   readonly fault: SessionFault | null
   readonly faultDetail?: FaultDetail | null
+  readonly budgetPaused?: FaultDetail | null
   readonly started: boolean
   readonly agentSpeaking: boolean
   readonly turnInFlight: boolean
@@ -33,6 +49,7 @@ export function CallStage({
   phase,
   fault,
   faultDetail = null,
+  budgetPaused = null,
   started,
   agentSpeaking,
   turnInFlight,
@@ -46,10 +63,11 @@ export function CallStage({
   onStop,
   onFinishAnswer,
 }: CallStageProps) {
-  const mic = micStateFor(phase, agentSpeaking, fault)
-  const blocked = mic === MicState.Blocked
   const idle = isRestartable(phase)
   const resting = !started && fault === null
+  const paused = budgetPaused !== null && resting && phase === SessionPhase.Idle
+  const mic = paused ? MicState.Blocked : micStateFor(phase, agentSpeaking, fault)
+  const blocked = mic === MicState.Blocked
   const next =
     solicited === undefined || solicited.field === null ? null : FIELD_SPOKEN[solicited.field]
   const classes = [styles.column, resting ? styles.stage : ""].filter((value) => value !== "")
@@ -61,16 +79,18 @@ export function CallStage({
         elapsedMs={elapsedMs}
         echoDiscards={echoDiscards}
         patience={patience}
-        notice={
-          blocked && fault !== null ? (
-            <FaultPanel key={fault} fault={fault} faultDetail={faultDetail} onStart={onStart} />
-          ) : undefined
-        }
+        notice={noticeFor(
+          paused ? budgetPaused : null,
+          blocked ? fault : null,
+          faultDetail,
+          onStart,
+        )}
+        available={!paused}
         onStart={onStart}
         onStop={onStop}
         onFinishAnswer={onFinishAnswer}
       />
-      {idle || blocked ? null : (
+      {idle || blocked || mic === MicState.Opening ? null : (
         <div className={styles.waiting}>
           <WaitingIndicator
             signals={{ phase, agentSpeaking, turnInFlight, readBackState }}
@@ -81,7 +101,7 @@ export function CallStage({
       {blocked || fault === null ? null : (
         <FaultPanel key={fault} fault={fault} faultDetail={faultDetail} canRestart={false} />
       )}
-      {resting && idle ? <IntakePrompt /> : null}
+      {resting && idle && !paused ? <IntakePrompt /> : null}
     </div>
   )
 }

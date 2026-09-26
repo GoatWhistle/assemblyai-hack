@@ -23,7 +23,7 @@ export type MicCopy = {
 
 export const MIC_COPY: Readonly<Record<MicState, MicCopy>> = Object.freeze({
   [MicState.Idle]: {
-    headline: "Start the intake call",
+    headline: "Start a call",
     detail: "Your microphone opens and the agent takes the order one field at a time.",
     action: "Start listening",
   },

@@ -36,6 +36,7 @@ export type IntakeScreenProps = {
   readonly phase: SessionPhase
   readonly fault: SessionFault | null
   readonly faultDetail?: FaultDetail | null
+  readonly budgetPaused?: FaultDetail | null
   readonly alert?: string | null
   readonly telemetry?: ReactNode
   readonly summary?: ReactNode
@@ -64,6 +65,7 @@ export function IntakeScreen({
   phase,
   fault,
   faultDetail = null,
+  budgetPaused = null,
   alert = null,
   telemetry,
   summary,
@@ -87,7 +89,10 @@ export function IntakeScreen({
 
   return (
     <div className={styles.page}>
-      <SiteHeader current="call" status={<PhaseDot phase={phase} fault={fault} />} />
+      <SiteHeader
+        current="call"
+        status={<PhaseDot phase={phase} fault={fault} paused={budgetPaused !== null} />}
+      />
 
       <main id={CALL_MAIN_ID} tabIndex={-1} className={styles.main}>
         <Thesis started={started} />
@@ -96,6 +101,7 @@ export function IntakeScreen({
           phase={phase}
           fault={fault}
           faultDetail={faultDetail}
+          budgetPaused={budgetPaused}
           started={started}
           agentSpeaking={agentSpeaking}
           turnInFlight={turnInFlight}

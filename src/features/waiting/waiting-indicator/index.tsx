@@ -34,14 +34,15 @@ export function WaitingIndicator({ signals, next = null }: WaitingIndicatorProps
     .join(" ")
   return (
     <output className={classes} aria-live="polite" data-waiting-on={state}>
-      <span className={styles.badge}>{SIDE_LABEL[copy.side]}</span>
+      <span className={styles.badge} title={`Read from ${copy.observedFrom}`}>
+        {SIDE_LABEL[copy.side]}
+      </span>
       <span className={styles.text}>
         <span className={styles.headline}>{copy.headline}</span>
         {next === null || copy.side !== "human" ? null : (
           <span className={styles.next}>Next: {next}</span>
         )}
         <span className={styles.detail}>{copy.detail}</span>
-        <span className={styles.observed}>Read from {copy.observedFrom}</span>
       </span>
     </output>
   )

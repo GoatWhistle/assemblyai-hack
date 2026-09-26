@@ -22,7 +22,7 @@ import {
 import type { FaultDetail, SessionHandles, UseSessionOptions } from "./session-options"
 import { SessionFault, SessionPhase } from "./session-status"
 import { useSessionLifecycle } from "./session-supervision"
-import { createReplyWatchdog } from "./session-timers"
+import { ConnectTimedOut, connectWithin, createReplyWatchdog } from "./session-timers"
 import { NOTHING_SOLICITED } from "./solicited-field"
 import { abandon, acquireStream, detailOf, faultForConnectError } from "./start-faults"
 import { usePatienceSync } from "./use-patience-sync"
@@ -172,14 +172,18 @@ export function useSession(options: UseSessionOptions = {}): SessionHandles {
     const agentClient = new AgentClient({ transport, events: agentEventsFor(wiring) })
     const sttClient = new SttClient({ transport, events: sttEventsFor(wiring) })
 
+    const connecting = Promise.all([agentClient.connect(), sttClient.connect()])
     try {
-      await Promise.all([agentClient.connect(), sttClient.connect()])
+      await connectWithin(connecting)
     } catch (error) {
       const current = life.epoch() === epoch
       if (current) {
         setFault(faultForConnectError(error))
         setFaultDetail(detailOf(error))
         setPhase(SessionPhase.Blocked)
+      }
+      if (error instanceof ConnectTimedOut) {
+        void connecting.finally(() => abandon(stream, agentClient, sttClient)).catch(() => {})
       }
       await abandon(stream, agentClient, sttClient)
       if (current) {

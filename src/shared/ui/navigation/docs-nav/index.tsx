@@ -135,6 +135,7 @@ export function DocsNav({ pages, related, label = "Documentation" }: DocsNavProp
         className={styles.toggle}
         aria-expanded={open}
         aria-controls={panelId}
+        aria-label={`Docs: ${current?.label ?? "Contents"}${activeLabel === null ? "" : ` · ${activeLabel}`}`}
         onClick={() => setOpen((value) => !value)}
       >
         <span className={styles.toggleLabel}>Docs</span>

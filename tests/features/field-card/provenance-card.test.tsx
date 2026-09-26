@@ -104,7 +104,7 @@ describe("U5: the field card shows what was said beside what was recorded", () =
       sourceBadges(candidate({ id: "a", value: "1234567893" }), null).map((b) => b.label),
     ).toEqual(["arithmetic"])
     expect(sourceBadges(LASA_CANDIDATE, null).map((badge) => badge.label)).toEqual([
-      "LASA pair",
+      "Look-alike pair",
       "catalogue",
     ])
     const unsupported = candidate({
@@ -172,7 +172,7 @@ describe("U5: the field card shows what was said beside what was recorded", () =
       vi.advanceTimersByTime(2000)
     })
     expect(screen.getByText(/Waiting 5 s for the caller/)).toBeTruthy()
-    expect(screen.getByText("NO_ANSWER")).toBeTruthy()
+    expect(screen.getByText("No usable answer yet")).toBeTruthy()
   })
 })
 

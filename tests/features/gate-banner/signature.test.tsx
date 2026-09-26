@@ -97,7 +97,7 @@ describe("U3: the signature moment names the outcome, the reason and the candida
     render(<GateBanner decision={decision} candidate={LASA} />)
     expect(screen.getAllByText("RE-ASK").length).toBeGreaterThan(0)
     expect(screen.getByText("certainty 1.00")).toBeTruthy()
-    expect(screen.getByText(/published LASA pair/)).toBeTruthy()
+    expect(screen.getByText(/published look-alike \(LASA\) pair/)).toBeTruthy()
     expect(
       screen.getByText(
         /candidates: .*Hydromorphone.*Morphine|candidates: .*Morphine.*Hydromorphone/,

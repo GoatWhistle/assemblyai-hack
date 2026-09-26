@@ -73,7 +73,7 @@ describe("r1-A5-07: the threat model states the vendor witness and how to check 
 
   it("links the receipt checker, and says why no sample receipt is shown", () => {
     const { container } = render(<ThreatModelPage />)
-    expect(container.querySelector('a[href^="/order/"]')).not.toBeNull()
+    expect(container.querySelector('a[href^="/order"]')).not.toBeNull()
     expect(container.textContent).toMatch(/No sample receipt is published/)
   })
 })

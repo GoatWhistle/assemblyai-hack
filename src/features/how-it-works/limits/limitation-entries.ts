@@ -27,7 +27,7 @@ const TRUST: readonly Limitation[] = [
     points: [
       "A session id is a bearer capability: its holder can post turns, finalize and mint a reconnect token.",
       "Looking up an unknown session id costs up to three storage listings, anonymously.",
-      "Finalize trusts an explicit origin label; a missing or unknown one still defaults to live.",
+      "Finalize trusts an explicit origin label; a missing or unknown one still defaults to live, but the session's holder can set it on purpose.",
       "A deployment with no tool secret, or one too short, says so in the 401.",
       "The agent's own hint is quoted back when the gate answers it, as a spoken echo rather than an instruction.",
       "A store error's text reaches the client; a test pins that no token or URL is included.",

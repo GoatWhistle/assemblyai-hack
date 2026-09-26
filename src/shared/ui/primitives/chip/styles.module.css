@@ -52,6 +52,12 @@
   --chip-line: var(--state-aborted-line);
 }
 
+.validator {
+  --chip-ink: var(--reason-validator-ink);
+  --chip-surface: var(--reason-validator-surface);
+  --chip-line: var(--reason-validator-line);
+}
+
 .lasa {
   --chip-ink: var(--state-lasa-ink);
   --chip-surface: var(--state-lasa-surface);

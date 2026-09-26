@@ -8,3 +8,7 @@ export const REPLAY_LENGTH_LABEL = `${REPLAY_SECONDS}-second replay`
 export function sessionSeconds(sessionMs: number): string {
   return `${(sessionMs / 1000).toFixed(1)}s`
 }
+
+export function replaySeconds(replayMs: number): string {
+  return `${(replayMs / 1000).toFixed(1)}s`
+}

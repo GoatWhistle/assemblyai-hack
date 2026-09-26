@@ -21,11 +21,13 @@ export function Captions({ lines, clockMs, voice }: CaptionsProps) {
   return (
     <div className={styles.captions}>
       <p className={styles.voice}>{VOICE_NOTE[voice]}</p>
-      <p className={styles.line} aria-live="polite">
+      <p className={styles.line}>
         {line === null ? (
-          <span className={styles.idle}>No one is speaking.</span>
+          <span className={styles.idle} aria-hidden="true">
+            No one is speaking.
+          </span>
         ) : (
-          <span key={line.id} className={styles.spoken} data-motion="fade">
+          <span>
             <span className={styles.who}>{line.who === "agent" ? "Agent" : "Caller"}</span>{" "}
             {line.text}
           </span>

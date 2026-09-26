@@ -109,11 +109,16 @@ describe("r1-A5-01: the measurements page leads with the catch beside the cost",
     )
     expect(catchPanel?.querySelector("[data-figure='with']")?.textContent).toBe(ab?.with.value)
     const confident = confidenceFigures().find((entry) => entry.id === "errors-above-threshold")
-    expect(catchPanel?.querySelector("[data-figure='confident']")?.textContent).toBe(
+    const cataloguePanel = container.querySelector("#headline [data-headline='catalogue']")
+    expect(
+      catchPanel?.querySelector("[data-figure='confident']"),
+      "r2-A5 N2: the pair rule caught none of the recorded errors, so their count sits under the catalogue check",
+    ).toBe(null)
+    expect(cataloguePanel?.querySelector("[data-figure='confident']")?.textContent).toBe(
       confident?.value,
     )
     expect(catchPanel?.textContent).toContain(ab?.with.command)
-    expect(catchPanel?.textContent).toContain(confident?.command)
+    expect(cataloguePanel?.textContent).toContain(confident?.command)
     const cost = container.querySelector("#headline [data-headline='cost']")
     expect(cost?.textContent).toContain(READ_BACK_COST.extraSeconds)
     expect(cost?.textContent, "the not-timed caveat travels with the seconds").toMatch(
@@ -144,6 +149,11 @@ describe("r1-A5-08: close codes read as observations, never as specification", (
   it("prints the command beside the session count", () => {
     const { container } = render(<OperationsPage />)
     expect(container.textContent).toContain("npx tsx scripts/eer/report.ts eval/<set>")
-    expect(container.textContent).toMatch(/\d+ recorded STT sessions \(40 from make eval/)
+    expect(container.textContent).toMatch(
+      /\d+ sessions over \d+ runs made before the spend ledger existed, npx tsx scripts\/report\/live-run-count\.ts/,
+    )
+    expect(container.textContent).toMatch(
+      /\d+ sessions of the 25 September stress run, npx tsx scripts\/measure\/analyse-stress\.ts/,
+    )
   })
 })

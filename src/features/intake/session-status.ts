@@ -70,6 +70,7 @@ export const SessionFault = {
   AgentReported: "agent_reported",
   SocketParamRefused: "socket_param_refused",
   CaptureFailed: "capture_failed",
+  ConnectTimedOut: "connect_timed_out",
 } as const
 
 export type SessionFault = (typeof SessionFault)[keyof typeof SessionFault]
@@ -131,6 +132,7 @@ export type FaultCopy = {
   readonly title: string
   readonly body: string
   readonly remedy: string
+  readonly lead?: string
 }
 
 export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.freeze({
@@ -167,6 +169,11 @@ export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.free
     remedy:
       "Check that the server has its key configured, then start again to mint a fresh token.",
   },
+  [SessionFault.ConnectTimedOut]: {
+    title: "The line did not open",
+    body: "Neither the token route nor the two sockets answered within 15 seconds, so the attempt was abandoned instead of spinning on. Nothing was recorded, and a socket that opens late is closed at once.",
+    remedy: "Try again, or watch the replay, which needs no connection at all.",
+  },
   [SessionFault.SocketDropped]: {
     title: "A socket dropped",
     body: "Tokens are single-use, so a reconnect mints a new one rather than reusing the old. Reusing one fails quietly, which is worse than failing loudly.",
@@ -174,6 +181,7 @@ export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.free
   },
   [SessionFault.CreditsExhausted]: {
     title: "The account is out of credit",
+    lead: "This project's AssemblyAI credit has run out, so no live call can start. Nothing was billed to you.",
     body: "Live calls spend this project's AssemblyAI credit, never yours, and it has run out. Two sockets bill at once while a session is open, and billing runs on socket lifetime rather than audio volume.",
     remedy: "Use the replay demonstration, which replays a session without opening a socket.",
   },
@@ -205,6 +213,7 @@ export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.free
   },
   [SessionFault.BudgetExhausted]: {
     title: "The live-call budget refused this call",
+    lead: "A live-call budget cap refused this call, so no token was issued and nothing was billed. The daily budget resets at 00:00 UTC.",
     body: "Live calls run on this project's own AssemblyAI credit, not on yours. The server caps the socket-seconds it mints per day, and how much of that one visitor may use, so no single visitor can spend it for everyone. A cap refused this call, so no token was issued and nothing was billed; the line below says which one.",
     remedy:
       "Use the replay demonstration, which runs the same gate without opening a socket, or come back after the daily reset.",

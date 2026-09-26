@@ -18,9 +18,7 @@
   letter-spacing: var(--track-normal);
   cursor: pointer;
   white-space: nowrap;
-  transition:
-    var(--transition-control),
-    scale var(--dur-fast) var(--ease-out-quart);
+  transition: var(--transition-control);
 }
 
 .button:hover:not(:disabled) {
@@ -120,13 +118,7 @@
   border-top-color: transparent;
   border-radius: var(--radius-pill);
   color: var(--button-ink);
-  animation: button-spin var(--dur-loop-spin) var(--ease-constant) infinite;
-}
-
-@keyframes button-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  animation: var(--keyframes-spin) var(--dur-loop-spin) var(--ease-constant) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

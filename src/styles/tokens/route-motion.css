@@ -1,0 +1,55 @@
+@view-transition {
+  navigation: auto;
+}
+
+/* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
+::view-transition-old(root) {
+  animation: readback-route-out var(--dur-fast) var(--ease-out-quart) both;
+}
+
+/* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
+::view-transition-new(root) {
+  animation: readback-route-in var(--dur-base) var(--ease-out-quart) both;
+}
+
+::view-transition-group(site-header),
+::view-transition-group(docs-nav),
+::view-transition-new(site-header),
+::view-transition-new(docs-nav) {
+  animation: none;
+}
+
+::view-transition-old(site-header),
+::view-transition-old(docs-nav) {
+  display: none;
+}
+
+@keyframes readback-route-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes readback-route-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
+  ::view-transition-old(root),
+  /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
+    ::view-transition-new(root) {
+    animation: none;
+  }
+}

@@ -37,6 +37,16 @@
   background-color: var(--state-asking-surface);
   color: var(--state-asking-ink);
   font-weight: var(--weight-semibold);
+  position: relative;
+}
+
+.stepCurrent::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 2px var(--violet-glow);
+  pointer-events: none;
   animation: var(--keyframes-pulse-ring) var(--dur-loop-pulse-urgent) var(--ease-out-quart)
     infinite;
 }
@@ -150,7 +160,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .stepCurrent {
-    animation: none;
     box-shadow: 0 0 0 2px var(--state-asking-line);
+  }
+
+  .stepCurrent::after {
+    animation: none;
+    opacity: 0;
   }
 }

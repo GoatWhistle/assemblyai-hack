@@ -1,25 +1,43 @@
+import type { BenchmarkRow } from "@/domain"
 import { AbsentValue } from "../absent-value"
 import { RAW_RUN_AGREEMENT_TEST } from "../benchmark-row"
 import type { FalseAskTally } from "../measured-figures"
 import styles from "./styles.module.css"
 
-export const HEADLINE_POLICY = "The shipped gate asks about every correct drug name:"
+export const HEADLINE_POLICY =
+  "The shipped gate as a whole, not the pair rule alone, asks about every correct drug name:"
 
 export type FalseAskHeadlineProps = {
   readonly tally: FalseAskTally | null
+  readonly contrastive?: BenchmarkRow | null
+  readonly compact?: boolean
 }
 
-function Method({ tally }: { readonly tally: FalseAskTally }) {
+function Method({
+  tally,
+  contrastive,
+}: {
+  readonly tally: FalseAskTally
+  readonly contrastive: BenchmarkRow | null
+}) {
   return (
     <>
       Every one of the {tally.of} drug names was heard correctly, and each is read back once by
-      policy. {tally.byStandingReadBack} got the plain read-back, {tally.byThreshold} the
-      threshold's re-ask below {tally.threshold}, and {tally.byPairRule} the contrastive
-      question, because the name is on the ISMP list. With the pair rule switched off the
-      threshold would take {tally.thresholdWithoutPairRule} of the {tally.of}. Recorded
-      confidences from synthesised speech through the live recognizer,{" "}
-      <code className={styles.inlineCode}>{tally.command}</code>, n = {tally.of}, measured{" "}
-      {tally.measuredOn ?? "on an unrecorded date"}.
+      policy; each mechanism pays for its own share. {tally.byStandingReadBack} got the plain
+      read-back, {tally.byThreshold} the threshold&rsquo;s re-ask below {tally.threshold}, and{" "}
+      {tally.byPairRule} the pair rule&rsquo;s contrastive question, because the name is on the
+      ISMP list. With the pair rule switched off the threshold would take{" "}
+      {tally.thresholdWithoutPairRule} of the {tally.of}. Recorded confidences from synthesised
+      speech through the live recognizer,{" "}
+      <code className={styles.inlineCode}>{tally.command}</code>, n = {tally.of}, recorded{" "}
+      {tally.measuredOn ?? "on an unrecorded date"}
+      {contrastive === null ? null : (
+        <>
+          , scored against the full 2023 ISMP list on{" "}
+          <time dateTime={contrastive.measuredOn ?? undefined}>{contrastive.measuredOn}</time>
+        </>
+      )}
+      .
     </>
   )
 }
@@ -32,10 +50,13 @@ function Split({ tally }: { readonly tally: FalseAskTally }) {
       label: `threshold re-ask below ${tally.threshold}`,
       count: tally.byThreshold,
     },
-    { key: "pair", label: "contrastive question", count: tally.byPairRule },
+    { key: "pair", label: "pair rule: contrastive question", count: tally.byPairRule },
   ]
   return (
-    <ul className={styles.split} aria-label="How each correct drug name was asked about">
+    <ul
+      className={styles.split}
+      aria-label="How the shipped gate asked about each correct name"
+    >
       {parts.map((part) => (
         <li
           key={part.key}
@@ -51,11 +72,52 @@ function Split({ tally }: { readonly tally: FalseAskTally }) {
   )
 }
 
-export function FalseAskHeadline({ tally }: FalseAskHeadlineProps) {
+function PairCost({
+  tally,
+  contrastive,
+}: {
+  readonly tally: FalseAskTally | null
+  readonly contrastive: BenchmarkRow | null
+}) {
   const dash = <AbsentValue />
   return (
+    <p className={styles.figure} data-headline="pair-cost">
+      The pair rule turns the read-back of{" "}
+      <strong>
+        {tally === null ? dash : tally.byPairRule} of {tally === null ? dash : tally.of}
+      </strong>{" "}
+      correct drug names into its longer, contrastive question
+      {contrastive === null ? null : <> ({contrastive.value})</>}.
+    </p>
+  )
+}
+
+export function FalseAskHeadline({
+  tally,
+  contrastive = null,
+  compact = false,
+}: FalseAskHeadlineProps) {
+  const dash = <AbsentValue />
+  if (compact) {
+    return (
+      <div className={styles.headline}>
+        <PairCost tally={tally} contrastive={contrastive} />
+        {tally === null ? null : (
+          <p className={styles.method}>
+            <code className={styles.inlineCode}>{tally.command}</code> n = {tally.of}, recorded{" "}
+            {tally.measuredOn ?? "on an unrecorded date"}
+            {contrastive === null
+              ? null
+              : `, scored against the 2023 ISMP list ${contrastive.measuredOn}`}
+          </p>
+        )}
+      </div>
+    )
+  }
+  return (
     <div className={styles.headline}>
-      <p className={styles.figure} data-headline="false-asks">
+      <PairCost tally={tally} contrastive={contrastive} />
+      <p className={styles.policy} data-headline="false-asks">
         {HEADLINE_POLICY} {tally === null ? dash : tally.asked} of{" "}
         {tally === null ? dash : tally.of}.
       </p>
@@ -64,7 +126,7 @@ export function FalseAskHeadline({ tally }: FalseAskHeadlineProps) {
         {tally === null ? (
           "Not measured yet: no recorded run supplies a correctly heard value to count against."
         ) : (
-          <Method tally={tally} />
+          <Method tally={tally} contrastive={contrastive} />
         )}
       </p>
       <p className={styles.agreement}>

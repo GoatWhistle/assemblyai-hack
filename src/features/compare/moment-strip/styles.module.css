@@ -45,7 +45,7 @@
 }
 
 .note {
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
   color: var(--state-lasa-ink);
@@ -90,5 +90,10 @@
   .without {
     padding-inline-start: 0;
     border-left: 0;
+  }
+
+  .code {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }

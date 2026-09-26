@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { GLOSSARY, ISMP_SOURCE } from "@/features/how-it-works/glossary/terms"
+import { GLOSSARY, glossaryAnchor, ISMP_SOURCE } from "@/features/how-it-works/glossary/terms"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { GLOSSARY_SECTIONS } from "../../docs-map"
@@ -27,11 +27,7 @@ export default function GlossaryPage() {
       >
         <dl className={styles.terms}>
           {GLOSSARY.map((entry) => (
-            <div
-              key={entry.term}
-              className={styles.entry}
-              id={`term-${entry.term.toLowerCase().replace(/\s+/g, "-")}`}
-            >
+            <div key={entry.term} className={styles.entry} id={glossaryAnchor(entry.term)}>
               <dt className={styles.term}>
                 {entry.term}
                 {entry.expansion === null ? null : (

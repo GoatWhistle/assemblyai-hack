@@ -30,12 +30,8 @@
   color: var(--text-secondary);
 }
 
-.spoken {
-  animation: var(--keyframes-fade) var(--dur-fast) var(--ease-out-quart) both;
-}
-
 @media (max-width: 40rem) {
   .line {
-    min-height: 4.5em;
+    min-height: 4lh;
   }
 }

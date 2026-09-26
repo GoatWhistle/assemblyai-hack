@@ -6,6 +6,14 @@ export type GlossaryTerm = {
   readonly definition: string
 }
 
+export function glossaryAnchor(term: string): string {
+  return `term-${term.toLowerCase().replace(/\s+/g, "-")}`
+}
+
+export function glossaryHref(term: string): string {
+  return `/docs/glossary#${glossaryAnchor(term)}`
+}
+
 export const GLOSSARY: readonly GlossaryTerm[] = Object.freeze([
   {
     term: "LASA",

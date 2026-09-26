@@ -3,6 +3,7 @@
   --arm-surface: var(--state-undecided-surface);
   --arm-line: var(--line-divider);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   padding: var(--space-5);
   border: 2px solid var(--arm-line);
@@ -13,28 +14,36 @@
   transition-delay: calc(var(--arm, 0) * var(--stagger-arm));
 }
 
-.arm[data-tone="lasa"] {
+.arm[data-tone="lasa"],
+.stack > [data-tone="lasa"] {
   --arm-ink: var(--reason-lasa-ink);
   --arm-surface: var(--reason-lasa-surface);
   --arm-line: var(--reason-lasa-line);
 }
 
-.arm[data-tone="threshold"] {
+.arm[data-tone="threshold"],
+.stack > [data-tone="threshold"] {
   --arm-ink: var(--reason-threshold-ink);
   --arm-surface: var(--reason-threshold-surface);
   --arm-line: var(--reason-threshold-line);
 }
 
-.arm[data-tone="committed"] {
+.arm[data-tone="committed"],
+.stack > [data-tone="committed"] {
   --arm-ink: var(--verdict-committed-ink);
   --arm-surface: var(--verdict-committed-surface);
   --arm-line: var(--verdict-committed-line);
 }
 
-.arm[data-tone="refused"] {
+.arm[data-tone="refused"],
+.stack > [data-tone="refused"] {
   --arm-ink: var(--verdict-refused-ink);
   --arm-surface: var(--verdict-refused-surface);
   --arm-line: var(--verdict-refused-line);
+}
+
+.stack > [data-tone="undecided"] {
+  --arm-ink: var(--text-primary);
 }
 
 .armHead {
@@ -79,6 +88,7 @@
   font-size: var(--text-2xs);
   letter-spacing: var(--track-normal);
   color: var(--text-faint);
+  overflow-wrap: anywhere;
 }
 
 .outcome {
@@ -114,10 +124,10 @@
 .current {
   opacity: 1;
   visibility: visible;
-  transition:
-    opacity var(--dur-slow) var(--ease-out-expo),
-    filter var(--dur-slow) var(--ease-out-expo);
-  transition-delay: calc(var(--arm, 0) * var(--stagger-arm));
+}
+
+.arm:not([data-tone="undecided"]) .current {
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .variant {
@@ -125,9 +135,9 @@
   visibility: hidden;
   filter: blur(2px);
   transition:
-    opacity var(--dur-slow) var(--ease-out-expo),
-    filter var(--dur-slow) var(--ease-out-expo),
-    visibility var(--dur-slow) step-end;
+    opacity var(--dur-fast) var(--ease-out-quart),
+    filter var(--dur-fast) var(--ease-out-quart),
+    visibility var(--dur-fast) step-end;
 }
 
 .outcomeValue {
@@ -136,7 +146,6 @@
   letter-spacing: var(--track-tight);
   line-height: var(--leading-tight);
   color: var(--arm-ink);
-  transition: color var(--dur-slow) var(--ease-out-quart);
 }
 
 .outcomeBody {

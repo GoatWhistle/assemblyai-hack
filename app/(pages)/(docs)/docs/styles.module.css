@@ -78,6 +78,7 @@
   display: inline-flex;
   align-items: center;
   min-height: var(--target-touch);
+  min-width: var(--target-touch);
   font-size: var(--text-sm);
 }
 

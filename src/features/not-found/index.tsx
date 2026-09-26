@@ -1,3 +1,5 @@
+import { CALL_HREF, REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { SiteHeader } from "@/shared/ui/primitives/site-header"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
@@ -19,11 +21,11 @@ export function NotFoundScreen() {
           how the check works.
         </p>
         <nav className={styles.links} aria-label="Where to go instead">
-          <ActionLink href="/" size="large">
+          <ActionLink href={CALL_HREF} tone="primary" size="large">
             Start a call
           </ActionLink>
-          <ActionLink href="/demo" size="large">
-            Watch the replay
+          <ActionLink href={REPLAY_ENTRY_HREF} size="large">
+            {`Watch the ${REPLAY_LENGTH_LABEL}`}
           </ActionLink>
           <ActionLink href="/docs" size="large">
             Read the docs

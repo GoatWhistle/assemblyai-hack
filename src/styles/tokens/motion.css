@@ -47,30 +47,33 @@
 }
 
 @keyframes readback-pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 var(--violet-glow);
+  from {
+    opacity: 0.5;
+    scale: 1;
   }
-  70% {
-    box-shadow: 0 0 0 14px var(--violet-glow-none);
-  }
-  100% {
-    box-shadow: 0 0 0 0 var(--violet-glow-none);
+  70%,
+  to {
+    opacity: 0;
+    scale: 1.35;
   }
 }
 
 @keyframes readback-breathe {
   0%,
   100% {
-    box-shadow: var(--mic-lift-quiet);
+    opacity: 0.4;
   }
   50% {
-    box-shadow: var(--mic-lift);
+    opacity: 1;
   }
 }
 
 @keyframes readback-fade {
   from {
-    opacity: 0;
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -78,11 +81,14 @@
   from {
     clip-path: inset(0 100% 0 0);
   }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 @keyframes readback-spin {
   to {
-    transform: rotate(360deg);
+    rotate: 1turn;
   }
 }
 
@@ -181,6 +187,10 @@
     animation-name: readback-fade !important;
     animation-duration: var(--reduced-fade) !important;
     animation-delay: 0ms !important;
+    animation-fill-mode: none !important;
+  }
+
+  [data-motion="crossfade"] {
     transition-duration: var(--reduced-fade) !important;
     transition-delay: 0ms !important;
   }
@@ -194,49 +204,5 @@
       opacity: 1;
       transform: none;
     }
-  }
-}
-
-@view-transition {
-  navigation: auto;
-}
-
-/* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
-::view-transition-old(root) {
-  animation: readback-route-out var(--dur-fast) var(--ease-out-quart) both;
-}
-
-/* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
-::view-transition-new(root) {
-  animation: readback-route-in var(--dur-slow) var(--ease-out-quart) both;
-}
-
-@keyframes readback-route-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes readback-route-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: none;
-  }
-
-  /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
-  ::view-transition-old(root),
-  /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
-    ::view-transition-new(root) {
-    animation: none;
   }
 }

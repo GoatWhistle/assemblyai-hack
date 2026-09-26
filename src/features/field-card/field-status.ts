@@ -32,7 +32,7 @@ export const STANCE_LABEL: Readonly<Record<FieldStance, string>> = Object.freeze
 export const STANCE_CHIP: Readonly<Record<FieldStance, ChipTone>> = Object.freeze({
   proposed: "neutral",
   asking: "asking",
-  refused: "escalated",
+  refused: "validator",
   lasa: "lasa",
   accepted: "accepted",
   confirmed: "accepted",

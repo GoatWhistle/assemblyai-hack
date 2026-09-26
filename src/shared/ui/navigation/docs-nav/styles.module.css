@@ -51,12 +51,7 @@
   transition: transform var(--dur-base) var(--ease-out-quart);
 }
 
-.toggle[aria-expanded="true"] .toggleSection {
-  font-weight: var(--weight-regular);
-  color: var(--text-secondary);
-}
-
-.toggleChevron {
+.toggle[aria-expanded="true"] .toggleChevron {
   transform: rotate(180deg);
 }
 
@@ -163,9 +158,10 @@
 }
 
 .relatedTitle {
-  padding: 0 var(--space-3);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-wide);
   color: var(--text-muted);
 }
 

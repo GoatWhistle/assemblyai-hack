@@ -153,7 +153,7 @@ describe("the indicator renders the side and the reason on screen", () => {
   it("names the signal it read the state from, rather than asserting it", () => {
     render(<WaitingIndicator signals={signals({ agentSpeaking: true })} />)
     expect(
-      screen.getByText(/Read from the reply lifecycle on the agent socket/),
+      screen.getByTitle(/Read from the reply lifecycle on the agent socket/),
       "a state with no named source cannot be checked by a judge",
     ).toBeDefined()
   })

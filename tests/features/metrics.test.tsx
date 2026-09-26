@@ -4,7 +4,7 @@ import MetricsPage from "@app/(pages)/(docs)/metrics/page"
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { NOT_MEASURED_LABEL } from "@/features/metrics/benchmark-row"
-import { closeCodeRows } from "@/features/metrics/close-code-tally"
+import { closeCodeRows, sessionsCounted } from "@/features/metrics/close-code-tally"
 import { confidenceFigures, errorRateFigures } from "@/features/metrics/measured-figures"
 import {
   GATE_METRICS,
@@ -12,7 +12,8 @@ import {
   NO_COMMAND,
   ORDER_METRICS,
 } from "@/features/metrics/metric-definitions"
-import { allScored, closeCodeCounts } from "@/features/metrics/recorded-runs"
+import { closeCodeCounts } from "@/features/metrics/recorded-runs"
+import { beforeLedgerRuns, codesSeen, stressRun } from "@/features/metrics/session-runs"
 
 function valueCells(): readonly HTMLElement[] {
   return [
@@ -94,7 +95,7 @@ describe("close codes are counted, not asserted", () => {
       rows.length,
       "the table used to declare 3007, 3008 and 3009 with count 0, which is a number without a method; it must now come from the recorded files",
     ).toBeGreaterThan(0)
-    const observed = new Set(allScored().map((entry) => entry.closeCode))
+    const observed = new Set(codesSeen([...beforeLedgerRuns(), stressRun()]))
     for (const row of rows) {
       expect(observed.has(row.code), `${row.code} is published but never observed`).toBe(true)
     }
@@ -102,7 +103,10 @@ describe("close codes are counted, not asserted", () => {
 
   it("has every count sum to the number of recorded sessions", () => {
     const total = closeCodeRows().reduce((sum, row) => sum + row.count, 0)
-    expect(total).toBe(allScored().length)
+    expect(total).toBe(sessionsCounted())
+    for (const row of closeCodeRows()) {
+      expect(row.beforeLedger + row.stress, `${row.code}`).toBe(row.count)
+    }
   })
 
   it("does not publish a count of zero for anything", () => {

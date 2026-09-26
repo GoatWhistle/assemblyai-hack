@@ -70,11 +70,11 @@ describe("U1: the judge hub carries what the old home page carried", () => {
   it("offers the replay and the live call as real links that work before hydration", async () => {
     await renderDemo({})
     const watch = screen.getByRole("link", {
-      name: new RegExp(`watch the ${REPLAY_SECONDS}-second case`, "i"),
+      name: new RegExp(`watch the ${REPLAY_SECONDS}-second replay`, "i"),
     })
     expect(watch.getAttribute("href")).toBe(REPLAY_ENTRY_HREF)
-    const talk = screen.getByRole("link", { name: /talk to it live/i })
-    expect(talk.getAttribute("href")).toBe(CALL_HREF)
+    const [talk] = screen.getAllByRole("link", { name: /^start a call$/i })
+    expect(talk?.getAttribute("href")).toBe(CALL_HREF)
     expect(screen.getByText(/who pays/i)).toBeTruthy()
     expect(screen.getByText(/who gets the order/i)).toBeTruthy()
   })
@@ -82,7 +82,7 @@ describe("U1: the judge hub carries what the old home page carried", () => {
   it("states the product claim that certainty is not proof", async () => {
     await renderDemo({})
     expect(screen.getByText(HERO_CLAIM)).toBeTruthy()
-    expect(HERO_CLAIM).toMatch(/high confidence does not protect/i)
+    expect(HERO_CLAIM).toMatch(/high recognizer certainty does not protect/i)
   })
 
   it("names the three things to say with outcomes computed by the shipped gate", async () => {

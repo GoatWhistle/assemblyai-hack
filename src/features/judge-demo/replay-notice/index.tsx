@@ -7,7 +7,7 @@ export const REPLAY_NOTICE_BODY =
   "Everything below runs on a synthesised session: the candidates and socket frames are built from the documented message shapes, not captured from a live call, and a recorded live session replaces them once one is captured. The gate, the validators and the published pair table are the shipped ones and decide here exactly as they decide on a call; no microphone is open and no audio is being sent to AssemblyAI right now."
 
 export const REPLAY_NOTICE_INSURANCE =
-  "This path exists so the demonstration cannot fail: it needs no microphone, no second person on the line and no working network beyond this page. When we checked on 11 September, 12 of the 45 submissions then published had a demo link that did not work."
+  "This path exists so the demonstration cannot fail: it needs no microphone, no second person on the line and no working network beyond this page. When we checked on 11 September, 12 of the 45 submissions then published had a demo link that did not work; that is our own count of the public submission pages, not a published figure."
 
 export function ReplayNotice() {
   return (

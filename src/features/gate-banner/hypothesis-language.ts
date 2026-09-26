@@ -10,7 +10,7 @@ export const LASA_STANCE: Stance = Object.freeze({
   claim:
     "What is known: this name sits on a published pair of medicines that sound alike. That is a fact about the list, not about the caller.",
   notClaim:
-    "What is not known, and what this re-ask does not assert: which of the listed names the caller said. Nothing here suggests the wrong one was spoken, and most of the time it was not.",
+    "What is not known, and what this re-ask does not assert: which of the listed names the caller said. The question is not a finding against the caller: in our recorded set of 59 correctly heard values, 21 still received it (npx tsx scripts/measure/coverage-matrix.ts, synthesised speech).",
   askedOf:
     "So the caller is asked to confirm, not corrected. The confirmation is the proof the pair makes unavailable any other way.",
 })
@@ -29,7 +29,7 @@ export const HYPOTHESIS_STANCE: Readonly<Record<ReasonCode, Stance | null>> = Ob
     notClaim:
       "What is not known: whether the value is wrong. A low reading is a statement about the audio the recognizer received, not a finding against the caller.",
     askedOf:
-      "So the value is confirmed aloud rather than rejected. Most values re-asked this way turn out to have been right.",
+      "So the value is confirmed aloud rather than rejected: a re-ask is a request, not a finding.",
   }),
   [ReasonCode.ReadBackRequired]: null,
   [ReasonCode.NoValidator]: null,
@@ -39,7 +39,7 @@ export const HYPOTHESIS_STANCE: Readonly<Record<ReasonCode, Stance | null>> = Ob
 })
 
 export const LASA_NOT_AN_ACCUSATION =
-  "A pair hit is a property of a published list, not a judgement about the caller. Most callers asked this question were right the first time, and the question is the price of the one who was not."
+  "A pair hit is a property of a published list, not a judgement about the caller. Correctly heard names get this question too, and the question is the price of the one that was not."
 
 export const ACCUSATION_WORDS: readonly string[] = Object.freeze([
   "you said the wrong",

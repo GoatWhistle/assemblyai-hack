@@ -29,6 +29,9 @@ export const KEYTERMS_AB_LEDE =
 export const KEYTERMS_AB_SUMMARY =
   "The shipped list carries clinic, prescriber, dosage and route words, never a drug name the pair check examines. A list that names pair members would bias the recognizer toward the very strings the read-back then confirms, so that arm is described and never run."
 
+export const KEYTERMS_COUNT_SOURCE =
+  "Both counts are computed in this page from the list the deployment builds (buildKeyterms in src/lasa), and make keyterms-purity fails the build if a pair member enters it."
+
 export const SAMPLE_SIZE = 6
 
 export const PHRASE_WINDOW = 2

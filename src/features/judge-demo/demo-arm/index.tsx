@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react"
-import { Chip } from "@/shared/ui/primitives/chip"
 import { DECISION_AT_MS, type DemoArm, type DemoPhase } from "../demo-arms"
 import styles from "./styles.module.css"
 
@@ -33,10 +32,7 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
       aria-label={arm.title}
     >
       <header className={styles.armHead}>
-        <Heading className={styles.armTitle}>
-          {arm.title}{" "}
-          <Chip tone={gated ? "lasa" : "plain"}>{gated ? "shipped" : "comparison only"}</Chip>
-        </Heading>
+        <Heading className={styles.armTitle}>{arm.title}</Heading>
         <p className={styles.armNote}>{arm.note}</p>
       </header>
       <div className={styles.said}>
@@ -66,7 +62,8 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
               key={entry}
               className={entry === phase ? styles.current : styles.variant}
               aria-hidden={entry === phase ? undefined : true}
-              data-motion="fade"
+              data-tone={toneOf(gated, entry)}
+              data-motion="crossfade"
             >
               <p className={styles.outcomeValue}>{arm.value[entry]}</p>
               <p className={styles.outcomeBody}>{arm.body[entry]}</p>

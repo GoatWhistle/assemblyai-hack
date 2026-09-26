@@ -1,6 +1,15 @@
 import { CloseCode, explainClose } from "@/realtime/close-codes"
 import type { CloseCodeTally } from "./metric-definitions"
-import { closeCodeCounts, recordedRuns, sessionsRecorded } from "./recorded-runs"
+import {
+  beforeLedgerRuns,
+  closesIn,
+  codesSeen,
+  LIVE_RUN_COUNT_COMMAND,
+  REPORT_ACCOUNT_RUNS,
+  STRESS_COMMAND,
+  sessionsIn,
+  stressRun,
+} from "./session-runs"
 
 export const CLOSE_CODE_REPORT_COMMAND = "npx tsx scripts/eer/report.ts eval/<set>"
 
@@ -32,25 +41,75 @@ export function sourceOf(code: number): string {
   return SOURCES[code] ?? "No observation recorded for this code"
 }
 
+function allRuns() {
+  return [...beforeLedgerRuns(), stressRun()]
+}
+
 export function closeCodeRows(): readonly CloseCodeTally[] {
-  return closeCodeCounts().map((row) => {
-    const explanation = explainClose(row.code, "")
+  const before = beforeLedgerRuns()
+  const stress = [stressRun()]
+  return codesSeen(allRuns()).map((code) => {
+    const explanation = explainClose(code, "")
+    const beforeLedger = closesIn(before, code)
+    const inStress = closesIn(stress, code)
     return {
-      code: row.code,
+      code,
       label: explanation.label,
       meaning: explanation.explanation,
-      count: row.count,
-      alertWorthy: ALERT_WORTHY_CODES.includes(row.code),
-      source: sourceOf(row.code),
+      count: beforeLedger + inStress,
+      beforeLedger,
+      stress: inStress,
+      alertWorthy: ALERT_WORTHY_CODES.includes(code),
+      source: sourceOf(code),
     }
   })
 }
 
-export function closeCodeSetDescription(): string {
-  const runs = recordedRuns()
-    .map((run) => `${run.scored.length} from ${run.command}`)
-    .join(", ")
-  return `${sessionsRecorded()} recorded STT sessions (${runs}), read from each run's result-plain.json`
+export type UnobservedCode = {
+  readonly code: number
+  readonly label: string
+  readonly meaning: string
+  readonly alertWorthy: boolean
+  readonly source: string
+}
+
+export function unobservedCodeRows(): readonly UnobservedCode[] {
+  const seen = new Set(codesSeen(allRuns()))
+  return OBSERVATION_SOURCES.filter(([code]) => !seen.has(code)).map(([code, source]) => {
+    const explanation = explainClose(code, "")
+    return {
+      code,
+      label: explanation.label,
+      meaning: explanation.explanation,
+      alertWorthy: ALERT_WORTHY_CODES.includes(code),
+      source,
+    }
+  })
+}
+
+export function sessionsCounted(): number {
+  return sessionsIn(allRuns())
+}
+
+export type CloseCodeScope = {
+  readonly beforeLedgerRuns: number
+  readonly beforeLedgerSessions: number
+  readonly fromReportSessions: number
+  readonly stressSessions: number
+  readonly beforeLedgerCommand: string
+  readonly stressCommand: string
+}
+
+export function closeCodeScope(): CloseCodeScope {
+  const before = beforeLedgerRuns()
+  return {
+    beforeLedgerRuns: before.length,
+    beforeLedgerSessions: sessionsIn(before),
+    fromReportSessions: sessionsIn(REPORT_ACCOUNT_RUNS),
+    stressSessions: stressRun().sessions,
+    beforeLedgerCommand: LIVE_RUN_COUNT_COMMAND,
+    stressCommand: STRESS_COMMAND,
+  }
 }
 
 export function alertWorthyList(): string {

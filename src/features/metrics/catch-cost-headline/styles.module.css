@@ -1,6 +1,7 @@
 .pair {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  align-items: start;
   gap: var(--space-4);
 }
 
@@ -31,16 +32,19 @@
   text-wrap: balance;
 }
 
+.wide {
+  grid-column: 1 / -1;
+}
+
 .figure strong,
 .second strong {
-  font-family: var(--font-data);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .second {
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--line-hairline);
+  max-width: var(--measure-prose);
   font-size: var(--text-base);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
@@ -55,8 +59,8 @@
 }
 
 .note strong {
-  font-family: var(--font-data);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
   color: var(--text-primary);
   white-space: nowrap;
 }

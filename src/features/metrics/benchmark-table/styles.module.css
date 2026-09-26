@@ -140,7 +140,7 @@
   order: 4;
 }
 
-.n::before {
+.n:not([data-absent])::before {
   content: "n = ";
   color: var(--text-muted);
 }

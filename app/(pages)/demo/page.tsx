@@ -6,9 +6,11 @@ import { HubNav, type HubSection } from "@/features/judge-demo/hub-nav"
 import { InstantEntry } from "@/features/judge-demo/instant-entry"
 import { JudgeHero } from "@/features/judge-demo/judge-hero"
 import { KeytermsAb } from "@/features/judge-demo/keyterms-ab"
+import { PairRuleCatch } from "@/features/judge-demo/pair-rule-catch"
 import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { SayThese } from "@/features/judge-demo/say-these"
 import { ScenarioPicker } from "@/features/judge-demo/scenario-picker"
+import { abCatch } from "@/features/metrics/report-figures"
 import { RECORDING_PUBLISHED } from "@/features/recorded-replay/published"
 import { RecordedSection } from "@/features/recorded-replay/recorded-section"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
@@ -27,8 +29,8 @@ const RECORDED_ID = "recorded"
 const SECTIONS: readonly HubSection[] = [
   { id: REPLAY_ID, label: REPLAY_LENGTH_LABEL },
   { id: TOUR_ID, label: "90-second tour" },
-  { id: SAY_ID, label: "What to say live" },
-  { id: SCENARIOS_ID, label: "Scenarios" },
+  { id: SAY_ID, label: "Say these three things" },
+  { id: SCENARIOS_ID, label: "One button, one scenario" },
   { id: KEYTERMS_ID, label: "Keyterms A/B" },
   {
     id: RECORDED_ID,
@@ -49,6 +51,8 @@ type DemoProps = {
 export default async function DemoPage({ searchParams }: DemoProps) {
   const params = await searchParams
   const autoplay = params.autoplay === "1" || params.judge === "1"
+  const ab = abCatch()
+  const figure = ab === null ? null : <PairRuleCatch without={ab.without} shipped={ab.with} />
   return (
     <div className={styles.shell}>
       <a className="skip-link" href={`#${REPLAY_ID}`}>
@@ -60,7 +64,7 @@ export default async function DemoPage({ searchParams }: DemoProps) {
         <HubNav sections={SECTIONS} />
         <section className={styles.section} id={REPLAY_ID} aria-label="Replay">
           {autoplay ? <InstantEntry /> : null}
-          <JudgeDemo autoplay={autoplay} headingLevel="h2" />
+          <JudgeDemo autoplay={autoplay} headingLevel="h2" figure={figure} />
         </section>
         <div className={styles.section} id={TOUR_ID}>
           <JudgeTour />
@@ -92,6 +96,12 @@ export default async function DemoPage({ searchParams }: DemoProps) {
           </ActionLink>
           <ActionLink href="/metrics" size="large">
             Read the measurements
+          </ActionLink>
+          <ActionLink href="/docs/limitations" size="large">
+            What this cannot prove
+          </ActionLink>
+          <ActionLink href="/docs/threat-model" size="large">
+            Threat model
           </ActionLink>
         </nav>
         <Disclaimer />

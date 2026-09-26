@@ -5,7 +5,7 @@
   gap: var(--space-2) var(--space-4);
   min-height: var(--target-touch);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--line-divider);
+  border: 1px solid var(--line-hairline);
   border-radius: var(--radius-sm);
   background-color: var(--surface-sunken);
 }
@@ -16,7 +16,7 @@
 }
 
 .system {
-  border-color: var(--line-strong);
+  border-color: var(--line-hairline);
   background-color: var(--surface-sunken);
 }
 
@@ -44,17 +44,7 @@
 }
 
 .animated .badge {
-  animation: waiting-blink var(--dur-deliberate) var(--ease-in-out) infinite alternate;
-}
-
-@keyframes waiting-blink {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0.55;
-  }
+  animation: var(--keyframes-blink) var(--dur-loop-pulse) var(--ease-in-out) infinite alternate;
 }
 
 .text {
@@ -80,12 +70,6 @@
   color: var(--text-secondary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
-}
-
-.observed {
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  color: var(--text-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {

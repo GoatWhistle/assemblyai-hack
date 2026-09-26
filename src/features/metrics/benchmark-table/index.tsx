@@ -61,7 +61,11 @@ export function BenchmarkTable({
               <td className={styles.commandCell} data-column="command">
                 <code className={styles.command}>{entry.row.command}</code>
               </td>
-              <td className={`${styles.number} ${styles.n}`} data-column="n">
+              <td
+                className={`${styles.number} ${styles.n}`}
+                data-column="n"
+                data-absent={entry.row.n === null ? "" : undefined}
+              >
                 {entry.row.n === null ? <AbsentValue /> : entry.row.n}
                 {compact || entry.setDescription === "" ? null : (
                   <span className={styles.set}>{entry.setDescription}</span>

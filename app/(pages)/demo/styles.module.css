@@ -24,7 +24,8 @@
   border-radius: var(--radius-md);
 }
 
-.section:target {
+.section:target h2 {
+  border-radius: var(--radius-sm);
   animation: var(--keyframes-arrive) var(--dur-emphatic) var(--ease-out-quart);
 }
 

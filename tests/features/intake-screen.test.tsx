@@ -85,7 +85,10 @@ describe("the intake screen", () => {
     expect(THESIS_PROMISE).toMatch(
       /look-alike list is asked again, even when the recognizer is certain/i,
     )
-    expect(THESIS_PROMISE).toMatch(/read back to you before it is written/i)
+    expect(THESIS_PROMISE).toMatch(/read back to you before they are written/i)
+    expect(THESIS_PROMISE, "NPI and DEA carry readBackAlways false").toMatch(
+      /NPI or DEA number is checked by arithmetic/,
+    )
   })
 
   it("hides the thesis once the order is under way", () => {

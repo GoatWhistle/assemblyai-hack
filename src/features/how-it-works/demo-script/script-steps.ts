@@ -50,12 +50,12 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
   }),
   Object.freeze({
     id: "counters",
-    action: "Read the refusal counter while an order is in progress.",
+    action: "Open Technical details during a call and read the refusal counter.",
     watchFor:
-      "How often the gate asked when the value was already right is published beside the catches. A counter that only showed the catches would make the metric one-sided.",
-    href: "/metrics",
-    linkLabel: "Open the measurements",
-    needsMicrophone: false,
+      "The refusal counter sits beside the catches under Technical details on the call page, and how often the gate asked when the value was already right is published beside the catches on the measurements page. A counter that only showed the catches would make the metric one-sided.",
+    href: "/",
+    linkLabel: "Start a call",
+    needsMicrophone: true,
   }),
   Object.freeze({
     id: "interrupt",
@@ -63,7 +63,7 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
     watchFor:
       "Nothing reaches the recognizer between the reply starting and the reply finishing, and a turn that matches the agent's own last line is discarded. Watch the dropped-turn count rather than the transcript: a phantom turn would put words nobody said into a field's provenance.",
     href: "/",
-    linkLabel: "Take an order",
+    linkLabel: "Start a call",
     needsMicrophone: true,
   }),
   Object.freeze({
@@ -72,7 +72,7 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
     watchFor:
       "With a marker (\u201cno wait\u201d, \u201csorry\u201d, \u201cI mean\u201d, \u201cactually\u201d, \u201cscratch that\u201d or \u201cnot X, Y\u201d, followed within four words by the new name), the first name is refused as a value you took back, E_RETRACTED_VALUE. Without a marker, or with the correction spread across two turns, it is not detected: both words were said, so either can be proved spoken, and you reject the wrong one when it is read back. This step is here because a script containing only the parts that work is a sales pitch.",
     href: "/",
-    linkLabel: "Take an order",
+    linkLabel: "Start a call",
     needsMicrophone: true,
   }),
 ])

@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { type Patience, patienceFor } from "@/realtime/patience"
 import { Wordmark } from "@/shared/ui/primitives/wordmark"
 import { FinishAnswer } from "../finish-answer"
+import { KeyHint } from "../key-hint"
 import { LevelMeter } from "../level-meter"
 import { isBusy, isCancellable, isOpen, MIC_COPY, MicState } from "../mic-state"
 import { useMicKeys } from "../use-mic-keys"
@@ -14,6 +15,7 @@ export type MicConsoleProps = {
   readonly echoDiscards: number
   readonly patience?: Patience | undefined
   readonly notice?: ReactNode
+  readonly available?: boolean
   readonly onStart?: (() => void) | undefined
   readonly onStop?: (() => void) | undefined
   readonly onFinishAnswer?: (() => void) | undefined
@@ -35,9 +37,9 @@ const STATE_CLASS: Readonly<Record<MicState, string>> = Object.freeze({
   [MicState.Blocked]: "blocked",
 })
 
-type KeyHint = { readonly key: string; readonly shortcut: string; readonly verb: string }
+type KeyShortcut = { readonly key: string; readonly shortcut: string; readonly verb: string }
 
-const KEY_HINT: Readonly<Record<MicState, KeyHint | null>> = Object.freeze({
+const KEY_HINT: Readonly<Record<MicState, KeyShortcut | null>> = Object.freeze({
   [MicState.Idle]: { key: "Space", shortcut: "Space", verb: "start" },
   [MicState.Opening]: { key: "Esc", shortcut: "Escape", verb: "cancel" },
   [MicState.Listening]: { key: "Esc", shortcut: "Escape", verb: "stop" },
@@ -53,6 +55,7 @@ export function MicConsole({
   echoDiscards,
   patience,
   notice,
+  available = true,
   onStart,
   onStop,
   onFinishAnswer,
@@ -62,17 +65,29 @@ export function MicConsole({
   const copy = MIC_COPY[state]
   const listening = state === MicState.Listening
   const active = patience ?? patienceFor(null)
-  const hint = KEY_HINT[state]
+  const hint = available ? KEY_HINT[state] : null
+  const inert = state === MicState.Closing || !available
+  const press = open || cancellable ? onStop : onStart
 
-  useMicKeys({ busy: isBusy(state), open, cancellable, onStart, onStop })
+  useMicKeys({
+    busy: isBusy(state),
+    open,
+    cancellable,
+    onStart: available ? onStart : undefined,
+    onStop,
+  })
 
   return (
     <section className={`${styles.console} ${styles[STATE_CLASS[state]] ?? ""}`}>
       <button
         type="button"
         className={styles.trigger}
-        onClick={open || cancellable ? onStop : onStart}
-        disabled={state === MicState.Closing}
+        onClick={() => {
+          if (!inert) {
+            press?.()
+          }
+        }}
+        aria-disabled={inert ? true : undefined}
         aria-label={copy.action}
         aria-keyshortcuts={hint?.shortcut}
       >
@@ -94,36 +109,53 @@ export function MicConsole({
         <FinishAnswer live={listening} patience={active} onFinish={onFinishAnswer} />
       ) : null}
 
-      {hint === null ? null : (
-        <p className={styles.keys}>
-          <kbd className={styles.kbd}>{hint.key}</kbd>
-          <span>{hint.verb}</span>
-        </p>
-      )}
+      <KeyHint
+        keyName={hint?.key ?? null}
+        verb={hint?.verb ?? null}
+        cancellable={cancellable}
+      />
 
       {open || elapsedMs > 0 ? (
-        <dl className={styles.telemetry}>
-          <div className={styles.metric}>
-            <dt>Call length</dt>
-            <dd className={styles.numeral}>{formatElapsed(elapsedMs)}</dd>
-          </div>
-          {echoDiscards > 0 ? (
-            <div className={styles.metric}>
-              <dt>Agent heard itself</dt>
-              <dd className={styles.numeral}>{echoDiscards}</dd>
-            </div>
-          ) : null}
-          {open ? (
-            <div className={styles.metric}>
-              <dt>Patience on this field</dt>
-              <dd className={styles.numeral} title={active.why}>
-                {active.name} {active.minSilence}-{active.maxSilence} ms
-              </dd>
-            </div>
-          ) : null}
-        </dl>
+        <MicTelemetry
+          open={open}
+          elapsedMs={elapsedMs}
+          echoDiscards={echoDiscards}
+          patience={active}
+        />
       ) : null}
     </section>
+  )
+}
+
+type MicTelemetryProps = {
+  readonly open: boolean
+  readonly elapsedMs: number
+  readonly echoDiscards: number
+  readonly patience: Patience
+}
+
+function MicTelemetry({ open, elapsedMs, echoDiscards, patience: active }: MicTelemetryProps) {
+  return (
+    <dl className={styles.telemetry}>
+      <div className={styles.metric}>
+        <dt>Call length</dt>
+        <dd className={styles.numeral}>{formatElapsed(elapsedMs)}</dd>
+      </div>
+      {echoDiscards > 0 ? (
+        <div className={styles.metric}>
+          <dt>Agent heard itself</dt>
+          <dd className={styles.numeral}>{echoDiscards}</dd>
+        </div>
+      ) : null}
+      {open ? (
+        <div className={styles.metric}>
+          <dt>Patience on this field</dt>
+          <dd className={styles.numeral} title={active.why}>
+            {active.name} {active.minSilence}-{active.maxSilence} ms
+          </dd>
+        </div>
+      ) : null}
+    </dl>
   )
 }
 

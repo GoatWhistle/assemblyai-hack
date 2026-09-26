@@ -31,6 +31,7 @@ export function WordSpanStrip({
               className={classes}
               aria-pressed={selected}
               onClick={() => onSelectWord?.(word)}
+              aria-label={`${word.text}, ${word.startMs} to ${word.endMs} ms, recognizer certainty ${word.confidence.toFixed(2)}`}
               title={`${word.text}: ${word.startMs}-${word.endMs} ms, recognizer certainty ${word.confidence.toFixed(2)}`}
             >
               <span className={styles.text}>{word.text}</span>

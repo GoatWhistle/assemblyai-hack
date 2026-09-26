@@ -8,6 +8,7 @@ export type ChipTone =
   | "asking"
   | "pending"
   | "escalated"
+  | "validator"
   | "aborted"
   | "lasa"
 
@@ -26,6 +27,7 @@ const TONE_CLASS: Record<ChipTone, string> = {
   asking: styles.asking ?? "",
   pending: styles.pending ?? "",
   escalated: styles.escalated ?? "",
+  validator: styles.validator ?? "",
   aborted: styles.aborted ?? "",
   lasa: styles.lasa ?? "",
 }

@@ -34,6 +34,17 @@ export const HELD_OUT_GENUINE_ABOVE_THRESHOLD = Object.freeze([
   "chlorthalidone",
 ])
 
+export const HELD_OUT_TYPOS = Object.freeze(["llevofloxacin", "epineprine"])
+
+export const HELD_OUT_REPLICATION = Object.freeze({
+  heldOutRate: "26.7%",
+  controlRate: "27.5%",
+  errors: 16,
+  aboveThreshold: 4,
+  withoutTyposRate: "24.1% [15.0%, 36.5%]",
+  withoutTyposN: 58,
+})
+
 export type AbCatch = {
   readonly without: BenchmarkRow
   readonly with: BenchmarkRow

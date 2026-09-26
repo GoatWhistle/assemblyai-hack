@@ -126,6 +126,8 @@ export type CloseCodeTally = {
   readonly label: string
   readonly meaning: string
   readonly count: number
+  readonly beforeLedger: number
+  readonly stress: number
   readonly alertWorthy: boolean
   readonly source: string
 }

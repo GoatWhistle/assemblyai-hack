@@ -17,7 +17,7 @@ const CATALOGUE: readonly ValidatorName[] = ["ndc_catalog", "ndc_format", "combo
 const RULE: readonly ValidatorName[] = ["range_check", "sig_abbrev", "schedule_refills"]
 
 function badge(id: string, passed: boolean, yes: string, no: string): SourceBadge {
-  return { id, label: passed ? yes : no, tone: passed ? "accepted" : "escalated" }
+  return { id, label: passed ? yes : no, tone: passed ? "accepted" : "validator" }
 }
 
 export function sourceBadges(
@@ -28,7 +28,7 @@ export function sourceBadges(
   const name = candidate.verdict.validatorName
   const badges: SourceBadge[] = []
   if (candidate.lasa.hit) {
-    badges.push({ id: "lasa", label: "LASA pair", tone: "lasa" })
+    badges.push({ id: "lasa", label: "Look-alike pair", tone: "lasa" })
   }
   if (name === "spoken_support") {
     badges.push(badge("spoken", passed, "spoken support", "not in what was said"))

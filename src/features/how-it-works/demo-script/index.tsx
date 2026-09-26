@@ -16,7 +16,7 @@ export function DemoScript() {
           <div className={styles.content}>
             <h3 className={styles.action}>
               {step.action}
-              {step.needsMicrophone ? <Chip tone="pending">needs a microphone</Chip> : null}
+              {step.needsMicrophone ? <Chip>needs a microphone</Chip> : null}
             </h3>
             <p className={styles.watch}>
               <span className={styles.watchLabel}>{WATCH_LABEL}</span>

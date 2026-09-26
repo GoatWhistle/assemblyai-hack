@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
 import { isMicrophoneFault, SessionFault, SessionPhase } from "@/features/intake/session-status"
@@ -180,9 +180,21 @@ describe("mic console", () => {
     expect(onStop).toHaveBeenCalledOnce()
   })
 
-  it("keeps the trigger disabled while the line is closing", () => {
-    renderConsole({ state: MicState.Closing })
-    expect((screen.getByRole("button") as HTMLButtonElement).disabled).toBe(true)
+  it("keeps the trigger inert while the line is closing, without dropping its focus", () => {
+    const onStop = vi.fn()
+    const onStart = vi.fn()
+    renderConsole({ state: MicState.Closing, onStop, onStart })
+    const trigger = screen.getByRole("button") as HTMLButtonElement
+    expect(trigger.getAttribute("aria-disabled")).toBe("true")
+    expect(
+      trigger.disabled,
+      "a disabled button drops keyboard focus to the body on every cancel (r2-A2 N1)",
+    ).toBe(false)
+    trigger.focus()
+    fireEvent.click(trigger)
+    expect(onStop).not.toHaveBeenCalled()
+    expect(onStart).not.toHaveBeenCalled()
+    expect(document.activeElement).toBe(trigger)
   })
 
   it("starts from the space bar but never hangs up on it", async () => {

@@ -41,7 +41,7 @@ const GROUND_LABEL: Readonly<Record<ReasonCode, string>> = Object.freeze({
   [ReasonCode.ValidatorFormat]: "format invalid",
   [ReasonCode.ValidatorCatalog]: "not in the catalogue",
   [ReasonCode.ValidatorCombo]: "combination not in the catalogue",
-  [ReasonCode.LasaHit]: "published LASA pair",
+  [ReasonCode.LasaHit]: "published look-alike (LASA) pair",
   [ReasonCode.LowConfidence]: "below this field's threshold",
   [ReasonCode.ReadBackRequired]: "field is always read back",
   [ReasonCode.NoValidator]: "no validator exists for this field",

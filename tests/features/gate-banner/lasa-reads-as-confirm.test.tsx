@@ -58,11 +58,12 @@ describe("a pair hit is stated as a hypothesis, not as a finding against the cal
     ).toBeTruthy()
   })
 
-  it("says in the stance itself that the caller is usually right", () => {
+  it("says in the stance itself that correct names get the question too, with the measured count", () => {
     expect(
-      LASA_STANCE.notClaim.toLowerCase(),
-      "the re-ask is the cost side of the idea: roughly a quarter of the questions this product asks land on a value that was already correct, and the wording must not imply otherwise",
-    ).toContain("most of the time it was not")
+      LASA_STANCE.notClaim,
+      "the re-ask is the cost side of the idea: questions land on values that were already correct, and the wording must not imply otherwise",
+    ).toMatch(/59 correctly heard values, 21 still received it/)
+    expect(LASA_STANCE.notClaim).toContain("npx tsx scripts/measure/coverage-matrix.ts")
   })
 
   it("carries no accusing word in any wording a caller or judge reads", () => {

@@ -114,9 +114,7 @@
 }
 
 .buttonOutcome {
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  letter-spacing: var(--track-normal);
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 

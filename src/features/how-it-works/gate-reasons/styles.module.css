@@ -16,9 +16,27 @@
   border-top: 1px solid var(--line-hairline);
 }
 
-.lasa {
-  background-color: var(--state-lasa-surface);
+.reason:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.reason:last-child {
   border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.reason[data-family="threshold"] {
+  --family-ink: var(--reason-threshold-ink);
+  background-color: var(--reason-threshold-surface);
+}
+
+.reason[data-family="validator"] {
+  --family-ink: var(--reason-validator-ink);
+  background-color: var(--reason-validator-surface);
+}
+
+.reason[data-family="lasa"] {
+  --family-ink: var(--reason-lasa-ink);
+  background-color: var(--reason-lasa-surface);
 }
 
 .ordinal {
@@ -49,9 +67,9 @@
   overflow-wrap: anywhere;
 }
 
-.lasa .code,
-.lasa .reasonTitle {
-  color: var(--state-lasa-ink);
+.reason .code,
+.reason .reasonTitle {
+  color: var(--family-ink, var(--text-primary));
 }
 
 .reasonBody {

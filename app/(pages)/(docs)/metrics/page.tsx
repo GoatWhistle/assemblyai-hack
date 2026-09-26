@@ -1,15 +1,19 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { glossaryHref } from "@/features/how-it-works/glossary/terms"
 import { BenchmarkTable } from "@/features/metrics/benchmark-table"
-import { CatchCostHeadline } from "@/features/metrics/catch-cost-headline"
+import { CatchCostHeadline, headlineTitle } from "@/features/metrics/catch-cost-headline"
 import { confidenceFigures, falseAskTally } from "@/features/metrics/measured-figures"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
 import {
   abCatch,
   contrastiveShareRow,
+  HELD_OUT_EER_SCRIPT,
   HELD_OUT_ENTRIES,
   HELD_OUT_GENUINE_ABOVE_THRESHOLD,
+  HELD_OUT_REPLICATION,
   HELD_OUT_STRATUM_SIZE,
+  HELD_OUT_TYPOS,
   THRESHOLDS,
 } from "@/features/metrics/report-figures"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
@@ -40,9 +44,26 @@ function strataSentence(): string {
   return `rare ${rare}, middle ${mid}, common ${common}, n = ${HELD_OUT_STRATUM_SIZE} each`
 }
 
+function Names({ names }: { readonly names: readonly string[] }) {
+  return (
+    <>
+      {names.map((name, index) => (
+        <span key={name}>
+          {index === 0 ? null : " and "}
+          <code className={styles.code}>{name}</code>
+        </span>
+      ))}
+    </>
+  )
+}
+
 export default function MetricsPage() {
-  const confident =
-    confidenceFigures().find((entry) => entry.id === "errors-above-threshold") ?? null
+  const figures = confidenceFigures()
+  const confident = figures.find((entry) => entry.id === "errors-above-threshold") ?? null
+  const catalogue = figures.find((entry) => entry.id === "catalogue-coverage") ?? null
+  const ab = abCatch()
+  const tally = falseAskTally()
+  const replication = HELD_OUT_REPLICATION
   return (
     <>
       <DocHeader title="Measurements" lede={METHOD_RULE}>
@@ -53,13 +74,14 @@ export default function MetricsPage() {
 
       <DocSection
         id={METRICS_SECTIONS.headline.id}
-        title="The pair rule stops every seeded mishearing, and asks about every correct name"
-        lead="The catch and its cost, side by side and at equal weight. Showing only one of the two would make the metric one-sided."
+        title={headlineTitle(ab, tally)}
+        lead="The catch and its cost, side by side and at equal weight, and each mechanism with its own number. Showing only one of the two would make the metric one-sided."
       >
         <CatchCostHeadline
-          ab={abCatch()}
+          ab={ab}
           confident={confident}
-          tally={falseAskTally()}
+          catalogue={catalogue}
+          tally={tally}
           contrastive={contrastiveShareRow()}
         />
       </DocSection>
@@ -67,7 +89,13 @@ export default function MetricsPage() {
       <DocSection
         id={METRICS_SECTIONS.policy.id}
         title="What the shipped gate stops, and what it asks"
-        lead="Standing read-back, threshold and contrastive pair rule, as the server publishes them. Brackets are 95% Wilson intervals."
+        lead={
+          <>
+            Standing read-back, threshold and contrastive pair rule, as the server publishes
+            them. Brackets are{" "}
+            <Link href={glossaryHref("Wilson interval")}>95% Wilson intervals</Link>.
+          </>
+        }
       >
         <BenchmarkTable entries={shippedPolicyEntries()} label="Shipped policy figures" />
       </DocSection>
@@ -86,16 +114,22 @@ export default function MetricsPage() {
           <strong>The pre-registered hypothesis did not replicate.</strong> It predicted that
           rarer names fail more, with non-overlapping intervals between the rare and common
           strata: {strataSentence()}, intervals overlapping. It is published as a negative
-          result rather than dropped. What did replicate is the part the product rests on: two
-          genuine recognizer errors on the held-out set,{" "}
-          {HELD_OUT_GENUINE_ABOVE_THRESHOLD.map((name, index) => (
-            <span key={name}>
-              {index === 0 ? null : " and "}
-              <code className={styles.code}>{name}</code>
-            </span>
-          ))}
-          , sat at or above the {THRESHOLDS.drugName.toFixed(2)} threshold and would have passed
-          a threshold alone (eval/REPORT.md, held-out section).
+          result rather than dropped.
+        </p>
+        <p className={styles.prose}>
+          <strong>What replicated is the overall error rate:</strong> {replication.heldOutRate}{" "}
+          on the held-out set against {replication.controlRate} on the control corpus. Of its{" "}
+          {replication.errors} errors, {replication.aboveThreshold} sat at or above the{" "}
+          {THRESHOLDS.drugName.toFixed(2)} threshold. Two of those four are typos our own
+          sampler drew from the FDA file (<Names names={HELD_OUT_TYPOS} />
+          ), so the recognizer was scored wrong for hearing the real word; the other two,{" "}
+          <Names names={HELD_OUT_GENUINE_ABOVE_THRESHOLD} />, are genuine recognizer errors that
+          a threshold alone would have passed.{" "}
+          <code className={styles.code}>{HELD_OUT_EER_SCRIPT}</code> prints all{" "}
+          {replication.errors}. Without the two typo items the rate is{" "}
+          {replication.withoutTyposRate}, n = {replication.withoutTyposN}; both figures are
+          published, because choosing the flattering one after seeing them is what the seal
+          exists to prevent (eval/REPORT.md, held-out section).
         </p>
         <p className={styles.prose}>
           The gate&rsquo;s own figures on the held-out set, its catch rate and its false-ask

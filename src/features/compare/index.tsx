@@ -36,7 +36,7 @@ export function verdictTone(moment: Moment): ChipTone {
     return "accepted"
   }
   if (moment.verdict === GateVerdict.Refused) {
-    return "escalated"
+    return "validator"
   }
   return moment.pairOutranksCertainty ? "lasa" : "asking"
 }

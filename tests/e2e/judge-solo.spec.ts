@@ -20,9 +20,9 @@ test.describe("a judge alone, with no microphone and no key", () => {
     await expect(page.getByText(/who pays/i)).toBeVisible()
     await expect(page.getByText(/who gets the order/i)).toBeVisible()
     await expect(
-      page.getByRole("link", { name: /watch the \d+-second case/i }),
+      page.getByRole("link", { name: /watch the \d+-second replay/i }).first(),
     ).toHaveAttribute("href", REPLAY_ENTRY)
-    await expect(page.getByRole("link", { name: /talk to it live/i })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: /^start a call$/i }).first()).toHaveAttribute(
       "href",
       "/",
     )
@@ -102,11 +102,17 @@ test.describe("with scripts disabled", () => {
   test("both entry links are real links that navigate", async ({ page }) => {
     test.setTimeout(90000)
     await page.goto("/demo")
-    await page.getByRole("link", { name: /watch the \d+-second case/i }).click()
+    await page
+      .getByRole("link", { name: /watch the \d+-second replay/i })
+      .first()
+      .click()
     await expect(page).toHaveURL(/\/demo\?autoplay=1#replay$/)
     await expect(page.getByRole("region", { name: "Replay" }).first()).toBeVisible()
     await page.goto("/demo")
-    await page.getByRole("link", { name: /talk to it live/i }).click()
+    await page
+      .getByRole("link", { name: /^start a call$/i })
+      .first()
+      .click()
     await expect(page).toHaveURL(/\/$/)
     await page.getByRole("link", { name: /judging\? watch the \d+-second replay/i }).click()
     await expect(page).toHaveURL(/\/demo\?autoplay=1#replay$/)

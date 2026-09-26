@@ -31,8 +31,8 @@
 
 .name {
   display: inline-block;
-  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart) both;
-  animation-delay: calc(var(--i, 0) * var(--stagger-step) + var(--dur-fast));
+  animation: var(--keyframes-verdict) var(--dur-fast) var(--ease-out-quart) both;
+  animation-delay: calc(min(var(--i, 0), 1) * var(--dur-instant));
 }
 
 .joiner {

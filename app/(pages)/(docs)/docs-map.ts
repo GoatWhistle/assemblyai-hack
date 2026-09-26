@@ -38,8 +38,8 @@ export const BENCHMARK_SECTIONS = Object.freeze({
 })
 
 export const OPERATIONS_SECTIONS = Object.freeze({
-  business: section("business", "Cost per order"),
   rates: section("rates", "Published rates"),
+  business: section("business", "Cost per order"),
   closeCodes: section("close-codes", "Socket close codes"),
 })
 

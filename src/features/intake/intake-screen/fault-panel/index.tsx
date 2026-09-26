@@ -37,7 +37,7 @@ export function FaultPanel({
   const card = useRef<HTMLDivElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
   const spent = degradesToReplay(fault)
-  const detailShown = spent && faultDetail !== null
+  const detailShown = spent && faultDetail !== null && copy.lead === undefined
 
   useEffect(() => {
     if (!canRestart) {
@@ -53,7 +53,7 @@ export function FaultPanel({
       <h2 className={styles.title} id={titleId} ref={heading} tabIndex={-1}>
         {copy.title}
       </h2>
-      <p className={styles.body}>{copy.body}</p>
+      <p className={styles.body}>{copy.lead ?? copy.body}</p>
       {detailShown ? <p className={styles.body}>{asSentence(faultDetail.message)}</p> : null}
       <div className={styles.remedy}>
         <p className={styles.remedyLabel}>What to do</p>
@@ -73,13 +73,53 @@ export function FaultPanel({
           Technical reason
           <Chevron className={styles.chevron} />
         </summary>
+        {copy.lead === undefined ? null : <p className={styles.technicalBody}>{copy.body}</p>}
+        {copy.lead === undefined || faultDetail === null ? null : (
+          <p className={styles.technicalBody}>{asSentence(faultDetail.message)}</p>
+        )}
         <p className={styles.technicalBody}>
           Reported as <code>{fault}</code>
           {faultDetail === null ? "." : ", with "}
           {faultDetail === null ? null : <code>{faultDetail.code}</code>}
-          {faultDetail === null || detailShown ? null : `: ${faultDetail.message}`}
+          {faultDetail === null || spent ? null : `: ${faultDetail.message}`}
         </p>
       </details>
     </div>
+  )
+}
+
+export const PAUSED_TITLE = "Live calls are paused for today"
+
+export const PAUSED_BODY =
+  "The daily live-call budget is spent, so the microphone stays off until it resets at 00:00 UTC. Nothing is billed to you, and the replay needs no call."
+
+export type BudgetPausedProps = {
+  readonly detail: FaultDetail
+}
+
+export function BudgetPaused({ detail }: BudgetPausedProps) {
+  const titleId = useId()
+  return (
+    <section className={`${styles.fault} ${styles.paused}`} aria-labelledby={titleId}>
+      <h2 className={styles.title} id={titleId}>
+        {PAUSED_TITLE}
+      </h2>
+      <p className={styles.body}>{PAUSED_BODY}</p>
+      <div className={styles.actions}>
+        <ActionLink href={REPLAY_ENTRY_HREF} tone="primary">
+          Watch the replay
+        </ActionLink>
+      </div>
+      <details className={styles.technical}>
+        <summary className={styles.technicalSummary}>
+          Technical reason
+          <Chevron className={styles.chevron} />
+        </summary>
+        <p className={styles.technicalBody}>
+          Read before any call from the budget route, reported as <code>{detail.code}</code>:{" "}
+          {detail.message}
+        </p>
+      </details>
+    </section>
   )
 }

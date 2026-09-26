@@ -81,11 +81,11 @@ export function confidenceFigures(): readonly MetricDefinition[] {
   return [
     {
       id: "errors-above-threshold",
-      name: "Errors the recognizer was confident about",
+      name: "Errors the recognizer reported at or above the threshold",
       meaning:
         "Recognizer errors whose own reported confidence sat at or above the drug-name threshold. A confidence check alone would have written every one of these into an order, which is the reason this product does not rely on one.",
       command: COVERAGE_MATRIX_COMMAND,
-      setDescription: `${wrong.length} recorded errors across ${COVERAGE_MATRIX_SET}`,
+      setDescription: `recorded errors across ${COVERAGE_MATRIX_SET}`,
       value: outOf(aboveThreshold.length, wrong.length),
       input: "tts",
       n: wrong.length === 0 ? null : wrong.length,
@@ -97,7 +97,7 @@ export function confidenceFigures(): readonly MetricDefinition[] {
       meaning:
         "Values the recognizer got right but reported below the threshold, counted with the pair rule switched off. The shipped policy reads every drug name back once regardless, so the threshold changes which question is asked, not whether one is; the catalogue check adds none of its own.",
       command: COVERAGE_MATRIX_COMMAND,
-      setDescription: `${correct.length} correct values across ${COVERAGE_MATRIX_SET}`,
+      setDescription: `correct values across ${COVERAGE_MATRIX_SET}`,
       value: outOf(correctBelowThreshold(scored).length, correct.length),
       input: "tts",
       n: correct.length === 0 ? null : correct.length,
@@ -109,7 +109,7 @@ export function confidenceFigures(): readonly MetricDefinition[] {
       meaning:
         "Recorded errors that no prescription product in the built catalogue matches, so the gate refuses them regardless of confidence. Measured by running the real validator and the real gate over each recorded utterance.",
       command: COVERAGE_MATRIX_COMMAND,
-      setDescription: `${wrong.length} recorded errors, assigned in the gate's own branch order`,
+      setDescription: "recorded errors, assigned in the gate's own branch order",
       value: outOf(wrong.length, wrong.length),
       input: "tts",
       n: wrong.length === 0 ? null : wrong.length,

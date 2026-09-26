@@ -1,7 +1,13 @@
-import { type FieldCandidate, type GateDecision, ReasonCode } from "@/domain"
+import type { ReactNode } from "react"
+import {
+  type ConfirmationEvidence,
+  type FieldCandidate,
+  type GateDecision,
+  ReasonCode,
+} from "@/domain"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { FIELD_LABEL } from "../intake/field-language"
-import { ContrastQuestion } from "./contrast-question"
+import { ContrastQuestion, spokenChoice } from "./contrast-question"
 import { stanceFor } from "./hypothesis-language"
 import {
   ACTION_LANGUAGE,
@@ -15,6 +21,50 @@ import { signatureOf } from "./signature"
 import { SignatureLine } from "./signature-line"
 import styles from "./styles.module.css"
 
+export const CONFIRMED_HEADLINE = "Written after the caller said the name"
+
+export type AskedEarlier = {
+  readonly decision: GateDecision
+  readonly candidate: FieldCandidate
+  readonly atSeconds: string
+}
+
+export type ConfirmedBannerProps = {
+  readonly evidence: ConfirmationEvidence
+  readonly candidate: FieldCandidate
+  readonly asked?: AskedEarlier | null
+}
+
+export function ConfirmedBanner({ evidence, candidate, asked = null }: ConfirmedBannerProps) {
+  const value = String(candidate.normalizedValue ?? candidate.rawValue)
+  const earlier = asked === null ? null : signatureOf(asked.candidate, asked.decision)
+  return (
+    <div
+      className={`${styles.banner} ${styles.accepted}`}
+      key={`confirmed:${evidence.candidateId}:${evidence.reasonCode}`}
+      data-motion="fade"
+    >
+      <div className={styles.top}>
+        <p className={styles.headline}>{CONFIRMED_HEADLINE}</p>
+        <Chip tone="accepted" monospace>
+          {evidence.reasonCode}
+        </Chip>
+        <Chip tone="plain">{FIELD_LABEL[candidate.field]}</Chip>
+      </div>
+      <p className={styles.because}>
+        The caller said {value} aloud, so {value} is the value in the order. A yes would have
+        written nothing: only a spoken name answers the contrastive question.
+      </p>
+      {asked === null || earlier === null ? null : (
+        <p className={styles.history}>
+          Asked at {asked.atSeconds}: RE-ASK <code>{asked.decision.reasonCode}</code>,{" "}
+          {spokenChoice(earlier.candidates)}?
+        </p>
+      )}
+    </div>
+  )
+}
+
 const SEVERITY_CLASS: Record<ReasonSeverity, string> = {
   accepted: styles.accepted ?? "",
   asking: styles.asking ?? "",
@@ -24,15 +74,50 @@ const SEVERITY_CLASS: Record<ReasonSeverity, string> = {
   aborted: styles.aborted ?? "",
 }
 
+export type ConfirmedField = {
+  readonly evidence: ConfirmationEvidence
+  readonly candidate: FieldCandidate
+  readonly asked?: AskedEarlier | null
+}
+
 export type GateBannerProps = {
   readonly decision: GateDecision | null
   readonly candidate?: FieldCandidate | null
+  readonly confirmed?: ConfirmedField | null
+  readonly live?: boolean
 }
 
-export function GateBanner({ decision, candidate = null }: GateBannerProps) {
-  if (decision === null) {
+function Region({ live, children }: { readonly live: boolean; readonly children: ReactNode }) {
+  if (live) {
     return (
       <output aria-live="polite" className={styles.region}>
+        {children}
+      </output>
+    )
+  }
+  return <div className={styles.region}>{children}</div>
+}
+
+export function GateBanner({
+  decision,
+  candidate = null,
+  confirmed = null,
+  live = true,
+}: GateBannerProps) {
+  if (confirmed !== null && confirmed.evidence.verdict === "confirmed") {
+    return (
+      <Region live={live}>
+        <ConfirmedBanner
+          evidence={confirmed.evidence}
+          candidate={confirmed.candidate}
+          asked={confirmed.asked ?? null}
+        />
+      </Region>
+    )
+  }
+  if (decision === null) {
+    return (
+      <Region live={live}>
         <div className={styles.banner}>
           <p className={styles.headline}>The gate has not been asked anything yet</p>
           <p className={styles.idle}>
@@ -40,7 +125,7 @@ export function GateBanner({ decision, candidate = null }: GateBannerProps) {
             order. Its verdict, and the reason code behind it, appears here as it happens.
           </p>
         </div>
-      </output>
+      </Region>
     )
   }
   const reason = describeReason(decision.reasonCode)
@@ -59,7 +144,7 @@ export function GateBanner({ decision, candidate = null }: GateBannerProps) {
     signature.candidates.length >= 2
   const verdictKey = `${decision.candidateId}:${decision.reasonCode}:${decision.evidence.attempt}`
   return (
-    <output aria-live="polite" className={styles.region}>
+    <Region live={live}>
       <div className={classes} key={verdictKey} data-motion="fade">
         {signature === null ? null : <SignatureLine signature={signature} />}
         <div className={styles.top}>
@@ -87,6 +172,6 @@ export function GateBanner({ decision, candidate = null }: GateBannerProps) {
           </div>
         )}
       </div>
-    </output>
+    </Region>
   )
 }

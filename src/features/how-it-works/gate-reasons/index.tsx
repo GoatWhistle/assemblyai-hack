@@ -1,4 +1,4 @@
-import { FIELD_POLICIES, ReasonCode } from "@/domain"
+import { FIELD_POLICIES, FieldName, ReasonCode } from "@/domain"
 import { FIELD_LABEL } from "@/features/intake/field-language"
 import styles from "./styles.module.css"
 
@@ -8,6 +8,7 @@ export type GateReason = {
   readonly title: string
   readonly body: string
   readonly pairRule: boolean
+  readonly family: "threshold" | "validator" | "lasa"
 }
 
 export const GATE_REASONS: readonly GateReason[] = Object.freeze([
@@ -17,6 +18,7 @@ export const GATE_REASONS: readonly GateReason[] = Object.freeze([
     title: "The recognizer was unsure",
     body: "The lowest certainty across the source words fell under the threshold for that field. The minimum is used rather than the mean, because a mean hides the single failed word that happens to be the drug name.",
     pairRule: false,
+    family: "threshold",
   },
   {
     code: ReasonCode.ValidatorChecksum,
@@ -24,30 +26,35 @@ export const GATE_REASONS: readonly GateReason[] = Object.freeze([
     title: "A validator said no",
     body: "A checksum, a catalogue lookup or an internal consistency check rejected the value. NPI and DEA are arithmetic; a drug name is proved by existing in the catalogue, and we say so rather than calling it a checksum.",
     pairRule: false,
+    family: "validator",
   },
   {
     code: ReasonCode.LasaHit,
-    label: "Look-alike name",
+    label: "Look-alike pair",
     title: "The name is on a published pair",
     body: "This one fires even at certainty 1.00 and is read before the threshold, so a confident value cannot reach acceptance by being confident. The agent names both drugs, and only a spoken name answers.",
     pairRule: true,
+    family: "lasa",
   },
 ])
 
 const STANDING = [...FIELD_POLICIES.values()]
   .filter((policy) => policy.readBackAlways)
-  .map((policy) => FIELD_LABEL[policy.field].toLowerCase())
+  .map((policy) =>
+    policy.field === FieldName.Sig
+      ? "directions (sig)"
+      : FIELD_LABEL[policy.field].toLowerCase(),
+  )
 
-export const STANDING_READ_BACK_LINE = `${STANDING.length} fields are always read back once, whatever else happens (${ReasonCode.ReadBackRequired}): ${STANDING.slice(0, -1).join(", ")} and ${STANDING.at(-1)}. The three reasons below change which question is asked, and only the third will not take a yes for an answer.`
+export const STANDING_FIELDS_LINE = `${STANDING.length} fields are always read back once, whatever else happens (${ReasonCode.ReadBackRequired}): ${STANDING.slice(0, -1).join(", ")} and ${STANDING.at(-1)}.`
+
+export const STANDING_READ_BACK_LINE = `${STANDING_FIELDS_LINE} The three reasons below change which question is asked, and only the third will not take a yes for an answer.`
 
 export function GateReasons() {
   return (
     <ol className={styles.reasons}>
       {GATE_REASONS.map((reason, index) => (
-        <li
-          key={reason.code}
-          className={reason.pairRule ? `${styles.reason} ${styles.lasa}` : styles.reason}
-        >
+        <li key={reason.code} className={styles.reason} data-family={reason.family}>
           <span className={styles.ordinal} aria-hidden="true">
             {index + 1}
           </span>

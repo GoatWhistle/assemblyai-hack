@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import type { BenchmarkRow } from "@/domain"
 import { AbsentValue } from "../absent-value"
 import { FalseAskHeadline } from "../false-ask-headline"
@@ -7,13 +8,24 @@ import { type AbCatch, READ_BACK_COST } from "../report-figures"
 import styles from "./styles.module.css"
 
 export const CATCH_TITLE = "What the pair rule catches"
-export const COST_TITLE = "What it costs on correct names"
+export const COST_TITLE = "What the pair rule costs on correct names"
+export const CATALOGUE_TITLE = "What caught the real recognizer errors: the catalogue check"
+export const NEUTRAL_HEADLINE_TITLE = "What the pair rule catches, and what it costs"
 
 export type CatchCostHeadlineProps = {
   readonly ab: AbCatch | null
   readonly confident: MetricDefinition | null
+  readonly catalogue: MetricDefinition | null
   readonly tally: FalseAskTally | null
   readonly contrastive: BenchmarkRow | null
+  readonly compact?: boolean
+}
+
+export function headlineTitle(ab: AbCatch | null, tally: FalseAskTally | null): string {
+  if (ab === null || tally === null || ab.with.value !== `0/${ab.with.n}`) {
+    return NEUTRAL_HEADLINE_TITLE
+  }
+  return `The pair rule stops every seeded mishearing, and puts its longer question to ${tally.byPairRule} of ${tally.of} correct names`
 }
 
 function Method({
@@ -39,22 +51,30 @@ function Method({
   )
 }
 
-function Catch({ ab, confident }: Pick<CatchCostHeadlineProps, "ab" | "confident">) {
+function Figure({ value }: { readonly value: string | null | undefined }): ReactNode {
+  return value === null || value === undefined ? <AbsentValue /> : value
+}
+
+function Catch({ ab, compact }: { readonly ab: AbCatch | null; readonly compact: boolean }) {
   return (
     <article className={styles.panel} data-headline="catch">
       <h3 className={styles.kicker}>{CATCH_TITLE}</h3>
       <p className={styles.figure}>
         Without the pair rule, a reflex yes writes{" "}
         <strong data-figure="without">
-          {ab === null ? <AbsentValue /> : ab.without.value}
+          <Figure value={ab?.without.value} />
         </strong>{" "}
         seeded pair mishearings. With it,{" "}
-        <strong data-figure="with">{ab === null ? <AbsentValue /> : ab.with.value}</strong>.
+        <strong data-figure="with">
+          <Figure value={ab?.with.value} />
+        </strong>
+        .
       </p>
       {ab === null ? null : (
         <p className={styles.note}>
-          Both arms read every drug name back and differ by the pair rule alone. How often a
-          real caller answers a plain read-back by reflex is not measured.{" "}
+          {compact
+            ? null
+            : "Both arms read every drug name back and differ by the pair rule alone. How often a real caller answers a plain read-back by reflex is not measured. "}
           <Method
             command={ab.with.command}
             n={String(ab.with.n)}
@@ -63,12 +83,32 @@ function Catch({ ab, confident }: Pick<CatchCostHeadlineProps, "ab" | "confident
           />
         </p>
       )}
+    </article>
+  )
+}
+
+function Catalogue({
+  confident,
+  catalogue,
+}: Pick<CatchCostHeadlineProps, "confident" | "catalogue">) {
+  return (
+    <article className={`${styles.panel} ${styles.wide}`} data-headline="catalogue">
+      <h3 className={styles.kicker}>{CATALOGUE_TITLE}</h3>
       <p className={styles.second}>
-        <strong data-figure="confident">
-          {confident === null || confident.value === null ? <AbsentValue /> : confident.value}
+        The catalogue check refused{" "}
+        <strong data-figure="catalogue">
+          <Figure value={catalogue?.value} />
         </strong>{" "}
-        recorded recognizer errors sat at or above the drug-name threshold, so a threshold alone
-        would have written them.{" "}
+        recorded recognizer errors, because each heard name matches no prescription product.
+        None of them was heard as a published partner, so the pair rule caught none of them, and
+        its catch above rests on the seeded pairs.
+      </p>
+      <p className={styles.second}>
+        Of the same errors,{" "}
+        <strong data-figure="confident">
+          <Figure value={confident?.value} />
+        </strong>{" "}
+        sat at or above the drug-name threshold, so a threshold alone would have written them.{" "}
         {confident === null ? null : (
           <Method
             command={confident.command}
@@ -111,17 +151,20 @@ function Seconds({
 export function CatchCostHeadline({
   ab,
   confident,
+  catalogue,
   tally,
   contrastive,
+  compact = false,
 }: CatchCostHeadlineProps) {
   return (
     <div className={styles.pair}>
-      <Catch ab={ab} confident={confident} />
+      <Catch ab={ab} compact={compact} />
       <article className={styles.panel} data-headline="cost">
         <h3 className={styles.kicker}>{COST_TITLE}</h3>
-        <FalseAskHeadline tally={tally} />
-        <Seconds tally={tally} contrastive={contrastive} />
+        <FalseAskHeadline tally={tally} contrastive={contrastive} compact={compact} />
+        {compact ? null : <Seconds tally={tally} contrastive={contrastive} />}
       </article>
+      {compact ? null : <Catalogue confident={confident} catalogue={catalogue} />}
     </div>
   )
 }

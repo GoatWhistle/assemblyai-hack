@@ -18,6 +18,7 @@ import { AnswerWait } from "./answer-wait"
 import { FieldHistory } from "./field-history"
 import {
   confidenceRankNote,
+  type FieldStance,
   isConfidenceOverruled,
   nameAnswerState,
   overruledNote,
@@ -35,7 +36,7 @@ import { ValueChange } from "./value-change"
 const CARD_CLASS: Record<string, string> = {
   lasa: styles.lasaCard ?? "",
   escalated: styles.escalatedCard ?? "",
-  refused: styles.escalatedCard ?? "",
+  refused: styles.refusedCard ?? "",
   accepted: styles.acceptedCard ?? "",
   confirmed: styles.acceptedCard ?? "",
 }
@@ -58,6 +59,17 @@ export type FieldCardProps = {
   readonly decisions?: ReadonlyMap<string, GateDecision>
   readonly onListen?: ListenHandler
 }
+
+const REPEATS_STANCE: Readonly<Record<FieldStance, readonly string[]>> = Object.freeze({
+  proposed: [],
+  asking: [],
+  refused: [],
+  lasa: ["lasa"],
+  accepted: [],
+  confirmed: ["aloud"],
+  escalated: [],
+  aborted: [],
+})
 
 export function FieldCard({
   candidate,
@@ -107,11 +119,13 @@ export function FieldCard({
         </div>
         <div className={styles.statuses}>
           <Chip tone={STANCE_CHIP[stance]}>{STANCE_LABEL[stance]}</Chip>
-          {sourceBadges(candidate, evidence).map((entry) => (
-            <Chip key={entry.id} tone={entry.tone}>
-              {entry.label}
-            </Chip>
-          ))}
+          {sourceBadges(candidate, evidence)
+            .filter((entry) => !REPEATS_STANCE[stance].includes(entry.id))
+            .map((entry) => (
+              <Chip key={entry.id} tone={entry.tone}>
+                {entry.label}
+              </Chip>
+            ))}
         </div>
       </header>
 

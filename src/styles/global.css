@@ -2,6 +2,7 @@
 @import "./tokens/semantic.css";
 @import "./tokens/typography.css";
 @import "./tokens/motion.css";
+@import "./tokens/route-motion.css";
 
 *,
 *::before,
@@ -129,7 +130,10 @@ a:hover {
   transform: none;
 }
 
-:where(h2, h3):target {
+:where(h2, h3):target,
+:where(section):target > :where(h2, h3):first-child,
+:where(section):target > :where(div):first-child > :where(h2, h3):first-child {
+  border-radius: var(--radius-sm);
   animation: readback-target var(--dur-emphatic) var(--ease-out-quart);
 }
 

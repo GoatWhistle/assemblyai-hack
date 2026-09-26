@@ -20,11 +20,10 @@ export function ConfirmationReceipt({ evidence }: ConfirmationReceiptProps) {
   return (
     <div className={styles.receipt}>
       <p className={styles.head}>
-        <Chip tone={CONFIRMATION_STATUS_TONE[status]} monospace>
-          {status}
-        </Chip>
-        <span>{CONFIRMATION_STATUS_LABEL[status]}</span>
-        <code className={styles.code}>{evidence.reasonCode}</code>
+        <Chip tone={CONFIRMATION_STATUS_TONE[status]}>{CONFIRMATION_STATUS_LABEL[status]}</Chip>
+        <code className={styles.code} data-status={status}>
+          {evidence.reasonCode}
+        </code>
       </p>
       <dl className={styles.turns}>
         <div className={styles.turn}>
@@ -35,7 +34,6 @@ export function ConfirmationReceipt({ evidence }: ConfirmationReceiptProps) {
             <dd className={styles.said}>
               &ldquo;{evidence.readBack.text}&rdquo;{" "}
               <span className={styles.meta}>
-                reply {evidence.readBack.replyId} ·{" "}
                 {evidence.readBack.completed ? "played" : "cut off at"}{" "}
                 <Timecode startMs={evidence.readBack.playedMs} /> of{" "}
                 <Timecode startMs={evidence.readBack.durationMs} />

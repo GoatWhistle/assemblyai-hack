@@ -15,6 +15,7 @@ export type StripLine = {
   readonly text: string
   readonly code: string | null
   readonly tone: StripTone
+  readonly emphasis?: string
 }
 
 const PHASES: readonly DemoPhase[] = ["resting", "asked", "settled"]
@@ -38,6 +39,7 @@ function pairRuleLines(arm: DemoArm): Readonly<Record<DemoPhase, StripLine>> {
       text: `RE-ASK at certainty ${certainty}: ${choice}? Only a spoken name answers`,
       code: arm.decision.reasonCode,
       tone: "lasa",
+      emphasis: `certainty ${certainty}`,
     },
     settled: {
       text: `${writtenName(arm)} written: the drug that was said`,

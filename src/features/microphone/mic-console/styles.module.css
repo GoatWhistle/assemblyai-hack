@@ -36,30 +36,30 @@
 }
 
 .idle .trigger::before {
-  animation: mic-breathe var(--dur-loop-breathe) var(--ease-in-out) infinite;
-}
-
-@keyframes mic-breathe {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-
-  50% {
-    opacity: 1;
-  }
+  animation: var(--keyframes-breathe) var(--dur-loop-breathe) var(--ease-in-out) infinite;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .trigger:hover:not(:disabled) {
+  .idle .trigger:hover {
     background-color: var(--action-hover);
     color: var(--text-on-accent);
     box-shadow: var(--mic-lift-hover);
     scale: 1.02;
   }
+
+  .opening .trigger:hover,
+  .listening .trigger:hover,
+  .speaking .trigger:hover {
+    background-color: var(--action-quiet);
+    scale: 1.02;
+  }
+
+  .blocked .trigger:not([aria-disabled="true"]):hover {
+    box-shadow: inset 0 0 0 2px var(--mic-blocked-line);
+  }
 }
 
-.trigger:active:not(:disabled) {
+.trigger:active:not([aria-disabled="true"]) {
   scale: 0.98;
 }
 
@@ -76,14 +76,8 @@
   border: 2px solid var(--line-divider);
   border-top-color: var(--action-rest);
   border-radius: var(--radius-pill);
-  animation: mic-spin var(--dur-loop-spin) var(--ease-constant) infinite;
+  animation: var(--keyframes-spin) var(--dur-loop-spin) var(--ease-constant) infinite;
   pointer-events: none;
-}
-
-@keyframes mic-spin {
-  to {
-    rotate: 1turn;
-  }
 }
 
 .trigger:focus-visible {
@@ -91,7 +85,7 @@
   outline-offset: 6px;
 }
 
-.trigger:disabled {
+.trigger[aria-disabled="true"] {
   cursor: wait;
   background-color: var(--surface-sunken);
   color: var(--text-faint);
@@ -111,6 +105,8 @@
   position: absolute;
   inset: 0;
   border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 2px var(--violet-glow);
+  opacity: 0;
   animation: var(--keyframes-pulse-ring) var(--dur-loop-pulse) var(--ease-out-quart) infinite;
   pointer-events: none;
 }
@@ -128,6 +124,11 @@
   .opening .trigger::after {
     animation: none;
     border-color: var(--action-rest);
+  }
+
+  .console .trigger:hover,
+  .console .trigger:active {
+    scale: none;
   }
 }
 
@@ -179,24 +180,6 @@
   text-wrap: pretty;
 }
 
-.keys {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin: var(--space-1) 0 0;
-  font-size: var(--text-2xs);
-  color: var(--text-faint);
-}
-
-.kbd {
-  padding: 2px 8px;
-  border-radius: var(--radius-xs);
-  background-color: var(--surface-sunken);
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  color: var(--text-secondary);
-}
-
 .telemetry {
   display: flex;
   justify-content: center;
@@ -228,6 +211,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+@media (max-width: 40rem) {
+  .headline {
+    font-size: var(--text-xl);
+  }
+}
+
 @media (max-height: 40rem) {
   .console {
     gap: var(--space-2);
@@ -237,11 +226,5 @@
   .trigger {
     width: 5rem;
     height: 5rem;
-  }
-}
-
-@media (pointer: coarse) and (hover: none) {
-  .keys {
-    display: none;
   }
 }

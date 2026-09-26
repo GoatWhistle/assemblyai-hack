@@ -27,14 +27,20 @@ describe("A3-07: the three reasons to re-ask are never painted alike", () => {
     expect(new Set(tones).size).toBe(3)
   })
 
-  it("paints a validator failure as a refusal, as the comparison page does", () => {
+  it("paints a validator failure as its own refusal family, never as the harm red", () => {
     for (const code of [
       ReasonCode.ValidatorChecksum,
       ReasonCode.ValidatorFormat,
       ReasonCode.ValidatorCatalog,
       ReasonCode.ValidatorCombo,
     ]) {
-      expect(SEVERITY_TONE[describeReason(code).severity]).toBe("escalated")
+      expect(SEVERITY_TONE[describeReason(code).severity]).toBe("validator")
+    }
+    for (const part of ["ink", "surface", "line"]) {
+      expect(
+        aliasOf(`--reason-validator-${part}`),
+        "red means a wrong value entered the order; a checksum refusal is the gate succeeding",
+      ).not.toBe(aliasOf(`--verdict-refused-${part}`))
     }
   })
 })

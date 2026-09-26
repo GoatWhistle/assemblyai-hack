@@ -4,7 +4,6 @@
   gap: var(--space-3);
   max-width: var(--measure-prose);
   text-align: center;
-  animation: var(--keyframes-fade-rise) var(--dur-slow) var(--ease-out-quart) both;
 }
 
 .promptBody {

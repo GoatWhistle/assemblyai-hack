@@ -71,7 +71,9 @@ describe("A1-01: both verdicts sit in one strip directly under the replay contro
     render(<JudgeDemo />)
     const strip = screen.getByRole("region", { name: VERDICT_STRIP_LABEL })
     const tones = () =>
-      [...strip.querySelectorAll("[data-tone]")].map((node) => node.getAttribute("data-tone"))
+      [...strip.querySelectorAll(":scope > [data-tone]")].map((node) =>
+        node.getAttribute("data-tone"),
+      )
     expect(tones()).toEqual(["undecided", "undecided"])
     playTo(DECISION_AT_MS + 100)
     expect(tones()).toEqual(["lasa", "threshold"])

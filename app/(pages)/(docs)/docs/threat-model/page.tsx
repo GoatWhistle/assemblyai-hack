@@ -60,8 +60,9 @@ export default function ThreatModelPage() {
           </li>
           <li>
             <strong>Why not relay the audio:</strong> it needs an always-on host, the process
-            this design removed to fit the platform. The trade is finer-grained evidence that a
-            hostile client could fabricate.
+            this design removed to fit the platform. The trade: we hold finer-grained evidence,
+            per word, that a hostile client could fabricate; a relaying design holds
+            coarser-grained evidence that a hostile client could not.
           </li>
         </ul>
         <p className={styles.more}>
@@ -113,7 +114,7 @@ export default function ThreatModelPage() {
           recorded live call, and a synthesised one would be a record presented as genuine.
         </p>
         <p className={styles.more}>
-          <Link href="/order/no-session">Check a downloaded receipt file</Link>
+          <Link href="/order">Check a downloaded receipt file</Link>
         </p>
       </DocSection>
     </>

@@ -23,6 +23,7 @@ import {
   WITHOUT_PAIR_RULE_POLICY,
 } from "@/features/judge-demo/demo-arms"
 import { LASA_CANDIDATE, LASA_DECISION } from "@/features/judge-demo/scenario"
+import { VERDICT_STRIP_LABEL } from "@/features/judge-demo/verdict-strip"
 import { decide } from "@/gate"
 import { lasaRiskFor } from "@/lasa"
 
@@ -64,8 +65,12 @@ describe("the two arms of the contrast", () => {
 
   it("marks only the arm with the pair rule as the shipped configuration", () => {
     render(<JudgeDemo />)
-    const on = screen.getByRole("region", { name: "Pair rule on" })
-    const off = screen.getByRole("region", { name: "Pair rule off" })
+    expect(screen.getByRole("region", { name: "Pair rule on" })).toBeDefined()
+    expect(screen.getByRole("region", { name: "Pair rule off" })).toBeDefined()
+    const strip = screen.getByRole("region", { name: VERDICT_STRIP_LABEL })
+    const cells = [...strip.children] as HTMLElement[]
+    const on = cells.find((cell) => cell.textContent?.includes("Pair rule on")) ?? strip
+    const off = cells.find((cell) => cell.textContent?.includes("Pair rule off")) ?? strip
     expect(within(on).getByText("shipped")).toBeDefined()
     expect(within(off).getByText("comparison only")).toBeDefined()
     expect(within(off).queryByText("shipped")).toBeNull()

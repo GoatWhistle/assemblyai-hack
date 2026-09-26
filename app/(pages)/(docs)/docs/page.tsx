@@ -4,10 +4,12 @@ import type { ReasonCode } from "@/domain"
 import { MOMENTS } from "@/features/compare"
 import { MomentStrip } from "@/features/compare/moment-strip"
 import { GATE_REASONS, STANDING_READ_BACK_LINE } from "@/features/how-it-works/gate-reasons"
+import { glossaryHref } from "@/features/how-it-works/glossary/terms"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { BenchmarkTable } from "@/features/metrics/benchmark-table"
-import { CatchCostHeadline } from "@/features/metrics/catch-cost-headline"
-import { confidenceFigures, falseAskTally } from "@/features/metrics/measured-figures"
+import { CatchCostHeadline, headlineTitle } from "@/features/metrics/catch-cost-headline"
+import { falseAskTally } from "@/features/metrics/measured-figures"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
 import { abCatch, contrastiveShareRow } from "@/features/metrics/report-figures"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
@@ -35,6 +37,7 @@ function reasonTabs() {
     const moment = momentFor(reason.code)
     return {
       id: reason.code,
+      accessibleLabel: `${reason.label}, ${reason.code}`,
       label: (
         <span className={styles.tabLabel}>
           <span>{reason.label}</span>
@@ -54,21 +57,40 @@ function reasonTabs() {
 
 export default function DocsOverviewPage() {
   const pairMoment = MOMENTS.find((moment) => moment.pairOutranksCertainty) ?? null
-  const confident =
-    confidenceFigures().find((entry) => entry.id === "errors-above-threshold") ?? null
+  const ab = abCatch()
+  const tally = falseAskTally()
   return (
     <>
       <DocHeader
         title="How Readback proves it did not mishear"
-        lede="Readback is a voice agent that takes prescription orders. Every value carries the spoken words that produced it, the recognizer's certainty over those words and an independent validator's verdict, and it enters the order only when a validator passed it or the caller confirmed it aloud."
+        lede={
+          <>
+            Readback is a voice agent that takes prescription orders. Every value carries the
+            spoken words that produced it, the recognizer&rsquo;s certainty over those words and
+            an independent validator&rsquo;s verdict, and it enters the order only when a
+            validator passed it or the caller confirmed it aloud.{" "}
+            <Link href="/docs/limitations">What this cannot prove</Link> is stated as plainly.
+          </>
+        }
       />
 
       <DocSection
         id={OVERVIEW_SECTIONS.claim.id}
         title="Certainty cannot tell sound-alike names apart"
-        lead="A recognizer can be fully certain it heard morphine while the caller said hydromorphone. Certainty describes the acoustics, not which of two similar names was meant."
+        lead={
+          <>
+            A recognizer can be fully certain it heard morphine while the caller said
+            hydromorphone. Certainty describes the acoustics, not which of two similar names was
+            meant: a <Link href={glossaryHref("LASA")}>look-alike, sound-alike</Link> pair.
+          </>
+        }
       >
         {pairMoment === null ? null : <MomentStrip moment={pairMoment} />}
+        <p className={styles.note}>
+          The last column is the plainest baseline: a threshold and the validators, with no
+          read-back at all. The measured catch below compares a stricter one, the same gate with
+          only the pair rule switched off, which still reads the name back.
+        </p>
         <p className={styles.prose}>
           So a drug name on the published ISMP List of Confused Drug Names triggers a mandatory
           re-ask even at certainty 1.00, and the re-ask is contrastive: the agent names both
@@ -77,7 +99,7 @@ export default function DocsOverviewPage() {
         </p>
         <div className={styles.actions}>
           <ActionLink href={REPLAY_ENTRY_HREF} tone="primary">
-            Watch it catch a staged mishearing
+            {`Watch the ${REPLAY_LENGTH_LABEL} of a staged mishearing`}
           </ActionLink>
           <ActionLink href="/compare">See all six moments</ActionLink>
         </div>
@@ -97,14 +119,16 @@ export default function DocsOverviewPage() {
 
       <DocSection
         id={OVERVIEW_SECTIONS.numbers.id}
-        title="The pair rule catches every seeded mishearing, and asks about every correct name"
-        lead="The measured catch beside its cost, each with the command that produced it, the size of its set and its date."
+        title={headlineTitle(ab, tally)}
+        lead="The measured catch beside its cost, each with the command that produced it and the size of its set. The split by mechanism and the cost in seconds are on the measurements page."
       >
         <CatchCostHeadline
-          ab={abCatch()}
-          confident={confident}
-          tally={falseAskTally()}
+          ab={ab}
+          confident={null}
+          catalogue={null}
+          tally={tally}
           contrastive={contrastiveShareRow()}
+          compact
         />
         <BenchmarkTable
           entries={shippedPolicyEntries().filter((entry) => entry.row.command === ISMP_COMMAND)}
@@ -113,7 +137,9 @@ export default function DocsOverviewPage() {
           compact
         />
         <div className={styles.actions}>
-          <ActionLink href="/metrics">All measurements</ActionLink>
+          <ActionLink href="/metrics#headline">
+            Full figures and their cost in seconds
+          </ActionLink>
           <ActionLink href="/docs/limitations">What this cannot prove</ActionLink>
         </div>
       </DocSection>

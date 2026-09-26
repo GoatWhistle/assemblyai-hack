@@ -6,6 +6,7 @@ import styles from "./styles.module.css"
 export type TabItem = {
   readonly id: string
   readonly label: ReactNode
+  readonly accessibleLabel?: string
   readonly panel: ReactNode
 }
 
@@ -65,6 +66,7 @@ export function Tabs({ label, items, defaultId }: TabsProps) {
               className={active ? `${styles.tab} ${styles.selected}` : styles.tab}
               aria-selected={active}
               aria-controls={`${base}-panel-${item.id}`}
+              aria-label={item.accessibleLabel}
               tabIndex={active ? 0 : -1}
               onClick={() => setSelected(item.id)}
             >

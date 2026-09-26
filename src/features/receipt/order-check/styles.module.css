@@ -1,50 +1,67 @@
 .check {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
 }
 
+.status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.reserved {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  min-height: calc(var(--space-8) * 3);
+}
+
 .note {
+  margin: 0;
   font-size: var(--text-sm);
   color: var(--text-secondary);
 }
 
 .upload {
+  position: relative;
   display: grid;
+  justify-items: start;
   gap: var(--space-2);
-  padding: var(--space-4);
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-md);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-hairline);
 }
 
-.label {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  color: var(--text-primary);
-}
-
-.input {
+.pick {
+  display: inline-flex;
+  align-items: center;
   min-height: var(--target-touch);
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-}
-
-.input::file-selector-button {
-  min-height: var(--target-touch);
-  margin-inline-end: var(--space-3);
   padding: 0 var(--space-4);
   border: 1px solid var(--line-divider);
   border-radius: var(--radius-sm);
   background-color: var(--surface-panel);
   color: var(--text-primary);
-  font: inherit;
+  font-size: var(--text-base);
   font-weight: var(--weight-medium);
   cursor: pointer;
   transition: var(--transition-control);
 }
 
-.input::file-selector-button:hover {
+.pick:hover {
   background-color: var(--ink-a5);
   border-color: var(--line-strong);
+}
+
+.upload:has(input:focus-visible) .pick {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.hint {
+  margin: 0;
+  max-width: var(--measure-prose);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
 }
 
 .error {

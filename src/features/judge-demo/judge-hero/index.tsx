@@ -1,14 +1,17 @@
 import { useId } from "react"
+import { THESIS_TITLE } from "@/features/intake/intake-screen/thesis"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { CALL_HREF, REPLAY_ENTRY_HREF } from "../entry-routes"
-import { REPLAY_SECONDS } from "../replay-clock"
+import { REPLAY_LENGTH_LABEL } from "../replay-clock"
 import styles from "./styles.module.css"
 
-const HERO_TITLE = "A prescription taken by voice, and proof it was not misheard"
-
 export const HERO_CLAIM =
-  "High confidence does not protect against two medicines that sound alike."
+  "High recognizer certainty does not protect against two medicines that sound alike."
+
+export const WATCH_LABEL = `Watch the ${REPLAY_LENGTH_LABEL}`
+
+export const CALL_LABEL = "Start a call"
 
 const HERO_BODY =
   "A recognizer can be certain and wrong: for example, the caller says hydromorphone and it returns morphine at certainty 1.00. Readback asks which of the listed names was meant whenever a drug name falls in a look-alike pair published by ISMP, and a yes does not answer it, however confident the recognizer was. It writes nothing a validator or the caller has not proved."
@@ -30,7 +33,7 @@ export function JudgeHero({ headingLevel = "h1", autoplaying = false }: JudgeHer
   return (
     <section className={styles.hero} aria-labelledby={headingId}>
       <Heading className={styles.title} id={headingId}>
-        {HERO_TITLE}
+        {THESIS_TITLE}
       </Heading>
       <p className={styles.claim}>{HERO_CLAIM}</p>
       <Disclosure summary="The mechanism and the business case">
@@ -43,13 +46,16 @@ export function JudgeHero({ headingLevel = "h1", autoplaying = false }: JudgeHer
       <div className={styles.actions}>
         {autoplaying ? null : (
           <ActionLink href={REPLAY_ENTRY_HREF} tone="primary" size="large">
-            Watch the {REPLAY_SECONDS}-second case: no mic, no key
+            {WATCH_LABEL}
           </ActionLink>
         )}
         <ActionLink href={CALL_HREF} size="large">
-          Talk to it live
+          {CALL_LABEL}
         </ActionLink>
       </div>
+      {autoplaying ? null : (
+        <p className={styles.caption}>The replay needs no microphone and no key.</p>
+      )}
     </section>
   )
 }

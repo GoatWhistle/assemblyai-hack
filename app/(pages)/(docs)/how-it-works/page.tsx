@@ -6,10 +6,11 @@ import {
   MICROPHONE_FREE_STEPS,
   SCRIPT_STEPS,
 } from "@/features/how-it-works/demo-script/script-steps"
-import { GateReasons, STANDING_READ_BACK_LINE } from "@/features/how-it-works/gate-reasons"
+import { GateReasons, STANDING_FIELDS_LINE } from "@/features/how-it-works/gate-reasons"
 import { LIMITATIONS, Limits } from "@/features/how-it-works/limits"
 import { ProofLadder } from "@/features/how-it-works/proof-ladder"
-import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { CALL_HREF, REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
@@ -31,20 +32,21 @@ export default function HowItWorksPage() {
         title="A value enters the order only after it is proved"
         lede={
           <>
-            Read-back is mandatory under ICAO Annex 11 &sect;3.7.3.1 for flight crews, and for
-            verbal orders under the Joint Commission&rsquo;s National Patient Safety Goal
-            NPSG.02.01.01, in place since 2003. We automate a step regulation already requires
-            and practice routinely skips.{" "}
+            Read-back is mandatory under ICAO Annex 11 &sect;3.7.3.1 for flight crews and has
+            been a Joint Commission requirement for verbal orders and critical test results
+            since it became a patient safety goal in 2003 (NPSG.02.01.01; ISMP places it at
+            PC.02.01.03 EP 20 in 2017; its 2026 location is not verified). We automate a step
+            that regulation already requires and practice routinely skips.{" "}
             <Link href="/docs/glossary#citations">The exact clauses</Link>
           </>
         }
       >
         <div className={styles.actions}>
           <ActionLink href={REPLAY_ENTRY_HREF} tone="primary" size="large">
-            Watch it catch a staged mishearing
+            {`Watch the ${REPLAY_LENGTH_LABEL} of a staged mishearing`}
           </ActionLink>
-          <ActionLink href="/" size="large">
-            Take an order
+          <ActionLink href={CALL_HREF} size="large">
+            Start a call
           </ActionLink>
         </div>
       </DocHeader>
@@ -52,7 +54,7 @@ export default function HowItWorksPage() {
       <DocSection
         id={HOW_SECTIONS.reasons.id}
         title="Three reasons to ask again, and only the third refuses a yes"
-        lead={STANDING_READ_BACK_LINE}
+        lead={STANDING_FIELDS_LINE}
       >
         <GateReasons />
       </DocSection>
@@ -74,7 +76,8 @@ export default function HowItWorksPage() {
             surface once. This script is its longer continuation, about seven minutes: it adds
             the checks a skeptic runs, including one the product only partly passes.{" "}
             {MICROPHONE_FREE_STEPS} of these {SCRIPT_STEPS.length} steps need no microphone and
-            no second person; the two that do are marked.
+            no second person; the {SCRIPT_STEPS.length - MICROPHONE_FREE_STEPS} that do are
+            marked.
           </>
         }
       >

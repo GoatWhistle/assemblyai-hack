@@ -14,6 +14,19 @@
   text-wrap: balance;
 }
 
+.figure strong {
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+.policy {
+  max-width: var(--measure-prose);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
 .split {
   display: flex;
   gap: 2px;
@@ -38,12 +51,17 @@
 }
 
 .part[data-route="pair"] {
-  background-color: var(--state-lasa-surface);
-  color: var(--state-lasa-ink);
+  background-color: var(--reason-lasa-surface);
+  color: var(--reason-lasa-ink);
+}
+
+.part[data-route="threshold"] {
+  background-color: var(--reason-threshold-surface);
+  color: var(--reason-threshold-ink);
 }
 
 .count {
-  font-family: var(--font-data);
+  font-weight: var(--weight-semibold);
   font-size: var(--text-lg);
   font-variant-numeric: tabular-nums;
   line-height: var(--leading-snug);
@@ -55,8 +73,12 @@
   color: var(--text-secondary);
 }
 
+.part[data-route="threshold"] .partLabel {
+  color: var(--reason-threshold-ink);
+}
+
 .part[data-route="pair"] .partLabel {
-  color: var(--state-lasa-ink);
+  color: var(--reason-lasa-ink);
 }
 
 .method,

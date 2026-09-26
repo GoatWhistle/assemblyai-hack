@@ -12,7 +12,7 @@ export type ReasonSeverity =
 export const SEVERITY_TONE: Readonly<Record<ReasonSeverity, ChipTone>> = Object.freeze({
   accepted: "accepted",
   asking: "asking",
-  refused: "escalated",
+  refused: "validator",
   lasa: "lasa",
   escalated: "escalated",
   aborted: "aborted",

@@ -101,7 +101,7 @@ describe("the replay is a first-class entry point that never reads as live", () 
   it("is the primary action on the judge hub", () => {
     const hero = readFileSync("src/features/judge-demo/judge-hero/index.tsx", "utf8")
     expect(hero).toMatch(/href=\{REPLAY_ENTRY_HREF\} tone="primary"/)
-    const demo = readFileSync("src/features/judge-demo/index.tsx", "utf8")
+    const demo = readFileSync("src/features/judge-demo/replay-controls/index.tsx", "utf8")
     expect(demo, "the play control on the replay is the primary button").toContain(
       '<Button tone="primary"',
     )

@@ -22,28 +22,36 @@
   transition-delay: calc(var(--arm, 0) * var(--stagger-arm));
 }
 
-.cell[data-tone="lasa"] {
+.cell[data-tone="lasa"],
+.stack > [data-tone="lasa"] {
   --cell-ink: var(--reason-lasa-ink);
   --cell-surface: var(--reason-lasa-surface);
   --cell-line: var(--reason-lasa-line);
 }
 
-.cell[data-tone="threshold"] {
+.cell[data-tone="threshold"],
+.stack > [data-tone="threshold"] {
   --cell-ink: var(--reason-threshold-ink);
   --cell-surface: var(--reason-threshold-surface);
   --cell-line: var(--reason-threshold-line);
 }
 
-.cell[data-tone="committed"] {
+.cell[data-tone="committed"],
+.stack > [data-tone="committed"] {
   --cell-ink: var(--verdict-committed-ink);
   --cell-surface: var(--verdict-committed-surface);
   --cell-line: var(--verdict-committed-line);
 }
 
-.cell[data-tone="refused"] {
+.cell[data-tone="refused"],
+.stack > [data-tone="refused"] {
   --cell-ink: var(--verdict-refused-ink);
   --cell-surface: var(--verdict-refused-surface);
   --cell-line: var(--verdict-refused-line);
+}
+
+.stack > [data-tone="undecided"] {
+  --cell-ink: var(--text-primary);
 }
 
 .arm {
@@ -74,26 +82,25 @@
   align-items: baseline;
   gap: var(--space-1) var(--space-2);
   margin: 0;
-  transition:
-    opacity var(--dur-slow) var(--ease-out-expo),
-    filter var(--dur-slow) var(--ease-out-expo),
-    visibility var(--dur-slow) step-end;
-  transition-delay: calc(var(--arm, 0) * var(--stagger-arm));
 }
 
 .current {
   opacity: 1;
   visibility: visible;
-  transition:
-    opacity var(--dur-slow) var(--ease-out-expo),
-    filter var(--dur-slow) var(--ease-out-expo);
-  transition-delay: calc(var(--arm, 0) * var(--stagger-arm));
+}
+
+.cell:not([data-tone="undecided"]) .current {
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .variant {
   opacity: 0;
   visibility: hidden;
   filter: blur(2px);
+  transition:
+    opacity var(--dur-fast) var(--ease-out-quart),
+    filter var(--dur-fast) var(--ease-out-quart),
+    visibility var(--dur-fast) step-end;
 }
 
 .verdict {
@@ -110,6 +117,27 @@
   font-size: var(--text-2xs);
   color: var(--text-secondary);
   overflow-wrap: anywhere;
+}
+
+.variant .code::after {
+  content: attr(data-code);
+}
+
+.emphasis {
+  position: relative;
+  white-space: nowrap;
+}
+
+.current[data-tone="lasa"] .emphasis::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.0625rem;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background-color: var(--reason-lasa-line);
+  animation: var(--keyframes-sweep) var(--dur-emphatic) var(--ease-out-expo) both;
+  animation-delay: var(--dur-base);
 }
 
 @media (max-width: 40rem) {

@@ -9,6 +9,7 @@ import type { SttClient } from "@/realtime/stt-client"
 import { TokenMintError } from "@/realtime/tokens"
 import type { FaultDetail } from "./session-options"
 import { SessionFault } from "./session-status"
+import { ConnectTimedOut } from "./session-timers"
 
 const FAULT_OF_REASON: Readonly<Record<MicrophoneFailureReason, SessionFault>> = Object.freeze({
   [MicrophoneFailureReason.Denied]: SessionFault.MicrophoneDenied,
@@ -24,6 +25,9 @@ const CREDIT_EXHAUSTED_STATUS = 402
 export function faultForConnectError(error: unknown): SessionFault {
   if (error instanceof SocketParamError) {
     return SessionFault.SocketParamRefused
+  }
+  if (error instanceof ConnectTimedOut) {
+    return SessionFault.ConnectTimedOut
   }
   if (!(error instanceof TokenMintError)) {
     return SessionFault.TokenFailed

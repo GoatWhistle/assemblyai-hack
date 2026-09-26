@@ -39,9 +39,9 @@
   --reason-threshold-surface: var(--asking-wash);
   --reason-threshold-line: var(--asking-line);
 
-  --reason-validator-ink: var(--refused);
-  --reason-validator-surface: var(--refused-wash);
-  --reason-validator-line: var(--refused-line);
+  --reason-validator-ink: var(--graphite);
+  --reason-validator-surface: var(--vellum);
+  --reason-validator-line: var(--stone);
 
   --reason-lasa-ink: var(--plum-deep);
   --reason-lasa-surface: var(--plum-wash);

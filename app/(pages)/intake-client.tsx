@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { STT_SAMPLE_RATE } from "@/audio/resample"
 import { playSegment } from "@/audio/segment-player"
 import type { ListenRequest } from "@/features/field-card/said-recorded"
+import { useBudgetAhead } from "@/features/intake/budget-ahead"
 import { useInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen } from "@/features/intake/intake-screen"
 import { SessionPhase } from "@/features/intake/session-status"
@@ -32,6 +33,7 @@ export function IntakeClient() {
   const readBack = useReadBack()
   const telemetry = useTelemetry()
   const recorder = useSessionRecorder()
+  const budgetPaused = useBudgetAhead()
 
   const onTranscriptTurn = useCallback(
     (turn: CallerTurn, discarded: boolean) => {
@@ -175,6 +177,7 @@ export function IntakeClient() {
         phase={session.phase}
         fault={session.fault}
         faultDetail={session.faultDetail}
+        budgetPaused={budgetPaused}
         alert={order.lastError}
         decisionHistory={order.decisionHistory}
         turnsHeld={order.turnsHeld}

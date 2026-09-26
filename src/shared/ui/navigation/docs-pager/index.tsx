@@ -31,13 +31,23 @@ export function DocsPager({ pages }: DocsPagerProps) {
       {previous === null ? (
         <span />
       ) : (
-        <Link href={previous.href} className={styles.link} rel="prev">
+        <Link
+          href={previous.href}
+          className={styles.link}
+          rel="prev"
+          aria-label={`Previous page: ${previous.label}`}
+        >
           <span className={styles.direction}>Previous</span>
           <span className={styles.label}>{previous.label}</span>
         </Link>
       )}
       {next === null ? null : (
-        <Link href={next.href} className={`${styles.link} ${styles.next}`} rel="next">
+        <Link
+          href={next.href}
+          className={`${styles.link} ${styles.next}`}
+          rel="next"
+          aria-label={`Next page: ${next.label}`}
+        >
           <span className={styles.direction}>Next</span>
           <span className={styles.label}>{next.label}</span>
         </Link>
