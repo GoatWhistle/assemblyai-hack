@@ -1,3 +1,7 @@
+import { REPLAY_ENTRY_HREF, REPLAY_HUB_HREF } from "@/features/judge-demo/entry-routes"
+
+const REPLAY_ANCHOR_HREF = `${REPLAY_HUB_HREF}#replay`
+
 export type ScriptStep = {
   readonly id: string
   readonly action: string
@@ -13,7 +17,7 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
     action: "Play the replay.",
     watchFor:
       "Both panels read the drug back. The left one asks which of the two drugs was meant and writes hydromorphone once the caller names it. The right one, the pair rule switched off and nothing else, reads morphine back, hears yes, and orders morphine where hydromorphone was spoken.",
-    href: "/demo",
+    href: REPLAY_ENTRY_HREF,
     linkLabel: "Open the replay",
     needsMicrophone: false,
   }),
@@ -22,7 +26,7 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
     action: "Show that nothing changed.",
     watchFor:
       "Before you press play, both panels already name what will happen. Play it and the panels reach exactly those outcomes. The refusal is not a reaction the page invents at the last moment.",
-    href: "/demo",
+    href: REPLAY_ANCHOR_HREF,
     linkLabel: "Open the replay",
     needsMicrophone: false,
   }),
@@ -31,7 +35,7 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
     action: "Look for a contradiction on the field card.",
     watchFor:
       "The recognizer reported its highest certainty and the gate still asks again. If those two read as contradicting each other on screen rather than as two independent facts, the interface has failed.",
-    href: "/demo",
+    href: REPLAY_ANCHOR_HREF,
     linkLabel: "Open the replay",
     needsMicrophone: false,
   }),

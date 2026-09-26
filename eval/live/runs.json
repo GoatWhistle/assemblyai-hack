@@ -114,6 +114,44 @@
         "the recognizer model is the one the browser reported from Begin, not one the server observed",
         "a preview deployment, so cold starts and the free-tier session limit may differ from production"
       ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T07:21:26.867Z",
+      "recordedAt": "2026-09-26T07:21:26.867Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke lasa-named: not observed: hydromorphone is in the order, the order committed; 0 of 10 caller lines played; last agent line: none; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 246.6,
+      "costUsd": 0.3494,
+      "sessionIds": [
+        "41e1a901-8ac9-4f0f-b5f7-3b919410dd56"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
+    },
+    {
+      "runId": "probe-2026-09-26T07:27:36.829Z",
+      "recordedAt": "2026-09-26T07:27:36.829Z",
+      "kind": "probe",
+      "command": "ad-hoc agent_not_found diagnosis",
+      "outcome": "failed",
+      "reason": "diagnosis of agent_not_found on production: one Firefox page on /live for 36 s and seven short agent sockets opened from scripts (six on the local key, three on tokens minted by production); every production-minted socket answered session.error agent_not_found, every local-key socket answered session.ready; socket time is an upper bound; the receipt route answered 404",
+      "socketSeconds": 50,
+      "costUsd": 0.0708,
+      "sessionIds": [
+        "diag-agent-not-found-2026-09-26"
+      ],
+      "boundaries": [
+        "one call by one member of the team, not a sample of prescribers",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+      ]
     }
   ]
 }

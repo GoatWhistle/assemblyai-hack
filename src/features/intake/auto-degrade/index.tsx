@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import { useReducedMotion } from "@/shared/ui/motion/use-reduced-motion"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Button } from "@/shared/ui/primitives/button"
@@ -8,7 +9,7 @@ import { degradesToReplay, SessionFault } from "../session-status"
 import styles from "./styles.module.css"
 
 export const AUTO_DEGRADE_SECONDS = 8
-export const AUTO_DEGRADE_TARGET = "/?judge=1#replay"
+export const AUTO_DEGRADE_TARGET = REPLAY_ENTRY_HREF
 
 const MICROPHONE_REASON = "No microphone could be opened here."
 

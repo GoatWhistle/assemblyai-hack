@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from "vitest"
 import { readRegistry } from "../../scripts/live/run-registry"
 import {
   ACCEPTANCE_BOUNDARIES,
+  deploymentBoundary,
   LIVE_SMOKE_BOUNDARY,
   parseReceiptArgs,
   type ReceiptArgs,
@@ -131,7 +132,19 @@ describe("live-receipt records a live smoke as what it is", () => {
     const deps = sandbox(async () => new Response("{}", { status: 404 }))
     const { record } = await recordReceipt(parsed(BASE), deps)
     expect(record.kind).toBe("acceptance_call")
-    expect(record.boundaries).toEqual(ACCEPTANCE_BOUNDARIES)
+    expect(record.boundaries).toEqual([
+      ...ACCEPTANCE_BOUNDARIES,
+      deploymentBoundary("https://preview.example.com"),
+    ])
     expect(record.reason).toMatch(/answered 404/)
+  })
+
+  it("does not call a production deployment a preview", () => {
+    expect(deploymentBoundary("https://readback-rx.vercel.app")).not.toMatch(/preview/)
+    expect(deploymentBoundary("https://readback-rx.vercel.app")).toContain(
+      "readback-rx.vercel.app",
+    )
+    expect(deploymentBoundary("https://readback-git-main-team.vercel.app")).toMatch(/preview/)
+    expect(deploymentBoundary("https://abc.ngrok-free.app")).toMatch(/preview/)
   })
 })

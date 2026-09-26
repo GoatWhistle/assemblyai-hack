@@ -14,31 +14,33 @@ Built for the [AssemblyAI Voice Agent Hackathon](https://lablab.ai/ai-hackathons
 
 ## If you are judging this
 
-**No clone, no key, no microphone.** Open the deployed application's root and press
-*Watch the 40-second case*, or go straight to `/?judge=1`, which opens the replay first.
+**No clone, no key, no microphone.** Open `/demo?autoplay=1` on the deployed application: the
+replay starts by itself. The root `/` is the live call for an ordinary user; its link *Judging?
+Watch the 40-second replay* leads to the same place, and the old `/?judge=1`, `/start` and
+`/live` links still work as redirects.
 
 | Route | What it is |
 |---|---|
-| `/` | The first screen: the case in one line, the replay, the three things to say, and the tour below |
-| `/live` | The live intake. Needs a microphone, and spends AssemblyAI credit; when the daily budget is spent it says so and offers the replay |
+| `/` | The live intake, for an ordinary user: the microphone, one line of promise and three things to say. Needs a microphone and spends AssemblyAI credit; when the daily budget is spent it says so and offers the replay. Telemetry sits under *Technical details* |
+| `/demo` | The judge hub: the 40-second replay with the pair rule on and off in two panels, the ninety-second tour, one-button scenarios, the keyterms A/B and the recorded audio |
+| `/docs` | The documentation overview: the hard claim, the three reasons to re-ask, a map of every page and the key numbers with their commands |
 | `/compare` | Six moments side by side: said, heard, certainty, the gate's verdict, and what would have been written without it |
 | `/how-it-works` | The three reasons to re-ask, the one constructor, and an attack console to try to get a value past the gate |
-| `/metrics` | Every figure with its input, command, n and date; a dash where nothing was measured |
+| `/metrics` | Every figure with its input, command, n and date; a dash where nothing was measured. The benchmark table is on `/metrics/benchmark`, the business reading and socket close codes on `/metrics/operations` |
 | `/order/[id]` | A committed order's receipt, re-checked in your browser: hash, NPI, DEA and the pair rule, VALID or TAMPERED |
-| `/demo` | The replay with the pair rule on and off in two panels; both read the drug back |
 
 ### The tour, ninety seconds
 
-Also on `/`, with a link per step. Only the last step needs a microphone.
+Also on `/demo`, with a link per step. Only the last step needs a microphone.
 
 | Seconds | Do this | Expect this |
 |---|---|---|
-| 15 | Open the replay (`/?judge=1`) | It starts by itself. At the decision the banner reads RE-ASK with `E_LASA_HIT` at certainty 1.00, candidates hydromorphone and morphine |
+| 15 | Open the replay (`/demo?autoplay=1`) | It starts by itself. At the decision the banner reads RE-ASK with `E_LASA_HIT` at certainty 1.00, candidates hydromorphone and morphine |
 | 10 | Read the two panels side by side | The pair-rule arm refuses the caller's "yes" and writes hydromorphone only when the caller says the name. The same candidate with the pair rule switched off is read back plainly, the "yes" is accepted, and morphine is ordered |
 | 15 | Open `/compare` | Six moments: said, heard, certainty, verdict, and what would have been written without the gate |
 | 15 | Try to forge a value on `/how-it-works` | Every attempt is refused by the only constructor that can write a field |
 | 15 | Open `/metrics` | Every figure carries its input, command, n and date; what was not measured shows a dash, never a zero |
-| 20 | Start a live call on `/live` and say "Hydromorphone, two milligrams" | Expected, not yet observed on a recorded live call: the agent names hydromorphone and every drug the ISMP list pairs with it, spelling the start of each, and asks which; a "yes" is not accepted, only a name. The decision log gains `E_LASA_HIT` |
+| 20 | Start a live call on `/` and say "Hydromorphone, two milligrams" | Expected, not yet observed on a recorded live call: the agent names hydromorphone and every drug the ISMP list pairs with it, spelling the start of each, and asks which; a "yes" is not accepted, only a name. The decision log gains `E_LASA_HIT` |
 
 **What the replay is.** The replay is built from **synthesised socket traffic**: messages
 generated in the documented shapes by `scripts/build/fixtures.ts`, not recorded from a

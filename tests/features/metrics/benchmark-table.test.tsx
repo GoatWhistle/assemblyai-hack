@@ -1,4 +1,7 @@
 import { existsSync } from "node:fs"
+import BenchmarkPage from "@app/(pages)/(docs)/metrics/benchmark/page"
+import OperationsPage from "@app/(pages)/(docs)/metrics/operations/page"
+import MetricsPage from "@app/(pages)/(docs)/metrics/page"
 import { render, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import {
@@ -8,10 +11,11 @@ import {
   NOT_MEASURED_LABEL,
   RAW_RUN_AGREEMENT_TEST,
 } from "@/features/metrics/benchmark-row"
+import { BenchmarkTable } from "@/features/metrics/benchmark-table"
 import { BUSINESS_FIGURES } from "@/features/metrics/business-figures"
 import { NOT_MEASURED_YET } from "@/features/metrics/business-reading"
+import { FalseAskHeadline, HEADLINE_POLICY } from "@/features/metrics/false-ask-headline"
 import { falseAskTally } from "@/features/metrics/measured-figures"
-import { HEADLINE_POLICY, MetricsDashboard } from "@/features/metrics/metrics-dashboard"
 
 const ALLOWED_INPUTS = new Set(["live socket", "TTS", "text", "fixture"])
 
@@ -52,7 +56,7 @@ const UNMEASURED: BenchmarkEntry = {
 
 describe("every benchmark row carries its method", () => {
   it("renders each row's command and its n, or a dash where n is absent", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     for (const entry of benchmarkEntries()) {
       const row = rowFor(entry.id)
       expect(within(cell(row, "command")).getByText(entry.row.command)).toBeDefined()
@@ -78,7 +82,7 @@ describe("every benchmark row carries its method", () => {
   })
 
   it("gives every row an input from the four allowed values", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     const entries = benchmarkEntries()
     expect(entries.length).toBeGreaterThan(0)
     for (const entry of entries) {
@@ -91,7 +95,7 @@ describe("every benchmark row carries its method", () => {
 
 describe("an unmeasured figure is a dash, never a zero", () => {
   it("renders a planted unmeasured row as a labelled dash in value, n and date", () => {
-    render(<MetricsDashboard entries={[UNMEASURED]} />)
+    render(<BenchmarkTable entries={[UNMEASURED]} />)
     const row = rowFor(UNMEASURED.id)
     for (const column of ["value", "n", "measured"]) {
       expect(isDash(cell(row, column)), column).toBe(true)
@@ -101,7 +105,7 @@ describe("an unmeasured figure is a dash, never a zero", () => {
   })
 
   it("publishes words re-said per order as a dash until a live order exists", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     const row = rowFor("words-resaid-per-order")
     expect(within(row).getByText("Words re-said per order")).toBeDefined()
     expect(isDash(cell(row, "value"))).toBe(true)
@@ -115,7 +119,7 @@ describe("the false-ask headline", () => {
       tally,
       "the recorded runs carry correct values, so the headline is measured",
     ).not.toBe(null)
-    render(<MetricsDashboard />)
+    render(<MetricsPage />)
     const headline = document.querySelector('[data-headline="false-asks"]')
     expect(headline?.textContent).toBe(`${HEADLINE_POLICY} ${tally?.asked} of ${tally?.of}.`)
     expect(
@@ -126,14 +130,14 @@ describe("the false-ask headline", () => {
   })
 
   it("renders dashes, not zeroes, when no run supplies the tally", () => {
-    render(<MetricsDashboard falseAsks={null} />)
+    render(<FalseAskHeadline tally={null} />)
     const headline = document.querySelector<HTMLElement>('[data-headline="false-asks"]')
     expect(headline?.textContent).not.toMatch(/[0-9]/)
     expect(headline === null ? false : isDash(headline)).toBe(true)
   })
 
   it("names the test that ties published totals to the raw runs, and that test exists", () => {
-    render(<MetricsDashboard />)
+    render(<MetricsPage />)
     expect(screen.getByText(/Published totals match raw runs/)).toBeDefined()
     expect(screen.getByText(RAW_RUN_AGREEMENT_TEST)).toBeDefined()
     expect(
@@ -145,7 +149,7 @@ describe("the false-ask headline", () => {
 
 describe("the business reading publishes no invented number", () => {
   it("shows a dash and not measured yet for every figure without a measured input", () => {
-    render(<MetricsDashboard />)
+    render(<OperationsPage />)
     for (const figure of BUSINESS_FIGURES) {
       expect(figure.value, `${figure.id} has no measured input behind it`).toBeNull()
       const item = document.querySelector<HTMLElement>(`[data-figure="${figure.id}"]`)
@@ -157,7 +161,7 @@ describe("the business reading publishes no invented number", () => {
   })
 
   it("refuses a cost-of-error figure without a cited source", () => {
-    render(<MetricsDashboard />)
+    render(<OperationsPage />)
     expect(screen.getByText(/No cost of a dispensing error is shown/)).toBeDefined()
     const reading = document.querySelectorAll("[data-figure]")
     for (const item of reading) {

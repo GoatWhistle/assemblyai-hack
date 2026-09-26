@@ -1,7 +1,10 @@
+import DocsOverviewPage from "@app/(pages)/(docs)/docs/page"
+import BenchmarkPage from "@app/(pages)/(docs)/metrics/benchmark/page"
+import OperationsPage from "@app/(pages)/(docs)/metrics/operations/page"
+import MetricsPage from "@app/(pages)/(docs)/metrics/page"
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { falseAskTally } from "@/features/metrics/measured-figures"
-import { MetricsDashboard } from "@/features/metrics/metrics-dashboard"
 import {
   SHIPPED_POLICY_COMMANDS,
   shippedPolicyEntries,
@@ -36,7 +39,7 @@ describe("the shipped-policy table is the server's rows, verbatim", () => {
   })
 
   it("renders each row's value and command as published", () => {
-    const { container } = render(<MetricsDashboard />)
+    const { container } = render(<MetricsPage />)
     for (const entry of shippedPolicyEntries()) {
       const row = container.querySelector(`tr[data-row="${entry.id}"]`)
       expect(row, entry.row.figure).not.toBeNull()
@@ -45,11 +48,20 @@ describe("the shipped-policy table is the server's rows, verbatim", () => {
     }
   })
 
-  it("renders no stale threshold-only wording anywhere on the page", () => {
-    const { container } = render(<MetricsDashboard />)
-    const text = container.textContent ?? ""
-    for (const stale of STALE_WORDING) {
-      expect(stale.test(text), `${stale} is still on the page`).toBe(false)
+  it("renders no stale threshold-only wording anywhere on the measurement pages", () => {
+    const pages = [
+      <MetricsPage key="metrics" />,
+      <BenchmarkPage key="benchmark" />,
+      <OperationsPage key="operations" />,
+      <DocsOverviewPage key="overview" />,
+    ]
+    for (const page of pages) {
+      const { container, unmount } = render(page)
+      const text = container.textContent ?? ""
+      for (const stale of STALE_WORDING) {
+        expect(stale.test(text), `${stale} is still on ${page.key}`).toBe(false)
+      }
+      unmount()
     }
   })
 })

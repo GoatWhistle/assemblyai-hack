@@ -13,23 +13,13 @@ const SHOWN: readonly FieldName[] = [
 
 export function ProofLadder() {
   return (
-    <section className={styles.ladder}>
-      <div className={styles.lede}>
-        <h2 className={styles.title}>What counts as proof differs by field</h2>
-        <p className={styles.body}>
-          Where arithmetic exists, voice is not spent. Where no checksum and no catalogue exist,
-          the spoken confirmation is the only proof there is.
-        </p>
-      </div>
-
-      <dl className={styles.rows}>
-        {SHOWN.map((field) => (
-          <div key={field} className={styles.row}>
-            <dt className={styles.field}>{FIELD_LABEL[field]}</dt>
-            <dd className={styles.note}>{FIELD_PROOF_NOTE[field]}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
+    <dl className={styles.rows}>
+      {SHOWN.map((field) => (
+        <div key={field} className={styles.row}>
+          <dt className={styles.field}>{FIELD_LABEL[field]}</dt>
+          <dd className={styles.note}>{FIELD_PROOF_NOTE[field]}</dd>
+        </div>
+      ))}
+    </dl>
   )
 }

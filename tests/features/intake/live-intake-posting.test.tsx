@@ -60,7 +60,7 @@ class FakeAudioContext {
   async close() {}
 }
 
-const { IntakeClient } = await import("@app/(pages)/live/intake-client")
+const { IntakeClient } = await import("@app/(pages)/intake-client")
 
 type Posted = { url: string; body: Record<string, unknown> }
 let posted: Posted[] = []

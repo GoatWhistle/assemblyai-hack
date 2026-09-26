@@ -30,7 +30,7 @@ describe("AU4: the judge URL puts the signature moment before the explanation", 
     const notice = screen.getByRole("complementary", { name: REPLAY_NOTICE_TITLE })
     expect(
       precedes(gated, notice),
-      "on /?judge=1 the decision lands at 9.6 s; a judge who has to scroll past three paragraphs to find it misses it",
+      "on /demo?autoplay=1 the decision lands at 9.6 s; a judge who has to scroll past three paragraphs to find it misses it",
     ).toBe(true)
   })
 

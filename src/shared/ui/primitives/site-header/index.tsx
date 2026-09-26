@@ -3,31 +3,43 @@ import type { ReactNode } from "react"
 import { Wordmark } from "../wordmark"
 import styles from "./styles.module.css"
 
+export type SiteSection = "call" | "replay" | "docs" | "order"
+
+type LegacySection = "home" | "live" | "how" | "compare" | "demo" | "metrics"
+
 export type SiteHeaderProps = {
-  readonly current: "home" | "live" | "how" | "compare" | "demo" | "metrics" | "order"
+  readonly current: SiteSection | LegacySection
   readonly status?: ReactNode
 }
 
 const LINKS: readonly {
-  readonly key: string
+  readonly key: SiteSection
   readonly href: string
   readonly label: string
 }[] = [
-  { key: "live", href: "/live", label: "Live call" },
-  { key: "how", href: "/how-it-works", label: "How it works" },
-  { key: "compare", href: "/compare", label: "Compare" },
-  { key: "demo", href: "/demo", label: "Replay" },
-  { key: "metrics", href: "/metrics", label: "Measurements" },
+  { key: "call", href: "/", label: "Call" },
+  { key: "replay", href: "/demo", label: "Replay" },
+  { key: "docs", href: "/docs", label: "Docs" },
 ]
 
+const SECTION_OF: Readonly<Record<SiteSection | LegacySection, SiteSection>> = {
+  call: "call",
+  replay: "replay",
+  docs: "docs",
+  order: "order",
+  home: "call",
+  live: "call",
+  demo: "replay",
+  how: "docs",
+  compare: "docs",
+  metrics: "docs",
+}
+
 export function SiteHeader({ current, status }: SiteHeaderProps) {
+  const section = SECTION_OF[current]
   return (
     <header className={styles.header}>
-      <Link
-        className={styles.brand}
-        href="/"
-        aria-current={current === "home" ? "page" : undefined}
-      >
+      <Link className={styles.brand} href="/">
         <Wordmark />
         <span className={styles.name}>
           Read<span className={styles.nameBack}>back</span>
@@ -38,11 +50,11 @@ export function SiteHeader({ current, status }: SiteHeaderProps) {
         {LINKS.map((link) => (
           <Link
             key={link.key}
-            className={[styles.link, current === link.key ? styles.linkActive : ""]
+            className={[styles.link, section === link.key ? styles.linkActive : ""]
               .filter((value) => value !== "")
               .join(" ")}
             href={link.href}
-            aria-current={current === link.key ? "page" : undefined}
+            aria-current={section === link.key ? "page" : undefined}
           >
             {link.label}
           </Link>

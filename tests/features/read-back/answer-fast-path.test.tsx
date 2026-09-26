@@ -167,7 +167,7 @@ describe("the fast path is invoked from the product path, not merely callable", 
 
 describe("the fast path is reached from the product tree, not only from this test", () => {
   it("acts on the fast path from the intake client rather than merely displaying it", () => {
-    const client = readFileSync("app/(pages)/live/intake-client.tsx", "utf8")
+    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
     expect(client).toContain("readBack.hear")
     expect(
       /endpointNow/.test(client),

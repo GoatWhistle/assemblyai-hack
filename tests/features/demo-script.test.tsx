@@ -79,7 +79,7 @@ describe("the on-screen demo script is numbered and self-contained", () => {
 
 describe("the new judge surfaces are rendered by pages, not stranded in the tree", () => {
   it("renders the numbered script from the how-it-works page", () => {
-    const page = readFileSync("app/(pages)/how-it-works/page.tsx", "utf8")
+    const page = readFileSync("app/(pages)/(docs)/how-it-works/page.tsx", "utf8")
     expect(
       page,
       "an on-screen script exists so a judge with no README open can follow it; unrendered it helps nobody",
@@ -87,7 +87,7 @@ describe("the new judge surfaces are rendered by pages, not stranded in the tree
   })
 
   it("places the script before the attack console it points at", () => {
-    const page = readFileSync("app/(pages)/how-it-works/page.tsx", "utf8")
+    const page = readFileSync("app/(pages)/(docs)/how-it-works/page.tsx", "utf8")
     expect(
       page.indexOf("<DemoScript />") < page.indexOf("<AttackConsole />"),
       "a step that says to attack the gate below has to actually come before the console",
@@ -95,7 +95,7 @@ describe("the new judge surfaces are rendered by pages, not stranded in the tree
   })
 
   it("calls the mishearing on the replay link staged, because no recognizer run produced it", () => {
-    const page = readFileSync("app/(pages)/how-it-works/page.tsx", "utf8")
+    const page = readFileSync("app/(pages)/(docs)/how-it-works/page.tsx", "utf8")
     expect(page).toContain("Watch it catch a staged mishearing")
     expect(page).not.toContain("Watch it catch a mishearing")
   })

@@ -101,7 +101,7 @@ for (const scenario of SCENARIOS) {
         lines: linesFor(scenario),
       }),
     })
-    await page.goto("/live")
+    await page.goto("/")
     const started = Date.now()
     await page.getByRole("button", { name: "Start listening" }).click()
 

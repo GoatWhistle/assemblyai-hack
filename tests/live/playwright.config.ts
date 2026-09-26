@@ -36,5 +36,20 @@ export default defineConfig({
         permissions: ["microphone"],
       },
     },
+    {
+      name: "firefox-fake-caller",
+      use: {
+        ...devices["Desktop Firefox"],
+        userAgent: "readback-live-smoke",
+        launchOptions: {
+          firefoxUserPrefs: {
+            "media.navigator.streams.fake": true,
+            "media.navigator.permission.disabled": true,
+            "media.autoplay.default": 0,
+            "media.autoplay.blocking_policy": 0,
+          },
+        },
+      },
+    },
   ],
 })

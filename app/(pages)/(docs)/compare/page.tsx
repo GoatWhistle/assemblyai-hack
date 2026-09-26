@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
-import { Compare } from "@/features/compare"
-import { SiteHeader } from "@/shared/ui/primitives/site-header"
-import { Disclaimer } from "@/shared/ui/states/disclaimer"
-import styles from "./styles.module.css"
-
-const MAIN_ID = "main"
+import { COMPARE_CAPTION, COMPARE_TITLE, Compare, SOURCE_NOTE } from "@/features/compare"
+import { DocHeader } from "@/shared/ui/navigation/doc-header"
+import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { COMPARE_SECTIONS } from "../docs-map"
 
 const COMPARE_HEADING = "What the gate changes, one moment at a time"
 
@@ -19,16 +17,16 @@ export const metadata: Metadata = {
 
 export default function ComparePage() {
   return (
-    <div className={styles.shell}>
-      <SiteHeader current="compare" />
-      <main className={styles.page} id={MAIN_ID}>
-        <section className={styles.hero}>
-          <h1 className={styles.heading}>{COMPARE_HEADING}</h1>
-          <p className={styles.lede}>{COMPARE_LEDE}</p>
-        </section>
+    <>
+      <DocHeader title={COMPARE_HEADING} lede={COMPARE_LEDE} />
+      <DocSection id={COMPARE_SECTIONS.moments.id} title={COMPARE_TITLE} lead={COMPARE_CAPTION}>
         <Compare />
-        <Disclaimer />
-      </main>
-    </div>
+      </DocSection>
+      <DocSection
+        id={COMPARE_SECTIONS.source.id}
+        title="Where the rows come from"
+        lead={SOURCE_NOTE}
+      />
+    </>
   )
 }

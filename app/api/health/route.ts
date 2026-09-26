@@ -1,4 +1,6 @@
+import { lookup } from "node:dns/promises"
 import { NextResponse } from "next/server"
+import { vendorView } from "@/agent"
 import {
   type DeployHealth,
   RATE_BRAKE_HONESTY_NOTE,
@@ -28,6 +30,10 @@ export async function GET(): Promise<NextResponse> {
       budget,
       rateBrakeNote: RATE_BRAKE_HONESTY_NOTE,
       buildSha: buildSha(process.env.VERCEL_GIT_COMMIT_SHA),
+      vendor: await vendorView(
+        { apiKey: process.env.ASSEMBLYAI_API_KEY, region: process.env.VERCEL_REGION },
+        async (host) => (await lookup(host, { all: true })).map((entry) => entry.address),
+      ),
     }
     return NextResponse.json(health, { headers: { "cache-control": "no-store" } })
   } catch (error) {

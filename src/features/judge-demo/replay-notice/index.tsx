@@ -1,3 +1,4 @@
+import { Fold } from "../fold"
 import styles from "./styles.module.css"
 
 export const REPLAY_NOTICE_TITLE = "Simulated session, not a live call"
@@ -16,7 +17,9 @@ export function ReplayNotice() {
         {REPLAY_NOTICE_TITLE}
       </p>
       <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
-      <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
+      <Fold summary="Why a replay exists at all">
+        <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
+      </Fold>
     </aside>
   )
 }

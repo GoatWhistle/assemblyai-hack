@@ -27,6 +27,9 @@ import { FieldCards } from "./field-cards"
 import styles from "./styles.module.css"
 import { Thesis } from "./thesis"
 
+export const LEGAL_SUMMARY =
+  "A technology demonstration, not a medical device. Use made-up details, never a real patient's."
+
 export type IntakeScreenProps = {
   readonly candidates: readonly FieldCandidate[]
   readonly decisions: ReadonlyMap<string, GateDecision>
@@ -99,7 +102,7 @@ export function IntakeScreen({
 
   return (
     <div className={styles.page}>
-      <SiteHeader current="live" status={<PhaseDot phase={phase} />} />
+      <SiteHeader current="call" status={<PhaseDot phase={phase} />} />
 
       <Thesis started={started} />
 
@@ -163,11 +166,29 @@ export function IntakeScreen({
         </div>
       ) : null}
 
-      {telemetry === undefined ? null : <div className={styles.telemetry}>{telemetry}</div>}
+      {telemetry === undefined ? null : (
+        <details className={styles.technical}>
+          <summary className={styles.summary}>
+            <span className={styles.summaryText}>
+              <span className={styles.summaryTitle}>Technical details</span>
+              <span className={styles.summaryHint}>
+                Sockets, recognizer model, latency, decision log and raw frames
+              </span>
+            </span>
+          </summary>
+          <div className={styles.telemetry}>{telemetry}</div>
+        </details>
+      )}
 
-      <div className={styles.legal}>
+      <details className={styles.legal}>
+        <summary className={styles.summary}>
+          <span className={styles.summaryText}>
+            <span className={styles.summaryTitle}>{LEGAL_SUMMARY}</span>
+            <span className={styles.summaryHint}>Read the full notice</span>
+          </span>
+        </summary>
         <Disclaimer />
-      </div>
+      </details>
     </div>
   )
 }

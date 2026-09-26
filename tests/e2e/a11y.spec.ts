@@ -1,15 +1,23 @@
 import AxeBuilder from "@axe-core/playwright"
 import { expect, type Page, test } from "@playwright/test"
 
+const REPLAY_ENTRY = "/demo?autoplay=1#replay"
+
+const DOCS_ROUTES = [
+  "/docs",
+  "/how-it-works",
+  "/compare",
+  "/metrics",
+  "/metrics/benchmark",
+  "/metrics/operations",
+] as const
+
 const ROUTES = [
   "/",
-  "/?judge=1",
-  "/live",
+  REPLAY_ENTRY,
   "/demo",
-  "/compare",
+  ...DOCS_ROUTES,
   "/order/no-such-session",
-  "/metrics",
-  "/how-it-works",
   "/cover",
   "/deck",
 ] as const
@@ -44,7 +52,7 @@ test.describe("AU5: no serious or critical axe violation on any route a judge ca
     })
   }
 
-  for (const path of ["/", "/?judge=1", "/live", "/compare", "/metrics"] as const) {
+  for (const path of ["/", REPLAY_ENTRY, ...DOCS_ROUTES] as const) {
     test(`${path} at phone width`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 })
       await page.goto(path)
@@ -55,7 +63,7 @@ test.describe("AU5: no serious or critical axe violation on any route a judge ca
   }
 
   test("the judge replay stays clean after the verdict has landed", async ({ page }) => {
-    await page.goto("/?judge=1")
+    await page.goto(REPLAY_ENTRY)
     await expect(page.getByText(/Pair rule on: asks which of the two/).first()).toBeVisible({
       timeout: 20000,
     })
@@ -100,13 +108,13 @@ test.describe("AU5: the judge path works from the keyboard alone, with focus alw
   }) => {
     await page.goto("/")
     await page.keyboard.press("Tab")
-    await expect(page.getByRole("link", { name: /skip to the content/i })).toBeFocused()
+    await expect(page.getByRole("link", { name: /skip to the call/i })).toBeFocused()
     expect((await focusedOutline(page)).outline).not.toMatch(/^none/)
 
-    await tabUntil(page, /watch the 40-second case/i)
+    await tabUntil(page, /watch the 40-second replay/i)
     expect((await focusedOutline(page)).outline).not.toMatch(/^none/)
     await page.keyboard.press("Enter")
-    await expect(page).toHaveURL(/judge=1/)
+    await expect(page).toHaveURL(/\/demo\?autoplay=1/)
     await expect(page.getByText(/Pair rule on: asks which of the two/).first()).toBeVisible({
       timeout: 20000,
     })
@@ -127,9 +135,11 @@ test.describe("AU5: the judge path works from the keyboard alone, with focus alw
   test("every nav link shows a focus ring that is not hidden under anything", async ({
     page,
   }) => {
-    await page.goto("/live")
-    for (const name of ["Live call", "How it works", "Compare", "Replay", "Measurements"]) {
-      const link = page.getByRole("navigation").first().getByRole("link", { name })
+    await page.goto("/docs")
+    for (const name of ["Call", "Replay", "Docs"]) {
+      const link = page
+        .getByRole("navigation", { name: "Sections" })
+        .getByRole("link", { name, exact: true })
       await link.focus()
       const visible = await link.evaluate((element) => {
         const rect = element.getBoundingClientRect()
@@ -149,7 +159,7 @@ test.describe("AU5: the judge path works from the keyboard alone, with focus alw
 })
 
 test.describe("AU5: prefers-reduced-motion stills every animation a judge would see", () => {
-  for (const path of ["/", "/?judge=1", "/live", "/how-it-works"] as const) {
+  for (const path of ["/", REPLAY_ENTRY, ...DOCS_ROUTES] as const) {
     test(`${path} runs no animation longer than a frame`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" })
       await page.goto(path)
@@ -173,8 +183,32 @@ test.describe("AU5: prefers-reduced-motion stills every animation a judge would 
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: "reduce" })
-    await page.goto("/?judge=1")
+    await page.goto(REPLAY_ENTRY)
     await expect(page.getByText(/18\.6s \/ 18\.6s/).first()).toBeVisible({ timeout: 5000 })
     await expect(page.getByText("E_LASA_HIT").first()).toBeVisible()
+  })
+})
+
+test.describe("the docs navigation works from the keyboard at phone width", () => {
+  test("the contents toggle opens, lists the sections, and Escape returns focus to it", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto("/metrics")
+    const nav = page.getByRole("navigation", { name: "Documentation" })
+    const toggle = nav.getByRole("button")
+    await expect(toggle).toHaveAttribute("aria-expanded", "false")
+    await toggle.focus()
+    await page.keyboard.press("Enter")
+    await expect(toggle).toHaveAttribute("aria-expanded", "true")
+    await expect(nav.getByRole("link", { name: "Measurements", exact: true })).toHaveAttribute(
+      "aria-current",
+      "page",
+    )
+    await expect(nav.getByRole("link", { name: "Held-out discipline" })).toBeVisible()
+    await nav.getByRole("link", { name: "Benchmark", exact: true }).focus()
+    await page.keyboard.press("Escape")
+    await expect(toggle).toHaveAttribute("aria-expanded", "false")
+    await expect(toggle).toBeFocused()
   })
 })

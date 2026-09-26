@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { FieldCard } from "@/features/field-card"
 import { GateBanner } from "@/features/gate-banner"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
@@ -17,7 +17,6 @@ import {
   SHIPPED_EVIDENCE,
   SPOKEN_TRUTH,
 } from "./demo-arms"
-import { KeytermsAb } from "./keyterms-ab"
 import { ReplayNotice, ReplayTag } from "./replay-notice"
 import { Captions } from "./replay-voice/captions"
 import { highlightedField, REPLAY_LINES } from "./replay-voice/replay-script"
@@ -27,14 +26,10 @@ import {
   type SpeechTrack,
 } from "./replay-voice/speech-track"
 import { LASA_CANDIDATE, LASA_DECISION } from "./scenario"
-import { ScenarioPicker } from "./scenario-picker"
 import styles from "./styles.module.css"
 import { PLAY_CONTROL, STOP_CONTROL, useControlFocus } from "./use-control-focus"
 
 const TICK_MS = 100
-
-const StillScenarioPicker = memo(ScenarioPicker)
-const StillKeytermsAb = memo(KeytermsAb)
 
 export type JudgeDemoProps = {
   readonly autoplay?: boolean
@@ -128,29 +123,34 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
     [...DEMO_STAGES].reverse().find((entry) => elapsedMs >= entry.atMs) ?? DEMO_STAGES[0]
 
   const ArmHeading = headingLevel === "h1" ? "h2" : "h3"
-  const title = <Heading className={styles.title}>The forty-second demonstration</Heading>
+  const title = (
+    <Heading className={headingLevel === "h1" ? styles.title : styles.sectionTitle}>
+      The forty-second demonstration
+    </Heading>
+  )
   const lede = (
     <p className={styles.body}>
-      One synthesised session, replayed through the whole pipeline. No microphone is needed and
-      no second person has to be on the line. The caller said {SPOKEN_TRUTH}; the recognizer
-      returned {RECOGNIZED_AS} and was {RECOGNIZER_CERTAINTY.toFixed(2)} certain of it. The two
-      panels run the shipped policy and differ by one flag, the pair rule: both read the drug
-      name back, and only one requires the caller to answer with the name.
+      One synthesised session, replayed through the whole pipeline, with no microphone and no
+      second person on the line. The two panels run the shipped policy and differ by one flag,
+      the pair rule: both read the drug name back, and only one requires the caller to answer
+      with the name.
     </p>
   )
   const context = (
-    <>
-      <ReplayNotice />
+    <div className={styles.context}>
       <div className={styles.truth}>
         <p className={styles.truthLabel}>Ground truth for this replay</p>
         <p className={styles.truthText}>
           The human said {SPOKEN_TRUTH}. The recognizer heard {RECOGNIZED_AS} and reported{" "}
-          {RECOGNIZER_CERTAINTY.toFixed(2)} certainty. Both drugs exist, both pass a catalogue
-          lookup, and both are opioid pain medicines dosed differently, which is why a swap
-          between them is dangerous.
+          {RECOGNIZER_CERTAINTY.toFixed(2)} certainty.
+        </p>
+        <p className={styles.truthNote}>
+          Both drugs exist, both pass a catalogue lookup, and both are opioid pain medicines
+          dosed differently, which is why a swap between them is dangerous.
         </p>
       </div>
-    </>
+      <ReplayNotice />
+    </div>
   )
 
   return (
@@ -216,8 +216,6 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
           {context}
         </>
       ) : null}
-      <StillScenarioPicker />
-      <StillKeytermsAb />
     </div>
   )
 }

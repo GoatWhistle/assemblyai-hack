@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T07:27:36.829Z",
+  "kind": "probe",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "diag-agent-not-found-2026-09-26",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 50,
+    "stt": 36
+  },
+  "costUsd": 0.0685,
+  "outcome": "failed",
+  "reason": "diagnosis of agent_not_found on production: one Firefox page on /live for 36 s and seven short agent sockets opened from scripts (six on the local key, three on tokens minted by production); every production-minted socket answered session.error agent_not_found, every local-key socket answered session.ready; socket time is an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "one call by one member of the team, not a sample of prescribers",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "a preview deployment, so cold starts and the free-tier session limit may differ from production"
+  ]
+}

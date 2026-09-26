@@ -1,8 +1,10 @@
 import { readFileSync } from "node:fs"
 import { act, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { JUDGE_LINK_LABEL } from "@/features/intake/intake-screen/intake-prompt"
 import { JudgeDemo } from "@/features/judge-demo"
 import { DEMO_DURATION_MS } from "@/features/judge-demo/demo-arms"
+import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import {
   INSTANT_ENTRY_BODY,
   INSTANT_ENTRY_CASE,
@@ -75,7 +77,7 @@ describe("the replay is a first-class entry point that never reads as live", () 
     ).toBeTruthy()
   })
 
-  it("is offered as a primary action on the intake screen rather than as a microphone fallback", () => {
+  it("is offered on the call page as a named judge entry rather than as a microphone fallback", () => {
     const screenSource = readFileSync(
       "src/features/intake/intake-screen/intake-prompt/index.tsx",
       "utf8",
@@ -84,8 +86,17 @@ describe("the replay is a first-class entry point that never reads as live", () 
       /No microphone\? Watch the recording/.test(screenSource),
       "framing the replay as what to do when the hardware fails buries the one path that always works",
     ).toBe(false)
-    expect(screenSource).toContain("Run the replay")
-    expect(screenSource).toContain('tone="primary"')
+    expect(screenSource).toContain("REPLAY_ENTRY_HREF")
+    expect(JUDGE_LINK_LABEL).toMatch(/judging\? watch the 40-second replay/i)
+  })
+
+  it("is the primary action on the judge hub", () => {
+    const hero = readFileSync("src/features/judge-demo/judge-hero/index.tsx", "utf8")
+    expect(hero).toMatch(/href=\{REPLAY_ENTRY_HREF\} tone="primary"/)
+    const demo = readFileSync("src/features/judge-demo/index.tsx", "utf8")
+    expect(demo, "the play control on the replay is the primary button").toContain(
+      '<Button tone="primary"',
+    )
   })
 })
 
@@ -144,18 +155,24 @@ describe("one URL lands a judge in the state worth seeing", () => {
     ).toMatch(/highest certainty/i)
   })
 
-  it("renders the autoplaying replay at the root under ?judge=1, and /start sends old links there", () => {
-    const page = readFileSync("app/(pages)/page.tsx", "utf8")
-    expect(page).toMatch(/<JudgeDemo\s[^>]*\bautoplay\b/)
-    expect(page, "the judge flag has to be what switches the replay on").toMatch(
-      /params\.judge === "1"/,
+  it("renders the autoplaying replay on the judge hub, and every old judge link lands there", () => {
+    expect(REPLAY_ENTRY_HREF).toBe("/demo?autoplay=1#replay")
+    const demo = readFileSync("app/(pages)/demo/page.tsx", "utf8")
+    expect(demo).toMatch(/<JudgeDemo\s[^>]*autoplay=\{autoplay\}/)
+    expect(demo, "the autoplay flag has to be what switches the replay on").toMatch(
+      /params\.autoplay === "1"/,
     )
-    expect(page, "an instant entry point that dead-ends is half an entry point").toContain(
+    expect(demo, "old ?judge=1 links must still autoplay").toMatch(/params\.judge === "1"/)
+    expect(demo, "an instant entry point that dead-ends is half an entry point").toContain(
       "InstantEntry",
+    )
+    const root = readFileSync("app/(pages)/page.tsx", "utf8")
+    expect(root, "an old /?judge=1 link must still land on the replay").toMatch(
+      /params\.judge === "1"[\s\S]*permanentRedirect\(REPLAY_ENTRY_HREF\)/,
     )
     const start = readFileSync("app/(pages)/start/page.tsx", "utf8")
     expect(start, "an old /start link must still land on the replay").toContain(
-      'redirect("/?judge=1',
+      "permanentRedirect(REPLAY_ENTRY_HREF)",
     )
   })
 })
@@ -167,6 +184,7 @@ describe("the instant entry is rendered by a page, not stranded in the tree", ()
       header,
       "a single URL a judge has to be told about is worse than a link they can see",
     ).toContain('href="/"')
-    expect(header).toContain('href: "/live"')
+    expect(header).toContain('href: "/"')
+    expect(header).toContain('href: "/demo"')
   })
 })

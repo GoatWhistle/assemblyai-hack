@@ -1,0 +1,37 @@
+.prose {
+  max-width: var(--measure-prose);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.tabCode {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+}
+
+.reason {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.reasonTitle {
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.reasonBody {
+  max-width: var(--measure-prose);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}

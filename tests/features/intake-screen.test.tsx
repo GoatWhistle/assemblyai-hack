@@ -3,8 +3,12 @@ import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
 import { FIELD_NAMES, type GateDecision, policyFor } from "@/domain"
 import { FIELD_LABEL, FIELD_PROOF_NOTE, INTAKE_ORDER } from "@/features/intake/field-language"
-import { IntakeScreen } from "@/features/intake/intake-screen"
+import { IntakeScreen, LEGAL_SUMMARY } from "@/features/intake/intake-screen"
+import { JUDGE_LINK_LABEL } from "@/features/intake/intake-screen/intake-prompt"
+import { THESIS_PROMISE } from "@/features/intake/intake-screen/thesis"
 import { PHASE_LABEL, SessionPhase } from "@/features/intake/session-status"
+import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { SAY_LINE_ORDER, SAY_LINES } from "@/features/judge-demo/say-these/say-lines"
 import {
   LASA_CANDIDATE,
   LASA_DECISION,
@@ -68,10 +72,13 @@ describe("the intake screen", () => {
       "the landing thesis was announced only to assistive technology; a judge arriving cold read a microphone and no claim",
     ).not.toContain("visually-hidden")
     expect(
-      screen.getByText(/high confidence does not protect/i),
+      screen.getByText(THESIS_PROMISE),
       "the product's whole argument is that certainty is not proof, so the screen has to say it before it says anything else",
     ).toBeDefined()
-    expect(screen.getByText(/look-alike list is asked again/i)).toBeDefined()
+    expect(THESIS_PROMISE).toMatch(
+      /look-alike list is asked again, even when the recognizer is certain/i,
+    )
+    expect(THESIS_PROMISE).toMatch(/read back to you before it is written/i)
   })
 
   it("hides the thesis once the order is under way", () => {
@@ -137,10 +144,14 @@ describe("the intake screen", () => {
   it("tells the operator what to say before anything has been proposed", () => {
     renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
     expect(screen.getByText(/say the patient, the drug/i)).toBeDefined()
+    const judge = screen.getByRole("link", { name: JUDGE_LINK_LABEL })
     expect(
-      screen.getByRole("link", { name: /run the replay/i }),
-      "the recorded route is the one path that always works; offering it as a microphone fallback buries it",
-    ).toBeDefined()
+      judge.getAttribute("href"),
+      "a judge who opens the user page still needs one visible step to the replay",
+    ).toBe(REPLAY_ENTRY_HREF)
+    for (const id of SAY_LINE_ORDER) {
+      expect(screen.getByText(`“${SAY_LINES[id]}”`)).toBeDefined()
+    }
     expect(
       screen.queryByRole("link", { name: /no microphone\? watch the recording/i }),
       "framing the replay as a consolation for broken hardware is exactly what this task removed",
@@ -155,11 +166,28 @@ describe("the intake screen", () => {
     ).toBeDefined()
   })
 
-  it("links to the demonstration and the measurements exactly once each", () => {
+  it("links to the call, the replay and the documentation exactly once each", () => {
     renderScreen()
+    expect(screen.getAllByRole("link", { name: /^Call$/i })).toHaveLength(1)
     expect(screen.getAllByRole("link", { name: /^Replay$/i })).toHaveLength(1)
-    expect(screen.getAllByRole("link", { name: /^Measurements$/i })).toHaveLength(1)
-    expect(screen.getByRole("link", { name: /How it works/i })).toBeDefined()
+    expect(screen.getAllByRole("link", { name: /^Docs$/i })).toHaveLength(1)
+  })
+
+  it("keeps the telemetry present but folded behind Technical details", () => {
+    renderScreen({ telemetry: <p>telemetry body</p> })
+    const details = screen.getByText("Technical details").closest("details")
+    expect(details, "the telemetry must stay on the page, one click away").not.toBeNull()
+    expect(details?.open, "an ordinary caller should not face socket frames first").toBe(false)
+    expect(details?.textContent).toContain("telemetry body")
+  })
+
+  it("shows the disclaimer's substance in one line and keeps the full text one click away", () => {
+    renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
+    expect(screen.getByText(LEGAL_SUMMARY)).toBeDefined()
+    expect(LEGAL_SUMMARY).toMatch(/not a medical device/i)
+    expect(LEGAL_SUMMARY).toMatch(/never a real patient/i)
+    const details = screen.getByText(LEGAL_SUMMARY).closest("details")
+    expect(details?.textContent).toContain(DISCLAIMER_TITLE)
   })
 
   it("selects a field from the order rail and highlights its span", async () => {

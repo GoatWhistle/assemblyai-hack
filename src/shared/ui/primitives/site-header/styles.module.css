@@ -79,7 +79,13 @@
     padding: var(--space-2) 0;
   }
 
+  .status {
+    order: 2;
+    margin-inline-start: auto;
+  }
+
   .nav {
+    order: 3;
     flex-wrap: nowrap;
     overflow-x: auto;
     overscroll-behavior-x: contain;

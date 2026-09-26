@@ -9,30 +9,20 @@ import {
   type RunRecord,
   ratePerHourFor,
 } from "@/domain"
+import { boundariesFor } from "./live/receipt-boundaries"
 import { appendRunRecord, RUN_REGISTRY } from "./live/run-registry"
 
-export const ACCEPTANCE_BOUNDARIES: readonly string[] = [
-  "one call by one member of the team, not a sample of prescribers",
-  "provenance is computed in the browser and posted by it; the server did not hear the audio",
-  "the recognizer model is the one the browser reported from Begin, not one the server observed",
-  "a preview deployment, so cold starts and the free-tier session limit may differ from production",
-]
-
-export const LIVE_SMOKE_BOUNDARY =
-  "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used"
+export {
+  ACCEPTANCE_BOUNDARIES,
+  deploymentBoundary,
+  LIVE_SMOKE_BOUNDARY,
+} from "./live/receipt-boundaries"
 
 const RECEIPT_KINDS: readonly RunKind[] = ["acceptance_call", "live_smoke", "probe"]
 
 const UNBOUND_PREFIX = "unbound-"
 
 const DEFAULT_COMMAND = "npx tsx scripts/live-receipt.ts"
-
-function boundariesFor(kind: RunKind): readonly string[] {
-  if (kind !== "live_smoke") {
-    return ACCEPTANCE_BOUNDARIES
-  }
-  return [LIVE_SMOKE_BOUNDARY, ...ACCEPTANCE_BOUNDARIES.slice(1)]
-}
 
 function isUnbound(sessionId: string): boolean {
   return sessionId.startsWith(UNBOUND_PREFIX)
@@ -79,7 +69,7 @@ export function acceptanceArtefact(input: AcceptanceInput) {
     costUsd: Math.round(costUsd * 10000) / 10000,
     outcome: input.outcome,
     reason: input.reason,
-    boundaries: boundariesFor(input.kind ?? "acceptance_call"),
+    boundaries: boundariesFor(input.kind ?? "acceptance_call", input.deployment),
   }
 }
 

@@ -71,7 +71,9 @@ export function MicConsole({
       <h2 className={styles.headline}>{copy.headline}</h2>
       <p className={styles.detail}>{copy.detail}</p>
 
-      <FinishAnswer live={listening} patience={active} onFinish={onFinishAnswer} />
+      {open ? (
+        <FinishAnswer live={listening} patience={active} onFinish={onFinishAnswer} />
+      ) : null}
 
       <p className={styles.keys}>
         <kbd className={styles.kbd}>Space</kbd>

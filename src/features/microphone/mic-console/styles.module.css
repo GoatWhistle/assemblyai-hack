@@ -186,3 +186,9 @@
     height: 5rem;
   }
 }
+
+@media (pointer: coarse) and (hover: none) {
+  .keys {
+    display: none;
+  }
+}

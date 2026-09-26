@@ -26,6 +26,9 @@ export const KEYTERMS_AB_TITLE = "The keyterms A/B, and why only one arm can be 
 export const KEYTERMS_AB_LEDE =
   "A competitor invites the reader to try it: ask for your hydrochlorothiazide, then delete the list and publish again. The invitation is a good one, and the vendor documents the biasing effect; we have not measured it. One of the two arms, though, is a configuration this product will not ship, so the switch below shows what each list does to the read-back instead of offering both as settings."
 
+export const KEYTERMS_AB_SUMMARY =
+  "The shipped list carries clinic, prescriber, dosage and route words, never a drug name the pair check examines. A list that names pair members would bias the recognizer toward the very strings the read-back then confirms, so that arm is described and never run."
+
 export const SAMPLE_SIZE = 6
 
 export const PHRASE_WINDOW = 2

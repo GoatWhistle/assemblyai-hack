@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation"
+import { permanentRedirect } from "next/navigation"
+import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 
 export default function StartPage(): never {
-  redirect("/?judge=1#replay")
+  permanentRedirect(REPLAY_ENTRY_HREF)
 }

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 test.describe("the evidence surfaces a judge is sent to", () => {
-  test("every benchmark figure carries its command, and absence is a dash", async ({
+  test("the measurements page leads with the headline and the shipped policy, each with its command", async ({
     page,
   }) => {
     await page.goto("/metrics")
@@ -10,8 +10,62 @@ test.describe("the evidence surfaces a judge is sent to", () => {
     ).toBeVisible()
     await expect(page.getByRole("region", { name: /Shipped policy figures/ })).toBeVisible()
     await expect(page.getByText("npx tsx scripts/measure/ab-gate.ts").first()).toBeVisible()
+    await expect(page.getByRole("link", { name: /Benchmark/ }).first()).toBeVisible()
+  })
+
+  test("every benchmark figure carries its command, and absence is a dash", async ({
+    page,
+  }) => {
+    await page.goto("/metrics/benchmark")
+    await expect(page.getByRole("region", { name: /Measured benchmark figures/ })).toBeVisible()
     await expect(page.getByText("make eval-control").first()).toBeVisible()
     await expect(page.getByLabel("not measured").first()).toBeVisible()
+    await expect(page.getByRole("region", { name: /Further report figures/ })).toBeVisible()
+  })
+
+  test("the operations page counts close codes rather than asserting them", async ({
+    page,
+  }) => {
+    await page.goto("/metrics/operations")
+    await expect(
+      page.getByRole("region", { name: /Socket close codes, scrollable/ }),
+    ).toBeVisible()
+    await expect(page.getByText(/no cost of a dispensing error is shown/i)).toBeVisible()
+  })
+
+  test("the docs overview states the hard claim and maps every docs page", async ({ page }) => {
+    await page.goto("/docs")
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+    await expect(page.getByText(/even at certainty 1\.00/).first()).toBeVisible()
+    const main = page.getByRole("main")
+    for (const href of [
+      "/how-it-works",
+      "/compare",
+      "/metrics",
+      "/metrics/benchmark",
+      "/metrics/operations",
+    ]) {
+      await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible()
+    }
+  })
+
+  test("the docs sidebar marks the current page and the contents link to real sections", async ({
+    page,
+  }) => {
+    await page.goto("/how-it-works")
+    const nav = page.getByRole("navigation", { name: "Documentation" })
+    await expect(nav.getByRole("link", { name: "How it works" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    )
+    const toc = page.getByRole("navigation", { name: "On this page" })
+    const targets = await toc
+      .getByRole("link")
+      .evaluateAll((links) => links.map((link) => link.getAttribute("href") ?? ""))
+    expect(targets.length).toBeGreaterThan(1)
+    for (const target of targets) {
+      await expect(page.locator(target)).toHaveCount(1)
+    }
   })
 
   test("the comparison shows six moments with the verdict beside the certainty", async ({
@@ -42,7 +96,16 @@ test.describe("the evidence surfaces a judge is sent to", () => {
 })
 
 test.describe("phone width", () => {
-  for (const path of ["/", "/?judge=1", "/live", "/compare", "/metrics"]) {
+  for (const path of [
+    "/",
+    "/demo",
+    "/docs",
+    "/how-it-works",
+    "/compare",
+    "/metrics",
+    "/metrics/benchmark",
+    "/metrics/operations",
+  ]) {
     test(`${path} does not scroll horizontally`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 })
       await page.goto(path)

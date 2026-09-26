@@ -1,4 +1,5 @@
 import { ismpPairCount, LASA_PAIRS } from "@/lasa"
+import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import styles from "./styles.module.css"
 
 type Limit = {
@@ -27,23 +28,12 @@ const LIMITS: readonly Limit[] = [
 
 export function Limits() {
   return (
-    <section className={styles.limits}>
-      <div className={styles.lede}>
-        <h2 className={styles.title}>What this does not prove</h2>
-        <p className={styles.body}>
-          Stated here rather than left to be discovered. A demonstration that hides its own
-          boundary is the failure mode this product exists to argue against.
-        </p>
-      </div>
-
-      <ul className={styles.list}>
-        {LIMITS.map((limit) => (
-          <li key={limit.id} className={styles.item}>
-            <p className={styles.itemTitle}>{limit.title}</p>
-            <p className={styles.itemBody}>{limit.body}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div className={styles.limits}>
+      {LIMITS.map((limit) => (
+        <Disclosure key={limit.id} id={`limit-${limit.id}`} summary={limit.title}>
+          <p>{limit.body}</p>
+        </Disclosure>
+      ))}
+    </div>
   )
 }

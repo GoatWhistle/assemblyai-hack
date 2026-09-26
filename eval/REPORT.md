@@ -947,11 +947,11 @@ total. At USD 0.45 per hour for one streaming socket, that recorded time alone c
 recorded duration are not included and their true cost is higher by an amount nobody
 wrote down.
 
-### Since the ledger: 12 runs on 25 September, 8 of them failed and billed regardless
+### Since the ledger: 14 runs on 25 and 26 September, 10 of them failed and billed regardless
 
-`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 12**,
-**runs that did not complete, still billed: 8**, 4066.368 s of socket-open time and
-**derived total: USD 2.5032**, at
+`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 14**,
+**runs that did not complete, still billed: 10**, 4362.968 s of socket-open time and
+**derived total: USD 2.9234**, at
 the rates checked on 17 September. The figure is our arithmetic over our own recorded seconds,
 not an invoice. By command:
 
@@ -959,9 +959,10 @@ not an invoice. By command:
 |---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 |
-| `make live-smoke` | 6 | 6 failed | 2.0956 |
+| `make live-smoke` | 7 | 7 failed | 2.4450 |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 |
+| ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 |
 
 - **The two stress sweeps** were started 12 s apart by mistake; the second is recorded as failed
   because two of its sessions closed 1006 and 1008 (see the stress section below).
@@ -971,6 +972,18 @@ not an invoice. By command:
   caller line reached the sockets in any attempt, and no order was committed. Each is kept as a
   failed run in `eval/live/runs.json` with that diagnosis, because each was billed. Their socket
   time is the harness wall clock across three sockets (agent, STT, medical), an upper bound.
+- **The seventh `make live-smoke` attempt, on 26 September, ran against the production
+  deployment in Firefox**, where AudioWorklet does start, and failed on a different cause: the
+  agent socket answered `session.update` with `session.error agent_not_found` for the agent the
+  production token route had just created, so the agent never spoke and no caller line was
+  played. The run was stopped after its second scenario rather than billing four more identical
+  failures.
+- **The diagnosis row** is the scripted reproduction of that failure: every socket opened on a
+  token minted by the production route answered `agent_not_found`, every socket opened on a
+  locally held key answered `session.ready`, including an agent created through the vendor's
+  us-west-2 address and joined through eu-west-1, so the cause is not region and not timing.
+  The production route's own finalize deleted the agent successfully, so the agent exists in the
+  account whose key the deployment holds; what that account does differently is not yet known.
 - **The reconciliation row** covers diagnostic agent sessions the coordinator opened by hand
   while tracing the live-smoke failures. The vendor's own session list shows 14 agent sessions
   on 25 September totalling 1546.0 s of agent socket time; the rows above account for 1490.7 s,
@@ -980,7 +993,7 @@ not an invoice. By command:
   vendor's own timeline back (the S2 witness); the timeline it read is committed as
   `eval/fixtures/witness/timeline-recorded-shape.json`.
 
-**Paid runs on record, artefacts plus ledger: 19.** The account balance a human last read off
+**Paid runs on record, artefacts plus ledger: 21.** The account balance a human last read off
 the vendor dashboard is USD 149.93 on 17 September; no later reading is recorded, so no
 vendor-verified figure covers the 25 September runs.
 

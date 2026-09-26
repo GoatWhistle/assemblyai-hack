@@ -26,7 +26,7 @@ import {
 vi.mock("@/realtime/transport", async () => (await import("./live-rig")).transportModule())
 vi.mock("@/audio/microphone", async () => (await import("./live-rig")).microphoneModule())
 
-const { IntakeClient } = await import("@app/(pages)/live/intake-client")
+const { IntakeClient } = await import("@app/(pages)/intake-client")
 
 const LASA = makeCandidate({
   candidateId: "cand-drug",

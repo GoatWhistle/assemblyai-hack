@@ -59,3 +59,18 @@ export function shippedPolicyEntries(
 ): readonly BenchmarkEntry[] {
   return rows.map(entryFor).filter((entry): entry is BenchmarkEntry => entry !== null)
 }
+
+export function reportEntries(
+  rows: readonly BenchmarkRow[] = BENCHMARK_ROWS,
+): readonly BenchmarkEntry[] {
+  return rows
+    .map((row, index) => ({ row, index }))
+    .filter(({ row }) => !SHIPPED_POLICY_COMMANDS.includes(row.command))
+    .map(({ row, index }) => ({
+      id: `report-${index}`,
+      row,
+      meaning: "",
+      setDescription: "",
+      tone: "neutral" as const,
+    }))
+}

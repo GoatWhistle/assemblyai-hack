@@ -1,3 +1,4 @@
+import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Button } from "@/shared/ui/primitives/button"
 import { Panel } from "@/shared/ui/primitives/panel"
@@ -6,8 +7,6 @@ import { AutoDegrade } from "../../auto-degrade"
 import type { FaultDetail } from "../../session-options"
 import { FAULT_COPY, type SessionFault } from "../../session-status"
 import styles from "./styles.module.css"
-
-const REPLAY_HREF = "/?judge=1#replay"
 
 export type FaultPanelProps = {
   readonly fault: SessionFault
@@ -37,7 +36,7 @@ export function FaultPanel({ fault, faultDetail = null, onStart }: FaultPanelPro
           actions={
             <>
               <Button onClick={onStart}>Try again</Button>
-              <ActionLink href={REPLAY_HREF}>Run the replay instead</ActionLink>
+              <ActionLink href={REPLAY_ENTRY_HREF}>Run the replay instead</ActionLink>
             </>
           }
         />

@@ -116,4 +116,10 @@
   --rail-width: 20rem;
   --content-max: 75rem;
   --target-touch: 2.75rem;
+
+  --docs-max: 90rem;
+  --docs-sidebar: 14.5rem;
+  --docs-toc: 13rem;
+  --docs-main: 52rem;
+  --docs-sticky-top: var(--space-5);
 }

@@ -14,6 +14,7 @@ import {
 import { type GateOutcome, outcomeOf } from "@/features/gate-banner/signature"
 import { decide } from "@/gate"
 import { lasaRiskFor } from "@/lasa"
+import { SAY_LINES } from "./say-lines"
 
 export type SayThis = {
   readonly id: string
@@ -73,7 +74,7 @@ function phrase(id: string, say: string, expected: string, built: FieldCandidate
 export const SAY_THESE: readonly SayThis[] = [
   phrase(
     "clean",
-    "Lisinopril, ten milligrams, one tablet by mouth once daily, thirty tablets.",
+    SAY_LINES.clean,
     "Each value is read back once. Say yes and it is written; the order commits when every critical field is proved.",
     candidate({
       id: "say-clean",
@@ -87,7 +88,7 @@ export const SAY_THESE: readonly SayThis[] = [
   ),
   phrase(
     "lasa",
-    "Hydromorphone, two milligrams.",
+    SAY_LINES.lasa,
     "Asked again even if the recognizer is certain, naming every drug the published list pairs with it. Answer with the name; a yes does not confirm it.",
     candidate({
       id: "say-lasa",
@@ -101,7 +102,7 @@ export const SAY_THESE: readonly SayThis[] = [
   ),
   phrase(
     "npi",
-    "Prescriber NPI one two three four five six seven eight nine zero.",
+    SAY_LINES.npi,
     "Refused by arithmetic before anyone reads it back, then asked for digit by digit.",
     candidate({
       id: "say-npi",

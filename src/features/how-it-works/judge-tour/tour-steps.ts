@@ -14,7 +14,7 @@ export const TOUR_STEPS: readonly TourStep[] = Object.freeze([
     click: "Open the replay.",
     expect:
       "It starts by itself. At the decision the banner reads RE-ASK with E_LASA_HIT at certainty 1.00, candidates Hydromorphone / Morphine.",
-    href: "/?judge=1#replay",
+    href: "/demo?autoplay=1#replay",
     needsMicrophone: false,
   },
   {
@@ -23,7 +23,7 @@ export const TOUR_STEPS: readonly TourStep[] = Object.freeze([
     click: "Read the two panels side by side.",
     expect:
       "The shipped arm asks which of the two drugs was meant and writes hydromorphone only after the caller names it. The same policy with the pair rule switched off reads morphine back, takes a yes, and orders morphine.",
-    href: "/?judge=1#replay",
+    href: "/demo#replay",
     needsMicrophone: false,
   },
   {
@@ -58,7 +58,7 @@ export const TOUR_STEPS: readonly TourStep[] = Object.freeze([
     click: "Start a live call and say: Hydromorphone, two milligrams.",
     expect:
       "Expected, not yet observed on a recorded live call: the agent names hydromorphone and every drug the published list pairs with it, and waits for a name, not a yes. The telemetry shows both sockets' frames and the decision log gains E_LASA_HIT.",
-    href: "/live",
+    href: "/",
     needsMicrophone: true,
   },
 ])

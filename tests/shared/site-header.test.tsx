@@ -38,9 +38,24 @@ describe("AU4: the order page is not the live call", () => {
     expect(nav.querySelector("[aria-current=page]")).toBeNull()
   })
 
-  it("still marks the live call on the live page", () => {
-    render(<SiteHeader current="live" />)
-    expect(screen.getByRole("link", { name: "Live call" }).getAttribute("aria-current")).toBe(
+  it("still marks the call on the call page", () => {
+    render(<SiteHeader current="call" />)
+    expect(screen.getByRole("link", { name: "Call" }).getAttribute("aria-current")).toBe("page")
+  })
+
+  it("marks Docs as current on every documentation page", () => {
+    for (const current of ["docs", "how", "compare", "metrics"] as const) {
+      const view = render(<SiteHeader current={current} />)
+      expect(screen.getByRole("link", { name: "Docs" }).getAttribute("aria-current")).toBe(
+        "page",
+      )
+      view.unmount()
+    }
+  })
+
+  it("marks Replay as current on the judge hub", () => {
+    render(<SiteHeader current="replay" />)
+    expect(screen.getByRole("link", { name: "Replay" }).getAttribute("aria-current")).toBe(
       "page",
     )
   })

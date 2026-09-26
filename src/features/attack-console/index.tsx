@@ -58,16 +58,7 @@ export function AttackConsole() {
   const written = [...outcomes.values()].filter((outcome) => outcome.written).length
 
   return (
-    <section className={styles.console}>
-      <div className={styles.lede}>
-        <h2 className={styles.title}>Try to write a value the gate did not prove</h2>
-        <p className={styles.body}>
-          Each button builds a real candidate, runs the real decision function and calls the
-          only constructor that can write a field. Nothing here is staged: the refusal you read
-          is the string the gate raised.
-        </p>
-      </div>
-
+    <div className={styles.console}>
       <ol className={styles.attacks}>
         {ATTACKS.map((attack) => {
           const outcome = outcomes.get(attack.id)
@@ -100,6 +91,6 @@ export function AttackConsole() {
           function that produces one otherwise.
         </p>
       )}
-    </section>
+    </div>
   )
 }

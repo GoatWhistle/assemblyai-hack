@@ -142,6 +142,30 @@
       ],
       "openSeconds": 55.3,
       "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T07:21:26.867Z",
+      "at": "2026-09-26T07:21:26.867Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246.6,
+      "outcome": "failed"
+    },
+    {
+      "runId": "ad-hoc-agent-not-found-diagnosis-2026-09-26T07:27:36.829Z",
+      "at": "2026-09-26T07:27:36.829Z",
+      "command": "ad-hoc agent_not_found diagnosis",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 50,
+      "outcome": "failed"
     }
   ]
 }

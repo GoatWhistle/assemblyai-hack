@@ -1,3 +1,6 @@
+import BenchmarkPage from "@app/(pages)/(docs)/metrics/benchmark/page"
+import OperationsPage from "@app/(pages)/(docs)/metrics/operations/page"
+import MetricsPage from "@app/(pages)/(docs)/metrics/page"
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { NOT_MEASURED_LABEL } from "@/features/metrics/benchmark-row"
@@ -9,11 +12,14 @@ import {
   NO_COMMAND,
   ORDER_METRICS,
 } from "@/features/metrics/metric-definitions"
-import { MetricsDashboard } from "@/features/metrics/metrics-dashboard"
 import { allScored, closeCodeCounts } from "@/features/metrics/recorded-runs"
 
 function valueCells(): readonly HTMLElement[] {
-  return [...document.querySelectorAll<HTMLElement>('td[data-column="value"]')]
+  return [
+    ...document.querySelectorAll<HTMLElement>(
+      '#measured td[data-column="value"], #unmeasured td[data-column="value"]',
+    ),
+  ]
 }
 
 describe("every metric carries a method", () => {
@@ -26,7 +32,7 @@ describe("every metric carries a method", () => {
   })
 
   it("renders an unmeasured figure as a labelled dash rather than as a zero", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     const absent = valueCells().filter(
       (cell) => cell.querySelector(`[aria-label="${NOT_MEASURED_LABEL}"]`) !== null,
     )
@@ -41,7 +47,7 @@ describe("every metric carries a method", () => {
   })
 
   it("prints the command beside each figure, and says so when no command exists", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     expect(screen.getAllByText("make measure").length).toBe(LATENCY_METRICS.length)
     expect(
       screen.getAllByText(NO_COMMAND).length,
@@ -52,7 +58,7 @@ describe("every metric carries a method", () => {
 
 describe("the false-ask rate is first class", () => {
   it("appears as its own figure, not a footnote", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     expect(screen.getByText("False-ask rate")).toBeDefined()
   })
 
@@ -63,7 +69,7 @@ describe("the false-ask rate is first class", () => {
   })
 
   it("sits alongside the catch rate rather than replacing it", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     expect(screen.getByText("LASA catch rate")).toBeDefined()
     expect(screen.getByText("Accepted-wrong count")).toBeDefined()
   })
@@ -119,7 +125,7 @@ describe("close codes are counted, not asserted", () => {
   })
 
   it("renders one row per observed code", () => {
-    render(<MetricsDashboard />)
+    render(<OperationsPage />)
     for (const row of closeCodeRows()) {
       const cells = screen
         .getAllByRole("cell")
@@ -150,7 +156,7 @@ describe("measured figures reach the screen", () => {
   })
 
   it("renders those figures rather than leaving the page all placeholders", () => {
-    render(<MetricsDashboard />)
+    render(<BenchmarkPage />)
     for (const figure of [...errorRateFigures(), ...confidenceFigures()]) {
       expect(screen.getByText(figure.name)).toBeDefined()
       if (figure.value !== null) {
@@ -160,19 +166,19 @@ describe("measured figures reach the screen", () => {
   })
 })
 
-describe("held-out discipline is stated on the page", () => {
+describe("held-out discipline is stated on the measurements page", () => {
   it("says thresholds are tuned on the development set only", () => {
-    render(<MetricsDashboard />)
+    render(<MetricsPage />)
     expect(screen.getByText(/tuned on the development set only/i)).toBeDefined()
   })
 
   it("says a number without a method is not published", () => {
-    render(<MetricsDashboard />)
+    render(<MetricsPage />)
     expect(screen.getByText(/A number without a method is not published here/i)).toBeDefined()
   })
 
   it("says why a dash is a dash", () => {
-    render(<MetricsDashboard />)
+    render(<MetricsPage />)
     expect(
       screen.getByText(/a named target means the run costs credit and has not been spent/i),
       "a column of dashes reads as an unfinished page unless the page says what each one is waiting for",
@@ -180,7 +186,7 @@ describe("held-out discipline is stated on the page", () => {
   })
 
   it("distinguishes an unspent paid run from a figure nothing computes in the lede", () => {
-    render(<MetricsDashboard />)
+    render(<MetricsPage />)
     expect(
       screen.getByText(/no command yet means nothing computes the figure/i),
       "not measured covers two different states and a judge cannot tell them apart without being told",

@@ -1,39 +1,26 @@
 .console {
-  padding: var(--space-5);
-  border-radius: var(--radius-lg);
+  padding: var(--space-1) var(--space-5) var(--space-5);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-md);
   background-color: var(--surface-panel);
-  box-shadow: var(--hairline);
-}
-
-.lede {
-  max-width: var(--measure-prose);
-}
-
-.title {
-  margin: 0;
-  font-size: var(--text-lg);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--track-tight);
-  color: var(--text-primary);
-}
-
-.body {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-muted);
-  text-wrap: pretty;
 }
 
 .attacks {
   display: grid;
-  gap: var(--space-4);
-  margin: var(--space-5) 0 0;
 }
 
 .attack {
-  padding-top: var(--space-4);
+  padding-block: var(--space-4);
+}
+
+.attack + .attack {
   border-top: 1px solid var(--line-hairline);
+}
+
+@media (max-width: 40rem) {
+  .console {
+    padding-inline: var(--space-4);
+  }
 }
 
 .head {

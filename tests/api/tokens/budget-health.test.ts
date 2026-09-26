@@ -3,6 +3,7 @@ import { GET as healthRoute } from "@app/api/health/route"
 import { GET as agentRoute } from "@app/api/tokens/agent/route"
 import { GET as sttRoute } from "@app/api/tokens/stt/route"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { keyFingerprint } from "@/agent"
 import {
   BUDGET_EXHAUSTED_CODE,
   BUDGET_EXPLANATION,
@@ -20,6 +21,10 @@ import {
   VENDOR_KEY,
   VENDOR_TOOL_SECRET,
 } from "./vendor-stub"
+
+vi.mock("node:dns/promises", () => ({
+  lookup: vi.fn(async () => [{ address: "192.0.2.10", family: 4 }]),
+}))
 
 const original = globalThis.fetch
 
@@ -101,10 +106,15 @@ describe("T7: /api/health is public and carries no secret", () => {
       "model",
       "rateBrakeNote",
       "tokenExpiresInSeconds",
+      "vendor",
     ])
     expect(body.model).toBe(STT_MODEL)
     expect(body.rateBrakeNote).toBe(RATE_BRAKE_HONESTY_NOTE)
     expect(body.buildSha).toBe("0123456789abcdef0123456789abcdef01234567")
+    expect(body.vendor.agentsHostAddresses).toEqual(["192.0.2.10"])
+    expect(body.vendor.keyFingerprint).toBe(keyFingerprint(VENDOR_KEY))
+    expect(body.vendor.keyFingerprint).toHaveLength(12)
+    expect(VENDOR_KEY).not.toContain(String(body.vendor.keyFingerprint))
   })
 
   it("contains no secret and no environment value other than the build sha", async () => {

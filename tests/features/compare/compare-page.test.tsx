@@ -1,6 +1,7 @@
-import ComparePage, { metadata } from "@app/(pages)/compare/page"
+import ComparePage, { metadata } from "@app/(pages)/(docs)/compare/page"
+import DocsLayout from "@app/(pages)/(docs)/layout"
 import { render, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import { GateAction, policyFor, ReasonCode } from "@/domain"
 import {
   COLUMN,
@@ -13,6 +14,8 @@ import {
 } from "@/features/compare"
 import { decide } from "@/gate"
 import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
+
+vi.mock("next/navigation", () => ({ usePathname: () => "/compare" }))
 
 function rows(container: HTMLElement): HTMLTableRowElement[] {
   return [...container.querySelectorAll<HTMLTableRowElement>("tbody tr")]
@@ -33,8 +36,12 @@ describe("the compare page", () => {
     expect(rows(container).length).toBe(6)
   })
 
-  it("carries metadata, the site header and the disclaimer", () => {
-    render(<ComparePage />)
+  it("carries metadata, and the docs layout around it carries the site header and the disclaimer", () => {
+    render(
+      <DocsLayout>
+        <ComparePage />
+      </DocsLayout>,
+    )
     expect(metadata.title).toBe("Compare")
     expect(screen.getByRole("banner")).toBeDefined()
     expect(screen.getByText(DISCLAIMER_TITLE)).toBeDefined()

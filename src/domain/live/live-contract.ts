@@ -145,6 +145,14 @@ export type DeployHealth = {
   readonly budget: BudgetStatus
   readonly rateBrakeNote: string
   readonly buildSha: string | null
+  readonly vendor: VendorView
+}
+
+export type VendorView = {
+  readonly keyFingerprint: string | null
+  readonly agentsHostAddresses: readonly string[]
+  readonly streamingHostAddresses: readonly string[]
+  readonly region: string | null
 }
 
 export type RunOutcome = "completed" | "failed" | "inconclusive"

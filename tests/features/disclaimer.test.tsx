@@ -12,7 +12,7 @@ import {
 const PAGES = [
   "app/(pages)/page.tsx",
   "app/(pages)/demo/page.tsx",
-  "app/(pages)/metrics/page.tsx",
+  "app/(pages)/(docs)/layout.tsx",
 ]
 
 describe("the medical disclaimer", () => {

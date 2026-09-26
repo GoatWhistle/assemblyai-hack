@@ -3,12 +3,14 @@
 import { type KeyboardEvent as ReactKeyboardEvent, useId, useRef, useState } from "react"
 import { Counted } from "@/shared/ui/data-display/counted"
 import { Chip } from "@/shared/ui/primitives/chip"
+import { Fold } from "../fold"
 import {
   CIRCULARITY,
   COMPETITOR_CITATION,
   COMPETITOR_PROMPT_LINE,
   isTabArrowKey,
   KEYTERMS_AB_LEDE,
+  KEYTERMS_AB_SUMMARY,
   KEYTERMS_AB_TITLE,
   KEYTERMS_ARMS,
   type KeytermsArmId,
@@ -49,7 +51,10 @@ export function KeytermsAb() {
         <h2 className={styles.title} id={titleId}>
           {KEYTERMS_AB_TITLE}
         </h2>
-        <p className={styles.lede}>{KEYTERMS_AB_LEDE}</p>
+        <p className={styles.lede}>{KEYTERMS_AB_SUMMARY}</p>
+        <Fold summary="Where this A/B comes from">
+          <p className={styles.lede}>{KEYTERMS_AB_LEDE}</p>
+        </Fold>
       </header>
 
       <div className={styles.switcher} role="tablist" aria-label="Keyterms configuration">
@@ -152,8 +157,10 @@ export function KeytermsAb() {
         )}
       </div>
 
-      <p className={styles.circularity}>{CIRCULARITY}</p>
-      <p className={styles.cost}>{NO_MICROPHONE_NOTE}</p>
+      <Fold summary="Why the biased arm is invalid, not merely worse">
+        <p className={styles.circularity}>{CIRCULARITY}</p>
+        <p className={styles.cost}>{NO_MICROPHONE_NOTE}</p>
+      </Fold>
     </section>
   )
 }
