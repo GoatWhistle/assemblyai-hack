@@ -41,6 +41,19 @@ async function observe(page: Page): Promise<RunObservation> {
   return { orderText, log }
 }
 
+async function pageFailure(page: Page): Promise<string | null> {
+  const alert = page.getByRole("alert")
+  const running = await page.getByRole("button", { name: "Stop listening" }).count()
+  if (running > 0 || (await alert.count()) === 0) {
+    return null
+  }
+  const details = alert.first().locator("details")
+  if ((await details.count()) > 0) {
+    await details.first().evaluate((node) => node.setAttribute("open", ""))
+  }
+  return (await alert.first().innerText()).replace(/\s+/g, " ").trim()
+}
+
 async function sessionIdOf(page: Page): Promise<string | null> {
   const term = page.getByText("Session issued by the server", { exact: true })
   if ((await term.count()) === 0) {
@@ -118,6 +131,14 @@ for (const scenario of SCENARIOS) {
       await page.waitForTimeout(POLL_MS)
       observation = await observe(page)
       verdict = judgeRun(scenario, observation)
+      const failure = await pageFailure(page)
+      if (failure !== null && verdict.outcome !== "completed") {
+        verdict = {
+          outcome: "failed",
+          reason: `${verdict.reason}; the page stopped the call: ${failure}`,
+        }
+        break
+      }
     }
 
     const stop = page.getByRole("button", { name: "Stop listening" })
