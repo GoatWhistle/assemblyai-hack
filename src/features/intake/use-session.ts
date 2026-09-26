@@ -30,6 +30,17 @@ import { usePatienceSync } from "./use-patience-sync"
 export type { CallerTurn } from "./session-events"
 export type { FaultDetail, SessionHandles, UseSessionOptions } from "./session-options"
 
+function muteRecognizer(
+  stt: SttClient | null,
+  capture: MicrophoneCapture | null,
+  muted: boolean,
+): void {
+  if (muted && stt?.isOpen === true) {
+    stt.forceEndpoint()
+  }
+  capture?.setSttMuted(muted)
+}
+
 export function useSession(options: UseSessionOptions = {}): SessionHandles {
   const [echoDiscards, setEchoDiscards] = useState(0)
   const [level, setLevel] = useState(0)
@@ -127,7 +138,7 @@ export function useSession(options: UseSessionOptions = {}): SessionHandles {
       turns,
       watchdog,
       activity: () => life.activity(),
-      setSttMuted: (muted) => capture.current?.setSttMuted(muted),
+      setSttMuted: (muted) => muteRecognizer(stt.current, capture.current, muted),
       setAgentSpeaking,
       onAgentLine: (text) => latest.current.onAgentLine?.(text),
       onTranscriptTurn: (turn, discarded) => latest.current.onTranscriptTurn?.(turn, discarded),

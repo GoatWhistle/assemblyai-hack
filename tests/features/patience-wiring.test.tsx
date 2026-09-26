@@ -211,3 +211,18 @@ describe("ForceEndpoint is sent by the product, not merely callable", () => {
     expect(framesOfType("ForceEndpoint")).toHaveLength(0)
   })
 })
+
+describe("the caller's turn closes on our recognizer when the agent takes the turn", () => {
+  it("sends ForceEndpoint before the half-duplex mute, so the words already heard become a turn", async () => {
+    render(<Harness field={FieldName.PatientName} />)
+    await openTheLine()
+    const agent = sockets.find((socket) =>
+      socket.sentJson().some((frame) => frame.type === "session.update"),
+    )
+    expect(agent, "the agent socket never configured its session").toBeDefined()
+    await act(async () => {
+      agent?.deliverJson({ type: "reply.started", reply_id: "reply-1" })
+    })
+    expect(framesOfType("ForceEndpoint")).toHaveLength(1)
+  })
+})
