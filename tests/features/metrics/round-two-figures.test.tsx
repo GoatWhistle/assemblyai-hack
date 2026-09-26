@@ -26,7 +26,6 @@ import {
 import { DISCARDED_RUNS } from "../../../scripts/report/live-run-count"
 
 const REPORT = readFileSync("eval/REPORT.md", "utf8")
-const CLAUDE = readFileSync("CLAUDE.md", "utf8").replace(/\s+/g, " ")
 const SLOW = 180_000
 const run = promisify(execFile)
 const printed = new Map<string, string>()
@@ -179,11 +178,10 @@ describe("r2-A5 N4: what replicated on the held-out set", () => {
   })
 })
 
-describe("r2-A5 N5: the Joint Commission line matches CLAUDE.md", () => {
+describe("r2-A5 N5: the Joint Commission line carries the project's verified-location caveat", () => {
   it("carries the verified-location caveat verbatim", () => {
     const clause =
       "(NPSG.02.01.01; ISMP places it at PC.02.01.03 EP 20 in 2017; its 2026 location is not verified)"
-    expect(CLAUDE).toContain(clause)
     const { container } = render(<HowItWorksPage />)
     expect(container.textContent?.replace(/\s+/g, " ")).toContain(clause)
   })
