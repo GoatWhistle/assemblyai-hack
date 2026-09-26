@@ -48,7 +48,8 @@ export function stubVendor(answers: VendorAnswers = {}): VendorStub {
   return {
     calls,
     tokenCalls: () => calls.filter((call) => !call.url.startsWith(AGENTS_URL_PREFIX)),
-    agentCreations: () => calls.filter((call) => call.url.startsWith(AGENTS_URL_PREFIX)),
+    agentCreations: () =>
+      calls.filter((call) => call.url.startsWith(AGENTS_URL_PREFIX) && call.method === "POST"),
   }
 }
 

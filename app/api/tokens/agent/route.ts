@@ -86,7 +86,9 @@ async function newBinding(input: {
     return { sessionId, agentId }
   } catch (error) {
     if (error instanceof UpstreamError) {
-      throw new RouteRefusal(failure("could not create the agent for this session", 502))
+      throw new RouteRefusal(
+        failure(`could not create the agent for this session: ${error.message}`, 502),
+      )
     }
     throw error
   }

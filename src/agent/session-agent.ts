@@ -5,6 +5,31 @@ export const AGENTS_URL = "https://agents.assemblyai.com/v1/agents"
 
 export type AgentFetch = (url: string, init: RequestInit) => Promise<Response>
 
+export const AGENT_READ_BACK_ATTEMPTS = 3
+
+const READ_BACK_PAUSE_MS = 400
+
+async function readBackStatus(input: {
+  apiKey: string
+  agentId: string
+  doFetch: AgentFetch
+  pauseMs: number
+}): Promise<number> {
+  let status = 0
+  for (let attempt = 0; attempt < AGENT_READ_BACK_ATTEMPTS; attempt += 1) {
+    const response = await input.doFetch(`${AGENTS_URL}/${encodeURIComponent(input.agentId)}`, {
+      headers: { Authorization: `Bearer ${input.apiKey}` },
+      cache: "no-store",
+    })
+    status = response.status
+    if (response.ok) {
+      return status
+    }
+    await new Promise((resolve) => setTimeout(resolve, input.pauseMs))
+  }
+  return status
+}
+
 function agentIdOf(body: unknown): string | null {
   if (typeof body !== "object" || body === null) {
     return null
@@ -23,6 +48,7 @@ export async function createSessionAgent(input: {
   sessionId: string
   model?: string
   doFetch?: AgentFetch
+  readBackPauseMs?: number
 }): Promise<string> {
   const definition = buildAgentDefinition({
     baseUrl: input.baseUrl,
@@ -46,6 +72,19 @@ export async function createSessionAgent(input: {
   const id = agentIdOf(await response.json())
   if (id === null) {
     throw new UpstreamError(502, "the agent creation response carried no agent id")
+  }
+  const status = await readBackStatus({
+    apiKey: input.apiKey,
+    agentId: id,
+    doFetch,
+    pauseMs: input.readBackPauseMs ?? READ_BACK_PAUSE_MS,
+  })
+  if (status < 200 || status >= 300) {
+    await deleteSessionAgent({ apiKey: input.apiKey, agentId: id, doFetch })
+    throw new UpstreamError(
+      502,
+      `the vendor created ${id} but GET ${AGENTS_URL}/${id} answered ${status} ${AGENT_READ_BACK_ATTEMPTS} times, so a socket could not load it either`,
+    )
   }
   return id
 }
