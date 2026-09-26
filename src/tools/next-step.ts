@@ -6,7 +6,7 @@ export const READ_BACK_NEXT =
   "Call read_back now with this field, candidate_id and utterance set to say_to_caller, then say say_to_caller. After the caller answers, call read_back again with caller_answer. Nothing is written before that second call."
 
 export const ACCEPT_NEXT =
-  "Accepted by its validator, so no yes is needed, but nothing is written yet. Call read_back with this field, candidate_id and utterance set to say_to_caller, then at once call read_back again with caller_answer set to the caller's most recent words; that second call writes it. Then say say_to_caller."
+  "Written: its validator proved it, so no yes is needed and no read_back call either. Say say_to_caller, then follow after_this."
 
 type Pending = {
   readonly field: FieldName

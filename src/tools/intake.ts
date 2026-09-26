@@ -2,6 +2,7 @@ import { matchesServerRecordedAgentLine, type TurnRecord } from "@/confirmation"
 import {
   abortField,
   type ConfirmationEvidence,
+  ConfirmationMode,
   type ConfirmedValue,
   EchoTurnError,
   emptyOrder,
@@ -12,11 +13,13 @@ import {
   type MetricEvent,
   type MetricKind,
   type Order,
+  policyFor,
   type ReasonCode,
   setField,
   withdrawField,
   withStatus,
 } from "@/domain"
+import { confirm } from "@/gate"
 import type { TimelineEntry } from "@/sessions"
 import type { ToolPayload } from "./respond"
 
@@ -208,6 +211,24 @@ export function rememberAgentLine(state: IntakeState, utterance: string): void {
 
 export function writeConfirmed(state: IntakeState, value: ConfirmedValue): void {
   state.order = setField(state.order, value)
+}
+
+export function writeAccepted(
+  state: IntakeState,
+  candidate: FieldCandidate,
+  decision: GateDecision,
+): void {
+  writeConfirmed(
+    state,
+    confirm({
+      candidate,
+      policy: policyFor(candidate.field),
+      decision,
+      confirmationMode: ConfirmationMode.Validator,
+      callerConfirmed: false,
+      confirmedAt: candidate.createdAt,
+    }),
+  )
 }
 
 export function markEscalated(state: IntakeState, field: FieldName): void {

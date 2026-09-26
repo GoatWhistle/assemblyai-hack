@@ -300,13 +300,23 @@ found" for a number that provably adds up would add noise to the demo. The exten
 exists and is switched off because the data is synthetic, not because it could not be
 built.
 
-### 4.3 `propose_field` — the only path to a field, and it does not write
+### 4.3 `propose_field` — the only path to a field, and it writes only what arithmetic proved
 
-Every field goes through it, and it never writes to the order. It returns a gate decision:
-the action, the reason code, the sentence to say, the evidence, and a flag saying whether
-anything was written. **That flag is present in every response, including an accept.** It
-is not for the model — it is for the audit and for a judge, who can see from the log that
-up to the moment of acceptance the order held nothing.
+Every field goes through it. It returns a gate decision: the action, the reason code, the
+sentence to say, the evidence, and a flag saying whether anything was written. **That flag
+is present in every response.** It is false for every value that needs the caller's
+confirmation, so a judge can see from the log that until the read-back was answered the
+order held nothing.
+
+**An accept writes at once, through `gate.confirm()` with confirmation mode `validator`.**
+An accept means an arithmetic check proved the value (NPI, DEA) above its confidence
+threshold, and the domain rule is that voice is not spent where arithmetic exists. An
+earlier version still wrote an accepted value only on a second `read_back` round trip. On
+the production smoke of 26 September 2026 the managed model accepted an NPI, never made
+the two follow-up calls, and fell silent until the idle watchdog closed the line after 90
+seconds: a ritual that added no proof and cost the call. The response now carries
+`after_this`, so the next step arrives with the write, and a late `read_back` on a written
+candidate answers that it is already written rather than writing it twice.
 
 **The transcript hint is the most fragile part of the contract.** The model must copy a
 stretch of the caller's utterance verbatim; `src/confirmation/provenance-match.ts` looks for

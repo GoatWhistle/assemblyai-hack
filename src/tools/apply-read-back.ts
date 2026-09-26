@@ -71,15 +71,7 @@ export function applyReadBackRegistration(
     }
   }
   if (latestDecision(state, event.candidateId)?.action === GateAction.Accept) {
-    return {
-      registered: true,
-      field: event.field,
-      candidate_id: event.candidateId,
-      awaiting: "nothing",
-      answer: "unclear",
-      written_to_order: false,
-      note: "this value passed its validator, so it needs no yes from the caller. Call read_back again right now with the same candidate_id and caller_answer set to the caller's most recent words; that second call writes it unless the caller has said no. Then say the sentence and go on",
-    }
+    return alreadyWritten(state, event)
   }
   return {
     registered: true,
@@ -139,8 +131,27 @@ function refused(event: ConfirmationEvent, field: string, error: string): ToolPa
   }
 }
 
+function alreadyWritten(
+  state: IntakeState,
+  event: ReadBackEvent | ConfirmationEvent,
+): ToolPayload {
+  return {
+    registered: true,
+    field: event.field,
+    candidate_id: event.candidateId,
+    awaiting: "nothing",
+    answer: "unclear",
+    written_to_order: state.order.fields.get(event.field)?.candidateId === event.candidateId,
+    note: "its validator proved this value and propose_field already wrote it; no read_back is needed. Go on with after_this",
+    after_this: orderNext(state),
+  }
+}
+
 export function applyConfirmation(state: IntakeState, event: ConfirmationEvent): ToolPayload {
   register(state, event)
+  if (state.order.fields.get(event.field)?.candidateId === event.candidateId) {
+    return alreadyWritten(state, event)
+  }
   const candidate = state.candidates.get(event.candidateId)
   const decision = latestDecision(state, event.candidateId)
 

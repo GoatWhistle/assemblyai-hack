@@ -146,7 +146,7 @@ describe("what a tool result tells the agent to do next", () => {
     expect(body.after_this.next).toContain("patient_name")
   })
 
-  it("writes an accepted value on the second call without waiting for a yes", async () => {
+  it("writes a value its validator proved at proposal time, with no read_back round trip", async () => {
     await seedTurn("NPI 1234567893", 0.99)
     const npi = await (
       await proposeField(
@@ -158,31 +158,23 @@ describe("what a tool result tells the agent to do next", () => {
       )
     ).json()
     expect(npi.action).toBe("accept")
-    expect(npi.next).toContain("at once")
-    const sentence = npi.say_to_caller
-    const registered = await (
-      await readBack(
-        call("read-back", {
-          field: "prescriber_npi",
-          candidate_id: npi.candidate_id,
-          utterance: sentence,
-        }),
-      )
-    ).json()
-    expect(registered.awaiting).toBe("nothing")
-    expect(registered.written_to_order).toBe(false)
+    expect(npi.written_to_order).toBe(true)
+    expect(npi.confirmation_mode).toBe("validator")
+    expect(npi.after_this.still_missing).not.toContain("prescriber_npi")
+    expect(npi.after_this.still_to_read_back).toEqual([])
 
-    const written = await (
+    const late = await (
       await readBack(
         call("read-back", {
           field: "prescriber_npi",
           candidate_id: npi.candidate_id,
-          utterance: sentence,
+          utterance: npi.say_to_caller,
           caller_answer: "NPI 1234567893",
         }),
       )
     ).json()
-    expect(written.written_to_order).toBe(true)
-    expect(written.confirmation_mode).toBe("validator")
+    expect(late.written_to_order).toBe(true)
+    expect(late.awaiting).toBe("nothing")
+    expect(late.after_this.still_missing).not.toContain("prescriber_npi")
   })
 })

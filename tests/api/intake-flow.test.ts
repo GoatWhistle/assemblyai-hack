@@ -31,7 +31,10 @@ async function collect(input: FieldInput): Promise<string> {
     )
   ).json()
 
-  expect(proposed.written_to_order, `${input.field} was written by propose_field`).toBe(false)
+  expect(
+    proposed.written_to_order,
+    `${input.field} was written by propose_field without its validator proving it`,
+  ).toBe(proposed.action === "accept")
   expect(proposed.candidate_id, `${input.field}: ${proposed.reason_code}`).not.toBeNull()
 
   await readBackAloud(`Confirming ${input.field}: ${input.value}. Correct?`, "yes")

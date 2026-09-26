@@ -34,9 +34,10 @@ import {
   recordEvent,
   rememberCandidate,
   rememberDecision,
+  writeAccepted,
 } from "./intake"
 import type { IntakeEvent } from "./intake-events"
-import { proposalNext } from "./next-step"
+import { orderNext, proposalNext } from "./next-step"
 import type { ToolPayload } from "./respond"
 
 type ProposalEvent = Extract<IntakeEvent, { type: "proposal" }>
@@ -235,5 +236,10 @@ export function applyProposal(
     markAborted(state, field)
   }
 
-  return decided({ decision, quotation: event.transcriptHint, matched })
+  const payload = decided({ decision, quotation: event.transcriptHint, matched })
+  if (decision.action !== GateAction.Accept) {
+    return payload
+  }
+  writeAccepted(state, candidate, decision)
+  return { ...payload, written_to_order: true, after_this: orderNext(state) }
 }

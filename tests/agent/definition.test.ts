@@ -70,8 +70,10 @@ describe("agent definition", () => {
     expect(SYSTEM_PROMPT).not.toMatch(/0\.9\d/)
   })
 
-  it("tells the model that propose_field never writes", () => {
-    expect(SYSTEM_PROMPT).toContain("propose_field does not write")
+  it("tells the model that propose_field writes only what a validator proved", () => {
+    expect(SYSTEM_PROMPT).toContain("propose_field writes only a value its validator proved")
+    expect(SYSTEM_PROMPT).toContain("with no read_back call")
+    expect(SYSTEM_PROMPT).toContain("call commit_order at once with caller_confirmed false")
     expect(SYSTEM_PROMPT).toContain("not a clinician")
   })
 

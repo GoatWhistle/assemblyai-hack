@@ -107,7 +107,7 @@ export function buildTools(
       type: "function",
       name: "propose_field",
       description:
-        "Propose a value for one order field. This NEVER writes to the order. Call it once for every value the caller says, in the same turn; when one caller turn holds several values, call it once per value. It returns a candidate_id and a say_to_caller sentence: register that sentence with read_back, say it, and write the value with the second read_back call once the caller answers.",
+        "Propose a value for one order field. Call it once for every value the caller says, in the same turn; when one caller turn holds several values, call it once per value. It returns a candidate_id and a say_to_caller sentence. If written_to_order is true, an arithmetic validator proved the value and it is already written: say the sentence and follow after_this.next. Otherwise register the sentence with read_back, say it, and write the value with the second read_back call once the caller answers.",
       parameters: {
         type: "object",
         properties: {
@@ -177,7 +177,7 @@ export function buildTools(
       type: "function",
       name: "commit_order",
       description:
-        "Place the order. Call this at once when the caller answers yes to your read-back of the whole order; saying you will place it does not place it. It refuses unless every critical field was written by a read_back call, and then names the fields to collect. The server records your full read-back from the recorded speech of the call.",
+        "Place the order. Call this at once when the caller answers yes to your read-back of the whole order; saying you will place it does not place it. It refuses unless every critical field is written, by propose_field when a validator proved it or by a read_back call otherwise, and then names the fields to collect. When the caller asks to submit early, call it with caller_confirmed false so the refusal names what is missing. The server records your full read-back from the recorded speech of the call.",
       parameters: {
         type: "object",
         properties: {
