@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="8" fill="#5d48db" />
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="#ffffff" stroke="#d3d4f9" />
   <defs>
     <mask id="beat">
       <rect width="32" height="32" fill="white" />
       <path d="M13.2 13 h1.3 l1.1 -2.6 1.5 5 1.1 -3 h1.5" fill="none" stroke="black" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
     </mask>
   </defs>
-  <rect x="12" y="5.5" width="8" height="13" rx="4" fill="#ffffff" mask="url(#beat)" />
-  <path d="M9 15.5 a7 7 0 0 0 14 0" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" />
-  <path d="M16 22.5 V26.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" />
+  <rect x="12" y="5.5" width="8" height="13" rx="4" fill="#5c48db" mask="url(#beat)" />
+  <path d="M9 15.5 a7 7 0 0 0 14 0" fill="none" stroke="#5c48db" stroke-width="2.2" stroke-linecap="round" />
+  <path d="M16 22.5 V26.5" fill="none" stroke="#5c48db" stroke-width="2.2" stroke-linecap="round" />
 </svg>
