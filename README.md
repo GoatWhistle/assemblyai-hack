@@ -530,7 +530,7 @@ Three workflows rather than one, split by what each protects and by how fast it 
 |---|---|---|
 | **code quality** | lint, types, the file and package ratchets, import cycles, the English-only rule, and the interface rules a screenshot cannot prove | about 10 minutes, two jobs in parallel |
 | **test suite** | the suite itself, then the offline evidence: the recorded pipeline, the latency budget, keyterm purity, the held-out seal, and every figure `make honest` reproduces | about 20 minutes |
-| **safety invariants** | the gate invariant, all twelve mutations, and the check that no secret reaches the built client bundle | about 25 minutes |
+| **safety invariants** | the gate invariant, all twelve mutations, and the check that no secret reaches the built client bundle | a few minutes; each mutation reruns the gate tests, not the whole suite |
 
 Every step inside a job carries `if: ${{ !cancelled() }}`, so a failing lint does not
 hide the state of the nine checks behind it. One red run should say everything that is
@@ -712,7 +712,7 @@ softened, is in [docs/limitations.md](docs/limitations.md).
   through our own host, which is the always-on process the architecture deliberately
   removed. Turn-level numbers from `GET /v1/sessions/{id}` are server-side and honest;
   word-level timings are not available there, so word-to-gate latency would be a browser
-  measurement, and it is not measured yet.
+  measurement, and it is not measured yet.
 - **A second channel now witnesses the words, after the call.** The agent socket recognizes
   the caller on AssemblyAI's side. At finalize the server fetches that transcript with its own
   key and marks every confirmed field `witnessed`, `not_witnessed` or `unavailable` in the
