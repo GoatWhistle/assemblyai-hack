@@ -41,6 +41,14 @@ function ratePercent(successes: number, total: number): string | null {
   return `${(interval.point * 100).toFixed(1)}% [${(interval.low * 100).toFixed(1)}, ${(interval.high * 100).toFixed(1)}]`
 }
 
+function lowerFirst(text: string): string {
+  return `${text.charAt(0).toLowerCase()}${text.slice(1)}`
+}
+
+function upperFirst(text: string): string {
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
+}
+
 function errors(scored: readonly Scored[]): readonly Scored[] {
   return scored.filter((entry) => entry.correct === false)
 }
@@ -52,15 +60,14 @@ function correctBelowThreshold(scored: readonly Scored[]): readonly Scored[] {
 export function errorRateFigures(): readonly MetricDefinition[] {
   return recordedRuns().map((run) => ({
     id: `eer-${run.id}`,
-    name: `Entity error rate, ${run.name.toLowerCase()}`,
-    meaning: `How often the recognizer returned a different drug name than the one spoken. ${run.setDescription}.`,
+    name: `Entity error rate, ${lowerFirst(run.name)}`,
+    meaning: `How often the recognizer returned a different drug name than the one spoken. ${upperFirst(run.setDescription)}.`,
     command: run.command,
-    setDescription: `${run.scored.length} utterances, recorded ${run.measuredAt.slice(0, 10)}`,
+    setDescription: `utterances in eval/${run.id}`,
     value: ratePercent(errors(run.scored).length, run.scored.length),
     input: "tts",
     n: run.scored.length,
     measuredOn: run.measuredAt.slice(0, 10),
-    tone: run.entityErrorRate > 0.2 ? "alert" : "neutral",
   }))
 }
 
@@ -83,7 +90,6 @@ export function confidenceFigures(): readonly MetricDefinition[] {
       input: "tts",
       n: wrong.length === 0 ? null : wrong.length,
       measuredOn,
-      tone: "alert",
     },
     {
       id: "threshold-false-asks",

@@ -4,18 +4,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { STT_SAMPLE_RATE } from "@/audio/resample"
 import { playSegment } from "@/audio/segment-player"
 import type { ListenRequest } from "@/features/field-card/said-recorded"
+import { useInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen } from "@/features/intake/intake-screen"
 import { SessionPhase } from "@/features/intake/session-status"
 import { solicitedField } from "@/features/intake/solicited-field"
 import { useLiveOrder } from "@/features/intake/use-live-order"
 import { type CallerTurn, useSession } from "@/features/intake/use-session"
 import { groupOrder } from "@/features/order-summary/order-groups"
-import { OrderPanel } from "@/features/order-summary/order-panel"
 import { useReadBack } from "@/features/read-back/use-read-back"
-import { RecorderBar } from "@/features/session-recorder/recorder-bar"
 import { useSessionRecorder } from "@/features/session-recorder/use-session-recorder"
 import { countDecisions } from "@/features/telemetry/decision-counts"
-import { TelemetryPanel } from "@/features/telemetry/telemetry-panel"
 import { useTelemetry } from "@/features/telemetry/use-telemetry"
 import {
   agentEntry,
@@ -107,6 +105,7 @@ export function IntakeClient() {
   })
   const live = session.phase === SessionPhase.Live
   finishRef.current = session.finishAnswer
+  const inCall = useInCall(session.phase !== SessionPhase.Idle)
 
   useEffect(() => {
     telemetry.decisionsSeen(order.candidates, order.decisionHistory)
@@ -180,6 +179,7 @@ export function IntakeClient() {
         decisionHistory={order.decisionHistory}
         turnsHeld={order.turnsHeld}
         turnInFlight={order.turnInFlight}
+        solicited={solicited}
         echoDiscards={session.echoDiscards}
         level={session.level}
         agentSpeaking={session.agentSpeaking}
@@ -191,32 +191,36 @@ export function IntakeClient() {
         snapshot={order.snapshot}
         onListen={listen}
         summary={
-          <OrderPanel
-            groups={groups}
-            snapshot={order.snapshot}
-            sessionId={session.sessionId}
-            witness={order.witness}
-          />
+          inCall === null ? null : (
+            <inCall.OrderPanel
+              groups={groups}
+              snapshot={order.snapshot}
+              sessionId={session.sessionId}
+              witness={order.witness}
+            />
+          )
         }
         telemetry={
-          <TelemetryPanel
-            mode={LIVE_MODE}
-            phase={session.phase}
-            sttModel={session.sttModel}
-            sessionId={session.sessionId}
-            log={telemetry.log}
-            counts={countDecisions({
-              candidates: order.candidates,
-              decisionHistory: order.decisionHistory,
-              snapshot: order.snapshot,
-            })}
-            decisions={order.decisionHistory}
-            latency={telemetry.latency}
-          />
+          inCall === null ? null : (
+            <inCall.TelemetryPanel
+              mode={LIVE_MODE}
+              phase={session.phase}
+              sttModel={session.sttModel}
+              sessionId={session.sessionId}
+              log={telemetry.log}
+              counts={countDecisions({
+                candidates: order.candidates,
+                decisionHistory: order.decisionHistory,
+                snapshot: order.snapshot,
+              })}
+              decisions={order.decisionHistory}
+              latency={telemetry.latency}
+            />
+          )
         }
       />
-      {recorder.enabled ? (
-        <RecorderBar
+      {recorder.enabled && inCall !== null ? (
+        <inCall.RecorderBar
           recorder={recorder}
           sessionId={session.sessionId}
           sttModel={session.sttModel}

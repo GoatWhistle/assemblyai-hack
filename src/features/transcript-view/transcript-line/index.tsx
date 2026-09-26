@@ -56,6 +56,7 @@ export function TranscriptLine({
                   word.confidence < weakBelow && styles.wordWeak,
                 )}
                 title={`${word.startMs}-${word.endMs} ms, certainty ${word.confidence.toFixed(2)}`}
+                aria-label={`${word.text}, ${word.startMs} to ${word.endMs} ms, recognizer certainty ${word.confidence.toFixed(2)}`}
                 onClick={() => onSelectWord?.(word, entry)}
               >
                 {word.text}{" "}

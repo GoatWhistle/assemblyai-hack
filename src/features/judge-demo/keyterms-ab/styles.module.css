@@ -89,9 +89,8 @@
 }
 
 .listLabel {
-  font-size: var(--text-2xs);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
   color: var(--text-muted);
 }
 
@@ -150,9 +149,8 @@
 }
 
 .effectTerm {
-  font-size: var(--text-2xs);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
   color: var(--text-muted);
 }
 
@@ -197,7 +195,7 @@
 
 .quote {
   font-family: var(--font-data);
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   color: var(--text-secondary);
 }
 
@@ -211,7 +209,7 @@
 }
 
 .cost {
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
   color: var(--text-faint);
   max-width: var(--measure-prose);

@@ -153,7 +153,10 @@ export function useSessionLifecycle(deps: LifecycleDeps): SessionLifecycle {
     [teardown],
   )
 
-  const stop = useCallback(() => teardown(null, SessionPhase.Closed), [teardown])
+  const stop = useCallback(
+    () => teardown(null, active.current ? SessionPhase.Closed : SessionPhase.Idle),
+    [teardown],
+  )
 
   const epoch = useCallback(() => epochs.current, [])
 

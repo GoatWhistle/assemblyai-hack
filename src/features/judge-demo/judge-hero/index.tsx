@@ -1,7 +1,8 @@
 import { useId } from "react"
+import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { CALL_HREF, REPLAY_ENTRY_HREF } from "../entry-routes"
-import { Fold } from "../fold"
+import { REPLAY_SECONDS } from "../replay-clock"
 import styles from "./styles.module.css"
 
 const HERO_TITLE = "A prescription taken by voice, and proof it was not misheard"
@@ -32,17 +33,17 @@ export function JudgeHero({ headingLevel = "h1", autoplaying = false }: JudgeHer
         {HERO_TITLE}
       </Heading>
       <p className={styles.claim}>{HERO_CLAIM}</p>
-      <Fold summary="The mechanism and the business case">
+      <Disclosure summary="The mechanism and the business case">
         <p className={styles.body}>{HERO_BODY}</p>
         <ul className={styles.parties}>
           <li className={styles.party}>{WHO_PAYS}</li>
           <li className={styles.party}>{WHO_GETS}</li>
         </ul>
-      </Fold>
+      </Disclosure>
       <div className={styles.actions}>
         {autoplaying ? null : (
           <ActionLink href={REPLAY_ENTRY_HREF} tone="primary" size="large">
-            Watch the 40-second case: no mic, no key
+            Watch the {REPLAY_SECONDS}-second case: no mic, no key
           </ActionLink>
         )}
         <ActionLink href={CALL_HREF} size="large">

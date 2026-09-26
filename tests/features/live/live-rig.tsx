@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react"
 import { vi } from "vitest"
+import { preloadInCall } from "@/features/intake/in-call-loader"
 import type { MemoryTransport, TransportListeners } from "@/realtime/transport"
 
 export const rig = {
@@ -67,7 +68,9 @@ export function json(body: unknown, status = 200): Response {
 }
 
 export function socket(host: "agents" | "streaming"): MemoryTransport {
-  const found = rig.sockets.filter((entry) => entry.url.includes(`${host}.assemblyai.com`))
+  const found = rig.sockets.filter((entry) =>
+    new URL(entry.url).hostname.startsWith(`${host}.`),
+  )
   const last = found[found.length - 1]
   if (last === undefined) {
     throw new Error(`no ${host} socket was opened`)
@@ -82,6 +85,7 @@ export async function advance(ms: number) {
 }
 
 export async function startTheCall(Client: () => React.ReactNode) {
+  await preloadInCall()
   render(<Client />)
   fireEvent.click(screen.getByRole("button", { name: "Start listening" }))
   await advance(0)

@@ -1,6 +1,22 @@
 import { GateAction, ReasonCode } from "@/domain"
+import type { ChipTone } from "@/shared/ui/primitives/chip"
 
-export type ReasonSeverity = "accepted" | "asking" | "lasa" | "escalated" | "aborted"
+export type ReasonSeverity =
+  | "accepted"
+  | "asking"
+  | "refused"
+  | "lasa"
+  | "escalated"
+  | "aborted"
+
+export const SEVERITY_TONE: Readonly<Record<ReasonSeverity, ChipTone>> = Object.freeze({
+  accepted: "accepted",
+  asking: "asking",
+  refused: "escalated",
+  lasa: "lasa",
+  escalated: "escalated",
+  aborted: "aborted",
+})
 
 export type ReasonLanguage = {
   readonly code: ReasonCode
@@ -21,31 +37,31 @@ export const REASON_LANGUAGE: Readonly<Record<ReasonCode, Omit<ReasonLanguage, "
       headline: "Asking again: could not be put into standard form",
       because:
         "The words were heard but no normal form could be derived from them, so there is nothing a validator could check. A phrase like a month's worth has no single numeric value.",
-      severity: "asking",
+      severity: "refused",
     },
     [ReasonCode.ValidatorChecksum]: {
       headline: "Asking for spell-out: the check digit does not match",
       because:
         "Arithmetic already rejected this value, so repeating it aloud proves nothing. One character is wrong and only a character-by-character reading locates it.",
-      severity: "asking",
+      severity: "refused",
     },
     [ReasonCode.ValidatorFormat]: {
       headline: "Asking for spell-out: the format is not valid",
       because:
         "The value does not have the shape the field requires, so a check digit cannot even be computed over it.",
-      severity: "asking",
+      severity: "refused",
     },
     [ReasonCode.ValidatorCatalog]: {
       headline: "Asking again: not in the catalogue",
       because:
         "The name does not exist in the built drug catalogue. Offering a choice between two names would be pointless when the heard name is not a product at all.",
-      severity: "asking",
+      severity: "refused",
     },
     [ReasonCode.ValidatorCombo]: {
       headline: "Asking which part: the combination does not exist",
       because:
         "Each part may be real on its own, but this drug, strength, form and route tuple is not in the catalogue, so one of the four is wrong and the operator must say which.",
-      severity: "asking",
+      severity: "refused",
     },
     [ReasonCode.LasaHit]: {
       headline: "Asking to disambiguate: published look-alike pair",

@@ -6,6 +6,12 @@
   padding: var(--space-6) var(--space-5) var(--space-8);
 }
 
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
 .hint {
   font-size: var(--text-sm);
   color: var(--text-muted);
@@ -36,6 +42,7 @@
     background-color: var(--surface-panel);
   }
 
+  .title,
   .hint {
     display: none;
   }

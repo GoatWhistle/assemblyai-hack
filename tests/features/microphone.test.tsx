@@ -11,12 +11,12 @@ import {
 import { MicConsole } from "@/features/microphone/mic-console"
 import {
   isBusy,
+  isCancellable,
   isOpen,
   MIC_COPY,
   MicState,
   micStateFor,
 } from "@/features/microphone/mic-state"
-import { MicKeyAction, micKeyAction } from "@/features/microphone/use-mic-keys"
 
 function renderConsole(overrides: Partial<Parameters<typeof MicConsole>[0]> = {}) {
   return render(
@@ -98,6 +98,8 @@ describe("isMicrophoneFault", () => {
     expect(isBusy(MicState.Listening)).toBe(false)
     expect(isOpen(MicState.AgentSpeaking)).toBe(true)
     expect(isOpen(MicState.Idle)).toBe(false)
+    expect(isCancellable(MicState.Opening)).toBe(true)
+    expect(isCancellable(MicState.Closing)).toBe(false)
   })
 })
 
@@ -157,16 +159,33 @@ describe("mic console", () => {
     expect(screen.getByText(MIC_COPY[MicState.AgentSpeaking].detail)).not.toBeNull()
   })
 
-  it("disables the trigger while the line is opening rather than queueing clicks", async () => {
+  it("turns the trigger into a cancel while the line is opening rather than queueing clicks", async () => {
     const onStart = vi.fn()
-    renderConsole({ state: MicState.Opening, onStart })
-    const trigger = screen.getByRole("button", { name: /opening/i })
-    expect((trigger as HTMLButtonElement).disabled).toBe(true)
+    const onStop = vi.fn()
+    renderConsole({ state: MicState.Opening, onStart, onStop })
+    const trigger = screen.getByRole("button", { name: /^cancel$/i })
+    expect(
+      (trigger as HTMLButtonElement).disabled,
+      "connecting had no way out: the button the caller had just pressed went grey and dead (r1-A3 A3-03)",
+    ).toBe(false)
     await userEvent.click(trigger)
     expect(onStart).not.toHaveBeenCalled()
+    expect(onStop).toHaveBeenCalledOnce()
   })
 
-  it("starts and stops from the space bar", async () => {
+  it("cancels an opening line from the escape key", async () => {
+    const onStop = vi.fn()
+    renderConsole({ state: MicState.Opening, onStop })
+    await userEvent.keyboard("{Escape}")
+    expect(onStop).toHaveBeenCalledOnce()
+  })
+
+  it("keeps the trigger disabled while the line is closing", () => {
+    renderConsole({ state: MicState.Closing })
+    expect((screen.getByRole("button") as HTMLButtonElement).disabled).toBe(true)
+  })
+
+  it("starts from the space bar but never hangs up on it", async () => {
     const onStart = vi.fn()
     const onStop = vi.fn()
     const { unmount } = renderConsole({ onStart })
@@ -176,7 +195,16 @@ describe("mic console", () => {
 
     renderConsole({ state: MicState.Listening, onStop })
     await userEvent.keyboard(" ")
-    expect(onStop).toHaveBeenCalledOnce()
+    expect(
+      onStop,
+      "space is also the page-scroll key, so a caller scrolling the field cards mid-call hung up (r1-A1 A1-17)",
+    ).not.toHaveBeenCalled()
+  })
+
+  it("replaces its own headline with a notice, so a fault is said once", () => {
+    renderConsole({ state: MicState.Blocked, notice: <p>one fault card</p> })
+    expect(screen.getByText("one fault card")).not.toBeNull()
+    expect(screen.queryByText(MIC_COPY[MicState.Blocked].headline)).toBeNull()
   })
 
   it("stops on escape only while the line is open", async () => {
@@ -200,34 +228,5 @@ describe("mic console", () => {
   it("announces the level for a screen reader instead of leaving the meter silent", () => {
     renderConsole({ state: MicState.Listening, level: 0.42 })
     expect(screen.getByLabelText(/input level 42 of 100/i)).not.toBeNull()
-  })
-})
-
-describe("micKeyAction", () => {
-  it("starts on space when idle and stops on space when open", () => {
-    expect(micKeyAction(" ", "Space", { busy: false, open: false })).toBe(MicKeyAction.Start)
-    expect(micKeyAction(" ", "Space", { busy: false, open: true })).toBe(MicKeyAction.Stop)
-  })
-
-  it("ignores space while the line is opening or closing", () => {
-    expect(micKeyAction(" ", "Space", { busy: true, open: false })).toBe(MicKeyAction.Ignore)
-    expect(micKeyAction(" ", "Space", { busy: true, open: true })).toBe(MicKeyAction.Ignore)
-  })
-
-  it("stops on escape only when the line is open", () => {
-    expect(micKeyAction("Escape", "Escape", { busy: false, open: true })).toBe(
-      MicKeyAction.Stop,
-    )
-    expect(micKeyAction("Escape", "Escape", { busy: false, open: false })).toBe(
-      MicKeyAction.Ignore,
-    )
-  })
-
-  it("ignores every other key", () => {
-    for (const key of ["a", "Enter", "Tab", "ArrowUp"]) {
-      expect(micKeyAction(key, `Key${key}`, { busy: false, open: true })).toBe(
-        MicKeyAction.Ignore,
-      )
-    }
   })
 })

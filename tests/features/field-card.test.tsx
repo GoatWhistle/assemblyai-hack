@@ -206,6 +206,9 @@ describe("stanceOf", () => {
   })
 
   it("reads an undecided candidate as proposed", () => {
-    expect(stanceOf(QUANTITY_CANDIDATE, null)).toBe("asking")
+    expect(
+      stanceOf(QUANTITY_CANDIDATE, null),
+      "A3-05: before the gate decides, no card may claim a re-ask is in flight",
+    ).toBe("proposed")
   })
 })

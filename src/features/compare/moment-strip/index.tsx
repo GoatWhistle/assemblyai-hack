@@ -1,5 +1,5 @@
 import { Chip } from "@/shared/ui/primitives/chip"
-import { breakable, COLUMN, PAIR_OUTRANKS_NOTE, partnersNote, verdictTone } from ".."
+import { COLUMN, PAIR_OUTRANKS_NOTE, partnersNote, verdictTone, WithoutGate } from ".."
 import { formatCertainty, type Moment } from "../moments"
 import styles from "./styles.module.css"
 
@@ -34,13 +34,13 @@ export function MomentStrip({ moment }: MomentStripProps) {
           <dt className={styles.label}>{COLUMN.verdict}</dt>
           <dd className={styles.verdict}>
             <Chip tone={verdictTone(moment)}>{moment.verdict}</Chip>
-            <code className={styles.code}>{breakable(moment.decision.reasonCode)}</code>
+            <code className={styles.code}>{moment.decision.reasonCode}</code>
           </dd>
         </div>
         <div className={`${styles.stop} ${styles.without}`}>
           <dt className={styles.label}>{COLUMN.withoutGate}</dt>
           <dd className={moment.withoutGateWrites ? styles.slipped : styles.value}>
-            {breakable(moment.withoutGateText)}
+            <WithoutGate moment={moment} className={undefined} />
           </dd>
         </div>
       </dl>

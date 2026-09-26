@@ -9,14 +9,18 @@ import { DemoArmPanel } from "./demo-arm"
 import {
   DECISION_AT_MS,
   DEMO_ARMS,
-  DEMO_DURATION_MS,
   DEMO_STAGES,
   phaseAt,
   RECOGNIZED_AS,
   RECOGNIZER_CERTAINTY,
-  SHIPPED_EVIDENCE,
   SPOKEN_TRUTH,
 } from "./demo-arms"
+import {
+  DEMO_DURATION_MS,
+  REPLAY_FROM_MS,
+  REPLAY_LENGTH_LABEL,
+  sessionSeconds,
+} from "./replay-clock"
 import { ReplayNotice, ReplayTag } from "./replay-notice"
 import { Captions } from "./replay-voice/captions"
 import { highlightedField, REPLAY_LINES } from "./replay-voice/replay-script"
@@ -26,10 +30,24 @@ import {
   type SpeechTrack,
 } from "./replay-voice/speech-track"
 import { LASA_CANDIDATE, LASA_DECISION } from "./scenario"
+import { settledCard } from "./settled-card"
 import styles from "./styles.module.css"
-import { PLAY_CONTROL, STOP_CONTROL, useControlFocus } from "./use-control-focus"
+import { PLAY_CONTROL, useControlFocus } from "./use-control-focus"
+import { useReplayClock } from "./use-replay-clock"
+import { VerdictStrip } from "./verdict-strip"
 
-const TICK_MS = 100
+export const REPLAY_TITLE = `The ${REPLAY_LENGTH_LABEL}`
+
+const PRIMARY_LABEL = {
+  rest: "Play the replay",
+  running: "Pause",
+  paused: "Resume",
+  ended: "Play again",
+} as const
+
+function reducedMotion(): boolean {
+  return globalThis.window?.matchMedia?.(REDUCED_MOTION_QUERY)?.matches === true
+}
 
 export type JudgeDemoProps = {
   readonly autoplay?: boolean
@@ -38,94 +56,86 @@ export type JudgeDemoProps = {
 
 export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoProps) {
   const Heading = headingLevel
-  const [elapsedMs, setElapsedMs] = useState(0)
-  const [running, setRunning] = useState(false)
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null)
   const autoplayed = useRef(false)
   const speech = useRef<SpeechTrack | null>(null)
   const [voice, setVoice] = useState<"synthesised" | "silent" | "muted">("muted")
-  const { controls, hold } = useControlFocus(running)
+  const holdRef = useRef<(index: number) => void>(() => undefined)
+  const clock = useReplayClock(() => holdRef.current(PLAY_CONTROL))
+  const { sessionMs, mode } = clock
+  const { controls, hold } = useControlFocus(mode === "running")
 
-  const clear = useCallback(() => {
-    if (timer.current !== null) {
-      clearInterval(timer.current)
-      timer.current = null
-    }
-  }, [])
-
-  const start = useCallback(() => {
-    clear()
-    setElapsedMs(0)
-    setRunning(true)
-    timer.current = setInterval(() => {
-      setElapsedMs((previous) => {
-        const next = previous + TICK_MS
-        if (next >= DEMO_DURATION_MS) {
-          hold(PLAY_CONTROL)
-          clear()
-          setRunning(false)
-          return DEMO_DURATION_MS
-        }
-        return next
-      })
-    }, TICK_MS)
-  }, [clear, hold])
-
-  const stop = useCallback(() => {
-    hold(PLAY_CONTROL)
-    clear()
-    setRunning(false)
-    speech.current?.stop()
-  }, [clear, hold])
+  useEffect(() => {
+    holdRef.current = hold
+  }, [hold])
 
   const play = useCallback(() => {
-    hold(STOP_CONTROL)
     speech.current?.reset()
     speech.current = createSpeechTrack(REPLAY_LINES, browserSpeaker())
     setVoice(speech.current.available ? "synthesised" : "silent")
-    start()
-  }, [hold, start])
+    clock.start()
+  }, [clock.start])
+
+  const primary = useCallback(() => {
+    if (mode === "running") {
+      speech.current?.stop()
+      clock.pause()
+      return
+    }
+    if (mode === "paused") {
+      clock.resume()
+      return
+    }
+    play()
+  }, [mode, play, clock.pause, clock.resume])
+
+  const stop = useCallback(() => {
+    hold(PLAY_CONTROL)
+    speech.current?.stop()
+    clock.rewind()
+  }, [hold, clock.rewind])
 
   useEffect(() => {
-    speech.current?.tick(elapsedMs)
-  }, [elapsedMs])
+    speech.current?.tick(sessionMs)
+  }, [sessionMs])
 
   useEffect(() => () => speech.current?.stop(), [])
-
-  useEffect(() => clear, [clear])
-
-  const settle = useCallback(() => {
-    clear()
-    setRunning(false)
-    setElapsedMs(DEMO_DURATION_MS)
-  }, [clear])
 
   useEffect(() => {
     if (!autoplay || autoplayed.current) {
       return
     }
     autoplayed.current = true
-    if (globalThis.window?.matchMedia?.(REDUCED_MOTION_QUERY)?.matches === true) {
-      settle()
+    const reduced = reducedMotion()
+    const section = controls.current?.closest("section") ?? null
+    if (section !== null && typeof section.scrollIntoView === "function") {
+      section.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" })
+    }
+    if (reduced) {
+      clock.settle()
       return
     }
-    start()
+    clock.start()
     return () => {
       autoplayed.current = false
-      clear()
+      clock.halt()
     }
-  }, [autoplay, clear, settle, start])
+  }, [autoplay, clock.settle, clock.start, clock.halt, controls])
 
-  const reached = elapsedMs >= DECISION_AT_MS
-  const phase = phaseAt(elapsedMs)
-  const fraction = Math.min(1, elapsedMs / DEMO_DURATION_MS)
+  const reached = sessionMs >= DECISION_AT_MS
+  const phase = phaseAt(sessionMs)
+  const fraction = Math.min(
+    1,
+    (sessionMs - REPLAY_FROM_MS) / (DEMO_DURATION_MS - REPLAY_FROM_MS),
+  )
   const stage =
-    [...DEMO_STAGES].reverse().find((entry) => elapsedMs >= entry.atMs) ?? DEMO_STAGES[0]
+    [...DEMO_STAGES].reverse().find((entry) => sessionMs >= entry.atMs) ?? DEMO_STAGES[0]
+  const card = settledCard(phase, reached ? LASA_DECISION : null)
+  const readingBack = highlightedField(REPLAY_LINES, sessionMs) === LASA_CANDIDATE.field
 
   const ArmHeading = headingLevel === "h1" ? "h2" : "h3"
   const title = (
     <Heading className={headingLevel === "h1" ? styles.title : styles.sectionTitle}>
-      The forty-second demonstration
+      {REPLAY_TITLE}
     </Heading>
   )
   const lede = (
@@ -133,7 +143,8 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
       One synthesised session, replayed through the whole pipeline, with no microphone and no
       second person on the line. The two panels run the shipped policy and differ by one flag,
       the pair rule: both read the drug name back, and only one requires the caller to answer
-      with the name.
+      with the name. The clock is session time: the replay picks up{" "}
+      {sessionSeconds(REPLAY_FROM_MS)} into the session, just before the caller names the drug.
     </p>
   )
   const context = (
@@ -169,23 +180,27 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
           {context}
         </>
       )}
-      <div className={styles.controls} ref={controls}>
-        <Button tone="primary" size="large" onClick={play} disabled={running}>
-          {elapsedMs === 0 ? "Play the replay" : "Play again"}
-        </Button>
-        <Button onClick={stop} disabled={!running}>
-          Stop
-        </Button>
+      <div className={styles.controls}>
+        <div className={styles.buttons} ref={controls}>
+          <Button tone="primary" size="large" onClick={primary}>
+            {PRIMARY_LABEL[mode]}
+          </Button>
+          <Button onClick={stop} disabled={mode !== "running" && mode !== "paused"}>
+            Stop
+          </Button>
+        </div>
         <div className={styles.progress}>
           <div className={styles.progressTrack}>
             <div className={styles.progressFill} style={{ transform: `scaleX(${fraction})` }} />
           </div>
           <p className={styles.progressLabel}>
-            {(elapsedMs / 1000).toFixed(1)}s / {(DEMO_DURATION_MS / 1000).toFixed(1)}s
+            {sessionSeconds(sessionMs)} / {sessionSeconds(DEMO_DURATION_MS)}
             {stage === undefined ? "" : ` · ${stage.label}`}
           </p>
         </div>
       </div>
+
+      <VerdictStrip phase={phase} />
 
       <div className={styles.split}>
         {DEMO_ARMS.map((arm) => (
@@ -193,20 +208,19 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
         ))}
       </div>
 
-      <Captions lines={REPLAY_LINES} clockMs={elapsedMs} voice={voice} />
+      <Captions lines={REPLAY_LINES} clockMs={sessionMs} voice={voice} />
       <GateBanner decision={reached ? LASA_DECISION : null} candidate={LASA_CANDIDATE} />
       <div
-        className={
-          highlightedField(REPLAY_LINES, elapsedMs) === LASA_CANDIDATE.field
-            ? styles.readingBack
-            : styles.resting
-        }
-        data-reading-back={highlightedField(REPLAY_LINES, elapsedMs) === LASA_CANDIDATE.field}
+        className={readingBack ? styles.readingBack : styles.resting}
+        data-reading-back={readingBack}
       >
         <FieldCard
-          candidate={LASA_CANDIDATE}
-          decision={reached ? LASA_DECISION : null}
-          evidence={phase === "settled" ? SHIPPED_EVIDENCE : null}
+          key={card.candidate.candidateId}
+          candidate={card.candidate}
+          decision={card.decision}
+          siblings={card.siblings}
+          evidence={card.evidence}
+          decisions={card.decisions}
         />
       </div>
 

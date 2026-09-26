@@ -1,11 +1,12 @@
 .card {
   --card-line: var(--line-hairline);
   display: grid;
-  border: 1px solid var(--card-line);
+  border: 2px solid var(--card-line);
   border-radius: var(--radius-lg);
   background-color: var(--surface-panel);
   box-shadow: var(--shadow-raise);
   overflow: hidden;
+  transition: border-color var(--dur-base) var(--ease-out-quart);
   animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart) both;
 }
 
@@ -15,17 +16,20 @@
 
 .lasaCard {
   --card-line: var(--state-lasa-line);
-  border-width: 2px;
 }
 
 .escalatedCard {
   --card-line: var(--state-escalated-line);
-  border-width: 2px;
 }
 
 .acceptedCard {
   --card-line: var(--state-accepted-line);
-  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
+  animation: var(--keyframes-commit) var(--dur-base) var(--ease-out-quart) both;
+}
+
+.receipt {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line-hairline);
 }
 
 .head {
@@ -106,7 +110,7 @@
 }
 
 .columnNote {
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   line-height: var(--leading-snug);
   color: var(--text-muted);
 }
@@ -116,7 +120,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-5) var(--space-3);
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
@@ -142,7 +146,7 @@
 }
 
 .provenanceCaveat {
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 

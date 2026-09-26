@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { DocsNav } from "@/shared/ui/navigation/docs-nav"
+import { DocsPager } from "@/shared/ui/navigation/docs-pager"
 import type { DocsPage } from "@/shared/ui/navigation/docs-tree"
 import { pageAt } from "@/shared/ui/navigation/docs-tree"
 import { TOC_TITLE, Toc } from "@/shared/ui/navigation/toc"
@@ -88,6 +89,50 @@ describe("the docs sidebar", () => {
     await user.keyboard("{Escape}")
     expect(toggle.getAttribute("aria-expanded")).toBe("false")
     expect(document.activeElement).toBe(toggle)
+  })
+
+  it("r1-A2-F8: closes the drawer when a section link is followed", async () => {
+    const user = userEvent.setup()
+    route.path = "/guide"
+    render(<DocsNav pages={PAGES} />)
+    const toggle = screen.getByRole("button", { name: /Docs/ })
+    await user.click(toggle)
+    expect(toggle.getAttribute("aria-expanded")).toBe("true")
+    await user.click(screen.getByRole("link", { name: "Second part" }))
+    expect(toggle.getAttribute("aria-expanded")).toBe("false")
+  })
+
+  it("r1-A1-06: lists a related group of links beside the docs pages", () => {
+    render(
+      <DocsNav
+        pages={PAGES}
+        related={{
+          label: "Replay hub",
+          summary: "The judge's page.",
+          links: [{ href: "/demo#replay", label: "Replay" }],
+        }}
+      />,
+    )
+    const group = screen.getByRole("list", { name: "Replay hub" })
+    expect(within(group).getByRole("link", { name: "Replay" }).getAttribute("href")).toBe(
+      "/demo#replay",
+    )
+  })
+})
+
+describe("r1-A1-11: the docs pager", () => {
+  it("links the previous and next page in sidebar order, child pages included", () => {
+    route.path = "/numbers"
+    render(<DocsPager pages={PAGES} />)
+    const pager = screen.getByRole("navigation", { name: "Previous and next page" })
+    expect(within(pager).getByRole("link", { name: /Guide/ }).getAttribute("href")).toBe(
+      "/guide",
+    )
+    expect(
+      within(pager)
+        .getByRole("link", { name: /Detail/ })
+        .getAttribute("href"),
+    ).toBe("/numbers/detail")
   })
 })
 

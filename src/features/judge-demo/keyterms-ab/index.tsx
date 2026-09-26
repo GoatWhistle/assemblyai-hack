@@ -2,8 +2,8 @@
 
 import { type KeyboardEvent as ReactKeyboardEvent, useId, useRef, useState } from "react"
 import { Counted } from "@/shared/ui/data-display/counted"
+import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { Chip } from "@/shared/ui/primitives/chip"
-import { Fold } from "../fold"
 import {
   CIRCULARITY,
   COMPETITOR_CITATION,
@@ -52,9 +52,9 @@ export function KeytermsAb() {
           {KEYTERMS_AB_TITLE}
         </h2>
         <p className={styles.lede}>{KEYTERMS_AB_SUMMARY}</p>
-        <Fold summary="Where this A/B comes from">
+        <Disclosure summary="Where this A/B comes from">
           <p className={styles.lede}>{KEYTERMS_AB_LEDE}</p>
-        </Fold>
+        </Disclosure>
       </header>
 
       <div className={styles.switcher} role="tablist" aria-label="Keyterms configuration">
@@ -157,10 +157,10 @@ export function KeytermsAb() {
         )}
       </div>
 
-      <Fold summary="Why the biased arm is invalid, not merely worse">
+      <Disclosure summary="Why the biased arm is invalid, not merely worse">
         <p className={styles.circularity}>{CIRCULARITY}</p>
         <p className={styles.cost}>{NO_MICROPHONE_NOTE}</p>
-      </Fold>
+      </Disclosure>
     </section>
   )
 }

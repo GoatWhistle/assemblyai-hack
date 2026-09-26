@@ -42,7 +42,9 @@ async function sessionIdOf(page: Page): Promise<string | null> {
   if ((await term.count()) === 0) {
     return null
   }
-  const text = (await term.locator("xpath=following-sibling::dd").innerText()).trim()
+  const text = (
+    (await term.first().locator("xpath=following-sibling::dd").textContent()) ?? ""
+  ).trim()
   return text.length === 0 || text === "not bound yet" ? null : text
 }
 

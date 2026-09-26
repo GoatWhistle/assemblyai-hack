@@ -1,0 +1,16 @@
+.prose {
+  max-width: var(--measure-prose);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+.prose strong {
+  font-weight: var(--weight-medium);
+}
+
+.code {
+  font-family: var(--font-data);
+  font-size: var(--text-sm);
+}

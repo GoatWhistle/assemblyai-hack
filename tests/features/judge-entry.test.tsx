@@ -11,6 +11,11 @@ import {
   InstantEntry,
 } from "@/features/judge-demo/instant-entry"
 import {
+  REPLAY_FROM_MS,
+  REPLAY_LENGTH_LABEL,
+  sessionSeconds,
+} from "@/features/judge-demo/replay-clock"
+import {
   REPLAY_NOTICE_BODY,
   REPLAY_NOTICE_INSURANCE,
   REPLAY_NOTICE_TITLE,
@@ -87,7 +92,10 @@ describe("the replay is a first-class entry point that never reads as live", () 
       "framing the replay as what to do when the hardware fails buries the one path that always works",
     ).toBe(false)
     expect(screenSource).toContain("REPLAY_ENTRY_HREF")
-    expect(JUDGE_LINK_LABEL).toMatch(/judging\? watch the 40-second replay/i)
+    expect(
+      JUDGE_LINK_LABEL,
+      "A1-02: the link names the replay, and any length it states must be the replay's own",
+    ).toMatch(new RegExp(`judging\\? watch the (${REPLAY_LENGTH_LABEL}|replay)`, "i"))
   })
 
   it("is the primary action on the judge hub", () => {
@@ -108,7 +116,7 @@ describe("one URL lands a judge in the state worth seeing", () => {
       vi.advanceTimersByTime(1000)
     })
     expect(
-      screen.getByText(/1\.0s \//),
+      screen.getByText(new RegExp(`${sessionSeconds(REPLAY_FROM_MS + 1000)} /`)),
       "a judge who has to find and press play is a judge who may not; the URL is the instruction",
     ).toBeTruthy()
   })
@@ -120,7 +128,7 @@ describe("one URL lands a judge in the state worth seeing", () => {
       vi.advanceTimersByTime(1000)
     })
     expect(
-      screen.getByText(/0\.0s \//),
+      screen.getByText(new RegExp(`${sessionSeconds(REPLAY_FROM_MS)} /`)),
       "the ordinary demonstration page must stay under the reader's control",
     ).toBeTruthy()
   })

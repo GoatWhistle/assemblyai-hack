@@ -1,8 +1,9 @@
-import { PHASE_LABEL, SessionPhase } from "../session-status"
+import { phaseLabel, type SessionFault, SessionPhase } from "../session-status"
 import styles from "./styles.module.css"
 
 export type PhaseDotProps = {
   readonly phase: SessionPhase
+  readonly fault?: SessionFault | null
 }
 
 function dotClass(phase: SessionPhase): string {
@@ -18,11 +19,11 @@ function dotClass(phase: SessionPhase): string {
   return styles.dotBusy ?? ""
 }
 
-export function PhaseDot({ phase }: PhaseDotProps) {
+export function PhaseDot({ phase, fault = null }: PhaseDotProps) {
   return (
     <span className={styles.phase}>
       <span className={[styles.dot, dotClass(phase)].join(" ")} aria-hidden="true" />
-      {PHASE_LABEL[phase]}
+      {phaseLabel(phase, fault)}
     </span>
   )
 }

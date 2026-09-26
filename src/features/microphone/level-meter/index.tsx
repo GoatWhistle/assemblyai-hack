@@ -54,7 +54,9 @@ export function LevelMeter({ level, state }: LevelMeterProps) {
   }, [listening])
 
   const heights = barHeights(history)
-  const classes = [styles.meter, listening ? styles.live : styles.quiet].join(" ")
+  const speaking = state === MicState.AgentSpeaking
+  const tone = listening ? styles.live : speaking ? styles.speaking : styles.quiet
+  const classes = [styles.meter, tone].join(" ")
 
   return (
     <div
@@ -63,14 +65,21 @@ export function LevelMeter({ level, state }: LevelMeterProps) {
       aria-label={
         listening
           ? `Microphone input level ${Math.round(level * 100)} of 100`
-          : "Microphone input level, no signal"
+          : speaking
+            ? "Microphone held closed while the agent speaks"
+            : "Microphone input level, no signal"
       }
     >
       {heights.map((height, index) => (
         <span
           key={`bar-${BAR_INDEXES[index]}`}
           className={styles.bar}
-          style={reduced ? undefined : ({ "--bar-level": height.toFixed(3) } as CSSProperties)}
+          style={
+            {
+              "--i": index,
+              ...(reduced ? {} : { "--bar-level": height.toFixed(3) }),
+            } as CSSProperties
+          }
         />
       ))}
     </div>

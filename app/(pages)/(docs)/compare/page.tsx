@@ -4,15 +4,15 @@ import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { COMPARE_SECTIONS } from "../docs-map"
 
-const COMPARE_HEADING = "What the gate changes, one moment at a time"
+const COMPARE_HEADING = "What the pair rule and read-back change, one moment at a time"
 
 const COMPARE_LEDE =
-  "Said, heard, the recognizer's own certainty, the gate's verdict with its reason code, and what a confidence threshold alone would have written. Where the two last columns disagree is where the gate earns its place."
+  "Said, heard, the recognizer's own certainty, the gate's verdict with its reason code, and what the same gate writes with only its threshold and validators left on. Where the two last columns disagree is where the pair rule and the standing read-back earn their place."
 
 export const metadata: Metadata = {
   title: "Compare",
   description:
-    "Six synthesised moments side by side: what was said, what the recognizer heard, its certainty, the gate's verdict and reason code, and what would have entered the order without the gate.",
+    "Six synthesised moments side by side: what was said, what the recognizer heard, its certainty, the gate's verdict and reason code, and what a threshold and the validators alone would have let into the order.",
 }
 
 export default function ComparePage() {
@@ -24,7 +24,7 @@ export default function ComparePage() {
       </DocSection>
       <DocSection
         id={COMPARE_SECTIONS.source.id}
-        title="Where the rows come from"
+        title="The rows are synthesised; the verdicts are computed"
         lead={SOURCE_NOTE}
       />
     </>

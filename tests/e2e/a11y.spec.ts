@@ -10,6 +10,9 @@ const DOCS_ROUTES = [
   "/metrics",
   "/metrics/benchmark",
   "/metrics/operations",
+  "/docs/limitations",
+  "/docs/threat-model",
+  "/docs/glossary",
 ] as const
 
 const ROUTES = [
@@ -111,7 +114,7 @@ test.describe("AU5: the judge path works from the keyboard alone, with focus alw
     await expect(page.getByRole("link", { name: /skip to the call/i })).toBeFocused()
     expect((await focusedOutline(page)).outline).not.toMatch(/^none/)
 
-    await tabUntil(page, /watch the 40-second replay/i)
+    await tabUntil(page, /watch the \d+-second replay/i)
     expect((await focusedOutline(page)).outline).not.toMatch(/^none/)
     await page.keyboard.press("Enter")
     await expect(page).toHaveURL(/\/demo\?autoplay=1/)
@@ -205,7 +208,7 @@ test.describe("the docs navigation works from the keyboard at phone width", () =
       "aria-current",
       "page",
     )
-    await expect(nav.getByRole("link", { name: "Held-out discipline" })).toBeVisible()
+    await expect(nav.getByRole("link", { name: "Held-out result" })).toBeVisible()
     await nav.getByRole("link", { name: "Benchmark", exact: true }).focus()
     await page.keyboard.press("Escape")
     await expect(toggle).toHaveAttribute("aria-expanded", "false")

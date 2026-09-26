@@ -1,23 +1,26 @@
-import { Fragment, type ReactNode } from "react"
 import { Chip, type ChipTone } from "@/shared/ui/primitives/chip"
 import { formatCertainty, GateVerdict, MOMENTS, type Moment } from "./moments"
 import styles from "./styles.module.css"
 
 export { formatCertainty, GateVerdict, MOMENTS, thresholdOnly, verdictFor } from "./moments"
 
-export const COMPARE_TITLE = "Six moments, with the gate and without it"
+export const COMPARE_TITLE =
+  "Six moments, decided by the shipped gate and without its two rules"
 
 export const COMPARE_CAPTION =
-  "Each row is one synthesised candidate decided by the shipped gate as this page renders. The last column runs the same candidate through the same decision function with the pair check and the standing read-back switched off, which is what a confidence threshold alone amounts to."
+  "Each row is one synthesised candidate decided by the shipped gate as this page renders. The last column runs the same candidate through the same decision function with the pair rule and the standing read-back switched off, which leaves a confidence threshold plus the validators."
 
 export const COLUMN = {
-  moment: "Moment",
   said: "Said",
   heard: "Heard",
   certainty: "Recognizer certainty",
   verdict: "Gate verdict",
-  withoutGate: "Without the gate",
+  withoutGate: "Threshold and validators only",
 } as const
+
+const COLUMN_COUNT = Object.keys(COLUMN).length
+
+export const ALSO_ASKS = "Also asks:"
 
 export const PAIR_OUTRANKS_NOTE = "outranked by the published pair"
 
@@ -27,20 +30,6 @@ export function partnersNote(partners: readonly string[]): string {
 
 export const SOURCE_NOTE =
   "These candidates are synthesised from the documented message shapes, not recorded from a live call. The verdicts are not: every one of them is computed by decide() from the gate package, over the real field policy table."
-
-export function breakable(text: string): ReactNode {
-  const parts = text.split("_")
-  return parts.map((part, index) => (
-    <Fragment key={`${index}-${part}`}>
-      {part}
-      {index < parts.length - 1 ? (
-        <>
-          _<wbr />
-        </>
-      ) : null}
-    </Fragment>
-  ))
-}
 
 export function verdictTone(moment: Moment): ChipTone {
   if (moment.verdict === GateVerdict.Pass) {
@@ -59,12 +48,39 @@ function outcomeClass(moment: Moment): string | undefined {
   return moment.verdict === GateVerdict.Pass ? styles.written : styles.slipped
 }
 
-function MomentRow({ moment }: { readonly moment: Moment }) {
+export function WithoutGate({
+  moment,
+  className,
+}: {
+  readonly moment: Moment
+  readonly className: string | undefined
+}) {
+  if (moment.withoutGateWrites) {
+    return <span className={className}>{moment.withoutGateText}</span>
+  }
+  return (
+    <span className={styles.also}>
+      {ALSO_ASKS} <code className={styles.code}>{moment.withoutGate.reasonCode}</code>
+    </span>
+  )
+}
+
+function MomentGroup({ moment }: { readonly moment: Moment }) {
+  return (
+    <tbody className={styles.group}>
+      <tr>
+        <th scope="rowgroup" colSpan={COLUMN_COUNT} className={styles.moment}>
+          {moment.title}
+        </th>
+      </tr>
+      <MomentCells moment={moment} />
+    </tbody>
+  )
+}
+
+function MomentCells({ moment }: { readonly moment: Moment }) {
   return (
     <tr className={styles.row} data-moment={moment.id}>
-      <th scope="row" className={styles.moment}>
-        {moment.title}
-      </th>
       <td className={styles.cell} data-label={COLUMN.said}>
         <span className={styles.value}>{moment.said}</span>
       </td>
@@ -87,11 +103,11 @@ function MomentRow({ moment }: { readonly moment: Moment }) {
       <td className={styles.cell} data-label={COLUMN.verdict}>
         <span className={styles.verdict}>
           <Chip tone={verdictTone(moment)}>{moment.verdict}</Chip>
-          <code className={styles.code}>{breakable(moment.decision.reasonCode)}</code>
+          <code className={styles.code}>{moment.decision.reasonCode}</code>
         </span>
       </td>
       <td className={styles.cell} data-label={COLUMN.withoutGate}>
-        <span className={outcomeClass(moment)}>{breakable(moment.withoutGateText)}</span>
+        <WithoutGate moment={moment} className={outcomeClass(moment)} />
       </td>
     </tr>
   )
@@ -111,11 +127,9 @@ export function Compare() {
             ))}
           </tr>
         </thead>
-        <tbody>
-          {MOMENTS.map((moment) => (
-            <MomentRow key={moment.id} moment={moment} />
-          ))}
-        </tbody>
+        {MOMENTS.map((moment) => (
+          <MomentGroup key={moment.id} moment={moment} />
+        ))}
       </table>
     </div>
   )

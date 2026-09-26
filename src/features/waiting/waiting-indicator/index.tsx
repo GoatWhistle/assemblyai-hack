@@ -6,6 +6,7 @@ import styles from "./styles.module.css"
 
 export type WaitingIndicatorProps = {
   readonly signals: WaitingSignals
+  readonly next?: string | null
 }
 
 const SIDE_CLASS: Readonly<Record<"human" | "system" | "neither", string>> = Object.freeze({
@@ -15,12 +16,12 @@ const SIDE_CLASS: Readonly<Record<"human" | "system" | "neither", string>> = Obj
 })
 
 const SIDE_LABEL: Readonly<Record<"human" | "system" | "neither", string>> = Object.freeze({
-  human: "your turn",
-  system: "the system's turn",
-  neither: "no turn",
+  human: "Your turn",
+  system: "The system's turn",
+  neither: "No turn",
 })
 
-export function WaitingIndicator({ signals }: WaitingIndicatorProps) {
+export function WaitingIndicator({ signals, next = null }: WaitingIndicatorProps) {
   const state: WaitingOn = waitingOn(signals)
   const copy = WAITING_COPY[state]
   const reduced = useReducedMotion()
@@ -36,6 +37,9 @@ export function WaitingIndicator({ signals }: WaitingIndicatorProps) {
       <span className={styles.badge}>{SIDE_LABEL[copy.side]}</span>
       <span className={styles.text}>
         <span className={styles.headline}>{copy.headline}</span>
+        {next === null || copy.side !== "human" ? null : (
+          <span className={styles.next}>Next: {next}</span>
+        )}
         <span className={styles.detail}>{copy.detail}</span>
         <span className={styles.observed}>Read from {copy.observedFrom}</span>
       </span>

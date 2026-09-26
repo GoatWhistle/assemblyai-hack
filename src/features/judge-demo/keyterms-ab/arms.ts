@@ -86,7 +86,7 @@ function shippedArm(): KeytermsArm {
   return Object.freeze({
     id: "shipped" as const,
     title: "Shipped list: identity context only",
-    listLabel: "what this deployment sends as keyterms",
+    listLabel: "What this deployment sends as keyterms",
     sample: Object.freeze(terms.slice(0, SAMPLE_SIZE)),
     termCount: terms.length,
     lasaTermsPresent: lasaTermsInside(terms),
@@ -104,7 +104,7 @@ function biasedArm(): KeytermsArm {
   return Object.freeze({
     id: "biased" as const,
     title: "Biased list: pair members as recognizer hints",
-    listLabel: "what the competitor's configuration sends",
+    listLabel: "What the competitor's configuration sends",
     sample,
     termCount: sample.length,
     lasaTermsPresent: lasaTermsInside(sample),

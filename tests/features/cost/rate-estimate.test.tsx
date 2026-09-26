@@ -201,7 +201,14 @@ describe("the counter reads as an estimate at a published rate and never as a bi
 
 describe("the estimate ships on the live screen, not merely in its own tests", () => {
   it("is rendered by the intake screen from the elapsed time it already tracks", () => {
-    const screenSource = readFileSync("src/features/intake/intake-screen/index.tsx", "utf8")
+    const screenSource = readFileSync(
+      "src/features/intake/intake-screen/technical-ledger/index.tsx",
+      "utf8",
+    )
+    expect(
+      readFileSync("src/features/intake/intake-screen/index.tsx", "utf8"),
+      "the ledger moved under Technical details (r1-A1 A1-05); it still has to be rendered from the screen",
+    ).toContain("TechnicalLedger")
     expect(
       screenSource,
       "a cost counter nobody renders shows a judge nothing, which is the dead-read-back defect one indirection away",

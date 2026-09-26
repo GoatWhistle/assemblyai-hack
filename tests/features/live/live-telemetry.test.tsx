@@ -69,7 +69,7 @@ describe("U8 and U6: telemetry and the order panel are fed by the product path",
     })
     await callerSays("Morphine")
     const telemetry = screen.getByRole("region", { name: "Telemetry" })
-    expect(within(telemetry).getByText("SPEAKING")).toBeTruthy()
+    expect(within(telemetry).getByText("Speaking")).toBeTruthy()
     expect(within(telemetry).getAllByText("reply.started").length).toBeGreaterThan(0)
     expect(within(telemetry).getByText("Live: two sockets")).toBeTruthy()
     expect(within(telemetry).getAllByText(LASA_DECISION.reasonCode).length).toBeGreaterThan(0)

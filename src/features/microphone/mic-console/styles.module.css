@@ -16,7 +16,7 @@
   border-radius: var(--radius-pill);
   background-color: var(--action-rest);
   color: var(--text-on-accent);
-  box-shadow: var(--mic-lift);
+  box-shadow: var(--mic-lift-quiet);
   cursor: pointer;
   transition:
     background-color var(--dur-base) var(--ease-out-quart),
@@ -25,18 +25,65 @@
     scale var(--dur-fast) var(--ease-out-quart);
 }
 
-.idle .trigger {
-  animation: var(--keyframes-breathe) var(--dur-loop-breathe) var(--ease-in-out) infinite;
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--mic-lift);
+  opacity: 0;
+  pointer-events: none;
 }
 
-.trigger:hover:not(:disabled) {
-  background-color: var(--action-hover);
-  box-shadow: var(--mic-lift-hover);
-  scale: 1.02;
+.idle .trigger::before {
+  animation: mic-breathe var(--dur-loop-breathe) var(--ease-in-out) infinite;
+}
+
+@keyframes mic-breathe {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover:not(:disabled) {
+    background-color: var(--action-hover);
+    color: var(--text-on-accent);
+    box-shadow: var(--mic-lift-hover);
+    scale: 1.02;
+  }
 }
 
 .trigger:active:not(:disabled) {
   scale: 0.98;
+}
+
+.opening .trigger {
+  background-color: var(--action-quiet);
+  color: var(--action-ink);
+  box-shadow: var(--mic-lift-quiet);
+}
+
+.opening .trigger::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--line-divider);
+  border-top-color: var(--action-rest);
+  border-radius: var(--radius-pill);
+  animation: mic-spin var(--dur-loop-spin) var(--ease-constant) infinite;
+  pointer-events: none;
+}
+
+@keyframes mic-spin {
+  to {
+    rotate: 1turn;
+  }
 }
 
 .trigger:focus-visible {
@@ -45,7 +92,7 @@
 }
 
 .trigger:disabled {
-  cursor: progress;
+  cursor: wait;
   background-color: var(--surface-sunken);
   color: var(--text-faint);
   box-shadow: var(--hairline);
@@ -69,12 +116,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .idle .trigger {
+  .idle .trigger::before {
     animation: none;
+    opacity: 0.7;
   }
 
   .listening .trigger::after {
     animation: none;
+  }
+
+  .opening .trigger::after {
+    animation: none;
+    border-color: var(--action-rest);
   }
 }
 

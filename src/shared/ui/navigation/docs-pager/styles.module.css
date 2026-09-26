@@ -1,0 +1,40 @@
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line-hairline);
+}
+
+.link {
+  display: grid;
+  align-content: center;
+  gap: var(--space-1);
+  min-height: var(--target-touch);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: var(--transition-control);
+}
+
+.link:hover {
+  border-color: var(--line-strong);
+  color: var(--text-primary);
+}
+
+.next {
+  grid-column: 2;
+  text-align: right;
+}
+
+.direction {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+}

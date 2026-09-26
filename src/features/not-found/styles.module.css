@@ -1,0 +1,30 @@
+.shell {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding-inline: var(--space-5);
+}
+
+.page {
+  display: grid;
+  gap: var(--space-5);
+  padding-block: var(--space-7) var(--space-8);
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 60ch;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

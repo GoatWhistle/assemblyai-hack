@@ -62,7 +62,7 @@
   font-family: var(--font-data);
   font-size: var(--text-2xs);
   color: var(--text-secondary);
-  overflow-wrap: break-word;
+  white-space: nowrap;
 }
 
 .slipped {

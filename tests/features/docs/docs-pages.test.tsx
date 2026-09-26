@@ -1,7 +1,10 @@
 import { existsSync } from "node:fs"
 import ComparePage from "@app/(pages)/(docs)/compare/page"
+import GlossaryPage from "@app/(pages)/(docs)/docs/glossary/page"
+import LimitationsPage from "@app/(pages)/(docs)/docs/limitations/page"
 import DocsOverviewPage from "@app/(pages)/(docs)/docs/page"
-import { DOCS_PAGES } from "@app/(pages)/(docs)/docs-map"
+import ThreatModelPage from "@app/(pages)/(docs)/docs/threat-model/page"
+import { DOCS_PAGES, REPLAY_HUB } from "@app/(pages)/(docs)/docs-map"
 import HowItWorksPage from "@app/(pages)/(docs)/how-it-works/page"
 import BenchmarkPage from "@app/(pages)/(docs)/metrics/benchmark/page"
 import OperationsPage from "@app/(pages)/(docs)/metrics/operations/page"
@@ -11,6 +14,7 @@ import type { ComponentType } from "react"
 import { afterEach, describe, expect, it } from "vitest"
 import { ReasonCode } from "@/domain"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
+import { abCatch } from "@/features/metrics/report-figures"
 import { flattenPages } from "@/shared/ui/navigation/docs-tree"
 
 afterEach(() => {
@@ -24,6 +28,9 @@ const PAGE_AT: Readonly<Record<string, ComponentType>> = {
   "/metrics": MetricsPage,
   "/metrics/benchmark": BenchmarkPage,
   "/metrics/operations": OperationsPage,
+  "/docs/limitations": LimitationsPage,
+  "/docs/threat-model": ThreatModelPage,
+  "/docs/glossary": GlossaryPage,
 }
 
 const VISUAL = "table, figure, ol, ul, dl, details, [role=tablist]"
@@ -103,23 +110,48 @@ describe("the docs overview states the product's hard claim", () => {
     expect(strip.getByText("Written: morphine")).toBeDefined()
   })
 
-  it("offers all three reasons to re-ask as tabs", () => {
+  it("offers all three reasons to re-ask as tabs, a plain label first and the code beside it", () => {
     render(<DocsOverviewPage />)
     for (const code of [
       ReasonCode.LowConfidence,
       ReasonCode.ValidatorChecksum,
       ReasonCode.LasaHit,
     ]) {
-      expect(screen.getByRole("tab", { name: code })).toBeDefined()
+      expect(screen.getByRole("tab", { name: new RegExp(code) })).toBeDefined()
     }
   })
 
-  it("prints every key number beside the command that produced it", () => {
+  it("names the standing read-back before the three reasons, since it is the most common ask", () => {
+    render(<DocsOverviewPage />)
+    expect(screen.getByText(new RegExp(ReasonCode.ReadBackRequired))).toBeDefined()
+  })
+
+  it("leads its numbers with the catch beside the cost, each with its command", () => {
     const { container } = render(<DocsOverviewPage />)
-    for (const entry of shippedPolicyEntries()) {
+    const section = container.querySelector<HTMLElement>("section#numbers")
+    expect(section).not.toBeNull()
+    const ab = abCatch()
+    expect(ab, "the ab-gate rows left the server's published figures").not.toBeNull()
+    const catchPanel = section?.querySelector('[data-headline="catch"]')
+    expect(catchPanel?.querySelector('[data-figure="without"]')?.textContent).toBe(
+      ab?.without.value,
+    )
+    expect(catchPanel?.querySelector('[data-figure="with"]')?.textContent).toBe(ab?.with.value)
+    expect(catchPanel?.textContent).toContain(ab?.with.command)
+    expect(section?.querySelector('[data-headline="cost"]')).not.toBeNull()
+    for (const entry of shippedPolicyEntries().filter((row) =>
+      row.row.command.includes("ismp-coverage"),
+    )) {
       const row = container.querySelector(`tr[data-row="${entry.id}"]`)
       expect(row?.querySelector('[data-column="value"]')?.textContent).toBe(entry.row.value)
       expect(row?.querySelector('[data-column="command"]')?.textContent).toBe(entry.row.command)
+    }
+  })
+
+  it("maps the replay hub's sections, so the two navigation systems reference each other", () => {
+    const { container } = render(<DocsOverviewPage />)
+    for (const link of REPLAY_HUB.links) {
+      expect(container.querySelector(`a[href="${link.href}"]`), link.href).not.toBeNull()
     }
   })
 

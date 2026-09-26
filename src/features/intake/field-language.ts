@@ -14,6 +14,20 @@ export const FIELD_LABEL: Readonly<Record<FieldName, string>> = Object.freeze({
   [FieldName.DaysSupply]: "Days supply",
 })
 
+export const FIELD_SPOKEN: Readonly<Record<FieldName, string>> = Object.freeze({
+  [FieldName.DrugName]: "the drug name",
+  [FieldName.Strength]: "the strength",
+  [FieldName.DosageForm]: "the dosage form",
+  [FieldName.Route]: "how it is given",
+  [FieldName.Quantity]: "the quantity",
+  [FieldName.Sig]: "how to take it",
+  [FieldName.PrescriberNpi]: "the prescriber's NPI",
+  [FieldName.PrescriberDea]: "the prescriber's DEA number",
+  [FieldName.PatientName]: "the patient's name",
+  [FieldName.Refills]: "the number of refills",
+  [FieldName.DaysSupply]: "the days supply",
+})
+
 export const FIELD_PROOF_NOTE: Readonly<Record<FieldName, string>> = Object.freeze({
   [FieldName.DrugName]:
     "Proved by existence in the built NDC catalogue. There is no check digit here.",

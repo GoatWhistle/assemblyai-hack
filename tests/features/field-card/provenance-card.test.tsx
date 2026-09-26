@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react"
-import { afterEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest"
 import {
   CandidateStatus,
   type ConfirmationEvidence,
@@ -20,6 +20,7 @@ import {
 import { FieldCard } from "@/features/field-card"
 import { LISTEN_NOTE } from "@/features/field-card/said-recorded"
 import { sourceBadges } from "@/features/field-card/source-badges"
+import { preloadInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen } from "@/features/intake/intake-screen"
 import { SessionPhase } from "@/features/intake/session-status"
 import { LASA_CANDIDATE } from "@/features/judge-demo/scenario"
@@ -176,6 +177,10 @@ describe("U5: the field card shows what was said beside what was recorded", () =
 })
 
 describe("U5: a click on a transcript word plays that word", () => {
+  beforeAll(async () => {
+    await preloadInCall()
+  })
+
   it("hands the word's own timecodes to the listen path", () => {
     const onListen = vi.fn(async () => "recorded" as const)
     render(

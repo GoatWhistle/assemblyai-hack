@@ -1,4 +1,8 @@
-import { MicrophoneFailureReason, MicrophonePermissionError } from "@/audio/microphone"
+import {
+  MicrophoneFailureReason,
+  MicrophonePermissionError,
+  requestMicrophone,
+} from "@/audio/microphone"
 import { BUDGET_EXHAUSTED_CODE, type BudgetStatus, SocketParamError } from "@/domain"
 import type { AgentClient } from "@/realtime/agent-client"
 import type { SttClient } from "@/realtime/stt-client"
@@ -77,6 +81,10 @@ export async function abandon(
   stt: SttClient,
 ): Promise<void> {
   await Promise.allSettled([agent.end(), stt.end()])
+  stopTracks(stream)
+}
+
+export function stopTracks(stream: MediaStream): void {
   for (const track of stream.getTracks()) {
     track.stop()
   }
@@ -86,4 +94,30 @@ export function faultForMicrophoneError(error: unknown): SessionFault {
   return error instanceof MicrophonePermissionError
     ? FAULT_OF_REASON[error.reason]
     : SessionFault.MicrophoneDenied
+}
+
+export async function acquireStream(
+  isCurrent: () => boolean,
+  block: (fault: SessionFault, detail: FaultDetail | null) => void,
+): Promise<MediaStream | null> {
+  const refusal = await budgetRefusal()
+  if (!isCurrent()) {
+    return null
+  }
+  if (refusal !== null) {
+    block(SessionFault.BudgetExhausted, refusal)
+    return null
+  }
+  try {
+    const stream = await requestMicrophone()
+    if (isCurrent()) {
+      return stream
+    }
+    stopTracks(stream)
+  } catch (error) {
+    if (isCurrent()) {
+      block(faultForMicrophoneError(error), null)
+    }
+  }
+  return null
 }

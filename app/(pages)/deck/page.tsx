@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export default function DeckPage() {
   return (
     <main className={styles.deck} id={MAIN_ID}>
+      <h1 className={styles.title}>Readback: the submission deck</h1>
       <p className={styles.hint}>
         Print to PDF to get one slide per page: landscape, no margins, background graphics on.
       </p>

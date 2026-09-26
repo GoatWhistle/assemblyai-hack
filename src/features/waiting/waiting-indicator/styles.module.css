@@ -27,10 +27,8 @@
 
 .badge {
   flex: none;
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
   padding: 0.125rem var(--space-2);
   border-radius: var(--radius-pill);
   border: 1px solid currentcolor;
@@ -46,7 +44,17 @@
 }
 
 .animated .badge {
-  animation: var(--keyframes-settle) var(--dur-deliberate) var(--ease-in-out) infinite alternate;
+  animation: waiting-blink var(--dur-deliberate) var(--ease-in-out) infinite alternate;
+}
+
+@keyframes waiting-blink {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.55;
+  }
 }
 
 .text {
@@ -59,6 +67,11 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
+}
+
+.next {
+  font-size: var(--text-sm);
+  color: var(--select-ink);
 }
 
 .detail {

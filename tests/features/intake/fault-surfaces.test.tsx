@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { beforeAll, describe, expect, it } from "vitest"
 import type { GateDecision } from "@/domain"
+import { preloadInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen } from "@/features/intake/intake-screen"
+import { REPLAY_ACTION_LABEL } from "@/features/intake/intake-screen/fault-panel"
 import { FAULT_COPY, SessionFault, SessionPhase } from "@/features/intake/session-status"
 import {
   LASA_CANDIDATE,
@@ -11,6 +13,10 @@ import {
 } from "@/features/judge-demo/scenario"
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { callerEntry } from "@/features/transcript-view/transcript-entry"
+
+beforeAll(async () => {
+  await preloadInCall()
+})
 
 const decisions = new Map<string, GateDecision>([
   [NAME_DECISION.candidateId, NAME_DECISION],
@@ -56,7 +62,7 @@ describe("honest status surfaces", () => {
 
   it("offers the replay demonstration as the way past a blocked microphone", () => {
     renderScreen({ fault: SessionFault.MicrophoneDenied, phase: SessionPhase.Blocked })
-    expect(screen.getByRole("link", { name: /run the replay instead/i })).toBeDefined()
+    expect(screen.getByRole("link", { name: REPLAY_ACTION_LABEL })).toBeDefined()
   })
 
   it("drops the viewport-tall idle stage once a fault has to be read", () => {

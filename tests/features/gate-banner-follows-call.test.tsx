@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, it } from "vitest"
+import { beforeAll, describe, expect, it } from "vitest"
 import type { FieldCandidate, GateDecision } from "@/domain"
+import { preloadInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen } from "@/features/intake/intake-screen"
 import { SessionPhase } from "@/features/intake/session-status"
 import {
@@ -11,6 +12,10 @@ import {
   NAME_DECISION,
 } from "@/features/judge-demo/scenario"
 import { initialContext } from "@/features/read-back/read-back-machine"
+
+beforeAll(async () => {
+  await preloadInCall()
+})
 
 const decisions = new Map<string, GateDecision>([
   [NAME_DECISION.candidateId, NAME_DECISION],

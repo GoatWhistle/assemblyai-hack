@@ -66,7 +66,9 @@ type Posted = { url: string; body: Record<string, unknown> }
 let posted: Posted[] = []
 
 function socket(host: "agents" | "streaming"): MemoryTransport {
-  const found = live.sockets.filter((entry) => entry.url.includes(`${host}.assemblyai.com`))
+  const found = live.sockets.filter((entry) =>
+    new URL(entry.url).hostname.startsWith(`${host}.`),
+  )
   return found[found.length - 1]?.transport as MemoryTransport
 }
 

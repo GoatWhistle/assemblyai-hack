@@ -58,7 +58,9 @@ function assertDecisionMatches(input: ConfirmInput): void {
 
   if (decision.action !== GateAction.Accept && !callerConfirmed) {
     refuse(
-      `${decision.reasonCode} asked the caller for ${candidate.field}; without an explicit yes there is nothing to confirm`,
+      decision.reasonCode === ReasonCode.LasaHit
+        ? `${decision.reasonCode} asked the caller which of two look-alike names was meant; only the caller saying the name confirms ${candidate.field}, and a yes does not`
+        : `${decision.reasonCode} asked the caller for ${candidate.field}; without an explicit yes there is nothing to confirm`,
     )
   }
 

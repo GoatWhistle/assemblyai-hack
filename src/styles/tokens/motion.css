@@ -11,20 +11,27 @@
   --dur-deliberate: 420ms;
   --dur-emphatic: 620ms;
   --dur-loop-spin: 620ms;
-  --dur-loop-shimmer: 1400ms;
   --dur-loop-pulse-urgent: 1800ms;
   --dur-loop-pulse: 2600ms;
   --dur-loop-breathe: 4200ms;
+  --reduced-fade: 160ms;
+  --stagger-step: 80ms;
+  --stagger-arm: 60ms;
 
   --transition-control:
     color var(--dur-fast) var(--ease-out-quart), background-color var(--dur-fast)
     var(--ease-out-quart), border-color var(--dur-fast) var(--ease-out-quart), box-shadow
-    var(--dur-fast) var(--ease-out-quart);
+    var(--dur-fast) var(--ease-out-quart), scale var(--dur-fast) var(--ease-out-quart);
 
   --keyframes-fade-rise: readback-fade-rise;
   --keyframes-pulse-ring: readback-pulse-ring;
   --keyframes-breathe: readback-breathe;
-  --keyframes-shimmer: readback-shimmer;
+  --keyframes-fade: readback-fade;
+  --keyframes-sweep: readback-sweep;
+  --keyframes-spin: readback-spin;
+  --keyframes-blink: readback-blink;
+  --keyframes-commit: readback-commit;
+  --keyframes-arrive: readback-arrive;
   --keyframes-enter: readback-enter;
   --keyframes-flag: readback-flag;
   --keyframes-settle: readback-settle;
@@ -36,10 +43,6 @@
   from {
     opacity: 0;
     transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -65,12 +68,42 @@
   }
 }
 
-@keyframes readback-shimmer {
+@keyframes readback-fade {
   from {
-    background-position: -140% 0;
+    opacity: 0;
+  }
+}
+
+@keyframes readback-sweep {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes readback-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes readback-blink {
+  from {
+    opacity: 1;
   }
   to {
-    background-position: 240% 0;
+    opacity: 0.55;
+  }
+}
+
+@keyframes readback-arrive {
+  from {
+    background-color: var(--select-surface);
+  }
+}
+
+@keyframes readback-commit {
+  from {
+    background-color: var(--verdict-committed-surface);
   }
 }
 
@@ -79,22 +112,12 @@
     opacity: 0;
     transform: translateY(6px);
   }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @keyframes readback-flag {
   from {
     opacity: 0;
     transform: translateY(-4px) scale(0.995);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
 
@@ -103,7 +126,6 @@
     opacity: 0.7;
     transform: translateY(-2px);
   }
-
   to {
     opacity: 1;
     transform: none;
@@ -112,10 +134,9 @@
 
 @keyframes readback-verdict-emphatic {
   from {
-    opacity: 0.7;
-    transform: scale(0.99);
+    opacity: 0.6;
+    transform: translateY(-8px);
   }
-
   to {
     opacity: 1;
     transform: none;
@@ -126,7 +147,6 @@
   from {
     opacity: 0.55;
   }
-
   to {
     opacity: 1;
   }
@@ -141,10 +161,11 @@
     --dur-deliberate: 1ms;
     --dur-emphatic: 1ms;
     --dur-loop-spin: 1ms;
-    --dur-loop-shimmer: 1ms;
     --dur-loop-pulse-urgent: 1ms;
     --dur-loop-pulse: 1ms;
     --dur-loop-breathe: 1ms;
+    --stagger-step: 0ms;
+    --stagger-arm: 0ms;
   }
 
   *,
@@ -154,6 +175,14 @@
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
+  }
+
+  [data-motion="fade"] {
+    animation-name: readback-fade !important;
+    animation-duration: var(--reduced-fade) !important;
+    animation-delay: 0ms !important;
+    transition-duration: var(--reduced-fade) !important;
+    transition-delay: 0ms !important;
   }
 
   @keyframes readback-fade-rise {
@@ -193,7 +222,6 @@
     opacity: 0;
     transform: translateY(6px);
   }
-
   to {
     opacity: 1;
     transform: none;

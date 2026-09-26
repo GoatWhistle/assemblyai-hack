@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T11:35:34.549Z",
+  "kind": "probe",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "diag-region-tools-2026-09-26",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 60,
+    "stt": 0
+  },
+  "costUsd": 0.075,
+  "outcome": "completed",
+  "reason": "diagnosis that found the regional agent store and the untraced catalogue: about thirty short agent sockets opened from scripts on 26 September (health, secret shapes, models, regional hosts, one prod tool call), each under two seconds; recorded as 60 s of agent socket time, an upper bound, because no clock was kept per socket; the receipt route answered 404",
+  "boundaries": [
+    "one call by one member of the team, not a sample of prescribers",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

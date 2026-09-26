@@ -12,6 +12,11 @@ import { JudgeDemo } from "@/features/judge-demo"
 import { DECISION_AT_MS, SETTLED_AT_MS } from "@/features/judge-demo/demo-arms"
 import { LASA_CANDIDATE, LASA_DECISION } from "@/features/judge-demo/scenario"
 
+function wholeParagraph(text: string) {
+  return (_: string, element: Element | null) =>
+    element?.tagName === "P" && element.textContent === text
+}
+
 function evidence(
   verdict: ConfirmationEvidence["verdict"],
   reasonCode: ConfirmationReason,
@@ -73,7 +78,7 @@ describe("S0: a LASA field card says it needs the name, not a yes", () => {
 describe("S0: the RE-ASK banner puts both candidates as the question", () => {
   it("shows the two names joined by or, and says a yes is not an answer", () => {
     render(<GateBanner decision={LASA_DECISION} candidate={LASA_CANDIDATE} />)
-    expect(screen.getByText("Hydromorphone or Morphine?")).toBeTruthy()
+    expect(screen.getByText(wholeParagraph("Hydromorphone or Morphine?"))).toBeTruthy()
     expect(screen.getByText(/A yes is not an answer to it/)).toBeTruthy()
   })
 
@@ -98,7 +103,9 @@ describe("S0: the replay's product path carries the name requirement through to 
     })
     const before = screen.queryAllByText("Settled by a spoken name").length
     expect(before).toBe(0)
-    expect(screen.getAllByText("Hydromorphone or Morphine?").length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText(wholeParagraph("Hydromorphone or Morphine?")).length,
+    ).toBeGreaterThan(0)
     act(() => {
       vi.advanceTimersByTime(SETTLED_AT_MS - DECISION_AT_MS)
     })

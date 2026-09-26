@@ -3,7 +3,7 @@
   gap: var(--space-5);
   padding-top: var(--space-6);
   border-top: 1px solid var(--line-hairline);
-  scroll-margin-top: var(--space-4);
+  scroll-margin-top: calc(var(--target-touch) + var(--space-5));
   min-width: 0;
 }
 
@@ -32,4 +32,10 @@
   display: grid;
   gap: var(--space-4);
   min-width: 0;
+}
+
+@media (min-width: 56rem) {
+  .section {
+    scroll-margin-top: var(--space-4);
+  }
 }

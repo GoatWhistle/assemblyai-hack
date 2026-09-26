@@ -1,20 +1,20 @@
-import type { DocsPage, DocsSection } from "@/shared/ui/navigation/docs-tree"
+import type { DocsLinkGroup, DocsPage, DocsSection } from "@/shared/ui/navigation/docs-tree"
 
 function section(id: string, label: string): DocsSection {
   return Object.freeze({ id, label })
 }
 
 export const OVERVIEW_SECTIONS = Object.freeze({
-  claim: section("claim", "The hard claim"),
-  reasons: section("reasons", "Three reasons to re-ask"),
+  claim: section("claim", "Certainty cannot tell names apart"),
+  reasons: section("reasons", "When the agent asks again"),
+  numbers: section("numbers", "The catch and its cost"),
   map: section("map", "Map of the docs"),
-  numbers: section("numbers", "Key numbers"),
 })
 
 export const HOW_SECTIONS = Object.freeze({
-  reasons: section("reasons", "Three reasons"),
+  reasons: section("reasons", "When the agent asks again"),
   proof: section("proof", "Proof per field"),
-  script: section("script", "Seven-minute script"),
+  script: section("script", "Extended script"),
   attack: section("attack", "Attack console"),
   limits: section("limits", "What it does not prove"),
 })
@@ -25,21 +25,39 @@ export const COMPARE_SECTIONS = Object.freeze({
 })
 
 export const METRICS_SECTIONS = Object.freeze({
-  headline: section("headline", "Headline figure"),
+  headline: section("headline", "Catch and cost"),
   policy: section("policy", "Shipped policy"),
-  discipline: section("discipline", "Held-out discipline"),
+  discipline: section("discipline", "Held-out result"),
   more: section("more", "More measurements"),
 })
 
 export const BENCHMARK_SECTIONS = Object.freeze({
-  measured: section("measured", "Measured"),
+  measured: section("measured", "Recognizer errors"),
   unmeasured: section("unmeasured", "Not measured yet"),
-  report: section("report", "Further report figures"),
+  report: section("report", "Checksums and calibration"),
 })
 
 export const OPERATIONS_SECTIONS = Object.freeze({
-  business: section("business", "Business reading"),
+  business: section("business", "Cost per order"),
+  rates: section("rates", "Published rates"),
   closeCodes: section("close-codes", "Socket close codes"),
+})
+
+export const LIMITATIONS_SECTIONS = Object.freeze({
+  trust: section("trust", "Trust boundary"),
+  evidence: section("evidence", "Evidence"),
+  operations: section("operations", "Operations and use"),
+})
+
+export const THREAT_SECTIONS = Object.freeze({
+  browser: section("browser", "What the browser supplies"),
+  witness: section("witness", "The vendor witness"),
+  receipt: section("receipt", "Checking a receipt"),
+})
+
+export const GLOSSARY_SECTIONS = Object.freeze({
+  terms: section("terms", "Terms"),
+  citations: section("citations", "Citations"),
 })
 
 export const BENCHMARK_PAGE: DocsPage = Object.freeze({
@@ -56,8 +74,35 @@ export const OPERATIONS_PAGE: DocsPage = Object.freeze({
   label: "Cost and operations",
   title: "Cost and operations",
   summary:
-    "What the gate would cost per order, why no figure is published yet, and the socket close codes counted from recorded sessions.",
+    "What the gate would cost per order, why no figure is published yet, and the socket close codes, each labelled as an observation with its source.",
   sections: Object.values(OPERATIONS_SECTIONS),
+})
+
+export const LIMITATIONS_PAGE: DocsPage = Object.freeze({
+  href: "/docs/limitations",
+  label: "Limitations",
+  title: "Limitations",
+  summary:
+    "Everything this project cannot prove, each with its status: measured, enforced, assumed, or false and admitted.",
+  sections: Object.values(LIMITATIONS_SECTIONS),
+})
+
+export const THREAT_PAGE: DocsPage = Object.freeze({
+  href: "/docs/threat-model",
+  label: "Threat model and receipts",
+  title: "Threat model and receipts",
+  summary:
+    "What the browser supplies, what the vendor's own transcript witnesses, what neither proves, and how to check a sealed receipt.",
+  sections: Object.values(THREAT_SECTIONS),
+})
+
+export const GLOSSARY_PAGE: DocsPage = Object.freeze({
+  href: "/docs/glossary",
+  label: "Glossary",
+  title: "Glossary",
+  summary:
+    "LASA, NDC, NPI, DEA, sig, keyterms, provenance and the other terms these pages use, plus the exact citations behind read-back.",
+  sections: Object.values(GLOSSARY_SECTIONS),
 })
 
 export const DOCS_PAGES: readonly DocsPage[] = Object.freeze([
@@ -65,7 +110,7 @@ export const DOCS_PAGES: readonly DocsPage[] = Object.freeze([
     href: "/docs",
     label: "Overview",
     title: "How Readback proves it did not mishear",
-    summary: "What Readback is, the claim it rests on, and the numbers behind it.",
+    summary: "What Readback is, the claim it rests on, and the catch and cost behind it.",
     sections: Object.values(OVERVIEW_SECTIONS),
   }),
   Object.freeze({
@@ -73,15 +118,15 @@ export const DOCS_PAGES: readonly DocsPage[] = Object.freeze([
     label: "How it works",
     title: "A value enters the order only after it is proved",
     summary:
-      "The three reasons the gate asks again, what counts as proof per field, a seven-minute script, a console for trying to forge a value, and the limits.",
+      "When the gate asks again, what counts as proof per field, an extended script, a console for trying to forge a value, and the limits.",
     sections: Object.values(HOW_SECTIONS),
   }),
   Object.freeze({
     href: "/compare",
     label: "Compare",
-    title: "What the gate changes, one moment at a time",
+    title: "What the pair rule and read-back change, one moment at a time",
     summary:
-      "Six synthesised moments decided by the shipped gate, beside what a confidence threshold alone would have written.",
+      "Six synthesised moments decided by the shipped gate, beside what a threshold and the validators alone would have written.",
     sections: Object.values(COMPARE_SECTIONS),
   }),
   Object.freeze({
@@ -89,8 +134,25 @@ export const DOCS_PAGES: readonly DocsPage[] = Object.freeze([
     label: "Measurements",
     title: "Measurements",
     summary:
-      "The headline figure, the shipped policy's measured rows and the held-out discipline, each with its command and set size.",
+      "What the pair rule catches beside what it costs, the shipped policy's rows and the held-out result, each with its command and set size.",
     sections: Object.values(METRICS_SECTIONS),
     children: Object.freeze([BENCHMARK_PAGE, OPERATIONS_PAGE]),
   }),
+  LIMITATIONS_PAGE,
+  THREAT_PAGE,
+  GLOSSARY_PAGE,
 ])
+
+export const REPLAY_HUB: DocsLinkGroup = Object.freeze({
+  label: "Replay hub",
+  summary:
+    "The judge's page: the replay, a 90-second tour of every surface, and the synthesised scenarios.",
+  links: Object.freeze([
+    Object.freeze({ href: "/demo#replay", label: "Replay" }),
+    Object.freeze({ href: "/demo#tour", label: "90-second tour" }),
+    Object.freeze({ href: "/demo#say", label: "What to say live" }),
+    Object.freeze({ href: "/demo#scenarios", label: "Scenarios" }),
+    Object.freeze({ href: "/demo#keyterms", label: "Keyterms A/B" }),
+    Object.freeze({ href: "/demo#recorded", label: "Recorded call (none yet)" }),
+  ]),
+})

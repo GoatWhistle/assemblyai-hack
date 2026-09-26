@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it } from "vitest"
 import {
@@ -64,8 +64,11 @@ describe("the two arms of the contrast", () => {
 
   it("marks only the arm with the pair rule as the shipped configuration", () => {
     render(<JudgeDemo />)
-    expect(screen.getByText("shipped")).toBeDefined()
-    expect(screen.getByText("comparison only")).toBeDefined()
+    const on = screen.getByRole("region", { name: "Pair rule on" })
+    const off = screen.getByRole("region", { name: "Pair rule off" })
+    expect(within(on).getByText("shipped")).toBeDefined()
+    expect(within(off).getByText("comparison only")).toBeDefined()
+    expect(within(off).queryByText("shipped")).toBeNull()
     expect(pair?.policy).toBe(SHIPPED_POLICY)
   })
 

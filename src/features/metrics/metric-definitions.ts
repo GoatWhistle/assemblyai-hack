@@ -127,4 +127,5 @@ export type CloseCodeTally = {
   readonly meaning: string
   readonly count: number
   readonly alertWorthy: boolean
+  readonly source: string
 }

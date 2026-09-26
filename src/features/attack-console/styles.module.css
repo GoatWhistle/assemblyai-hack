@@ -58,8 +58,19 @@
 }
 
 .refused {
+  position: relative;
   background-color: var(--surface-sunken);
   box-shadow: var(--hairline);
+}
+
+.refused::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--space-4);
+  bottom: var(--space-2);
+  height: 1px;
+  background-color: var(--line-strong);
+  animation: var(--keyframes-sweep) var(--dur-base) var(--ease-out-expo) both;
 }
 
 .written {

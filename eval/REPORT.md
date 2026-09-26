@@ -947,11 +947,11 @@ total. At USD 0.45 per hour for one streaming socket, that recorded time alone c
 recorded duration are not included and their true cost is higher by an amount nobody
 wrote down.
 
-### Since the ledger: 14 runs on 25 and 26 September, 10 of them failed and billed regardless
+### Since the ledger: 18 runs on 25 and 26 September, 13 of them failed and billed regardless
 
-`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 14**,
-**runs that did not complete, still billed: 10**, 4362.968 s of socket-open time and
-**derived total: USD 2.9234**, at
+`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 18**,
+**runs that did not complete, still billed: 13**, 5160.468 s of socket-open time and
+**derived total: USD 4.0532**, at
 the rates checked on 17 September. The figure is our arithmetic over our own recorded seconds,
 not an invoice. By command:
 
@@ -959,10 +959,11 @@ not an invoice. By command:
 |---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 |
-| `make live-smoke` | 7 | 7 failed | 2.4450 |
+| `make live-smoke` | 10 | 10 failed | 3.4898 |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 |
 | ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 |
+| ad-hoc region and tool diagnosis | 1 | completed | 0.0850 |
 
 - **The two stress sweeps** were started 12 s apart by mistake; the second is recorded as failed
   because two of its sessions closed 1006 and 1008 (see the stress section below).
@@ -984,6 +985,18 @@ not an invoice. By command:
   us-west-2 address and joined through eu-west-1, so the cause is not region and not timing.
   The production route's own finalize deleted the agent successfully, so the agent exists in the
   account whose key the deployment holds; what that account does differently is not yet known.
+- **The eighth to tenth `make live-smoke` attempts, on 26 September, ran after two production
+  defects were found and fixed.** Stored agents live in one AssemblyAI region, and the
+  unqualified host sent a US server and a European browser to two different stores, so every
+  call from Europe answered `agent_not_found`; both sides now name `agents.us.assemblyai.com`.
+  Separately, `data/catalog.json` was read from disk and never traced into the Vercel functions,
+  so every catalogue lookup answered 500; it is now traced and a test guards it. With both fixed,
+  the agent spoke, heard the whole dictation in one turn and called `lookup_drug`, which
+  answered with real catalogue rows, but the model then asked again for fields it had heard
+  instead of calling `propose_field`, so the gate never received a value and no order was
+  committed. These three runs fail on the language model's tool use, not on the gate.
+- **The region and tool diagnosis row** covers about thirty short agent sockets opened from
+  scripts to find those two defects, each under two seconds, recorded as 60 s, an upper bound.
 - **The reconciliation row** covers diagnostic agent sessions the coordinator opened by hand
   while tracing the live-smoke failures. The vendor's own session list shows 14 agent sessions
   on 25 September totalling 1546.0 s of agent socket time; the rows above account for 1490.7 s,
@@ -993,7 +1006,7 @@ not an invoice. By command:
   vendor's own timeline back (the S2 witness); the timeline it read is committed as
   `eval/fixtures/witness/timeline-recorded-shape.json`.
 
-**Paid runs on record, artefacts plus ledger: 21.** The account balance a human last read off
+**Paid runs on record, artefacts plus ledger: 25.** The account balance a human last read off
 the vendor dashboard is USD 149.93 on 17 September; no later reading is recorded, so no
 vendor-verified figure covers the 25 September runs.
 

@@ -12,6 +12,10 @@ export type BenchmarkTableProps = {
   readonly compact?: boolean
 }
 
+function sentenceCase(text: string): string {
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
+}
+
 function valueClass(entry: BenchmarkEntry): string {
   if (entry.row.value !== null && entry.tone === "alert") {
     return `${styles.value} ${styles.alert}`
@@ -26,12 +30,7 @@ export function BenchmarkTable({
   compact = false,
 }: BenchmarkTableProps) {
   return (
-    <section
-      className={styles.wrap}
-      aria-label={`${label}, scrollable sideways`}
-      // biome-ignore lint/a11y/noNoninteractiveTabindex: a table that scrolls sideways must be reachable by keyboard, which axe checks as scrollable-region-focusable
-      tabIndex={0}
-    >
+    <section className={styles.wrap} aria-label={label}>
       <table className={styles.table}>
         <caption>{caption}</caption>
         <thead className={styles.columns}>
@@ -48,7 +47,7 @@ export function BenchmarkTable({
           {entries.map((entry) => (
             <tr key={entry.id} data-row={entry.id}>
               <th scope="row" className={styles.figure}>
-                <span className={styles.name}>{entry.row.figure}</span>
+                <span className={styles.name}>{sentenceCase(entry.row.figure)}</span>
                 {compact || entry.meaning === "" ? null : (
                   <span className={styles.meaning}>{entry.meaning}</span>
                 )}

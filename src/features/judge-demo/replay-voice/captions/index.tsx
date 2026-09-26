@@ -25,10 +25,10 @@ export function Captions({ lines, clockMs, voice }: CaptionsProps) {
         {line === null ? (
           <span className={styles.idle}>No one is speaking.</span>
         ) : (
-          <>
+          <span key={line.id} className={styles.spoken} data-motion="fade">
             <span className={styles.who}>{line.who === "agent" ? "Agent" : "Caller"}</span>{" "}
             {line.text}
-          </>
+          </span>
         )}
       </p>
     </div>

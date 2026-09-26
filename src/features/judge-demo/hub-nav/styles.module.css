@@ -48,12 +48,23 @@
 
 @media (max-width: 40rem) {
   .list {
+    position: relative;
     flex-wrap: nowrap;
     overflow-x: auto;
     overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
-    padding: var(--space-1);
+    padding: var(--space-1) var(--space-6) var(--space-1) var(--space-1);
     margin: calc(-1 * var(--space-1));
+    mask-image: linear-gradient(
+      to right,
+      var(--surface-page) calc(100% - var(--space-6)),
+      transparent
+    );
+  }
+
+  .item {
+    scroll-snap-align: start;
   }
 
   .link {

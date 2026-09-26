@@ -166,6 +166,54 @@
       ],
       "openSeconds": 50,
       "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T11:03:45.884Z",
+      "at": "2026-09-26T11:03:45.884Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T11:08:00.235Z",
+      "at": "2026-09-26T11:08:00.235Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 246,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-26T11:23:57.214Z",
+      "at": "2026-09-26T11:23:57.214Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 245.1,
+      "outcome": "failed"
+    },
+    {
+      "runId": "ad-hoc-region-and-tool-diagnosis-2026-09-26T11:35:34.549Z",
+      "at": "2026-09-26T11:35:34.549Z",
+      "command": "ad-hoc region and tool diagnosis",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 60,
+      "outcome": "completed"
     }
   ]
 }

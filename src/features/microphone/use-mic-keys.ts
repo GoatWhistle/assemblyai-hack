@@ -15,6 +15,7 @@ export type MicKeyAction = (typeof MicKeyAction)[keyof typeof MicKeyAction]
 export type MicKeyState = {
   readonly busy: boolean
   readonly open: boolean
+  readonly cancellable?: boolean
 }
 
 export type MicKeyOptions = MicKeyState & {
@@ -46,18 +47,24 @@ export function insideDialog(target: EventTarget | null): boolean {
 export function micKeyAction(
   key: string,
   code: string,
-  { busy, open }: MicKeyState,
+  { busy, open, cancellable = false }: MicKeyState,
 ): MicKeyAction {
   if (key === "Escape") {
-    return open ? MicKeyAction.Stop : MicKeyAction.Ignore
+    return open || cancellable ? MicKeyAction.Stop : MicKeyAction.Ignore
   }
-  if (code !== "Space" || busy) {
+  if (code !== "Space" || busy || open) {
     return MicKeyAction.Ignore
   }
-  return open ? MicKeyAction.Stop : MicKeyAction.Start
+  return MicKeyAction.Start
 }
 
-export function useMicKeys({ busy, open, onStart, onStop }: MicKeyOptions): void {
+export function useMicKeys({
+  busy,
+  open,
+  cancellable = false,
+  onStart,
+  onStop,
+}: MicKeyOptions): void {
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (isEditing(event.target)) {
@@ -69,7 +76,7 @@ export function useMicKeys({ busy, open, onStart, onStop }: MicKeyOptions): void
       if (event.key === "Escape" && insideDialog(event.target)) {
         return
       }
-      const action = micKeyAction(event.key, event.code, { busy, open })
+      const action = micKeyAction(event.key, event.code, { busy, open, cancellable })
       if (action === MicKeyAction.Ignore) {
         return
       }
@@ -84,5 +91,5 @@ export function useMicKeys({ busy, open, onStart, onStop }: MicKeyOptions): void
     }
     globalThis.window?.addEventListener("keydown", onKey)
     return () => globalThis.window?.removeEventListener("keydown", onKey)
-  }, [busy, open, onStart, onStop])
+  }, [busy, open, cancellable, onStart, onStop])
 }

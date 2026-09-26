@@ -8,9 +8,16 @@ import styles from "./styles.module.css"
 const NO_RECORDING_NOTE =
   "No recorded live session has been published yet, so the replay above is the synthesised one. When a recorded call is published it plays here with its real audio."
 
-export function RecordedSection() {
-  const [load, setLoad] = useState<RecordingLoad | null>(null)
+export type RecordedSectionProps = {
+  readonly published?: boolean
+}
+
+export function RecordedSection({ published = true }: RecordedSectionProps) {
+  const [load, setLoad] = useState<RecordingLoad | null>(published ? null : { state: "absent" })
   useEffect(() => {
+    if (!published) {
+      return
+    }
     let live = true
     void loadPublishedRecording().then((result) => {
       if (live) {
@@ -20,7 +27,7 @@ export function RecordedSection() {
     return () => {
       live = false
     }
-  }, [])
+  }, [published])
   if (load === null) {
     return null
   }

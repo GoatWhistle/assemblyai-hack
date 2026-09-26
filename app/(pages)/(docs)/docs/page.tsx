@@ -1,26 +1,29 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import type { ReasonCode } from "@/domain"
 import { MOMENTS } from "@/features/compare"
 import { MomentStrip } from "@/features/compare/moment-strip"
-import { GATE_REASONS } from "@/features/how-it-works/gate-reasons"
+import { GATE_REASONS, STANDING_READ_BACK_LINE } from "@/features/how-it-works/gate-reasons"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
-import { benchmarkEntries } from "@/features/metrics/benchmark-row"
 import { BenchmarkTable } from "@/features/metrics/benchmark-table"
+import { CatchCostHeadline } from "@/features/metrics/catch-cost-headline"
+import { confidenceFigures, falseAskTally } from "@/features/metrics/measured-figures"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
+import { abCatch, contrastiveShareRow } from "@/features/metrics/report-figures"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
 import { Tabs } from "@/shared/ui/navigation/tabs"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
-import { DOCS_PAGES, OVERVIEW_SECTIONS } from "../docs-map"
+import { DOCS_PAGES, OVERVIEW_SECTIONS, REPLAY_HUB } from "../docs-map"
 import styles from "./styles.module.css"
 
-const CONFIDENT_ERRORS = "errors-above-threshold"
+const ISMP_COMMAND = "npx tsx scripts/measure/ismp-coverage.ts"
 
 export const metadata: Metadata = {
   title: "Docs",
   description:
-    "What Readback is, why recognizer certainty cannot rule out a look-alike drug name, the three reasons the gate asks again, and the measured figures with their commands.",
+    "What Readback is, why recognizer certainty cannot rule out a look-alike drug name, when the gate asks again, and what the pair rule catches beside what it costs.",
 }
 
 function momentFor(code: ReasonCode) {
@@ -32,7 +35,12 @@ function reasonTabs() {
     const moment = momentFor(reason.code)
     return {
       id: reason.code,
-      label: <code className={styles.tabCode}>{reason.code}</code>,
+      label: (
+        <span className={styles.tabLabel}>
+          <span>{reason.label}</span>
+          <code className={styles.tabCode}>{reason.code}</code>
+        </span>
+      ),
       panel: (
         <div className={styles.reason}>
           <p className={styles.reasonTitle}>{reason.title}</p>
@@ -46,10 +54,8 @@ function reasonTabs() {
 
 export default function DocsOverviewPage() {
   const pairMoment = MOMENTS.find((moment) => moment.pairOutranksCertainty) ?? null
-  const figures = [
-    ...benchmarkEntries().filter((entry) => entry.id === CONFIDENT_ERRORS),
-    ...shippedPolicyEntries(),
-  ]
+  const confident =
+    confidenceFigures().find((entry) => entry.id === "errors-above-threshold") ?? null
   return (
     <>
       <DocHeader
@@ -59,8 +65,8 @@ export default function DocsOverviewPage() {
 
       <DocSection
         id={OVERVIEW_SECTIONS.claim.id}
-        title="Certainty does not protect against homophony"
-        lead="A recognizer can be fully certain it heard morphine while the caller said hydromorphone. Certainty describes acoustics; it cannot tell two similar names apart."
+        title="Certainty cannot tell sound-alike names apart"
+        lead="A recognizer can be fully certain it heard morphine while the caller said hydromorphone. Certainty describes the acoustics, not which of two similar names was meant."
       >
         {pairMoment === null ? null : <MomentStrip moment={pairMoment} />}
         <p className={styles.prose}>
@@ -79,37 +85,60 @@ export default function DocsOverviewPage() {
 
       <DocSection
         id={OVERVIEW_SECTIONS.reasons.id}
-        title="Three reasons to re-ask"
-        lead="Every value passes one decision function before it can enter the order. The reasons are not interchangeable: the third fires regardless of certainty, and each tab shows the shipped gate deciding a real candidate for it."
+        title="When the agent asks again, and which question it asks"
+        lead={STANDING_READ_BACK_LINE}
       >
-        <Tabs label="Three reasons to re-ask" items={reasonTabs()} />
+        <Tabs label="Three reasons to ask again" items={reasonTabs()} />
+        <p className={styles.note}>
+          The last column of each strip runs the same candidate with the pair rule and the
+          standing read-back switched off, leaving a confidence threshold and the validators.
+        </p>
+      </DocSection>
+
+      <DocSection
+        id={OVERVIEW_SECTIONS.numbers.id}
+        title="The pair rule catches every seeded mishearing, and asks about every correct name"
+        lead="The measured catch beside its cost, each with the command that produced it, the size of its set and its date."
+      >
+        <CatchCostHeadline
+          ab={abCatch()}
+          confident={confident}
+          tally={falseAskTally()}
+          contrastive={contrastiveShareRow()}
+        />
+        <BenchmarkTable
+          entries={shippedPolicyEntries().filter((entry) => entry.row.command === ISMP_COMMAND)}
+          label="Size of the published list"
+          caption="How much of the catalogue the pair rule touches."
+          compact
+        />
+        <div className={styles.actions}>
+          <ActionLink href="/metrics">All measurements</ActionLink>
+          <ActionLink href="/docs/limitations">What this cannot prove</ActionLink>
+        </div>
       </DocSection>
 
       <DocSection
         id={OVERVIEW_SECTIONS.map.id}
         title="Map of the docs"
-        lead="Each page opens with a short lead. Proofs, method notes and caveats sit in expandable blocks beneath it, so nothing is dropped to keep a page short."
+        lead="Each page opens with a short lead and puts its evidence directly beneath it. The replay hub holds the judge's material."
       >
         <PageDirectory
           pages={DOCS_PAGES.filter((page) => page.href !== "/docs")}
           withChildren
         />
-      </DocSection>
-
-      <DocSection
-        id={OVERVIEW_SECTIONS.numbers.id}
-        title="Key numbers"
-        lead="The server's published rows, each with the command that produced it, the size of its set and the date it was measured. A number without a method is not published."
-      >
-        <BenchmarkTable
-          entries={figures}
-          label="Key numbers"
-          caption="Key numbers, each with its input, command, set size and date."
-          compact
-        />
-        <div className={styles.actions}>
-          <ActionLink href="/metrics">All measurements</ActionLink>
-          <ActionLink href="/metrics/benchmark">Full benchmark</ActionLink>
+        <div className={styles.hub}>
+          <p className={styles.hubTitle}>{REPLAY_HUB.label}</p>
+          <p className={styles.note}>{REPLAY_HUB.summary}</p>
+          <ul className={styles.hubLinks}>
+            {REPLAY_HUB.links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={styles.hubLink}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </DocSection>
     </>

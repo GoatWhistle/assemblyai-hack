@@ -15,6 +15,18 @@ export const SessionPhase = {
 export type SessionPhase = (typeof SessionPhase)[keyof typeof SessionPhase]
 
 export const PHASE_LABEL: Readonly<Record<SessionPhase, string>> = Object.freeze({
+  [SessionPhase.Idle]: "Ready",
+  [SessionPhase.RequestingMicrophone]: "Asking for the microphone",
+  [SessionPhase.MintingTokens]: "Connecting",
+  [SessionPhase.Live]: "Live",
+  [SessionPhase.Closing]: "Ending the call",
+  [SessionPhase.Closed]: "Call ended",
+  [SessionPhase.Blocked]: "Could not start",
+  [SessionPhase.Reconnecting]: "Reconnecting",
+  [SessionPhase.Degraded]: "Call stopped",
+})
+
+export const PHASE_TECHNICAL: Readonly<Record<SessionPhase, string>> = Object.freeze({
   [SessionPhase.Idle]: "Not connected",
   [SessionPhase.RequestingMicrophone]: "Asking for the microphone",
   [SessionPhase.MintingTokens]: "Minting short-lived tokens",
@@ -25,6 +37,13 @@ export const PHASE_LABEL: Readonly<Record<SessionPhase, string>> = Object.freeze
   [SessionPhase.Reconnecting]: "Reconnecting with a fresh token",
   [SessionPhase.Degraded]: "Stopped after a failed reconnect",
 })
+
+export function phaseLabel(phase: SessionPhase, fault: SessionFault | null): string {
+  if (phase === SessionPhase.Blocked && isMicrophoneFault(fault)) {
+    return "Microphone blocked"
+  }
+  return PHASE_LABEL[phase]
+}
 
 export function isRestartable(phase: SessionPhase): boolean {
   return (
@@ -73,15 +92,13 @@ const ADVISORY_FAULTS: readonly SessionFault[] = [
   SessionFault.SocketParamRefused,
 ]
 
-const REPLAY_FAULTS: readonly SessionFault[] = [
-  ...MICROPHONE_FAULTS,
-  SessionFault.TokenFailed,
+const SPENT_FAULTS: readonly SessionFault[] = [
   SessionFault.CreditsExhausted,
   SessionFault.BudgetExhausted,
 ]
 
 export function degradesToReplay(fault: SessionFault | null): boolean {
-  return fault !== null && REPLAY_FAULTS.includes(fault)
+  return fault !== null && SPENT_FAULTS.includes(fault)
 }
 
 export function isAdvisoryFault(fault: SessionFault | null): boolean {
@@ -157,7 +174,7 @@ export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.free
   },
   [SessionFault.CreditsExhausted]: {
     title: "The account is out of credit",
-    body: "Two sockets bill at once while a session is open, and billing runs on socket lifetime rather than audio volume.",
+    body: "Live calls spend this project's AssemblyAI credit, never yours, and it has run out. Two sockets bill at once while a session is open, and billing runs on socket lifetime rather than audio volume.",
     remedy: "Use the replay demonstration, which replays a session without opening a socket.",
   },
   [SessionFault.ConcurrencyReached]: {

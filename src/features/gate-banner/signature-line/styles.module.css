@@ -30,6 +30,10 @@
 }
 
 .reask .outcomeWord {
+  color: var(--state-asking-ink);
+}
+
+.lasaOutcome .outcomeWord {
   color: var(--state-lasa-ink);
 }
 
@@ -63,8 +67,26 @@
 }
 
 .certainty {
+  position: relative;
   font-size: var(--text-sm);
   color: var(--text-muted);
+}
+
+.outranked {
+  color: var(--state-lasa-ink);
+  font-weight: var(--weight-semibold);
+}
+
+.outranked::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.1875rem;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background-color: var(--state-lasa-line);
+  animation: var(--keyframes-sweep) var(--dur-emphatic) var(--ease-out-expo) both;
+  animation-delay: var(--dur-base);
 }
 
 .arrow {

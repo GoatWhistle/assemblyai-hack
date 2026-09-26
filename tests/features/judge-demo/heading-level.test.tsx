@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { JudgeDemo } from "@/features/judge-demo"
+import { JudgeDemo, REPLAY_TITLE } from "@/features/judge-demo"
 import { INSTANT_ENTRY_HEADING, InstantEntry } from "@/features/judge-demo/instant-entry"
+import { REPLAY_LENGTH_MS, REPLAY_SECONDS } from "@/features/judge-demo/replay-clock"
 
 describe("judge demo heading level", () => {
   it("renders its own title as h1 by default, when it is the only heading around it", () => {
     render(<JudgeDemo />)
-    const heading = screen.getByRole("heading", { name: /The forty-second demonstration/i })
+    const heading = screen.getByRole("heading", { name: REPLAY_TITLE })
     expect(
       heading.tagName,
       "standing alone, JudgeDemo carries the only heading and must stay an h1",
@@ -15,11 +16,22 @@ describe("judge demo heading level", () => {
 
   it("demotes its title to h2 when embedded under another page heading, as on the /demo hub", () => {
     render(<JudgeDemo headingLevel="h2" />)
-    const heading = screen.getByRole("heading", { name: /The forty-second demonstration/i })
+    const heading = screen.getByRole("heading", { name: REPLAY_TITLE })
     expect(
       heading.tagName,
       "the /demo hub opens with its own h1; JudgeDemo's title must not also claim h1 or the document has two, with the second appearing out of order",
     ).toBe("H2")
+  })
+})
+
+describe("A1-02: the replay names its true length", () => {
+  it("derives the length in its title from the replay clock, so the label cannot drift", () => {
+    expect(REPLAY_SECONDS).toBe(Math.round(REPLAY_LENGTH_MS / 1000))
+    expect(REPLAY_TITLE).toContain(`${REPLAY_SECONDS}-second`)
+    expect(
+      REPLAY_TITLE,
+      "the replay once claimed forty seconds while running 18.6",
+    ).not.toMatch(/forty|40-second/i)
   })
 })
 

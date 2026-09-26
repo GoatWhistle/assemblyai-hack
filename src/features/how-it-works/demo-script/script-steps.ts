@@ -68,9 +68,9 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
   }),
   Object.freeze({
     id: "self-correct",
-    action: "Say a drug name and correct yourself in the same breath.",
+    action: "Say a drug name and correct yourself, once with a marker and once without.",
     watchFor:
-      "We do not detect this, and the read-back is the mitigation rather than the fix. Both words are in the turn, so either can be proved spoken; you reject the value when it is read back to you. This step is here because a script containing only the parts that work is a sales pitch.",
+      "With a marker (\u201cno wait\u201d, \u201csorry\u201d, \u201cI mean\u201d, \u201cactually\u201d, \u201cscratch that\u201d or \u201cnot X, Y\u201d, followed within four words by the new name), the first name is refused as a value you took back, E_RETRACTED_VALUE. Without a marker, or with the correction spread across two turns, it is not detected: both words were said, so either can be proved spoken, and you reject the wrong one when it is read back. This step is here because a script containing only the parts that work is a sales pitch.",
     href: "/",
     linkLabel: "Take an order",
     needsMicrophone: true,

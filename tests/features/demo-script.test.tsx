@@ -34,9 +34,7 @@ describe("the on-screen demo script is numbered and self-contained", () => {
   })
 
   it("includes a step the product fails, rather than only the parts that work", () => {
-    const admitted = SCRIPT_STEPS.find((step) =>
-      step.watchFor.includes("We do not detect this"),
-    )
+    const admitted = SCRIPT_STEPS.find((step) => step.watchFor.includes("it is not detected"))
     expect(
       admitted,
       "a script containing only the successes is a sales pitch; the self-correction gap is documented and belongs in the sequence",
@@ -74,6 +72,18 @@ describe("the on-screen demo script is numbered and self-contained", () => {
         `"${step.action}" carries the README sentence verbatim; the same text in two places drifts in one of them`,
       ).toBe(false)
     }
+  })
+})
+
+describe("the self-correction step matches docs/limitations.md", () => {
+  it("names the retraction code and the unmarked case the product does not catch", () => {
+    const step = SCRIPT_STEPS.find((entry) => entry.id === "self-correct")
+    expect(
+      step?.watchFor,
+      "r1-A5-05: the step once said self-correction is not detected at all, which the marker check contradicts",
+    ).toContain("E_RETRACTED_VALUE")
+    expect(step?.watchFor).toMatch(/Without a marker/)
+    expect(step?.watchFor).not.toContain("We do not detect this")
   })
 })
 

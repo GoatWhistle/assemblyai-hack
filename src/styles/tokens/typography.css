@@ -6,7 +6,7 @@
     ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
 
   --text-2xs: 0.75rem;
-  --text-xs: 0.8125rem;
+  --text-xs: var(--text-sm);
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-md: 1.125rem;
@@ -24,7 +24,7 @@
 
   --weight-regular: 400;
   --weight-medium: 500;
-  --weight-semibold: 500;
+  --weight-semibold: 600;
 
   --track-display: -0.032em;
   --track-heading: -0.017em;

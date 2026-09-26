@@ -1,4 +1,6 @@
 import { useId } from "react"
+import { describeReason, SEVERITY_TONE } from "@/features/gate-banner/reason-language"
+import { Chip } from "@/shared/ui/primitives/chip"
 import { SAY_THESE } from "./phrases"
 import styles from "./styles.module.css"
 
@@ -21,7 +23,9 @@ export function SayThese() {
           <li key={entry.id} className={styles.item}>
             <p className={styles.say}>&ldquo;{entry.say}&rdquo;</p>
             <p className={styles.expected}>
-              <span className={styles.outcome}>{entry.outcome}</span>
+              <Chip tone={SEVERITY_TONE[describeReason(entry.decision.reasonCode).severity]}>
+                {entry.outcome}
+              </Chip>
               <code className={styles.code}>{entry.decision.reasonCode}</code>
             </p>
             <p className={styles.why}>{entry.expected}</p>

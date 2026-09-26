@@ -1,7 +1,11 @@
 import { useId } from "react"
+import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import styles from "./styles.module.css"
 
 export const INSTANT_ENTRY_HEADING = "You are already in the demonstration"
+
+export const INSTANT_ENTRY_LINE =
+  "A synthesised call is replaying on its own. No mic, nothing sent."
 
 export const INSTANT_ENTRY_BODY =
   "Nothing to install, no account, no microphone and no second person on the line. The replay below started on its own; it is a synthesised session, labelled as one, and the panels are the shipped gate deciding on it. If you prefer to drive it, the controls are there."
@@ -18,11 +22,18 @@ export function InstantEntry({ headingLevel = "h2" }: InstantEntryProps) {
   const Heading = headingLevel
   return (
     <section className={styles.entry} aria-labelledby={headingId}>
-      <Heading className={styles.heading} id={headingId}>
-        {INSTANT_ENTRY_HEADING}
-      </Heading>
-      <p className={styles.body}>{INSTANT_ENTRY_BODY}</p>
-      <p className={styles.case}>{INSTANT_ENTRY_CASE}</p>
+      <div className={styles.line}>
+        <Heading className={styles.heading} id={headingId}>
+          {INSTANT_ENTRY_HEADING}
+        </Heading>
+        <span className={styles.note}>{INSTANT_ENTRY_LINE}</span>
+      </div>
+      <div className={styles.more}>
+        <Disclosure summary="What you are watching">
+          <p>{INSTANT_ENTRY_BODY}</p>
+          <p>{INSTANT_ENTRY_CASE}</p>
+        </Disclosure>
+      </div>
     </section>
   )
 }

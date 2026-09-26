@@ -1,13 +1,23 @@
 import Link from "next/link"
 import { useId } from "react"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
-import { SAY_LINE_ORDER, SAY_LINES } from "@/features/judge-demo/say-these/say-lines"
+import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import styles from "./styles.module.css"
 
 export const INTAKE_HINT =
-  "Say the patient, the drug, the strength and the sig. Anything that cannot be proved is asked again."
+  "Say the patient's name, the drug and its strength, how to take it, and the prescriber's NPI. Anything that cannot be proved is asked again."
 
-export const JUDGE_LINK_LABEL = "Judging? Watch the 40-second replay"
+export const CALL_EXAMPLE_NPI_DIGITS = "1234567893"
+
+export const CALL_EXAMPLE_DRUG = "lisinopril"
+
+export const CALL_EXAMPLES: readonly string[] = Object.freeze([
+  "Patient Sam Rivera.",
+  "Lisinopril, ten milligrams, one tablet by mouth once daily, thirty tablets.",
+  "Prescriber NPI one two three four five six seven eight nine three.",
+])
+
+export const JUDGE_LINK_LABEL = `Judging? Watch the ${REPLAY_LENGTH_LABEL}`
 
 export function IntakePrompt() {
   const examplesId = useId()
@@ -18,9 +28,9 @@ export function IntakePrompt() {
         For example
       </p>
       <ul className={styles.examples} aria-labelledby={examplesId}>
-        {SAY_LINE_ORDER.map((id) => (
-          <li key={id} className={styles.example}>
-            &ldquo;{SAY_LINES[id]}&rdquo;
+        {CALL_EXAMPLES.map((line) => (
+          <li key={line} className={styles.example}>
+            &ldquo;{line}&rdquo;
           </li>
         ))}
       </ul>

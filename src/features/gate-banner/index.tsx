@@ -1,9 +1,14 @@
 import { type FieldCandidate, type GateDecision, ReasonCode } from "@/domain"
-import { Chip, type ChipTone } from "@/shared/ui/primitives/chip"
+import { Chip } from "@/shared/ui/primitives/chip"
 import { FIELD_LABEL } from "../intake/field-language"
 import { ContrastQuestion } from "./contrast-question"
 import { stanceFor } from "./hypothesis-language"
-import { ACTION_LANGUAGE, describeReason, type ReasonSeverity } from "./reason-language"
+import {
+  ACTION_LANGUAGE,
+  describeReason,
+  type ReasonSeverity,
+  SEVERITY_TONE,
+} from "./reason-language"
 import { ReasonStance } from "./reason-stance"
 import { RECOVERY_STEP } from "./recovery-language"
 import { signatureOf } from "./signature"
@@ -13,17 +18,10 @@ import styles from "./styles.module.css"
 const SEVERITY_CLASS: Record<ReasonSeverity, string> = {
   accepted: styles.accepted ?? "",
   asking: styles.asking ?? "",
+  refused: styles.refused ?? "",
   lasa: styles.lasa ?? "",
   escalated: styles.escalated ?? "",
   aborted: styles.aborted ?? "",
-}
-
-const SEVERITY_CHIP: Record<ReasonSeverity, ChipTone> = {
-  accepted: "accepted",
-  asking: "asking",
-  lasa: "lasa",
-  escalated: "escalated",
-  aborted: "aborted",
 }
 
 export type GateBannerProps = {
@@ -34,15 +32,15 @@ export type GateBannerProps = {
 export function GateBanner({ decision, candidate = null }: GateBannerProps) {
   if (decision === null) {
     return (
-      <div aria-live="polite">
-        <output className={styles.banner} aria-live="polite">
+      <output aria-live="polite" className={styles.region}>
+        <div className={styles.banner}>
           <p className={styles.headline}>The gate has not been asked anything yet</p>
           <p className={styles.idle}>
             Every proposed value passes through one decision function before it can enter the
             order. Its verdict, and the reason code behind it, appears here as it happens.
           </p>
-        </output>
-      </div>
+        </div>
+      </output>
     )
   }
   const reason = describeReason(decision.reasonCode)
@@ -61,12 +59,12 @@ export function GateBanner({ decision, candidate = null }: GateBannerProps) {
     signature.candidates.length >= 2
   const verdictKey = `${decision.candidateId}:${decision.reasonCode}:${decision.evidence.attempt}`
   return (
-    <div aria-live="polite">
-      <output className={classes} aria-live="polite" key={verdictKey}>
+    <output aria-live="polite" className={styles.region}>
+      <div className={classes} key={verdictKey} data-motion="fade">
         {signature === null ? null : <SignatureLine signature={signature} />}
         <div className={styles.top}>
           <p className={styles.headline}>{reason.headline}</p>
-          <Chip tone={SEVERITY_CHIP[reason.severity]} monospace>
+          <Chip tone={SEVERITY_TONE[reason.severity]} monospace>
             {reason.code}
           </Chip>
           <Chip tone="plain">{ACTION_LANGUAGE[decision.action]}</Chip>
@@ -88,7 +86,7 @@ export function GateBanner({ decision, candidate = null }: GateBannerProps) {
             <p className={styles.recoveryDetail}>{recovery.detail}</p>
           </div>
         )}
-      </output>
-    </div>
+      </div>
+    </output>
   )
 }

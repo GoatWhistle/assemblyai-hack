@@ -34,6 +34,13 @@ export function agentActivityOf(frames: readonly TappedFrame[]): AgentActivity {
   return AgentActivity.Offline
 }
 
+export const ACTIVITY_WORD: Readonly<Record<AgentActivity, string>> = Object.freeze({
+  OFFLINE: "Offline",
+  LISTENING: "Listening",
+  THINKING: "Thinking",
+  SPEAKING: "Speaking",
+})
+
 export const ACTIVITY_LABEL: Readonly<Record<AgentActivity, string>> = Object.freeze({
   OFFLINE: "Agent socket not open",
   LISTENING: "Agent is listening",

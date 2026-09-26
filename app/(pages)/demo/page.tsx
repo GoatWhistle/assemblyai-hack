@@ -6,8 +6,10 @@ import { HubNav, type HubSection } from "@/features/judge-demo/hub-nav"
 import { InstantEntry } from "@/features/judge-demo/instant-entry"
 import { JudgeHero } from "@/features/judge-demo/judge-hero"
 import { KeytermsAb } from "@/features/judge-demo/keyterms-ab"
+import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { SayThese } from "@/features/judge-demo/say-these"
 import { ScenarioPicker } from "@/features/judge-demo/scenario-picker"
+import { RECORDING_PUBLISHED } from "@/features/recorded-replay/published"
 import { RecordedSection } from "@/features/recorded-replay/recorded-section"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { SiteHeader } from "@/shared/ui/primitives/site-header"
@@ -23,12 +25,15 @@ const KEYTERMS_ID = "keyterms"
 const RECORDED_ID = "recorded"
 
 const SECTIONS: readonly HubSection[] = [
-  { id: REPLAY_ID, label: "40-second replay" },
+  { id: REPLAY_ID, label: REPLAY_LENGTH_LABEL },
   { id: TOUR_ID, label: "90-second tour" },
   { id: SAY_ID, label: "What to say live" },
   { id: SCENARIOS_ID, label: "Scenarios" },
   { id: KEYTERMS_ID, label: "Keyterms A/B" },
-  { id: RECORDED_ID, label: "Recorded audio" },
+  {
+    id: RECORDED_ID,
+    label: RECORDING_PUBLISHED ? "Recorded audio" : "Recorded audio (none yet)",
+  },
 ]
 
 export const metadata: Metadata = {
@@ -76,7 +81,7 @@ export default async function DemoPage({ searchParams }: DemoProps) {
         </div>
         <div className={styles.section} id={RECORDED_ID}>
           <h2 className={styles.heading}>Recorded audio</h2>
-          <RecordedSection />
+          <RecordedSection published={RECORDING_PUBLISHED} />
         </div>
         <nav className={styles.onward} aria-label="Where to go next">
           <ActionLink href="/how-it-works" size="large">

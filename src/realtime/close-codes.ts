@@ -95,6 +95,7 @@ export function isAlertWorthy(code: number): boolean {
   return (
     code === CloseCode.ThreeHourCap ||
     code === CloseCode.SessionLimit ||
-    code === CloseCode.PolicyViolation
+    code === CloseCode.PolicyViolation ||
+    code === CloseCode.MalformedConfiguration
   )
 }

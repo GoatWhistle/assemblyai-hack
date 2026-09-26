@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T11:08:00.235Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "unbound-lasa-named-1790420879926",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 246,
+    "stt": 246
+  },
+  "costUsd": 0.3485,
+  "outcome": "failed",
+  "reason": "the page never bound a server session (unbound-lasa-named-1790420879926), so no receipt exists; live smoke lasa-named: not observed: hydromorphone is in the order, the order committed; 1 of 10 caller lines played; last agent line: I'm sorry, I could not record the drug name. Could you please repeat the name of the medication?; socket time is the harness wall clock, an upper bound",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

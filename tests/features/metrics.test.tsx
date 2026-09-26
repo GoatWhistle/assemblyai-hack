@@ -142,7 +142,7 @@ describe("measured figures reach the screen", () => {
     for (const figure of figures) {
       expect(figure.value, figure.name).not.toBeNull()
       expect(figure.command.length).toBeGreaterThan(0)
-      expect(figure.setDescription).toMatch(/[0-9]+ utterances/)
+      expect(figure.setDescription).toMatch(/utterances in eval\//)
     }
   })
 
@@ -167,9 +167,13 @@ describe("measured figures reach the screen", () => {
 })
 
 describe("held-out discipline is stated on the measurements page", () => {
-  it("says thresholds are tuned on the development set only", () => {
+  it("says thresholds are chosen defaults tuned on no set, as eval/REPORT.md does", () => {
     render(<MetricsPage />)
-    expect(screen.getByText(/tuned on the development set only/i)).toBeDefined()
+    expect(
+      screen.getByText(/Thresholds are chosen defaults, not tuned on any set/),
+      "r1-A5-03: the page once said thresholds were tuned on the development set, contradicting the report",
+    ).toBeDefined()
+    expect(document.body.textContent ?? "").not.toMatch(/tuned on the development set/i)
   })
 
   it("says a number without a method is not published", () => {

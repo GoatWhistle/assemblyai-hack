@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { JudgeDemo } from "@/features/judge-demo"
 import { DECISION_AT_MS } from "@/features/judge-demo/demo-arms"
+import { REPLAY_FROM_MS } from "@/features/judge-demo/replay-clock"
 import { REPLAY_LINES } from "@/features/judge-demo/replay-voice/replay-script"
 
 const spoken: string[] = []
@@ -48,7 +49,7 @@ describe("U2: the replay speaks, and its captions and highlight follow the playb
   it("speaks each line when the clock reaches it, not before", () => {
     render(<JudgeDemo />)
     fireEvent.click(screen.getByRole("button", { name: /play the replay/i }))
-    advance(6000)
+    advance(6000 - REPLAY_FROM_MS)
     expect(spoken).toEqual([])
     advance(1000)
     expect(spoken).toEqual([REPLAY_LINES[0]?.text])
@@ -59,7 +60,7 @@ describe("U2: the replay speaks, and its captions and highlight follow the playb
   it("highlights the field only while the agent reads it back", () => {
     render(<JudgeDemo />)
     fireEvent.click(screen.getByRole("button", { name: /play the replay/i }))
-    advance(7000)
+    advance(7000 - REPLAY_FROM_MS)
     expect(readingBack()).toBe("false")
     advance(DECISION_AT_MS - 7000 + 200)
     expect(readingBack()).toBe("true")

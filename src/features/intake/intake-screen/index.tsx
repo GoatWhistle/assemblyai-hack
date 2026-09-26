@@ -1,34 +1,31 @@
 "use client"
 
-import { type ReactNode, useMemo } from "react"
+import type { ReactNode } from "react"
 import type { FieldCandidate, GateDecision } from "@/domain"
-import { estimateFromElapsed } from "@/features/cost/published-rate"
-import { RateEstimate } from "@/features/cost/rate-estimate"
 import type { ListenHandler } from "@/features/field-card/said-recorded"
-import { GateBanner } from "@/features/gate-banner"
-import { RefusalCounter } from "@/features/gate-ledger/refusal-counter"
-import { type RefusalTally, tallyRefusals } from "@/features/gate-ledger/refusal-tally"
-import { RejectedTable } from "@/features/gate-ledger/rejected-table"
 import type { LiveOrderSnapshot } from "@/features/order-summary/live-snapshot"
 import type { FastPath } from "@/features/read-back/fast-path"
 import type { ReadBackContext } from "@/features/read-back/read-back-machine"
 import type { TranscriptEntry } from "@/features/transcript-view/transcript-entry"
 import type { Patience } from "@/realtime/patience"
+import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { SiteHeader } from "@/shared/ui/primitives/site-header"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
-import { IntakeRail } from "../intake-rail"
+import { useInCall } from "../in-call-loader"
 import { PhaseDot } from "../phase-dot"
 import type { FaultDetail } from "../session-options"
-import type { SessionFault, SessionPhase } from "../session-status"
-import { useCandidateSelection } from "../use-candidate-selection"
+import { type SessionFault, SessionPhase } from "../session-status"
+import type { Solicited } from "../solicited-field"
 import { CallStage } from "./call-stage"
-import { FaultPanel } from "./fault-panel"
-import { FieldCards } from "./field-cards"
+import { CALL_MAIN_ID } from "./landmarks"
 import styles from "./styles.module.css"
 import { Thesis } from "./thesis"
 
 export const LEGAL_SUMMARY =
   "A technology demonstration, not a medical device. Use made-up details, never a real patient's."
+
+export const TECHNICAL_HINT =
+  "Sockets, recognizer model, latency, cost, refusals and raw frames"
 
 export type IntakeScreenProps = {
   readonly candidates: readonly FieldCandidate[]
@@ -47,6 +44,7 @@ export type IntakeScreenProps = {
   readonly decisionHistory?: readonly GateDecision[]
   readonly turnsHeld?: number | null
   readonly turnInFlight?: boolean
+  readonly solicited?: Solicited
   readonly echoDiscards: number
   readonly level: number
   readonly agentSpeaking: boolean
@@ -74,6 +72,7 @@ export function IntakeScreen({
   decisionHistory,
   turnsHeld = null,
   turnInFlight = false,
+  solicited,
   echoDiscards,
   level,
   agentSpeaking,
@@ -83,112 +82,90 @@ export function IntakeScreen({
   onStop,
   onFinishAnswer,
 }: IntakeScreenProps) {
-  const { selected, selection, selectCandidate, selectWord } = useCandidateSelection(
-    candidates,
-    onListen,
-  )
-  const selectedCandidateId = selected?.candidateId ?? null
-
-  const shownDecision = selected === null ? null : (decisions.get(selected.candidateId) ?? null)
-
-  const tally: RefusalTally = useMemo(
-    () => tallyRefusals(decisionHistory ?? []),
-    [decisionHistory],
-  )
-
-  const estimate = useMemo(() => estimateFromElapsed(elapsedMs), [elapsedMs])
-
   const started = candidates.length > 0 || transcript.length > 0
+  const inCall = useInCall(phase !== SessionPhase.Idle || started)
 
   return (
     <div className={styles.page}>
-      <SiteHeader current="call" status={<PhaseDot phase={phase} />} />
+      <SiteHeader current="call" status={<PhaseDot phase={phase} fault={fault} />} />
 
-      <Thesis started={started} />
+      <main id={CALL_MAIN_ID} tabIndex={-1} className={styles.main}>
+        <Thesis started={started} />
 
-      <CallStage
-        phase={phase}
-        fault={fault}
-        started={started}
-        agentSpeaking={agentSpeaking}
-        turnInFlight={turnInFlight}
-        readBackState={readBack.state}
-        level={level}
-        elapsedMs={elapsedMs}
-        echoDiscards={echoDiscards}
-        patience={patience}
-        onStart={onStart}
-        onStop={onStop}
-        onFinishAnswer={onFinishAnswer}
-      />
+        <CallStage
+          phase={phase}
+          fault={fault}
+          faultDetail={faultDetail}
+          started={started}
+          agentSpeaking={agentSpeaking}
+          turnInFlight={turnInFlight}
+          readBackState={readBack.state}
+          solicited={solicited}
+          level={level}
+          elapsedMs={elapsedMs}
+          echoDiscards={echoDiscards}
+          patience={patience}
+          onStart={onStart}
+          onStop={onStop}
+          onFinishAnswer={onFinishAnswer}
+        />
 
-      {fault === null ? null : (
-        <FaultPanel fault={fault} faultDetail={faultDetail} onStart={onStart} />
-      )}
+        {alert === null ? null : (
+          <p className={styles.alert} role="alert">
+            {alert}
+          </p>
+        )}
 
-      {alert === null ? null : (
-        <p className={styles.alert} role="alert">
-          {alert}
-        </p>
-      )}
-
-      {started ? (
-        <div className={styles.shell}>
-          <div className={styles.main}>
-            {candidates.length === 0 ? null : (
-              <GateBanner decision={shownDecision} candidate={selected} />
-            )}
-            {summary}
-            <RefusalCounter tally={tally} turnsHeld={turnsHeld} />
-            <RateEstimate estimate={estimate} />
-            <RejectedTable decisionHistory={decisionHistory ?? []} />
-            <FieldCards
-              candidates={candidates}
-              decisions={decisions}
-              snapshot={snapshot}
-              selectedWordStartMs={selection?.startMs ?? null}
-              onSelectWord={selectWord}
-              onListen={onListen}
-            />
-          </div>
-
-          <IntakeRail
+        {started && inCall !== null ? (
+          <inCall.CallPanels
             candidates={candidates}
-            selectedCandidateId={selectedCandidateId}
+            decisions={decisions}
             transcript={transcript}
-            selection={selection}
             readBack={readBack}
-            {...(fastPath === undefined ? {} : { fastPath })}
+            fastPath={fastPath}
+            summary={summary}
+            snapshot={snapshot}
             echoDiscards={echoDiscards}
-            onSelectCandidate={selectCandidate}
-            onSelectWord={selectWord}
+            onListen={onListen}
           />
-        </div>
-      ) : null}
+        ) : null}
 
-      {telemetry === undefined ? null : (
-        <details className={styles.technical}>
-          <summary className={styles.summary}>
-            <span className={styles.summaryText}>
-              <span className={styles.summaryTitle}>Technical details</span>
-              <span className={styles.summaryHint}>
-                Sockets, recognizer model, latency, decision log and raw frames
+        {telemetry === undefined ? null : (
+          <div className={styles.technical}>
+            <Disclosure
+              tone="framed"
+              summary={
+                <span className={styles.summary}>
+                  <span>Technical details</span>
+                  <span className={styles.hint}>{TECHNICAL_HINT}</span>
+                </span>
+              }
+            >
+              {telemetry}
+              {started && inCall !== null ? (
+                <inCall.TechnicalLedger
+                  decisionHistory={decisionHistory ?? []}
+                  turnsHeld={turnsHeld}
+                  elapsedMs={elapsedMs}
+                />
+              ) : null}
+            </Disclosure>
+          </div>
+        )}
+
+        <div className={styles.legal}>
+          <Disclosure
+            summary={
+              <span className={styles.summary}>
+                <span>{LEGAL_SUMMARY}</span>
+                <span className={styles.hint}>Read the full notice</span>
               </span>
-            </span>
-          </summary>
-          <div className={styles.telemetry}>{telemetry}</div>
-        </details>
-      )}
-
-      <details className={styles.legal}>
-        <summary className={styles.summary}>
-          <span className={styles.summaryText}>
-            <span className={styles.summaryTitle}>{LEGAL_SUMMARY}</span>
-            <span className={styles.summaryHint}>Read the full notice</span>
-          </span>
-        </summary>
-        <Disclaimer />
-      </details>
+            }
+          >
+            <Disclaimer />
+          </Disclosure>
+        </div>
+      </main>
     </div>
   )
 }

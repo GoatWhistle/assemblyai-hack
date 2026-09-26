@@ -25,7 +25,7 @@ const FILES: readonly RecordedRun[] = [
     id: "dev",
     name: "Development set",
     setDescription:
-      "40 drug names spoken by two synthetic voices, the set thresholds were tuned on",
+      "40 drug names spoken by two synthetic voices; the development set, on which no threshold was tuned",
     command: "make eval",
     scored: dev.scored as readonly Scored[],
     entityErrorRate: dev.entityErrorRate,

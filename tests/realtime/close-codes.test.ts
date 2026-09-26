@@ -35,7 +35,9 @@ describe("explainClose", () => {
 })
 
 describe("isAlertWorthy", () => {
-  it("is true only for the two codes that mean money was burned", () => {
+  it("is true for exactly the four codes the project treats as alert-worthy on the first occurrence", () => {
+    expect(isAlertWorthy(1008)).toBe(true)
+    expect(isAlertWorthy(3006)).toBe(true)
     expect(isAlertWorthy(3008)).toBe(true)
     expect(isAlertWorthy(3009)).toBe(true)
     expect(isAlertWorthy(3007)).toBe(false)

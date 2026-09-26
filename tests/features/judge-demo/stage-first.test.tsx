@@ -2,6 +2,7 @@ import { act, cleanup, render, screen } from "@testing-library/react"
 import { StrictMode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { JudgeDemo } from "@/features/judge-demo"
+import { REPLAY_FROM_MS, sessionSeconds } from "@/features/judge-demo/replay-clock"
 import { REPLAY_NOTICE_TITLE, REPLAY_TAG_LINE } from "@/features/judge-demo/replay-notice"
 
 function precedes(first: Element, second: Element): boolean {
@@ -68,14 +69,14 @@ describe("AU5: the autoplay survives an effect that runs twice", () => {
       vi.advanceTimersByTime(1000)
     })
     expect(
-      screen.getByText(/1\.0s \//),
+      screen.getByText(new RegExp(`${sessionSeconds(REPLAY_FROM_MS + 1000)} /`)),
       "a cleanup that stops the timer while a ref still says it started leaves the replay frozen at 0.0s with Play disabled",
     ).toBeTruthy()
   })
 })
 
 describe("AU5: pressing a replay control never drops keyboard focus on the page body", () => {
-  it("moves focus to Stop when Play disables itself, and back to Play when Stop does", () => {
+  it("keeps focus on the primary control as it turns into Pause, and returns it there from Stop", () => {
     vi.useFakeTimers()
     render(<JudgeDemo headingLevel="h2" />)
     const play = screen.getByRole("button", { name: /play the replay/i })
@@ -83,11 +84,14 @@ describe("AU5: pressing a replay control never drops keyboard focus on the page 
     act(() => {
       play.click()
     })
-    const stop = screen.getByRole("button", { name: /^stop$/i })
+    const pause = screen.getByRole("button", { name: /^pause$/i })
     expect(
       document.activeElement,
-      "a disabled button that held focus hands it to nothing",
-    ).toBe(stop)
+      "A1-24: the primary control never disables itself while playing, so focus stays where the judge pressed",
+    ).toBe(pause)
+    expect(pause.hasAttribute("disabled")).toBe(false)
+    const stop = screen.getByRole("button", { name: /^stop$/i })
+    stop.focus()
     act(() => {
       vi.advanceTimersByTime(1000)
     })
@@ -105,6 +109,7 @@ describe("AU5: pressing a replay control never drops keyboard focus on the page 
     act(() => {
       play.click()
     })
+    screen.getByRole("button", { name: /^stop$/i }).focus()
     act(() => {
       vi.advanceTimersByTime(20000)
     })

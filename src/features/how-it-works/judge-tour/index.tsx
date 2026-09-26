@@ -25,7 +25,7 @@ export function JudgeTour() {
               </p>
               <p className={styles.expect}>{step.expect}</p>
             </div>
-            <ActionLink href={step.href}>Go</ActionLink>
+            <ActionLink href={step.href}>{step.go}</ActionLink>
           </li>
         ))}
       </ol>

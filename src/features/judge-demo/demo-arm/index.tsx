@@ -1,11 +1,24 @@
+import type { CSSProperties } from "react"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { DECISION_AT_MS, type DemoArm, type DemoPhase } from "../demo-arms"
 import styles from "./styles.module.css"
+
+const PHASES: readonly DemoPhase[] = ["resting", "asked", "settled"]
 
 export type DemoArmPanelProps = {
   readonly arm: DemoArm
   readonly phase: DemoPhase
   readonly headingLevel: "h2" | "h3"
+}
+
+function toneOf(gated: boolean, phase: DemoPhase): string {
+  if (phase === "resting") {
+    return "undecided"
+  }
+  if (phase === "asked") {
+    return gated ? "lasa" : "threshold"
+  }
+  return gated ? "committed" : "refused"
 }
 
 export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
@@ -14,15 +27,15 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
   const asked = phase !== "resting"
   return (
     <section
-      className={[styles.arm, gated ? styles.armGated : styles.armUngated].join(" ")}
+      className={styles.arm}
+      data-tone={toneOf(gated, phase)}
+      style={{ "--arm": gated ? 0 : 1 } as CSSProperties}
       aria-label={arm.title}
     >
       <header className={styles.armHead}>
         <Heading className={styles.armTitle}>
           {arm.title}{" "}
-          <Chip tone={gated ? "lasa" : "escalated"}>
-            {gated ? "shipped" : "comparison only"}
-          </Chip>
+          <Chip tone={gated ? "lasa" : "plain"}>{gated ? "shipped" : "comparison only"}</Chip>
         </Heading>
         <p className={styles.armNote}>{arm.note}</p>
       </header>
@@ -45,14 +58,21 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
           read as <code className={styles.reasonCode}>{arm.answer.reasonCode}</code>
         </p>
       </div>
-      <div
-        className={[styles.outcome, gated ? styles.outcomeGated : styles.outcomeUngated].join(
-          " ",
-        )}
-      >
+      <div className={styles.outcome}>
         <p className={styles.outcomeLabel}>{arm.outcomeLabel}</p>
-        <p className={styles.outcomeValue}>{arm.value[phase]}</p>
-        <p className={styles.outcomeBody}>{arm.body[phase]}</p>
+        <div className={styles.stack}>
+          {PHASES.map((entry) => (
+            <div
+              key={entry}
+              className={entry === phase ? styles.current : styles.variant}
+              aria-hidden={entry === phase ? undefined : true}
+              data-motion="fade"
+            >
+              <p className={styles.outcomeValue}>{arm.value[entry]}</p>
+              <p className={styles.outcomeBody}>{arm.body[entry]}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

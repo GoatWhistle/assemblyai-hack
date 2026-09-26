@@ -7,10 +7,12 @@ import {
   GateAction,
   GateViolationError,
   policyFor,
+  ReasonCode,
   setField,
   VerdictOutcome,
 } from "@/domain"
 import { confirm, decide } from "@/gate"
+import { lasaRiskFor } from "@/lasa"
 import { candidateFor } from "./factory"
 
 describe("confirm is the only constructor of ConfirmedValue", () => {
@@ -96,6 +98,28 @@ describe("confirm is the only constructor of ConfirmedValue", () => {
         callerConfirmed: false,
       }),
     ).toThrow(/without an explicit yes/)
+  })
+
+  it("tells a look-alike refusal apart: only a spoken name confirms it, never a yes", () => {
+    const candidate = candidateFor({
+      field: FieldName.DrugName,
+      rawValue: "Morphine",
+      normalizedValue: "morphine",
+      confidence: 1.0,
+      lasa: lasaRiskFor("Morphine"),
+    })
+    const decision = decide(candidate, policyFor(FieldName.DrugName))
+    expect(decision.reasonCode).toBe(ReasonCode.LasaHit)
+    const attempt = () =>
+      confirm({
+        candidate,
+        policy: policyFor(FieldName.DrugName),
+        decision,
+        confirmationMode: ConfirmationMode.ReadBack,
+        callerConfirmed: false,
+      })
+    expect(attempt).toThrow(/only the caller saying the name confirms/)
+    expect(attempt).not.toThrow(/explicit yes/)
   })
 
   it("refuses a value that failed its validator without a spoken confirmation", () => {

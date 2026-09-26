@@ -37,7 +37,7 @@ export const WAITING_COPY: Readonly<Record<WaitingOn, WaitingCopy>> = Object.fre
   [WaitingOn.Opening]: {
     headline: "The system is opening the line",
     detail:
-      "Asking for the microphone and minting a single-use token for each socket. Nothing you say is captured yet.",
+      "Asking for the microphone and fetching a single-use token for each connection. Nothing you say is captured yet.",
     side: "system",
     observedFrom: "the session phase",
   },

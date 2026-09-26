@@ -42,7 +42,28 @@
   opacity: 0.7;
 }
 
+.speaking .bar {
+  background-color: var(--mic-speaking-line);
+  animation: meter-wave calc(var(--dur-deliberate) * 2) var(--ease-in-out) infinite alternate;
+  animation-delay: calc(var(--i, 0) * var(--dur-instant) * -0.6);
+}
+
+@keyframes meter-wave {
+  from {
+    scale: 1 0.22;
+  }
+
+  to {
+    scale: 1 0.55;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .meter.speaking .bar {
+    animation: none;
+    scale: 1 0.4;
+  }
+
   .meter .bar {
     scale: 1 0.3;
     transition: background-color var(--dur-fast) var(--ease-constant);

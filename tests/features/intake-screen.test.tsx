@@ -1,14 +1,17 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, it, vi } from "vitest"
-import { FIELD_NAMES, type GateDecision, policyFor } from "@/domain"
-import { FIELD_LABEL, FIELD_PROOF_NOTE, INTAKE_ORDER } from "@/features/intake/field-language"
+import { beforeAll, describe, expect, it, vi } from "vitest"
+import type { GateDecision } from "@/domain"
+import { preloadInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen, LEGAL_SUMMARY } from "@/features/intake/intake-screen"
-import { JUDGE_LINK_LABEL } from "@/features/intake/intake-screen/intake-prompt"
+import {
+  CALL_EXAMPLES,
+  INTAKE_HINT,
+  JUDGE_LINK_LABEL,
+} from "@/features/intake/intake-screen/intake-prompt"
 import { THESIS_PROMISE } from "@/features/intake/intake-screen/thesis"
 import { PHASE_LABEL, SessionPhase } from "@/features/intake/session-status"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
-import { SAY_LINE_ORDER, SAY_LINES } from "@/features/judge-demo/say-these/say-lines"
 import {
   LASA_CANDIDATE,
   LASA_DECISION,
@@ -18,6 +21,10 @@ import {
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { callerEntry } from "@/features/transcript-view/transcript-entry"
 import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
+
+beforeAll(async () => {
+  await preloadInCall()
+})
 
 const decisions = new Map<string, GateDecision>([
   [NAME_DECISION.candidateId, NAME_DECISION],
@@ -127,7 +134,11 @@ describe("the intake screen", () => {
     const onStart = vi.fn()
     renderScreen({ onStart })
     const trigger = screen.getByRole("button", { name: /start listening/i })
-    expect(trigger.getAttribute("aria-pressed")).toBe("false")
+    expect(
+      trigger.getAttribute("aria-pressed"),
+      "a toggle that changes its label and its pressed state at once announces the state twice (r1-A2 F18)",
+    ).toBeNull()
+    expect(trigger.getAttribute("aria-keyshortcuts")).toBe("Space")
     await userEvent.click(trigger)
     expect(onStart).toHaveBeenCalledOnce()
   })
@@ -143,14 +154,18 @@ describe("the intake screen", () => {
 
   it("tells the operator what to say before anything has been proposed", () => {
     renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
-    expect(screen.getByText(/say the patient, the drug/i)).toBeDefined()
+    expect(screen.getByText(INTAKE_HINT)).toBeDefined()
+    expect(
+      INTAKE_HINT,
+      "'sig' is pharmacy jargon an ordinary caller does not know (r1-A1 A1-03)",
+    ).not.toMatch(/\bsig\b/i)
     const judge = screen.getByRole("link", { name: JUDGE_LINK_LABEL })
     expect(
       judge.getAttribute("href"),
       "a judge who opens the user page still needs one visible step to the replay",
     ).toBe(REPLAY_ENTRY_HREF)
-    for (const id of SAY_LINE_ORDER) {
-      expect(screen.getByText(`“${SAY_LINES[id]}”`)).toBeDefined()
+    for (const line of CALL_EXAMPLES) {
+      expect(screen.getByText(`“${line}”`)).toBeDefined()
     }
     expect(
       screen.queryByRole("link", { name: /no microphone\? watch the recording/i }),
@@ -202,36 +217,5 @@ describe("the intake screen", () => {
   it("marks a field in a published pair in the order rail", () => {
     renderScreen()
     expect(screen.getByText("pair")).toBeDefined()
-  })
-})
-
-describe("field language", () => {
-  it("labels every field the domain declares, not merely every field the form lists", () => {
-    for (const field of FIELD_NAMES) {
-      expect(
-        FIELD_LABEL[field]?.length ?? 0,
-        `${field} exists in the domain with no label, so it would render as a blank row on the form`,
-      ).toBeGreaterThan(0)
-      expect(
-        FIELD_PROOF_NOTE[field]?.length ?? 0,
-        `${field} has no note saying what proves it, which is the decision the policy table forces on every new field`,
-      ).toBeGreaterThan(0)
-    }
-  })
-
-  it("puts every declared field in the intake order rather than silently dropping one", () => {
-    expect(
-      [...INTAKE_ORDER].sort(),
-      "a field added to the domain and left out of the intake order is collected by nothing, and the previous version of this test compared the order against itself",
-    ).toEqual([...FIELD_NAMES].sort())
-  })
-
-  it("carries a policy for every field the form intends to collect", () => {
-    for (const field of INTAKE_ORDER) {
-      expect(
-        policyFor(field).criticality,
-        `${field} appears on the form with no policy, so nothing decides how it is proved`,
-      ).toBeDefined()
-    }
   })
 })

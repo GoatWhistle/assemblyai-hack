@@ -116,7 +116,7 @@ describe("the indicator renders the side and the reason on screen", () => {
         signals={signals({ readBackState: ReadBackState.AwaitingConfirmation })}
       />,
     )
-    expect(screen.getByText("your turn")).toBeDefined()
+    expect(screen.getByText("Your turn")).toBeDefined()
     expect(
       screen.getByText(WAITING_COPY[WaitingOn.YourConfirmation].headline),
       "a caller who cannot tell waiting from processing repeats themselves",
@@ -125,11 +125,24 @@ describe("the indicator renders the side and the reason on screen", () => {
 
   it("warns against repeating while the gate is checking", () => {
     render(<WaitingIndicator signals={signals({ turnInFlight: true })} />)
-    expect(screen.getByText("the system's turn")).toBeDefined()
+    expect(screen.getByText("The system's turn")).toBeDefined()
     expect(
       screen.getByText(/Do not repeat yourself/),
       "a repeat during processing produces a second turn and both then carry provenance",
     ).toBeDefined()
+  })
+
+  it("names the field the caller is being asked for, in plain words", () => {
+    render(<WaitingIndicator signals={signals()} next="the drug name" />)
+    expect(
+      screen.getByText("Next: the drug name"),
+      "'Waiting for you: speak when you are ready' left the caller guessing which field was being asked for (r1-A1 A1-18)",
+    ).toBeDefined()
+  })
+
+  it("does not name a next field while the system holds the turn", () => {
+    render(<WaitingIndicator signals={signals({ turnInFlight: true })} next="the drug name" />)
+    expect(screen.queryByText(/^Next:/)).toBeNull()
   })
 
   it("exposes the state as a data attribute so the live screen can be asserted on", () => {

@@ -9,17 +9,19 @@
   padding: var(--space-1) var(--space-4);
   min-height: 2.25rem;
   border: 1px solid var(--action-line);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background-color: var(--action-surface);
   color: var(--action-ink-own);
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  letter-spacing: var(--track-tight);
+  letter-spacing: var(--track-normal);
   text-decoration: none;
   max-width: 100%;
   text-align: center;
   text-wrap: balance;
-  transition: var(--transition-control);
+  transition:
+    var(--transition-control),
+    scale var(--dur-fast) var(--ease-out-quart);
 }
 
 .action:hover {
@@ -30,20 +32,23 @@
 
 .action:active {
   background-color: var(--ink-a8);
+  scale: 0.97;
 }
 
 .primary {
   --action-surface: var(--action-rest);
   --action-ink-own: var(--text-on-accent);
   --action-line: var(--action-rest);
-  box-shadow: var(--mic-lift-quiet);
 }
 
 .primary:hover {
   background-color: var(--action-hover);
   border-color: var(--action-hover);
   color: var(--text-on-accent);
-  box-shadow: var(--mic-lift);
+}
+
+.primary:active {
+  background-color: var(--action-active);
 }
 
 .quiet {
@@ -78,5 +83,11 @@
   .small {
     min-height: var(--target-touch);
     padding: 0 var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action:active {
+    scale: none;
   }
 }

@@ -12,7 +12,13 @@
 }
 
 .nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
   min-width: 0;
+  margin-inline: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  background-color: var(--surface-page);
 }
 
 .main {
@@ -34,13 +40,14 @@
   }
 
   .nav {
-    position: sticky;
+    z-index: auto;
+    margin-inline: 0;
+    padding: var(--space-5) 0 0;
     top: var(--docs-sticky-top);
     align-self: start;
     max-height: calc(100dvh - 2 * var(--docs-sticky-top));
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding-top: var(--space-5);
   }
 }
 

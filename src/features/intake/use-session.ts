@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { EchoGuard } from "@/audio/echo-guard"
-import { type MicrophoneCapture, requestMicrophone, startCapture } from "@/audio/microphone"
+import { type MicrophoneCapture, startCapture } from "@/audio/microphone"
 import { encodeBase64 } from "@/audio/resample"
 import { AgentClient } from "@/realtime/agent-client"
 import { installExitPath } from "@/realtime/exit-path"
@@ -24,13 +24,7 @@ import { SessionFault, SessionPhase } from "./session-status"
 import { useSessionLifecycle } from "./session-supervision"
 import { createReplyWatchdog } from "./session-timers"
 import { NOTHING_SOLICITED } from "./solicited-field"
-import {
-  abandon,
-  budgetRefusal,
-  detailOf,
-  faultForConnectError,
-  faultForMicrophoneError,
-} from "./start-faults"
+import { abandon, acquireStream, detailOf, faultForConnectError } from "./start-faults"
 import { usePatienceSync } from "./use-patience-sync"
 
 export type { CallerTurn } from "./session-events"
@@ -108,24 +102,20 @@ export function useSession(options: UseSessionOptions = {}): SessionHandles {
     setSttModel(null)
     setSessionId(null)
     setPhase(SessionPhase.RequestingMicrophone)
-    const refusal = await budgetRefusal()
-    if (refusal !== null) {
-      setFault(SessionFault.BudgetExhausted)
-      setFaultDetail(refusal)
-      setPhase(SessionPhase.Blocked)
-      return
-    }
-    let stream: MediaStream
-    try {
-      stream = await requestMicrophone()
-    } catch (error) {
-      setFault(faultForMicrophoneError(error))
-      setPhase(SessionPhase.Blocked)
+    const epoch = life.epoch()
+    const stream = await acquireStream(
+      () => life.epoch() === epoch,
+      (blocked, detail) => {
+        setFault(blocked)
+        setFaultDetail(detail)
+        setPhase(SessionPhase.Blocked)
+      },
+    )
+    if (stream === null) {
       return
     }
 
     setPhase(SessionPhase.MintingTokens)
-    const epoch = life.epoch()
     const turns = createAgentTurnAssembler((turn) => latest.current.onAgentTurn?.(turn))
     const watchdog = createReplyWatchdog(() => {
       releaseHalfDuplex(wiring)
@@ -174,11 +164,16 @@ export function useSession(options: UseSessionOptions = {}): SessionHandles {
     try {
       await Promise.all([agentClient.connect(), sttClient.connect()])
     } catch (error) {
-      setFault(faultForConnectError(error))
-      setFaultDetail(detailOf(error))
-      setPhase(SessionPhase.Blocked)
+      const current = life.epoch() === epoch
+      if (current) {
+        setFault(faultForConnectError(error))
+        setFaultDetail(detailOf(error))
+        setPhase(SessionPhase.Blocked)
+      }
       await abandon(stream, agentClient, sttClient)
-      closedSession()
+      if (current) {
+        closedSession()
+      }
       return
     }
     if (life.epoch() !== epoch) {

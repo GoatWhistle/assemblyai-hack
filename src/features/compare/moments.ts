@@ -113,7 +113,7 @@ function momentFrom(source: Source): Moment {
     withoutGateWrites: writes,
     withoutGateText: writes
       ? `Written: ${writtenValue(source.candidate)}`
-      : `Asks as well: ${withoutGate.reasonCode}`,
+      : `Also asks: ${withoutGate.reasonCode}`,
     pairOutranksCertainty: decision.reasonCode === ReasonCode.LasaHit,
     partners:
       decision.reasonCode === ReasonCode.LasaHit ? source.candidate.lasa.confusableWith : [],

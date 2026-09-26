@@ -31,9 +31,11 @@ describe("T6: an exhausted budget moves the visitor to the replay before the mic
         : undefined
     await startTheCall(IntakeClient)
     expect(rig.microphoneRequests).toBe(0)
-    expect(screen.getByText(/the daily cap is reached/)).toBeTruthy()
+    expect(screen.getByText(/the daily cap is reached/i)).toBeTruthy()
     expect(screen.getAllByText(/live-call budget refused this call/i).length).toBeGreaterThan(0)
-    expect(screen.getAllByText(/project's own credit, never yours/i).length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText(/project's own AssemblyAI credit, not on yours/i).length,
+    ).toBeGreaterThan(0)
     expect(screen.getByText(/moving to the replay demonstration/i)).toBeTruthy()
   })
 

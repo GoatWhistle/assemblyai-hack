@@ -18,7 +18,7 @@ import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
 vi.mock("next/navigation", () => ({ usePathname: () => "/compare" }))
 
 function rows(container: HTMLElement): HTMLTableRowElement[] {
-  return [...container.querySelectorAll<HTMLTableRowElement>("tbody tr")]
+  return [...container.querySelectorAll<HTMLTableRowElement>("tbody tr[data-moment]")]
 }
 
 function rowFor(container: HTMLElement, id: string): HTMLTableRowElement {
@@ -60,8 +60,12 @@ describe("the compare page", () => {
       const raised = decide(moment.candidate, policyFor(moment.candidate.field))
       expect(moment.decision, `${moment.id} shows a verdict nothing computed`).toEqual(raised)
       const row = within(rowFor(container, moment.id))
+      const verdictCell = rowFor(container, moment.id).querySelector<HTMLElement>(
+        '[data-label="Gate verdict"]',
+      )
+      expect(verdictCell, `${moment.id} has no verdict cell`).not.toBeNull()
       expect(row.getByText(verdictFor(raised))).toBeDefined()
-      expect(row.getByText(raised.reasonCode)).toBeDefined()
+      expect(within(verdictCell as HTMLElement).getByText(raised.reasonCode)).toBeDefined()
       expect(
         row.getByText(formatCertainty(moment.candidate.provenance.minConfidence)),
       ).toBeDefined()
@@ -85,7 +89,7 @@ describe("the compare page", () => {
     expect(lasa, "the page lost the moment it exists for").toBeDefined()
     const row = within(rowFor(container, lasa?.id ?? ""))
     expect(row.getByText(GateVerdict.ReAsk)).toBeDefined()
-    expect(row.getByText(ReasonCode.LasaHit)).toBeDefined()
+    expect(row.getAllByText(ReasonCode.LasaHit).length).toBeGreaterThan(0)
     expect(row.getByText("certainty 1.00")).toBeDefined()
     expect(row.getByText(PAIR_OUTRANKS_NOTE)).toBeDefined()
     expect(row.getByText("Written: morphine")).toBeDefined()
@@ -100,6 +104,19 @@ describe("the compare page", () => {
     for (const row of rows(container)) {
       expect(row.textContent ?? "").not.toMatch(/certainty[^|]*%/i)
     }
+  })
+
+  it("r1-A5-09: labels the last column as what it is, a threshold with the validators still on", () => {
+    render(<ComparePage />)
+    expect(
+      screen.getByRole("columnheader", { name: "Threshold and validators only" }),
+    ).toBeDefined()
+    expect(screen.queryByRole("columnheader", { name: "Without the gate" })).toBeNull()
+  })
+
+  it("r1-A3-10: never lets a reason code break mid-token", () => {
+    const { container } = render(<ComparePage />)
+    expect(container.querySelector("wbr")).toBeNull()
   })
 
   it("says the candidates are synthesised rather than recorded live", () => {

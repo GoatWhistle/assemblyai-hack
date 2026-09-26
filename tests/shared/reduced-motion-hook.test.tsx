@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
+import { hydrateRoot } from "react-dom/client"
 import { renderToStaticMarkup } from "react-dom/server"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { readReducedMotion, useReducedMotion } from "@/shared/ui/motion/use-reduced-motion"
@@ -54,13 +55,44 @@ describe("useReducedMotion first-render value", () => {
     ).toBe("reduced")
   })
 
-  it("the state initializer itself carries the real preference, before any effect can run", () => {
+  it("renders the server markup without the preference, so hydration never disagrees with it", () => {
     stubMatchMedia(true)
     const markup = renderToStaticMarkup(<Probe />)
     expect(
       markup,
-      "renderToStaticMarkup never runs effects, so this is the literal useState initial value: a hardcoded false here would render 'full' for a reduced-motion viewer",
-    ).toContain("reduced")
+      "the server cannot see the viewer's preference; reading matchMedia during the first client render produced a hydration mismatch on the call page (r1-A2 F3), and CSS media queries already cover the first paint",
+    ).toContain("full")
+  })
+
+  it("hydrates a reduced-motion viewer without a mismatch warning and then reports the preference", async () => {
+    stubMatchMedia(true)
+    const container = document.createElement("div")
+    container.innerHTML = renderToStaticMarkup(<Probe />)
+    document.body.append(container)
+    const errors = vi.spyOn(console, "error").mockImplementation(() => undefined)
+    await act(async () => {
+      hydrateRoot(container, <Probe />)
+    })
+    expect(
+      errors.mock.calls.flat().join(" "),
+      "a hydration warning means server and client rendered different trees for the same component",
+    ).not.toMatch(/hydrat|did not match|didn't match/i)
+    errors.mockRestore()
+    expect(container.textContent).toBe("reduced")
+    container.remove()
+  })
+
+  it("follows a preference that changes while the page is open", () => {
+    const { listeners, media } = stubMatchMedia(false)
+    render(<Probe />)
+    expect(screen.getByTestId("probe").textContent).toBe("full")
+    act(() => {
+      ;(media as { matches: boolean }).matches = true
+      for (const listener of [...listeners]) {
+        listener({ matches: true } as MediaQueryListEvent)
+      }
+    })
+    expect(screen.getByTestId("probe").textContent).toBe("reduced")
   })
 
   it("stays truthful when there is no window.matchMedia at all", () => {

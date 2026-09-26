@@ -10,6 +10,8 @@ test.describe("the evidence surfaces a judge is sent to", () => {
     ).toBeVisible()
     await expect(page.getByRole("region", { name: /Shipped policy figures/ })).toBeVisible()
     await expect(page.getByText("npx tsx scripts/measure/ab-gate.ts").first()).toBeVisible()
+    await expect(page.locator("[data-headline='catch']")).toBeVisible()
+    await expect(page.locator("[data-headline='cost']")).toBeVisible()
     await expect(page.getByRole("link", { name: /Benchmark/ }).first()).toBeVisible()
   })
 
@@ -27,8 +29,9 @@ test.describe("the evidence surfaces a judge is sent to", () => {
     page,
   }) => {
     await page.goto("/metrics/operations")
+    await expect(page.getByRole("region", { name: "Socket close codes" })).toBeVisible()
     await expect(
-      page.getByRole("region", { name: /Socket close codes, scrollable/ }),
+      page.getByText(/documents no WebSocket close codes at all/).first(),
     ).toBeVisible()
     await expect(page.getByText(/no cost of a dispensing error is shown/i)).toBeVisible()
   })
@@ -44,6 +47,11 @@ test.describe("the evidence surfaces a judge is sent to", () => {
       "/metrics",
       "/metrics/benchmark",
       "/metrics/operations",
+      "/docs/limitations",
+      "/docs/threat-model",
+      "/docs/glossary",
+      "/demo#replay",
+      "/demo#tour",
     ]) {
       await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible()
     }
@@ -72,8 +80,33 @@ test.describe("the evidence surfaces a judge is sent to", () => {
     page,
   }) => {
     await page.goto("/compare")
-    await expect(page.getByRole("row")).toHaveCount(7)
+    await expect(page.locator("tbody tr[data-moment]")).toHaveCount(6)
+    await expect(page.locator('th[scope="rowgroup"]')).toHaveCount(6)
     await expect(page.getByText("E_LASA_HIT").first()).toBeVisible()
+  })
+
+  test("limitations are two clicks from the header and read as text", async ({ page }) => {
+    await page.goto("/")
+    await page
+      .getByRole("navigation", { name: "Sections" })
+      .getByRole("link", { name: "Docs", exact: true })
+      .click()
+    await page
+      .getByRole("navigation", { name: "Documentation" })
+      .getByRole("link", { name: "Limitations" })
+      .click()
+    await expect(page).toHaveURL(/\/docs\/limitations$/)
+    await expect(page.getByText(/call 911, or 988/)).toBeVisible()
+    await expect(page.locator("main details")).toHaveCount(0)
+  })
+
+  test("the threat model quotes the witness boundary and links the receipt checker", async ({
+    page,
+  }) => {
+    await page.goto("/docs/threat-model")
+    await expect(page.getByText(/does not prove the audio came from a human/)).toBeVisible()
+    await page.getByRole("link", { name: "Check a downloaded receipt file" }).click()
+    await expect(page.getByLabel(/check a receipt file/i)).toBeVisible({ timeout: 15000 })
   })
 
   test("a receipt for an unknown session is refused, not shown empty", async ({ page }) => {
@@ -105,6 +138,9 @@ test.describe("phone width", () => {
     "/metrics",
     "/metrics/benchmark",
     "/metrics/operations",
+    "/docs/limitations",
+    "/docs/threat-model",
+    "/docs/glossary",
   ]) {
     test(`${path} does not scroll horizontally`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 })
@@ -115,4 +151,40 @@ test.describe("phone width", () => {
       expect(overflow).toBeLessThanOrEqual(1)
     })
   }
+})
+
+test.describe("r1-A2-F8: the docs navigation stays reachable on a long page at phone width", () => {
+  test("the contents toggle stays on screen after scrolling, and a section link closes it", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto("/metrics/benchmark")
+    const nav = page.getByRole("navigation", { name: "Documentation" })
+    const toggle = nav.getByRole("button")
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2))
+    await expect(toggle).toBeInViewport()
+    await toggle.click()
+    await expect(toggle).toHaveAttribute("aria-expanded", "true")
+    await nav.getByRole("link", { name: "Not measured yet" }).click()
+    await expect(toggle).toHaveAttribute("aria-expanded", "false")
+    await expect(page).toHaveURL(/#unmeasured$/)
+  })
+
+  test("r1-A2-F12: the breadcrumb back to Measurements is a full touch target", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      hasTouch: true,
+      isMobile: true,
+    })
+    const page = await context.newPage()
+    await page.goto("/metrics/benchmark")
+    const crumb = page
+      .getByRole("main")
+      .getByRole("link", { name: "Measurements", exact: true })
+    const box = await crumb.boundingBox()
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44)
+    await context.close()
+  })
 })

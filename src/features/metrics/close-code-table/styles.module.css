@@ -1,6 +1,8 @@
 .wrap {
-  overflow-x: auto;
-  border-radius: var(--radius-sm);
+  min-width: 0;
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-panel);
 }
 
 .table {
@@ -10,10 +12,11 @@
 }
 
 .table caption {
-  padding-bottom: var(--space-3);
-  max-width: var(--measure-prose);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--line-divider);
+  background-color: var(--surface-sunken);
   text-align: left;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
   text-wrap: pretty;
@@ -21,10 +24,23 @@
 
 .table th,
 .table td {
-  padding: var(--space-3) var(--space-3) var(--space-3) 0;
-  border-bottom: 1px solid var(--line-hairline);
+  padding: var(--space-3) var(--space-4);
   text-align: left;
   vertical-align: top;
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-inline-start: var(--space-5);
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-inline-end: var(--space-5);
+}
+
+.table tbody tr {
+  border-top: 1px solid var(--line-hairline);
 }
 
 .table thead th {
@@ -40,6 +56,17 @@
   white-space: nowrap;
 }
 
+.command {
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  padding: 0.0625rem var(--space-2);
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-panel);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
 .label {
   font-weight: var(--weight-medium);
   color: var(--text-primary);
@@ -47,12 +74,57 @@
 
 .meaning {
   color: var(--text-secondary);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-relaxed);
 }
 
-.table td.count {
-  padding-right: 0;
+.source {
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.table .count {
   text-align: right;
   font-family: var(--font-data);
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 40rem) {
+  .table caption {
+    padding-inline: var(--space-4);
+  }
+
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .table tbody,
+  .table td {
+    display: block;
+  }
+
+  .table tbody tr {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+
+  .table td,
+  .table td:first-child,
+  .table td:last-child {
+    padding: 0;
+  }
+
+  .table .count {
+    text-align: left;
+  }
+
+  .table .count::before {
+    content: "seen ";
+    color: var(--text-muted);
+  }
 }

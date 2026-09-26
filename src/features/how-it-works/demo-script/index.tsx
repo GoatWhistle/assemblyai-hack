@@ -1,4 +1,3 @@
-import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { SCRIPT_STEPS } from "./script-steps"
@@ -10,19 +9,15 @@ export function DemoScript() {
   return (
     <ol className={styles.steps}>
       {SCRIPT_STEPS.map((step, index) => (
-        <li key={step.id} className={styles.step}>
+        <li key={step.id} id={`step-${step.id}`} className={styles.step}>
           <span className={styles.ordinal} aria-hidden="true">
             {index + 1}
           </span>
-          <Disclosure
-            id={`step-${step.id}`}
-            summary={
-              <span className={styles.action}>
-                {step.action}
-                {step.needsMicrophone ? <Chip tone="pending">needs a microphone</Chip> : null}
-              </span>
-            }
-          >
+          <div className={styles.content}>
+            <h3 className={styles.action}>
+              {step.action}
+              {step.needsMicrophone ? <Chip tone="pending">needs a microphone</Chip> : null}
+            </h3>
             <p className={styles.watch}>
               <span className={styles.watchLabel}>{WATCH_LABEL}</span>
               {step.watchFor}
@@ -34,7 +29,7 @@ export function DemoScript() {
                 </ActionLink>
               </div>
             )}
-          </Disclosure>
+          </div>
         </li>
       ))}
     </ol>

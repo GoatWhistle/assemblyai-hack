@@ -1,9 +1,8 @@
 import type { Metadata } from "next"
 import { permanentRedirect } from "next/navigation"
+import { CALL_MAIN_ID } from "@/features/intake/intake-screen/landmarks"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import { IntakeClient } from "./intake-client"
-
-const MAIN_ID = "main"
 
 export const metadata: Metadata = {
   title: { absolute: "Readback: prescription intake that proves it did not mishear" },
@@ -22,12 +21,10 @@ export default async function CallPage({ searchParams }: CallPageProps) {
   }
   return (
     <>
-      <a className="skip-link" href={`#${MAIN_ID}`}>
+      <a className="skip-link" href={`#${CALL_MAIN_ID}`}>
         Skip to the call
       </a>
-      <main id={MAIN_ID}>
-        <IntakeClient />
-      </main>
+      <IntakeClient />
     </>
   )
 }

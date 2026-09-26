@@ -1,8 +1,9 @@
+import type { ReactNode } from "react"
 import { type Patience, patienceFor } from "@/realtime/patience"
 import { Wordmark } from "@/shared/ui/primitives/wordmark"
 import { FinishAnswer } from "../finish-answer"
 import { LevelMeter } from "../level-meter"
-import { isBusy, isOpen, MIC_COPY, MicState } from "../mic-state"
+import { isBusy, isCancellable, isOpen, MIC_COPY, MicState } from "../mic-state"
 import { useMicKeys } from "../use-mic-keys"
 import styles from "./styles.module.css"
 
@@ -11,10 +12,11 @@ export type MicConsoleProps = {
   readonly level: number
   readonly elapsedMs: number
   readonly echoDiscards: number
-  readonly patience?: Patience
-  readonly onStart?: () => void
-  readonly onStop?: () => void
-  readonly onFinishAnswer?: () => void
+  readonly patience?: Patience | undefined
+  readonly notice?: ReactNode
+  readonly onStart?: (() => void) | undefined
+  readonly onStop?: (() => void) | undefined
+  readonly onFinishAnswer?: (() => void) | undefined
 }
 
 function formatElapsed(ms: number): string {
@@ -33,33 +35,46 @@ const STATE_CLASS: Readonly<Record<MicState, string>> = Object.freeze({
   [MicState.Blocked]: "blocked",
 })
 
+type KeyHint = { readonly key: string; readonly shortcut: string; readonly verb: string }
+
+const KEY_HINT: Readonly<Record<MicState, KeyHint | null>> = Object.freeze({
+  [MicState.Idle]: { key: "Space", shortcut: "Space", verb: "start" },
+  [MicState.Opening]: { key: "Esc", shortcut: "Escape", verb: "cancel" },
+  [MicState.Listening]: { key: "Esc", shortcut: "Escape", verb: "stop" },
+  [MicState.AgentSpeaking]: { key: "Esc", shortcut: "Escape", verb: "stop" },
+  [MicState.Closing]: null,
+  [MicState.Blocked]: null,
+})
+
 export function MicConsole({
   state,
   level,
   elapsedMs,
   echoDiscards,
   patience,
+  notice,
   onStart,
   onStop,
   onFinishAnswer,
 }: MicConsoleProps) {
   const open = isOpen(state)
-  const busy = isBusy(state)
+  const cancellable = isCancellable(state)
   const copy = MIC_COPY[state]
   const listening = state === MicState.Listening
   const active = patience ?? patienceFor(null)
+  const hint = KEY_HINT[state]
 
-  useMicKeys({ busy, open, onStart, onStop })
+  useMicKeys({ busy: isBusy(state), open, cancellable, onStart, onStop })
 
   return (
     <section className={`${styles.console} ${styles[STATE_CLASS[state]] ?? ""}`}>
       <button
         type="button"
         className={styles.trigger}
-        onClick={open ? onStop : onStart}
-        disabled={busy}
-        aria-pressed={open}
+        onClick={open || cancellable ? onStop : onStart}
+        disabled={state === MicState.Closing}
         aria-label={copy.action}
+        aria-keyshortcuts={hint?.shortcut}
       >
         <span className={styles.glyph} aria-hidden="true">
           {open ? <StopGlyph /> : <Wordmark size={44} />}
@@ -68,23 +83,23 @@ export function MicConsole({
 
       <LevelMeter level={level} state={state} />
 
-      <h2 className={styles.headline}>{copy.headline}</h2>
-      <p className={styles.detail}>{copy.detail}</p>
+      {notice ?? (
+        <>
+          <h2 className={styles.headline}>{copy.headline}</h2>
+          <p className={styles.detail}>{copy.detail}</p>
+        </>
+      )}
 
       {open ? (
         <FinishAnswer live={listening} patience={active} onFinish={onFinishAnswer} />
       ) : null}
 
-      <p className={styles.keys}>
-        <kbd className={styles.kbd}>Space</kbd>
-        <span>{open ? "stop" : "start"}</span>
-        {open ? (
-          <>
-            <kbd className={styles.kbd}>Esc</kbd>
-            <span>stop</span>
-          </>
-        ) : null}
-      </p>
+      {hint === null ? null : (
+        <p className={styles.keys}>
+          <kbd className={styles.kbd}>{hint.key}</kbd>
+          <span>{hint.verb}</span>
+        </p>
+      )}
 
       {open || elapsedMs > 0 ? (
         <dl className={styles.telemetry}>

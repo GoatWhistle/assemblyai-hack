@@ -28,9 +28,10 @@ export const MIC_COPY: Readonly<Record<MicState, MicCopy>> = Object.freeze({
     action: "Start listening",
   },
   [MicState.Opening]: {
-    headline: "Opening the line",
-    detail: "Asking for the microphone and minting a short-lived token for each socket.",
-    action: "Opening",
+    headline: "Connecting",
+    detail:
+      "Allow the microphone if your browser asks. Nothing is captured until the line is open.",
+    action: "Cancel",
   },
   [MicState.Listening]: {
     headline: "Listening",
@@ -43,14 +44,14 @@ export const MIC_COPY: Readonly<Record<MicState, MicCopy>> = Object.freeze({
     action: "Stop listening",
   },
   [MicState.Closing]: {
-    headline: "Closing the line",
-    detail: "Waiting for both sockets to confirm they ended, so nothing keeps billing.",
-    action: "Closing",
+    headline: "Ending the call",
+    detail: "Waiting for the line to confirm it closed, so nothing keeps running.",
+    action: "Ending the call",
   },
   [MicState.Blocked]: {
-    headline: "The line cannot open",
-    detail: "Nothing was recorded. The replay demonstration runs without a microphone.",
-    action: "Try again",
+    headline: "The call could not start",
+    detail: "Nothing was recorded. The replay runs without a microphone.",
+    action: "Start listening",
   },
 })
 
@@ -80,6 +81,10 @@ export function micStateFor(
 
 export function isBusy(state: MicState): boolean {
   return state === MicState.Opening || state === MicState.Closing
+}
+
+export function isCancellable(state: MicState): boolean {
+  return state === MicState.Opening
 }
 
 export function isOpen(state: MicState): boolean {

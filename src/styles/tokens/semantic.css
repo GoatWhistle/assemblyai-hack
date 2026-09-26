@@ -35,29 +35,52 @@
   --select-line: var(--violet);
   --select-ink: var(--violet-deep);
 
-  --state-accepted-ink: var(--verified);
-  --state-accepted-surface: var(--verified-wash);
-  --state-accepted-line: var(--verified-line);
+  --reason-threshold-ink: var(--asking);
+  --reason-threshold-surface: var(--asking-wash);
+  --reason-threshold-line: var(--asking-line);
 
-  --state-asking-ink: var(--asking);
-  --state-asking-surface: var(--asking-wash);
-  --state-asking-line: var(--asking-line);
+  --reason-validator-ink: var(--refused);
+  --reason-validator-surface: var(--refused-wash);
+  --reason-validator-line: var(--refused-line);
+
+  --reason-lasa-ink: var(--plum-deep);
+  --reason-lasa-surface: var(--plum-wash);
+  --reason-lasa-line: var(--plum);
+
+  --verdict-committed-ink: var(--verified);
+  --verdict-committed-surface: var(--verified-wash);
+  --verdict-committed-line: var(--verified-line);
+
+  --verdict-refused-ink: var(--refused);
+  --verdict-refused-surface: var(--refused-wash);
+  --verdict-refused-line: var(--refused-line);
+
+  --state-accepted-ink: var(--verdict-committed-ink);
+  --state-accepted-surface: var(--verdict-committed-surface);
+  --state-accepted-line: var(--verdict-committed-line);
+
+  --state-asking-ink: var(--reason-threshold-ink);
+  --state-asking-surface: var(--reason-threshold-surface);
+  --state-asking-line: var(--reason-threshold-line);
 
   --state-pending-ink: var(--violet);
   --state-pending-surface: var(--violet-wash);
   --state-pending-line: var(--violet-line);
 
-  --state-escalated-ink: var(--refused);
-  --state-escalated-surface: var(--refused-wash);
-  --state-escalated-line: var(--refused-line);
+  --state-escalated-ink: var(--verdict-refused-ink);
+  --state-escalated-surface: var(--verdict-refused-surface);
+  --state-escalated-line: var(--verdict-refused-line);
 
   --state-aborted-ink: var(--flint);
   --state-aborted-surface: var(--vellum);
   --state-aborted-line: var(--linen);
 
-  --state-lasa-ink: var(--violet-deep);
-  --state-lasa-surface: var(--violet-wash);
-  --state-lasa-line: var(--violet);
+  --state-lasa-ink: var(--reason-lasa-ink);
+  --state-lasa-surface: var(--reason-lasa-surface);
+  --state-lasa-line: var(--reason-lasa-line);
+
+  --state-undecided-surface: var(--vellum);
+  --state-undecided-line: var(--linen);
 
   --mic-idle-ink: var(--graphite);
   --mic-idle-line: var(--linen);
@@ -81,7 +104,7 @@
 
   --span-highlight: var(--violet-wash);
   --span-highlight-ink: var(--carbon);
-  --span-lasa: var(--violet-wash);
+  --span-lasa: var(--plum-wash);
 
   --radius-xs: 4px;
   --radius-sm: 8px;

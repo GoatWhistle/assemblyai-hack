@@ -18,7 +18,9 @@
   letter-spacing: var(--track-normal);
   cursor: pointer;
   white-space: nowrap;
-  transition: var(--transition-control);
+  transition:
+    var(--transition-control),
+    scale var(--dur-fast) var(--ease-out-quart);
 }
 
 .button:hover:not(:disabled) {
@@ -28,7 +30,7 @@
 
 .button:active:not(:disabled) {
   background-color: var(--ink-a8);
-  transform: translateY(0.5px);
+  scale: 0.97;
 }
 
 .button:disabled {
@@ -135,6 +137,6 @@
   }
 
   .button:active:not(:disabled) {
-    transform: none;
+    scale: none;
   }
 }

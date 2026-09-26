@@ -1,3 +1,7 @@
+.region {
+  display: block;
+}
+
 .banner {
   --banner-ink: var(--text-primary);
   --banner-surface: var(--surface-panel);
@@ -24,10 +28,19 @@
   animation: var(--keyframes-verdict) var(--dur-fast) var(--ease-out-quart) both;
 }
 
+.refused {
+  --banner-surface: var(--reason-validator-surface);
+  --banner-line: var(--reason-validator-line);
+  --banner-ink: var(--reason-validator-ink);
+  border-width: 2px;
+  animation: var(--keyframes-verdict) var(--dur-fast) var(--ease-out-quart) both;
+}
+
 .lasa {
   --banner-surface: var(--surface-panel);
   --banner-line: var(--state-lasa-line);
   --banner-ink: var(--state-lasa-ink);
+  border-width: 2px;
   animation: var(--keyframes-verdict-emphatic) var(--dur-base) var(--ease-out-expo) both;
 }
 
@@ -80,7 +93,7 @@
 }
 
 .utteranceLabel {
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
@@ -110,7 +123,7 @@
 }
 
 .recoveryLabel {
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   color: var(--text-muted);
   margin: 0;
 }
@@ -124,7 +137,7 @@
 }
 
 .recoveryDetail {
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
   max-width: var(--measure-prose);

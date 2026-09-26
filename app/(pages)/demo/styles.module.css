@@ -11,11 +11,21 @@
   padding-bottom: var(--space-8);
 }
 
+.page :where(a, button, summary, input, [tabindex]) {
+  scroll-margin-top: calc(var(--target-touch) + var(--space-6));
+  scroll-margin-bottom: var(--space-5);
+}
+
 .section {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
   scroll-margin-top: calc(var(--target-touch) + var(--space-6));
+  border-radius: var(--radius-md);
+}
+
+.section:target {
+  animation: var(--keyframes-arrive) var(--dur-emphatic) var(--ease-out-quart);
 }
 
 .heading {

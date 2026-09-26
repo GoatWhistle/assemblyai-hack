@@ -10,12 +10,15 @@ import {
 } from "@/domain"
 import { confirm, decide } from "@/gate"
 import { answerTo, type DemoAnswer } from "./demo-answer"
+import { DECISION_AT_MS, REPLAY_FROM_MS } from "./replay-clock"
 import {
   LASA_CANDIDATE,
   NAMED_ANSWER_AT_MS,
   NAMED_CANDIDATE,
   STRENGTH_CANDIDATE,
 } from "./scenario"
+
+export { DECISION_AT_MS, DEMO_DURATION_MS, REPLAY_FROM_MS } from "./replay-clock"
 
 type DemoArmId = "pair-rule" | "plain-read-back"
 
@@ -45,9 +48,7 @@ export const WITHOUT_PAIR_RULE_POLICY: FieldPolicy = withoutPairRule(SHIPPED_POL
 export const NAMED_ANSWER = "Hydromorphone."
 export const PLAIN_ANSWER = "Yes."
 
-export const DECISION_AT_MS = 9600
 export const SETTLED_AT_MS = NAMED_ANSWER_AT_MS + 1200
-export const DEMO_DURATION_MS = 18600
 
 const ANSWERABLE: readonly FieldCandidate[] = [LASA_CANDIDATE, NAMED_CANDIDATE]
 
@@ -175,7 +176,10 @@ export type DemoStage = {
 }
 
 export const DEMO_STAGES: readonly DemoStage[] = [
-  { atMs: 0, label: "Session opens, both sockets carry short-lived tokens" },
+  {
+    atMs: REPLAY_FROM_MS,
+    label: "Session open on short-lived tokens, patient already named; the drug comes next",
+  },
   { atMs: 6800, label: "Caller says the drug name" },
   { atMs: 8400, label: "Recognizer finalises the turn at 1.00 certainty" },
   { atMs: 9100, label: "Gate reads the published pair table" },

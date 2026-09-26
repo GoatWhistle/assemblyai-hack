@@ -6,6 +6,7 @@ import { TOUR_SECONDS, TOUR_STEPS } from "@/features/how-it-works/judge-tour/tou
 import { DEMO_DURATION_MS } from "@/features/judge-demo/demo-arms"
 import { CALL_HREF, REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import { HERO_CLAIM } from "@/features/judge-demo/judge-hero"
+import { REPLAY_SECONDS } from "@/features/judge-demo/replay-clock"
 import { SAY_THESE } from "@/features/judge-demo/say-these/phrases"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
 
@@ -68,7 +69,9 @@ describe("U1: the root is the call, and every judge entry lands on the replay", 
 describe("U1: the judge hub carries what the old home page carried", () => {
   it("offers the replay and the live call as real links that work before hydration", async () => {
     await renderDemo({})
-    const watch = screen.getByRole("link", { name: /watch the 40-second case/i })
+    const watch = screen.getByRole("link", {
+      name: new RegExp(`watch the ${REPLAY_SECONDS}-second case`, "i"),
+    })
     expect(watch.getAttribute("href")).toBe(REPLAY_ENTRY_HREF)
     const talk = screen.getByRole("link", { name: /talk to it live/i })
     expect(talk.getAttribute("href")).toBe(CALL_HREF)

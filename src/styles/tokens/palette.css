@@ -1,18 +1,22 @@
 :root {
   --paper: oklch(100% 0 90);
-  --vellum: oklch(95.5% 0 90);
-  --linen: oklch(90.7% 0 90);
-  --stone: oklch(55% 0 90);
-  --flint: oklch(50% 0 90);
-  --slate: oklch(42% 0 90);
-  --graphite: oklch(30.1% 0 90);
-  --carbon: oklch(12% 0 90);
+  --vellum: oklch(95.5% 0.005 282);
+  --linen: oklch(90.7% 0.006 282);
+  --stone: oklch(55% 0.008 282);
+  --flint: oklch(50% 0.008 282);
+  --slate: oklch(42% 0.008 282);
+  --graphite: oklch(30.1% 0.008 282);
+  --carbon: oklch(12% 0.006 282);
 
   --violet: oklch(51.5% 0.213 282);
   --violet-deep: oklch(42% 0.196 282);
   --violet-soft: oklch(68.7% 0.174 287);
   --violet-wash: oklch(96.5% 0.018 285);
   --violet-line: oklch(88% 0.052 284);
+
+  --plum: oklch(54% 0.2 322);
+  --plum-deep: oklch(44% 0.18 322);
+  --plum-wash: oklch(96.5% 0.022 322);
 
   --verified: oklch(52% 0.116 162);
   --verified-wash: oklch(96.5% 0.028 162);
@@ -31,9 +35,9 @@
   --violet-glow-soft: oklch(51.5% 0.213 282 / 0.18);
   --violet-glow-none: oklch(51.5% 0.213 282 / 0);
 
-  --scrim: oklch(12% 0 90 / 0.34);
+  --scrim: oklch(12% 0.006 282 / 0.34);
 
-  --ink-a5: oklch(12% 0 90 / 0.05);
-  --ink-a8: oklch(12% 0 90 / 0.08);
-  --ink-a12: oklch(12% 0 90 / 0.12);
+  --ink-a5: oklch(12% 0.006 282 / 0.05);
+  --ink-a8: oklch(12% 0.006 282 / 0.08);
+  --ink-a12: oklch(12% 0.006 282 / 0.12);
 }

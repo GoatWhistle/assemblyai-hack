@@ -1,3 +1,4 @@
+import { ReasonCode } from "@/domain"
 import { GateOutcome, type Signature } from "../signature"
 import styles from "./styles.module.css"
 
@@ -12,9 +13,16 @@ export type SignatureLineProps = {
 }
 
 export function SignatureLine({ signature }: SignatureLineProps) {
+  const lasa = signature.reasonCode === ReasonCode.LasaHit
   return (
     <div className={styles.signature}>
-      <p className={[styles.outcome, OUTCOME_CLASS[signature.outcome]].join(" ")}>
+      <p
+        className={[
+          styles.outcome,
+          OUTCOME_CLASS[signature.outcome],
+          lasa ? styles.lasaOutcome : "",
+        ].join(" ")}
+      >
         <span className={styles.gateLabel}>Gate</span>
         <span className={styles.outcomeWord}>{signature.outcome}</span>
         <code className={styles.code}>{signature.reasonCode}</code>
@@ -23,7 +31,9 @@ export function SignatureLine({ signature }: SignatureLineProps) {
         <span className={styles.part}>
           Recognizer: <strong className={styles.heard}>{signature.heard}</strong>
         </span>
-        <span className={styles.certainty}>certainty {signature.certainty}</span>
+        <span className={[styles.certainty, lasa ? styles.outranked : ""].join(" ")}>
+          certainty {signature.certainty}
+        </span>
         <span aria-hidden="true" className={styles.arrow}>
           →
         </span>

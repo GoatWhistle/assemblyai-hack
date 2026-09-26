@@ -17,13 +17,11 @@
 }
 
 .columnHead {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3);
   text-align: left;
   vertical-align: bottom;
-  font-size: var(--text-2xs);
+  font-size: var(--text-xs);
   font-weight: var(--weight-medium);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
   color: var(--text-muted);
   border-bottom: 1px solid var(--line-divider);
 }
@@ -32,13 +30,12 @@
   vertical-align: top;
 }
 
-.row + .row {
-  border-top: 1px solid var(--line-hairline);
+.group {
+  border-top: 1px solid var(--line-divider);
 }
 
 .moment {
-  min-width: 8.5rem;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-3) 0;
   text-align: left;
   vertical-align: top;
   font-weight: var(--weight-medium);
@@ -47,13 +44,14 @@
 }
 
 .cell {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3);
   vertical-align: top;
   line-height: var(--leading-snug);
 }
 
 .value {
   font-family: var(--font-data);
+  font-size: var(--text-xs);
   color: var(--text-primary);
   overflow-wrap: break-word;
 }
@@ -61,6 +59,7 @@
 .outranked {
   display: block;
   font-family: var(--font-data);
+  font-size: var(--text-xs);
   color: var(--text-muted);
 }
 
@@ -74,16 +73,23 @@
 
 .verdict {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
 }
 
 .code {
   font-family: var(--font-data);
   font-size: var(--text-2xs);
   color: var(--text-secondary);
-  overflow-wrap: break-word;
+  white-space: nowrap;
+}
+
+.also {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 .written {
@@ -102,35 +108,42 @@
   background-color: var(--state-escalated-surface);
 }
 
-@container (max-width: 42rem) {
+@container (max-width: 46rem) {
   .head {
     display: none;
   }
 
   .table,
-  .table tbody,
+  .group,
   .row,
   .moment,
   .cell {
     display: block;
   }
 
+  .moment {
+    padding: var(--space-3) var(--space-4) 0;
+  }
+
   .row {
-    padding: var(--space-2) 0;
+    padding: var(--space-1) var(--space-1) var(--space-2);
   }
 
   .cell {
     display: grid;
     grid-template-columns: minmax(7rem, 38%) 1fr;
-    gap: var(--space-3);
+    gap: 0 var(--space-3);
     padding-block: var(--space-2);
   }
 
   .cell::before {
     content: attr(data-label);
-    font-size: var(--text-2xs);
-    letter-spacing: var(--track-wide);
-    text-transform: uppercase;
+    grid-row: 1 / span 3;
+    font-size: var(--text-xs);
     color: var(--text-muted);
+  }
+
+  .cell > * {
+    grid-column: 2;
   }
 }

@@ -1,5 +1,5 @@
 .wrap {
-  overflow-x: auto;
+  min-width: 0;
   border: 1px solid var(--line-hairline);
   border-radius: var(--radius-md);
   background-color: var(--surface-panel);

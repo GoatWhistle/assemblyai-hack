@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react"
 import styles from "./styles.module.css"
 
 export type ContrastQuestionProps = {
@@ -18,7 +19,25 @@ export function ContrastQuestion({ candidates }: ContrastQuestionProps) {
         The question, answered only by saying a name: {candidates.length} names on the published
         list
       </p>
-      <p className={styles.text}>{spokenChoice(candidates)}?</p>
+      <p className={styles.text}>
+        {candidates.map((name, index) => (
+          <span key={name}>
+            {index === 0 ? null : (
+              <span className={styles.joiner}>
+                {index === candidates.length - 1 ? " or " : ", "}
+              </span>
+            )}
+            <span
+              className={styles.name}
+              data-motion="fade"
+              style={{ "--i": index } as CSSProperties}
+            >
+              {name}
+            </span>
+          </span>
+        ))}
+        ?
+      </p>
       <p className={styles.note}>
         A yes is not an answer to it: the field stays empty until the caller says one of the
         names aloud, and saying a different one corrects the value.

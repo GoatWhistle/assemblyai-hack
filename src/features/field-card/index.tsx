@@ -12,7 +12,7 @@ import { Certainty } from "@/shared/ui/data-display/certainty"
 import { VerdictBlock } from "@/shared/ui/data-display/verdict-block"
 import { WordSpanStrip } from "@/shared/ui/data-display/word-span-strip"
 import { Chip } from "@/shared/ui/primitives/chip"
-import { describeReason } from "../gate-banner/reason-language"
+import { describeReason, SEVERITY_TONE } from "../gate-banner/reason-language"
 import { CRITICALITY_LABEL, FIELD_LABEL, FIELD_PROOF_NOTE } from "../intake/field-language"
 import { AnswerWait } from "./answer-wait"
 import { FieldHistory } from "./field-history"
@@ -20,12 +20,13 @@ import {
   confidenceRankNote,
   isConfidenceOverruled,
   nameAnswerState,
+  overruledNote,
   STANCE_CHIP,
   STANCE_LABEL,
   stanceOf,
 } from "./field-status"
 import { LasaOverride } from "./lasa-override"
-import { priorAttemptOf, valueChanged } from "./prior-attempt"
+import { type PriorAttempt, priorAttemptOf, valueChanged } from "./prior-attempt"
 import { type ListenHandler, SaidRecorded } from "./said-recorded"
 import { sourceBadges } from "./source-badges"
 import styles from "./styles.module.css"
@@ -34,7 +35,16 @@ import { ValueChange } from "./value-change"
 const CARD_CLASS: Record<string, string> = {
   lasa: styles.lasaCard ?? "",
   escalated: styles.escalatedCard ?? "",
+  refused: styles.escalatedCard ?? "",
   accepted: styles.acceptedCard ?? "",
+  confirmed: styles.acceptedCard ?? "",
+}
+
+function heardLine(rawValue: string, corrected: PriorAttempt | null): string {
+  const heard = `heard as "${rawValue}"`
+  return corrected === null
+    ? heard
+    : `${heard}, correcting attempt ${corrected.attempt}, which was heard as "${corrected.rawValue}"`
 }
 
 export type FieldCardProps = {
@@ -61,8 +71,8 @@ export function FieldCard({
   onListen,
 }: FieldCardProps) {
   const policy = policyFor(candidate.field)
-  const stance = stanceOf(candidate, decision)
-  const overruled = isConfidenceOverruled(decision)
+  const stance = stanceOf(candidate, decision, evidence)
+  const overruled = isConfidenceOverruled(decision, candidate)
   const minConfidence = candidate.provenance.minConfidence
   const aboveThreshold = minConfidence >= policy.autoAcceptThreshold
   const classes = [styles.card, CARD_CLASS[stance] ?? ""]
@@ -71,6 +81,8 @@ export function FieldCard({
   const displayValue =
     candidate.normalizedValue === null ? "no standard form" : String(candidate.normalizedValue)
   const prior = priorAttemptOf(candidate, siblings)
+  const corrected =
+    stance === "confirmed" && prior !== null && valueChanged(prior, candidate) ? prior : null
 
   return (
     <article className={classes} aria-label={`${FIELD_LABEL[candidate.field]} field card`}>
@@ -91,7 +103,7 @@ export function FieldCard({
           >
             {displayValue}
           </p>
-          <p className={styles.raw}>heard as &ldquo;{candidate.rawValue}&rdquo;</p>
+          <p className={styles.raw}>{heardLine(candidate.rawValue, corrected)}</p>
         </div>
         <div className={styles.statuses}>
           <Chip tone={STANCE_CHIP[stance]}>{STANCE_LABEL[stance]}</Chip>
@@ -105,9 +117,13 @@ export function FieldCard({
 
       <SaidRecorded candidate={candidate} {...(onListen === undefined ? {} : { onListen })} />
       {awaitingSinceMs === null ? null : <AnswerWait sinceMs={awaitingSinceMs} />}
-      {evidence === null ? null : <ConfirmationReceipt evidence={evidence} />}
+      {evidence === null ? null : (
+        <section className={styles.receipt} aria-label="Read-back and answer">
+          <ConfirmationReceipt evidence={evidence} />
+        </section>
+      )}
 
-      {overruled && candidate.lasa.hit ? (
+      {decision !== null && overruled && candidate.lasa.hit ? (
         <LasaOverride
           lasa={candidate.lasa}
           minConfidence={minConfidence}
@@ -122,6 +138,7 @@ export function FieldCard({
           current={displayValue}
           currentRaw={candidate.rawValue}
           changed={valueChanged(prior, candidate)}
+          written={stance === "confirmed" || stance === "accepted"}
         />
       )}
 
@@ -137,11 +154,7 @@ export function FieldCard({
             minConfidence={minConfidence}
             threshold={policy.autoAcceptThreshold}
             overruled={overruled}
-            overruledBy={
-              overruled
-                ? "Outranked on this field by a published look-alike pair. This number is not what decides here."
-                : undefined
-            }
+            overruledBy={overruled ? overruledNote(decision) : undefined}
           />
         </div>
       </div>
@@ -171,7 +184,7 @@ export function FieldCard({
       {decision === null ? null : (
         <div className={styles.decision}>
           <div className={styles.decisionHead}>
-            <Chip tone={STANCE_CHIP[stance]} monospace>
+            <Chip tone={SEVERITY_TONE[describeReason(decision.reasonCode).severity]} monospace>
               {decision.reasonCode}
             </Chip>
             <span className={styles.columnLabel}>

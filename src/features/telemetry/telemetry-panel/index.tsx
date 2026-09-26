@@ -2,11 +2,11 @@
 
 import { useSyncExternalStore } from "react"
 import { type GateDecision, LatencyInterval } from "@/domain"
-import { PHASE_LABEL, type SessionPhase } from "@/features/intake/session-status"
+import { PHASE_TECHNICAL, type SessionPhase } from "@/features/intake/session-status"
 import type { LatencySummary } from "@/features/latency/latency-recorder"
 import type { TappedFrame } from "@/realtime/frame-tap"
 import { Chip } from "@/shared/ui/primitives/chip"
-import { ACTIVITY_LABEL, agentActivityOf } from "../agent-activity"
+import { ACTIVITY_LABEL, ACTIVITY_WORD, agentActivityOf } from "../agent-activity"
 import type { DecisionCounts } from "../decision-counts"
 import { DecisionLog } from "../decision-log"
 import { FrameFeed } from "../frame-feed"
@@ -51,17 +51,17 @@ export function TelemetryPanel({
       <div className={styles.status}>
         <Chip tone={mode.kind === "live" ? "pending" : "plain"}>{modeLabel(mode)}</Chip>
         <output className={styles.activity} aria-live="polite">
-          <span className={styles.activityWord}>{activity}</span>
+          <span className={styles.activityWord}>{ACTIVITY_WORD[activity]}</span>
           <span className={styles.activityNote}>{ACTIVITY_LABEL[activity]}</span>
         </output>
       </div>
       <dl className={styles.facts}>
         <div>
           <dt>Sockets</dt>
-          <dd>{PHASE_LABEL[phase]}</dd>
+          <dd>{PHASE_TECHNICAL[phase]}</dd>
         </div>
         <div>
-          <dt>Recognizer model reported by Begin</dt>
+          <dt>Recognizer model, from the session's Begin message</dt>
           <dd>{sttModel ?? "not reported yet"}</dd>
         </div>
         <div>
