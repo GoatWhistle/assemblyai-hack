@@ -36,6 +36,13 @@ describe("dea mod10", () => {
     expect(verdict.evidence.even).toBe(12)
   })
 
+  it("drops the punctuation a recognizer writes between digit groups", () => {
+    expect(normalizeDea("AB, 123-4563")).toBe("AB1234563")
+    expect(normalizeDea("AB. 123-4563")).toBe("AB1234563")
+    expect(normalizeDea("AB: 1234563")).toBe("AB1234563")
+    expect(normalizeDea("AB, 123-456")).toBeNull()
+  })
+
   it("cites the arithmetic rule", () => {
     expect(validateDea("AB1234563").ruleCited).toContain("(d1+d3+d5) + 2*(d2+d4+d6)")
   })

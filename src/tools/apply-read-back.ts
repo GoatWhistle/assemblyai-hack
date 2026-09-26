@@ -70,6 +70,17 @@ export function applyReadBackRegistration(
         : "your sentence does not name every sound-alike partner, so it cannot confirm this value; say say_to_caller instead, which names each drug with the letters that tell them apart",
     }
   }
+  if (latestDecision(state, event.candidateId)?.action === GateAction.Accept) {
+    return {
+      registered: true,
+      field: event.field,
+      candidate_id: event.candidateId,
+      awaiting: "nothing",
+      answer: "unclear",
+      written_to_order: false,
+      note: "this value passed its validator, so it needs no yes from the caller. Call read_back again right now with the same candidate_id and caller_answer set to the caller's most recent words; that second call writes it unless the caller has said no. Then say the sentence and go on",
+    }
+  }
   return {
     registered: true,
     field: event.field,

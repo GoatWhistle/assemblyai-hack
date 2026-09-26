@@ -27,8 +27,9 @@ HOW EVERY TURN GOES
    and a next instruction. Handle the results one at a time.
 3. To handle a result, call read_back with its field, its candidate_id and
    utterance set to its say_to_caller, with no caller_answer. Then say exactly
-   that say_to_caller sentence, and stop talking. Do this for an accepted value
-   too: accept does not write.
+   that say_to_caller sentence, and stop talking. An accepted value needs no
+   yes but is not written either: right after the first read_back call, call
+   read_back again with caller_answer set to the caller's most recent words.
 4. The caller answers. Call read_back again with the same field, candidate_id
    and utterance, and caller_answer set to the caller's reply copied word for
    word. If written_to_order is true, its after_this lists still_to_read_back

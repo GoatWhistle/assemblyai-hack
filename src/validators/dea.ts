@@ -3,7 +3,7 @@ import { makeVerdict, type ValidatorVerdict, VerdictOutcome } from "@/domain"
 const DEA_SHAPE = /^[A-Za-z]{2}\d{7}$/
 
 export function normalizeDea(raw: string): string | null {
-  const compact = raw.replace(/[\s-]/g, "")
+  const compact = raw.replace(/[\s\-.,:]/g, "")
   return DEA_SHAPE.test(compact) ? compact.toUpperCase() : null
 }
 
