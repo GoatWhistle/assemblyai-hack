@@ -6,6 +6,8 @@ import { identifierField, optionalUtteranceField, utteranceField } from "@/tools
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 15
+
 const schema = z.object({
   field: z.enum(FIELD_NAMES as [FieldName, ...FieldName[]]),
   candidate_id: identifierField(),

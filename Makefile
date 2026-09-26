@@ -122,10 +122,10 @@ typecheck:
 	$(RUN) "npx tsc --noEmit"
 
 test:
-	$(RUN) "npx vitest run --no-file-parallelism"
+	$(RUN) "npx vitest run --config tests/vitest.config.ts --no-file-parallelism"
 
 e2e:
-	$(RUN) "npx playwright test"
+	$(RUN) "npx playwright test --config tests/e2e/playwright.config.ts"
 
 file-length:
 	@bash scripts/checks/file-length.sh
@@ -176,7 +176,7 @@ secrets:
 	@bash scripts/checks/secrets.sh
 
 keyterms-purity:
-	$(RUN) "npx vitest run tests/lasa/keyterms-purity.test.ts"
+	$(RUN) "npx vitest run --config tests/vitest.config.ts tests/lasa/keyterms-purity.test.ts"
 
 heldout-seal:
 	@bash scripts/checks/heldout-seal.sh

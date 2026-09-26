@@ -199,6 +199,14 @@ sealed the same day, and **not read again until this run**. The prediction, the 
 rule and what would falsify the hypothesis were written to
 `eval/heldout-preregistration.md` **before** the audio existed.
 
+**The seal's digest was rewritten on 26 September, and the set was not.** The seal hashed
+the lines `sha256sum` prints, and Git Bash on Windows prints `hash *path` where Linux prints
+`hash  path`, so the same file produced one digest on the machine that sealed it and another
+in CI, which failed the check. `scripts/checks/heldout-seal.sh` now normalises that marker
+before hashing, and `eval/heldout.sha256` holds the normalised digest. The sealed content,
+`eval/heldout/terms.json`, is byte for byte the committed file; the old digest is what the
+same bytes give in the Windows format, which was checked before the file was rewritten.
+
 All 60 sessions closed with code 1000 at 24-second spacing, so by pre-registered rule 3
 the run is scoreable. No item shares a term with the development or control corpora,
 which seven tests in `tests/eval/heldout-discipline.test.ts` enforce.

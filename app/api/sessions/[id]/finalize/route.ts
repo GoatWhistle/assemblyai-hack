@@ -14,6 +14,8 @@ import { loadIntake, receiptOf, removeIntake } from "@/tools"
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 30
+
 async function witnessed(
   receipt: OrderReceipt | null,
   witness: OrderWitness,

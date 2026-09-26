@@ -1,8 +1,9 @@
-import { execFileSync } from "node:child_process"
+import { execFile } from "node:child_process"
 import { mkdtempSync, readFileSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { describe, expect, it } from "vitest"
+import { promisify } from "node:util"
+import { beforeAll, describe, expect, it } from "vitest"
 import {
   type Anchor,
   figuresLocated,
@@ -16,6 +17,9 @@ import { STRUCTURAL_ANCHORS } from "./public-figures-structural"
 
 const ANCHORS: readonly Anchor[] = [...MEASURED_ANCHORS, ...STRUCTURAL_ANCHORS]
 const SLOW = 240_000
+const GATHER = 600_000
+const BUFFER = 64 * 1024 * 1024
+const run = promisify(execFile)
 const evidence = new Map<string, string>()
 
 function childEnvironment(): NodeJS.ProcessEnv {
@@ -28,43 +32,60 @@ function childEnvironment(): NodeJS.ProcessEnv {
   return environment
 }
 
-function listTests(): string {
+async function listTests(): Promise<string> {
   const scratch = mkdtempSync(join(tmpdir(), "public-figures-"))
   try {
     const target = join(scratch, "tests.json")
-    execFileSync("npx", ["vitest", "list", `--json="${target}"`], {
-      encoding: "utf8",
-      stdio: "pipe",
-      shell: true,
-      env: childEnvironment(),
-      timeout: SLOW,
-    })
+    await run(
+      "npx",
+      ["vitest", "list", "--config", "tests/vitest.config.ts", `--json="${target}"`],
+      {
+        encoding: "utf8",
+        shell: true,
+        env: childEnvironment(),
+        timeout: SLOW,
+        maxBuffer: BUFFER,
+      },
+    )
     return readFileSync(target, "utf8")
   } finally {
     rmSync(scratch, { recursive: true, force: true })
   }
 }
 
-function evidenceFor(source: string): string {
-  const cached = evidence.get(source)
-  if (cached !== undefined) {
-    return cached
-  }
-  let produced: string
+async function produce(source: string): Promise<string> {
   if (source === VITEST_LIST) {
-    produced = listTests()
-  } else if (source.startsWith("npx ")) {
-    const [bin, ...args] = source.split(" ")
-    produced = execFileSync(bin ?? "npx", args, {
-      encoding: "utf8",
-      stdio: "pipe",
-      shell: true,
-    })
-  } else {
-    produced = readFileSync(source, "utf8")
+    return listTests()
   }
-  evidence.set(source, produced)
-  return produced
+  if (source.startsWith("npx ")) {
+    const [bin, ...args] = source.split(" ")
+    const { stdout } = await run(bin ?? "npx", args, {
+      encoding: "utf8",
+      shell: true,
+      timeout: SLOW,
+      maxBuffer: BUFFER,
+    })
+    return stdout
+  }
+  return readFileSync(source, "utf8")
+}
+
+beforeAll(async () => {
+  const sources = [...new Set(ANCHORS.map((anchor) => anchor.source))]
+  const gathered = await Promise.all(
+    sources.map(async (source) => [source, await produce(source)] as const),
+  )
+  for (const [source, produced] of gathered) {
+    evidence.set(source, produced)
+  }
+}, GATHER)
+
+function evidenceFor(source: string): string {
+  const gathered = evidence.get(source)
+  if (gathered === undefined) {
+    throw new Error(`no evidence was gathered for ${source}`)
+  }
+  return gathered
 }
 
 function documentText(document: PublicDocument): string {

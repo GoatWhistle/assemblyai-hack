@@ -22,6 +22,8 @@ import {
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 30
+
 export const MAX_WORDS_PER_TURN = 200
 
 export const MAX_TIMELINE_MS = 3 * 60 * 60 * 1000

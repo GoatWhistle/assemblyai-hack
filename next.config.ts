@@ -46,6 +46,10 @@ const config: NextConfig = {
         source: "/(.*)",
         headers: production ? [...BASE_HEADERS, ...PRODUCTION_HEADERS] : BASE_HEADERS,
       },
+      {
+        source: "/worklets/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600, must-revalidate" }],
+      },
     ]
   },
 }

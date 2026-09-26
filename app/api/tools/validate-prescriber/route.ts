@@ -7,6 +7,8 @@ import { validateDea, validateNpi } from "@/validators"
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 15
+
 const schema = z.object({
   npi: z.string().regex(/^\d{10}$/, "npi must be exactly 10 digits, no separators"),
   dea: z

@@ -6,6 +6,8 @@ import { utteranceField } from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 15
+
 const schema = z.object({
   full_order_read_back: utteranceField(),
   caller_confirmed: z.boolean(),

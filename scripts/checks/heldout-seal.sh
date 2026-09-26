@@ -24,6 +24,7 @@ digest() {
   sealed_files -print0 \
     | sort -z \
     | xargs -0 -r sha256sum \
+    | sed 's/ \*/  /' \
     | sha256sum \
     | cut -d' ' -f1
 }

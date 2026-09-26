@@ -91,9 +91,9 @@ PY
     continue
   fi
 
-  NO_COLOR=1 FORCE_COLOR=0 npx vitest run --reporter=dot --no-color >/dev/null 2>&1 && status=0 || status=$?
+  NO_COLOR=1 FORCE_COLOR=0 npx vitest run --config tests/vitest.config.ts --reporter=dot --no-color >/dev/null 2>&1 && status=0 || status=$?
 
-  named=$(NO_COLOR=1 FORCE_COLOR=0 npx vitest run --no-color --reporter=json -t "$expected_test" 2>/dev/null) || true
+  named=$(NO_COLOR=1 FORCE_COLOR=0 npx vitest run --config tests/vitest.config.ts --no-color --reporter=json -t "$expected_test" 2>/dev/null) || true
   verdict=$(printf '%s' "$named" | node "$ROOT/scripts/checks/named-test-verdict.mjs" "$expected_test")
 
   if [ "$status" -eq 0 ]; then

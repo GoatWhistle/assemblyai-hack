@@ -22,6 +22,8 @@ const AGENT_TOKEN_URL = "https://agents.assemblyai.com/v1/token"
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 20
+
 const rateBrakeState = freshRateBrakeState()
 
 class RouteRefusal extends Error {

@@ -1,16 +1,24 @@
-import { execFileSync } from "node:child_process"
+import { execFile } from "node:child_process"
 import { readFileSync } from "node:fs"
+import { promisify } from "node:util"
 import { describe, expect, it } from "vitest"
 import { STEPS } from "../../scripts/report/honest"
 
 const REPORT = readFileSync("eval/REPORT.md", "utf8")
 
-function runStep(command: string): string {
+const run = promisify(execFile)
+
+async function runStep(command: string): Promise<string> {
   const [bin, ...args] = command.split(" ")
   if (bin === undefined) {
     throw new Error(`empty command: ${command}`)
   }
-  return execFileSync(bin, args, { encoding: "utf8", stdio: "pipe", shell: true })
+  const { stdout } = await run(bin, args, {
+    encoding: "utf8",
+    shell: true,
+    maxBuffer: 64 * 1024 * 1024,
+  })
+  return stdout
 }
 
 type Anchor = {
@@ -124,7 +132,7 @@ describe("what make honest prints today agrees with what eval/REPORT.md claims",
   })
 
   for (const anchor of ANCHORS) {
-    it(`"${anchor.step}" prints figures that still appear in eval/REPORT.md`, () => {
+    it(`"${anchor.step}" prints figures that still appear in eval/REPORT.md`, async () => {
       const step = STEPS.find((candidate) => candidate.title === anchor.step)
       expect(
         step,
@@ -133,7 +141,7 @@ describe("what make honest prints today agrees with what eval/REPORT.md claims",
       if (step === undefined) {
         return
       }
-      const output = runStep(step.command)
+      const output = await runStep(step.command)
       for (const figure of anchor.figures) {
         expect(
           output,

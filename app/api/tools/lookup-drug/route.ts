@@ -7,6 +7,8 @@ import { spokenValueField } from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 15
+
 const schema = z.object({
   query: spokenValueField(),
   limit: z.number().int().min(1).max(5).optional(),

@@ -23,7 +23,7 @@ function runProbeWithLeakedCredentials(): { ok: boolean; output: string } {
     leaked[name] = `leaked-${name}-that-must-not-survive`
   }
   try {
-    const output = execSync(`npx vitest run ${PROBE_FILE}`, {
+    const output = execSync(`npx vitest run --config tests/vitest.config.ts ${PROBE_FILE}`, {
       encoding: "utf8",
       stdio: "pipe",
       env: { ...process.env, ...leaked },

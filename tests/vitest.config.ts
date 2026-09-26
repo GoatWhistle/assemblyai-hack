@@ -2,12 +2,14 @@ import { fileURLToPath } from "node:url"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vitest/config"
 
+// biome-ignore lint/style/noDefaultExport: Vitest reads its configuration from the default export
 export default defineConfig({
+  root: fileURLToPath(new URL("..", import.meta.url)),
   plugins: [react()],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@app": fileURLToPath(new URL("./app", import.meta.url)),
+      "@": fileURLToPath(new URL("../src", import.meta.url)),
+      "@app": fileURLToPath(new URL("../app", import.meta.url)),
     },
   },
   test: {

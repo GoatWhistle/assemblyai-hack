@@ -5,6 +5,8 @@ import { loadIntake, receiptOf, toolCatalog } from "@/tools"
 
 export const dynamic = "force-dynamic"
 
+export const maxDuration = 30
+
 async function findReceipt(id: string) {
   const stored = await sessionStore().get(id)
   if (stored?.receipt !== undefined && stored.receipt !== null) {

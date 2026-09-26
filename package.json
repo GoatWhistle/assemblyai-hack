@@ -13,10 +13,10 @@
     "lint": "biome check src app tests scripts",
     "format": "biome check --write src app tests scripts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --no-file-parallelism",
-    "test:watch": "vitest",
-    "test:cover": "vitest run --coverage --no-file-parallelism",
-    "e2e": "playwright test",
+    "test": "vitest run --config tests/vitest.config.ts --no-file-parallelism",
+    "test:watch": "vitest --config tests/vitest.config.ts",
+    "test:cover": "vitest run --config tests/vitest.config.ts --coverage --no-file-parallelism",
+    "e2e": "playwright test --config tests/e2e/playwright.config.ts",
     "verify-receipt": "tsx scripts/verify-receipt.ts"
   },
   "dependencies": {
