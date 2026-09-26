@@ -42,7 +42,7 @@ async function observe(page: Page): Promise<RunObservation> {
 }
 
 async function pageFailure(page: Page): Promise<string | null> {
-  const alert = page.getByRole("alert")
+  const alert = page.getByRole("alert").filter({ has: page.getByRole("heading") })
   const running = await page.getByRole("button", { name: "Stop listening" }).count()
   if (running > 0 || (await alert.count()) === 0) {
     return null
