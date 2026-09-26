@@ -947,14 +947,14 @@ total. At USD 0.45 per hour for one streaming socket, that recorded time alone c
 recorded duration are not included and their true cost is higher by an amount nobody
 wrote down.
 
-### Since the ledger: 41 runs on 25 and 26 September, 33 of them failed and billed regardless
+### Since the ledger: 43 runs on 25 and 26 September, 33 of them failed and billed regardless
 
-`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 41**,
-**runs that did not complete, still billed: 33**, 11138.068 s of socket-open time and
-**derived total: USD 12.5211**, at
+`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 43**,
+**runs that did not complete, still billed: 33**, 11250.468 s of socket-open time and
+**derived total: USD 12.6804**, at
 the rates checked on 17 September. It also prints
-**attempts refused before any socket opened, so not billed: 3**: three live-smoke attempts late on 26 September found the day's socket
-budget already spent, so the server minted no token and nothing opened; they stay in the ledger
+**attempts refused before any socket opened, so not billed: 5**: five live-smoke attempts on 26 September found the day's socket
+budget, or this client's half of it, already spent, so the server minted no token and nothing opened; they stay in the ledger
 at 0 s because every attempt is recorded, and they are not counted as paid. The figure is our arithmetic over our own recorded seconds,
 not an invoice. By command:
 
@@ -962,7 +962,7 @@ not an invoice. By command:
 |---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 |
-| `make live-smoke` | 22 | 2 completed, 20 failed | 7.9999 |
+| `make live-smoke` | 24 | 4 completed, 20 failed | 8.1592 |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 |
 | ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 |
@@ -1044,6 +1044,12 @@ not an invoice. By command:
   happened, and the harness went on answering "yes" to a finished call for about four minutes;
   the prompt now sends an early "submit" to `commit_order` so the server's refusal is heard, and
   the harness stops once the order is committed.
+- **The twenty-third and twenty-fourth attempts, at 19:43 and 19:44 UTC on the deployment with
+  both fixes, completed:** `yeah-no` was read as a refusal and wrote nothing, and in `barge-in` a
+  reply ended interrupted after the caller cut in. The two scenarios after them, `npi-groups` and
+  `commit-hold`, were refused before any socket opened: one client may spend half of the daily
+  socket budget, and this machine's address had spent its half on the day's runs, which is the
+  cap working as designed. They are in the ledger at 0 s.
 - **The managed-model probe rows** are scratch drivers, not committed code, that took an agent
   issued by the production token route, spoke to it over the agent socket alone (text through
   `conversation.message`, or SAPI audio through `input.audio`) and posted the caller's words to
@@ -1069,7 +1075,7 @@ not an invoice. By command:
   vendor's own timeline back (the S2 witness); the timeline it read is committed as
   `eval/fixtures/witness/timeline-recorded-shape.json`.
 
-**Paid runs on record, artefacts plus ledger: 48.** The account balance a human last read off
+**Paid runs on record, artefacts plus ledger: 50.** The account balance a human last read off
 the vendor dashboard is USD 149.93 on 17 September; no later reading is recorded, so no
 vendor-verified figure covers the 25 September runs.
 
