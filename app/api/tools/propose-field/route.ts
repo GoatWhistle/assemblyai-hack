@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { FIELD_NAMES, type FieldName } from "@/domain"
-import { recordIntakeEvent, runSessionTool } from "@/tools"
+import { awaitQuotedTurn, recordIntakeEvent, runSessionTool } from "@/tools"
 import { spokenValueField, utteranceField } from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
@@ -20,6 +20,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     request,
     schema,
     async (input, sessionId) => {
+      const waited = await awaitQuotedTurn({ sessionId, hint: input.transcript_hint })
       const { outcome } = await recordIntakeEvent(sessionId, {
         type: "proposal",
         atMs: Date.now(),
@@ -28,7 +29,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         value: input.value,
         transcriptHint: input.transcript_hint,
       })
-      return outcome
+      return { status: outcome.status, payload: { ...outcome.payload, waited } }
     },
   )
 

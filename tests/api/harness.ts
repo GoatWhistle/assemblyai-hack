@@ -10,6 +10,7 @@ import {
   requireRegisteredIntake,
   SESSION_QUERY_PARAM,
   setConfirmationWait,
+  setQuotationWait,
   setToolCatalog,
   TOOL_SECRET_HEADER,
 } from "@/tools"
@@ -121,6 +122,7 @@ export async function resetToolEnvironment(): Promise<void> {
   setToolCatalog(catalogFromFile(fixture))
   installIntakeEventStore(createMemoryEventStore())
   setConfirmationWait({ timeoutMs: 0, pollMs: 1 })
+  setQuotationWait({ timeoutMs: 0, pollMs: 1 })
   nextReply = 1
   await registerSession(SESSION)
 }

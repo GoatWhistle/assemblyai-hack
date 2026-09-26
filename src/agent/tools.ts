@@ -107,7 +107,7 @@ export function buildTools(
       type: "function",
       name: "propose_field",
       description:
-        'Propose a value for one order field. This NEVER writes to the order. It returns a gate decision that tells you whether the value was accepted or what exactly to ask the caller. You must call this for every field. If the decision action is not "accept", you must follow the returned instruction before proposing that field again.',
+        "Propose a value for one order field. This NEVER writes to the order. Call it once for every value the caller says, in the same turn; when one caller turn holds several values, call it once per value. It returns a candidate_id and a say_to_caller sentence: register that sentence with read_back, say it, and write the value with the second read_back call once the caller answers.",
       parameters: {
         type: "object",
         properties: {
@@ -124,7 +124,7 @@ export function buildTools(
           transcript_hint: {
             type: "string",
             description:
-              "The contiguous stretch of the caller's last utterance that this value came from, copied verbatim. Used to locate the source words and their timings and confidence. If you cannot copy it verbatim, say so to the caller instead of guessing.",
+              'Only the two to five words of the caller\'s speech that carry this value, copied exactly, for example "Maria Lopez" or "30 tablets". Used to locate the source words and their timings and confidence. Never write words the caller did not say.',
           },
         },
         required: ["field", "value", "transcript_hint"],

@@ -150,6 +150,43 @@ export function normalizeStrength(raw: string): string | null {
   return null
 }
 
+const COUNT_UNIT =
+  /^(.+?)\s+(tablets?|capsules?|caps?|pills?|vials?|ampoules?|ampules?|patch(?:es)?|inhalers?|bottles?|doses?|syringes?|days?(?:'s?)?(?:\s+supply)?)$/
+
+const SPOKEN_ROUTES: readonly (readonly [RegExp, string])[] = [
+  [/^(by mouth|orally|oral|p\.?\s?o\.?|per os)$/, "ORAL"],
+  [/^(intravenous(ly)?|i\.?\s?v\.?|into the vein)$/, "INTRAVENOUS"],
+  [/^(intramuscular(ly)?|i\.?\s?m\.?|into the muscle)$/, "INTRAMUSCULAR"],
+  [/^(subcutaneous(ly)?|sub-?q|under the skin)$/, "SUBCUTANEOUS"],
+  [/^(sublingual(ly)?|under the tongue)$/, "SUBLINGUAL"],
+  [/^(rectal(ly)?)$/, "RECTAL"],
+  [/^(topical(ly)?|on the skin)$/, "TOPICAL"],
+  [/^(transdermal(ly)?)$/, "TRANSDERMAL"],
+]
+
+export function normalizeRoute(raw: string): string {
+  const text = raw
+    .trim()
+    .toLowerCase()
+    .replace(/[.,]+$/, "")
+    .replace(/\s+/g, " ")
+  const known = SPOKEN_ROUTES.find(([pattern]) => pattern.test(text))
+  return known === undefined ? text.toUpperCase() : known[1]
+}
+
+export function normalizeCount(raw: string): number | null {
+  const plain = normalizeInteger(raw)
+  if (plain !== null) {
+    return plain
+  }
+  const match = raw
+    .trim()
+    .toLowerCase()
+    .replace(/[.,]+$/, "")
+    .match(COUNT_UNIT)
+  return match === null ? null : normalizeInteger(String(match[1]))
+}
+
 function normalizeName(raw: string): string | null {
   const text = raw.trim().replace(/\s+/g, " ")
   if (text.length === 0) {
@@ -168,8 +205,9 @@ export function normalizeFieldValue(field: FieldName, raw: string): NormalizedVa
   }
   switch (field) {
     case FieldName.Quantity:
-    case FieldName.Refills:
     case FieldName.DaysSupply:
+      return normalizeCount(text)
+    case FieldName.Refills:
       return normalizeInteger(text)
     case FieldName.Strength:
       return normalizeStrength(text)
@@ -182,8 +220,9 @@ export function normalizeFieldValue(field: FieldName, raw: string): NormalizedVa
     case FieldName.DrugName:
       return text.toLowerCase().replace(/\s+/g, " ")
     case FieldName.DosageForm:
-    case FieldName.Route:
       return text.toUpperCase().replace(/\s+/g, " ")
+    case FieldName.Route:
+      return normalizeRoute(text)
     case FieldName.Sig:
       return text.replace(/\s+/g, " ")
     default:

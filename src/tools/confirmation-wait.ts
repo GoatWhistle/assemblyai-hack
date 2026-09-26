@@ -1,3 +1,4 @@
+import { matchProvenance } from "@/confirmation"
 import { ConfirmationReason, GateAction } from "@/domain"
 import { evidenceFor } from "./apply-read-back"
 import { loadIntake } from "./intake-access"
@@ -53,5 +54,39 @@ export async function awaitCallerAnswer(input: {
       return "timed_out"
     }
     await pause(Math.max(1, Math.min(wait.pollMs, deadline - Date.now())))
+  }
+}
+
+export const DEFAULT_QUOTATION_WAIT: ConfirmationWait = Object.freeze({
+  timeoutMs: 4000,
+  pollMs: 150,
+})
+
+let quotationWait: ConfirmationWait = DEFAULT_QUOTATION_WAIT
+
+export function setQuotationWait(next: ConfirmationWait | null): void {
+  quotationWait = next ?? DEFAULT_QUOTATION_WAIT
+}
+
+export async function awaitQuotedTurn(input: {
+  sessionId: string
+  hint: string
+}): Promise<WaitOutcome> {
+  const deadline = Date.now() + quotationWait.timeoutMs
+  for (;;) {
+    const state = await loadIntake(input.sessionId)
+    if (state === null) {
+      return "not_applicable"
+    }
+    if (
+      matchProvenance({ hint: input.hint, turns: state.turns, sessionId: input.sessionId }) !==
+      null
+    ) {
+      return "ready"
+    }
+    if (Date.now() >= deadline) {
+      return "timed_out"
+    }
+    await pause(Math.max(1, Math.min(quotationWait.pollMs, deadline - Date.now())))
   }
 }

@@ -46,7 +46,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           }
         : { hit: false },
       note: lasa.hit
-        ? "Sound-alike risk detected. You must call read_back before propose_field."
+        ? "Sound-alike risk detected. Propose the name as spoken: propose_field returns ask_disambiguate and a say_to_caller naming every drug of the pair, and only the caller saying one of the names confirms it."
         : null,
     }
   })

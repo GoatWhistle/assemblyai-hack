@@ -38,7 +38,7 @@ describe("lookup_drug", () => {
 
     expect(body.lasa_warning.hit).toBe(true)
     expect(body.lasa_warning.confusable_with).toContain("hydromorphone")
-    expect(body.note).toContain("read_back")
+    expect(body.note).toContain("ask_disambiguate")
   })
 
   it("reports no warning for a drug in no pair", async () => {
