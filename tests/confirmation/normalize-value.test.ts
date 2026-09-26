@@ -72,6 +72,13 @@ describe("value normalization", () => {
     expect(normalizeFieldValue(FieldName.Quantity, "30 bananas")).toBeNull()
   })
 
+  it("reads a strength spoken per unit, the way an injection is dictated", () => {
+    expect(normalizeStrength("2 milligrams per milliliter")).toBe("2 mg/ml")
+    expect(normalizeStrength("two milligrams per millilitre")).toBe("2 mg/ml")
+    expect(normalizeStrength("2 milligrams/mL")).toBe("2 mg/ml")
+    expect(normalizeStrength("10 milligrams.")).toBe("10 mg")
+  })
+
   it("maps a spoken route onto the catalogue vocabulary, so by mouth can pass the combination check", () => {
     expect(normalizeFieldValue(FieldName.Route, "By mouth")).toBe("ORAL")
     expect(normalizeFieldValue(FieldName.Route, "orally")).toBe("ORAL")

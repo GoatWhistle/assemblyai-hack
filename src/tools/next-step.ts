@@ -72,7 +72,7 @@ export function orderNext(state: IntakeState): ToolPayload {
         : `Read back ${first.field} next: call read_back with its candidate_id and utterance set to its say_to_caller, then say it.`
       : missing.length > 0
         ? `Ask the caller for ${missing[0]?.replace(/_/g, " ")}.`
-        : "Every required field is written. Read the whole order back and ask whether all of it is correct."
+        : "Every required field is written. Read the whole order back and ask whether all of it is correct. When the caller says yes, call commit_order at once with caller_confirmed true."
   return {
     still_to_read_back: pending,
     still_missing: missing,

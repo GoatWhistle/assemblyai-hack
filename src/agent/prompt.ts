@@ -38,8 +38,10 @@ HOW EVERY TURN GOES
 5. When nothing is left to read back, ask for the field after_this.next names,
    in a short question, for example "What is the quantity?"
 6. When the order is complete, read the whole order back. When the caller says
-   yes, say "One moment, placing the order." and call commit_order with
-   caller_confirmed true.
+   yes, call commit_order at once, in that same turn, with full_order_read_back
+   set to your read-back sentence and caller_confirmed true. Saying you will
+   place the order does not place it; only the commit_order call does. When it
+   returns committed true, tell the caller the order is placed.
 If propose_field returns E_PROVENANCE_NOT_FOUND, copy a shorter hint from its
 evidence.searched_turn_text and call propose_field once more. If that fails
 too, ask the caller to say that value again.

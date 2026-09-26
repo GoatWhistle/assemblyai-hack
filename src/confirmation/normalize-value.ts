@@ -46,6 +46,8 @@ const UNIT_WORDS: Readonly<Record<string, string>> = Object.freeze({
   g: "g",
   milliliter: "mL",
   milliliters: "mL",
+  millilitre: "mL",
+  millilitres: "mL",
   ml: "mL",
   unit: "unit",
   units: "unit",
@@ -140,7 +142,16 @@ const STRENGTH_PARSERS: readonly ((text: string) => string | null)[] = [
 ]
 
 export function normalizeStrength(raw: string): string | null {
-  const text = collapseThousandsSeparators(raw.trim().toLowerCase()).replace(/\s+/g, " ")
+  const spaced = collapseThousandsSeparators(raw.trim().toLowerCase()).replace(/\s+/g, " ")
+  const text = spaced.replace(/[.,]+$/, "").replace(/ per /g, "/")
+  const fraction = text.split("/")
+  if (fraction.length === 2 && /[a-z]$/.test(String(fraction[0]))) {
+    const numerator = normalizeStrength(String(fraction[0]))
+    const unit = UNIT_WORDS[String(fraction[1]).trim()]
+    if (numerator !== null && !numerator.includes("/") && unit !== undefined) {
+      return `${numerator}/${unit.toLowerCase()}`
+    }
+  }
   for (const parse of STRENGTH_PARSERS) {
     const value = parse(text)
     if (value !== null) {
