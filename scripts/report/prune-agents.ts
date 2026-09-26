@@ -1,9 +1,7 @@
 #!/usr/bin/env -S npx tsx
 
 import { AGENT_NAME_PREFIX } from "@/agent"
-import { AGENT_API_BASE } from "@/domain"
-
-const AGENTS_URL = `${AGENT_API_BASE}/agents`
+import { AGENT_REGION_HOSTS } from "@/domain"
 
 const ORPHAN_TTL_HOURS = 24
 
@@ -46,24 +44,36 @@ async function main(): Promise<void> {
   }
   const apply = process.argv.includes("--apply")
   const headers = { Authorization: `Bearer ${key}` }
-  const response = await fetch(AGENTS_URL, { headers })
-  if (!response.ok) {
-    console.error(`GET ${AGENTS_URL} answered ${response.status}`)
-    process.exit(1)
-    return
-  }
-  const orphans = orphanedSessionAgents(listedAgents(await response.json()), Date.now())
-  console.log(`per-session agents older than ${ORPHAN_TTL_HOURS} h: ${orphans.length}`)
-  for (const id of orphans) {
-    if (!apply) {
-      console.log(`  would delete ${id}`)
+  for (const host of AGENT_REGION_HOSTS) {
+    const agentsUrl = `https://${host}/v1/agents`
+    const response = await fetch(agentsUrl, { headers }).catch((error: unknown) => {
+      console.error(`GET ${agentsUrl} could not connect: ${String(error)}`)
+      return null
+    })
+    if (response === null) {
+      process.exitCode = 1
       continue
     }
-    const deleted = await fetch(`${AGENTS_URL}/${encodeURIComponent(id)}`, {
-      method: "DELETE",
-      headers,
-    })
-    console.log(`  DELETE ${id}: ${deleted.status}`)
+    if (!response.ok) {
+      console.error(`GET ${agentsUrl} answered ${response.status}`)
+      process.exitCode = 1
+      continue
+    }
+    const orphans = orphanedSessionAgents(listedAgents(await response.json()), Date.now())
+    console.log(
+      `${host}: per-session agents older than ${ORPHAN_TTL_HOURS} h: ${orphans.length}`,
+    )
+    for (const id of orphans) {
+      if (!apply) {
+        console.log(`  would delete ${id}`)
+        continue
+      }
+      const deleted = await fetch(`${agentsUrl}/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers,
+      })
+      console.log(`  DELETE ${id}: ${deleted.status}`)
+    }
   }
   if (!apply) {
     console.log(
