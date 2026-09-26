@@ -35,7 +35,7 @@ test.describe("a judge alone, with no microphone and no key", () => {
       page,
     }) => {
       await page.goto(entry)
-      await expect(page).toHaveURL(/\/demo\?autoplay=1/)
+      await expect(page).toHaveURL(/\/demo\?(?:.*&)?autoplay=1/)
       const replay = page.getByRole("region", { name: "Replay" }).first()
       await expect(replay).toBeVisible()
       await expect(

@@ -32,6 +32,15 @@ const PRODUCTION_HEADERS = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ]
 
+export const JUDGE_ENTRY_REDIRECTS = [
+  {
+    source: "/",
+    has: [{ type: "query" as const, key: "judge", value: "1" }],
+    destination: "/demo?autoplay=1#replay",
+    permanent: true,
+  },
+]
+
 export const SERVER_DATA_FILES = {
   "/api/**/*": ["./data/catalog.json"],
 }
@@ -43,6 +52,9 @@ const config: NextConfig = {
   typedRoutes: true,
   experimental: {
     typedEnv: true,
+  },
+  async redirects() {
+    return JUDGE_ENTRY_REDIRECTS
   },
   async headers() {
     const production = process.env.NODE_ENV === "production"

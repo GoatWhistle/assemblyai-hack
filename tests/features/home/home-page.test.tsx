@@ -9,8 +9,8 @@ import { HERO_CLAIM } from "@/features/judge-demo/judge-hero"
 import { REPLAY_SECONDS } from "@/features/judge-demo/replay-clock"
 import { SAY_THESE } from "@/features/judge-demo/say-these/phrases"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
+import { JUDGE_ENTRY_REDIRECTS } from "../../../next.config"
 
-const { default: CallPage } = await import("@app/(pages)/page")
 const { default: DemoPage } = await import("@app/(pages)/demo/page")
 const { default: LivePage } = await import("@app/(pages)/live/page")
 const { default: StartPage } = await import("@app/(pages)/start/page")
@@ -49,15 +49,20 @@ describe("U1: the root is the call, and every judge entry lands on the replay", 
     )
   })
 
-  it("sends ?judge=1 on the root to the autoplaying replay", async () => {
-    const digest = await CallPage({ searchParams: Promise.resolve({ judge: "1" }) }).then(
-      () => "",
-      (error: { digest?: string }) => String(error.digest ?? ""),
-    )
-    expect(digest, "links in the README, the slides and lablab still carry ?judge=1").toContain(
-      REPLAY_ENTRY_HREF,
-    )
-    expect(digest).toContain("308")
+  it("sends ?judge=1 on the root to the autoplaying replay with a permanent redirect", () => {
+    const [redirect] = JUDGE_ENTRY_REDIRECTS
+    expect(redirect?.source).toBe("/")
+    expect(redirect?.has).toEqual([{ type: "query", key: "judge", value: "1" }])
+    expect(
+      redirect?.destination,
+      "links in the README, the slides and lablab still carry ?judge=1",
+    ).toBe(REPLAY_ENTRY_HREF)
+    expect(redirect?.permanent).toBe(true)
+  })
+
+  it("keeps the root static, so a judge's first request is served without a cold function", () => {
+    const page = readFileSync("app/(pages)/page.tsx", "utf8")
+    expect(page).not.toMatch(/searchParams|cookies\(|headers\(|force-dynamic/)
   })
 
   it("moves /live to the root and /start to the replay permanently", () => {
