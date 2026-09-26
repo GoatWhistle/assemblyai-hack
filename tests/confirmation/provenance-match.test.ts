@@ -51,6 +51,18 @@ describe("provenance matching", () => {
     expect(matchProvenance({ hint: "12345", turns: grouped, sessionId: "s1" })).toBeNull()
   })
 
+  it("matches a unit or a number the other recognizer wrote out, and nothing else", () => {
+    const turns = [turn(5, "Lisinopril, 10 mg, tablet. Hydromorphone 2 mg/mL injection")]
+    const find = (hint: string) =>
+      matchProvenance({ hint, turns, sessionId: "s1" })?.provenance.words.map((w) => w.text)
+
+    expect(find("10 milligrams")).toEqual(["10", "mg,"])
+    expect(find("ten milligrams")).toEqual(["10", "mg,"])
+    expect(find("2 milligrams per milliliter")).toEqual(["2", "mg/mL"])
+    expect(find("20 milligrams")).toBeUndefined()
+    expect(find("10 micrograms")).toBeUndefined()
+  })
+
   it("returns null when the model paraphrased the hint", () => {
     const turns = [turn(2, "lisinopril ten milligrams")]
     expect(matchProvenance({ hint: "twenty milligrams", turns, sessionId: "s1" })).toBeNull()

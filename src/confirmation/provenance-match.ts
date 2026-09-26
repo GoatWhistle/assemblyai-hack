@@ -1,4 +1,5 @@
 import { makeProvenance, type Provenance, type WordSpan } from "@/domain"
+import { normalizeInteger } from "./normalize-value"
 
 export type TurnRecord = {
   readonly turnOrder: number
@@ -11,6 +12,45 @@ const SEARCH_TURN_WINDOW = 3
 
 function normalizeToken(token: string): string {
   return token.toLowerCase().replace(/[^a-z0-9]/g, "")
+}
+
+const SPOKEN_UNITS: Readonly<Record<string, string>> = Object.freeze({
+  milligram: "mg",
+  milligrams: "mg",
+  microgram: "mcg",
+  micrograms: "mcg",
+  gram: "g",
+  grams: "g",
+  milliliter: "ml",
+  milliliters: "ml",
+  millilitre: "ml",
+  millilitres: "ml",
+  percent: "%",
+})
+
+function canonicalPiece(piece: string): string {
+  const unit = SPOKEN_UNITS[piece]
+  if (unit !== undefined) {
+    return unit
+  }
+  if (/^[a-z]+$/.test(piece)) {
+    const number = normalizeInteger(piece)
+    return number === null ? piece : String(number)
+  }
+  return piece
+}
+
+function canonicalText(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\//g, " per ")
+    .replace(/([a-z])(\d)/g, "$1 $2")
+    .replace(/(\d)([a-z])/g, "$1 $2")
+    .split(/\s+/)
+    .map((piece) => piece.replace(/[^a-z0-9%]/g, ""))
+    .filter((piece) => piece.length > 0)
+    .map(canonicalPiece)
+    .join("")
 }
 
 function tokensOf(text: string): readonly string[] {
@@ -38,10 +78,13 @@ function findSpan(turn: TurnRecord, hint: readonly string[]): readonly WordSpan[
   return null
 }
 
-function findJoinedSpan(turn: TurnRecord, hint: readonly string[]): readonly WordSpan[] | null {
-  const wanted = hint.join("")
+function findJoinedSpan(turn: TurnRecord, hint: string): readonly WordSpan[] | null {
+  const wanted = canonicalText(hint)
+  if (wanted.length === 0) {
+    return null
+  }
   const words = turn.words
-  const normalized = words.map((w) => normalizeToken(w.text))
+  const normalized = words.map((w) => canonicalText(w.text))
   for (let start = 0; start < normalized.length; start += 1) {
     if (normalized[start] === "" || !wanted.startsWith(String(normalized[start]))) {
       continue
@@ -81,7 +124,7 @@ export function matchProvenance(input: {
   const recent = [...input.turns].sort((a, b) => b.turnOrder - a.turnOrder).slice(0, window)
 
   for (const turn of recent) {
-    const span = findSpan(turn, hint) ?? findJoinedSpan(turn, hint)
+    const span = findSpan(turn, hint) ?? findJoinedSpan(turn, input.hint)
     if (span !== null && span.length > 0) {
       return {
         provenance: makeProvenance({
