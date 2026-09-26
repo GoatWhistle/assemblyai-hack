@@ -71,3 +71,12 @@ export async function recordIntakeEvent(
 export async function removeIntake(sessionId: string): Promise<void> {
   await intakeEventStore().remove(sessionId)
 }
+
+export async function lastAgentLineOf(sessionId: string): Promise<string> {
+  const state = await loadIntake(sessionId)
+  if (state === null) {
+    return ""
+  }
+  const spoken = state.timeline.findLast((entry) => entry.kind === "agent")
+  return spoken?.kind === "agent" ? spoken.turn.text : (state.lastAgentLine ?? "")
+}

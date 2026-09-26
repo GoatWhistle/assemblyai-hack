@@ -177,22 +177,17 @@ export function buildTools(
       type: "function",
       name: "commit_order",
       description:
-        "Write the order. This refuses unless every critical field is a confirmed value. Before calling it you must read the whole order back to the caller and get an explicit yes. If it refuses, it tells you which fields are missing - collect those, do not call it again with the same state.",
+        "Place the order. Call this at once when the caller answers yes to your read-back of the whole order; saying you will place it does not place it. It refuses unless every critical field was written by a read_back call, and then names the fields to collect. The server records your full read-back from the recorded speech of the call.",
       parameters: {
         type: "object",
         properties: {
-          full_order_read_back: {
-            type: "string",
-            description:
-              "The exact sentence in which you read the complete order back to the caller, word for word.",
-          },
           caller_confirmed: {
             type: "boolean",
             description:
               "True only if the caller answered yes to the full read-back. Never set this true on your own judgement.",
           },
         },
-        required: ["full_order_read_back", "caller_confirmed"],
+        required: ["caller_confirmed"],
         additionalProperties: false,
       },
       execution_mode: "hold",

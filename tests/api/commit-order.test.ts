@@ -1,10 +1,12 @@
 import { POST as commitOrder } from "@app/api/tools/commit-order/route"
 import { beforeEach, describe, expect, it } from "vitest"
+import { confirmHonestIntake } from "./committed-order"
 import {
   call,
   resetToolEnvironment,
   responseBytes,
   SESSION,
+  sayAgent,
   TOOL_RESPONSE_LIMIT,
 } from "./harness"
 
@@ -72,5 +74,18 @@ describe("commit_order", () => {
       ),
     )
     expect(response.status).toBe(401)
+  })
+
+  it("takes the full read-back from the recorded agent line when the model sends only the yes", async () => {
+    await confirmHonestIntake()
+    const spoken =
+      "Reading the whole order back. Phenylephrine, 100 mg per 10 mL. Is all of that correct?"
+    await sayAgent(spoken)
+    const body = await (
+      await commitOrder(call("commit-order", { caller_confirmed: true }))
+    ).json()
+
+    expect(body.committed).toBe(true)
+    expect(body.full_order_read_back).toBe(spoken)
   })
 })

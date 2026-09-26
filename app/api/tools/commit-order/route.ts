@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { originFromEnv, sessionStore } from "@/sessions"
-import { receiptOf, recordIntakeEvent, runSessionTool } from "@/tools"
+import { lastAgentLineOf, receiptOf, recordIntakeEvent, runSessionTool } from "@/tools"
 import { utteranceField } from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic"
 export const maxDuration = 15
 
 const schema = z.object({
-  full_order_read_back: utteranceField(),
+  full_order_read_back: utteranceField().optional(),
   caller_confirmed: z.boolean(),
 })
 
@@ -18,10 +18,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     request,
     schema,
     async (input, sessionId) => {
+      const fullOrderReadBack = input.full_order_read_back ?? (await lastAgentLineOf(sessionId))
       const { state, seq, outcome } = await recordIntakeEvent(sessionId, {
         type: "commit",
         atMs: Date.now(),
-        fullOrderReadBack: input.full_order_read_back,
+        fullOrderReadBack,
         callerConfirmed: input.caller_confirmed,
       })
 
