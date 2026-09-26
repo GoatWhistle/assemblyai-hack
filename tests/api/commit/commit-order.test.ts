@@ -1,6 +1,6 @@
 import { POST as commitOrder } from "@app/api/tools/commit-order/route"
 import { beforeEach, describe, expect, it } from "vitest"
-import { confirmHonestIntake } from "./committed-order"
+import { confirmHonestIntake } from "../committed-order"
 import {
   call,
   resetToolEnvironment,
@@ -8,7 +8,7 @@ import {
   SESSION,
   sayAgent,
   TOOL_RESPONSE_LIMIT,
-} from "./harness"
+} from "../harness"
 
 beforeEach(resetToolEnvironment)
 

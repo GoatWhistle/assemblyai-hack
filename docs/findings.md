@@ -312,7 +312,7 @@ confirmed. A caller who named the drug last left every combination check `NotApp
 nothing checked the confirmed set again, so an order for a strength the drug does not come in
 could commit with every field individually confirmed. `commit_order` now checks the confirmed
 combination as a whole and refuses with `COMMIT_REFUSED_INCONSISTENT_COMBINATION`;
-`tests/api/commit-combination.test.ts` fails with the check removed and passes with it.
+`tests/api/commit/commit-combination.test.ts` fails with the check removed and passes with it.
 
 ## What the audits could not verify, stated
 
