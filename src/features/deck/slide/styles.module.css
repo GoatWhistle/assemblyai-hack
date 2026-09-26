@@ -83,3 +83,47 @@
     aspect-ratio: auto;
   }
 }
+
+@media screen and (max-width: 48rem) {
+  .slide {
+    aspect-ratio: auto;
+    overflow: visible;
+  }
+
+  .frame {
+    row-gap: var(--space-4);
+    height: auto;
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .top,
+  .source {
+    font-size: var(--text-xs);
+  }
+
+  .title,
+  .body {
+    max-width: none;
+  }
+
+  .title {
+    font-size: var(--text-xl);
+  }
+
+  .body {
+    gap: var(--space-3);
+  }
+
+  .paragraph,
+  .opening .paragraph {
+    font-size: var(--text-base);
+  }
+
+  .source {
+    padding-top: var(--space-2);
+  }
+
+  .opening .title {
+    font-size: var(--text-2xl);
+  }
+}
