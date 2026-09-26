@@ -198,7 +198,7 @@ export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.free
   },
   [SessionFault.ReplyStalled]: {
     title: "The agent's reply never finished",
-    body: "Your microphone is muted towards the recognizer while the agent speaks, so it cannot hear itself. The end of that reply did not arrive within 20 seconds, so the microphone was reopened rather than left deaf.",
+    body: "Your microphone is muted towards the recognizer while the agent speaks, so it cannot hear itself. The reply stopped sending audio for 20 seconds without finishing, so the microphone was reopened rather than left deaf.",
     remedy: "Keep talking; if the agent stays silent, stop and start again.",
   },
   [SessionFault.IdleEnded]: {

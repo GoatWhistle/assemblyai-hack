@@ -26,6 +26,7 @@ export function connectWithin<T>(
 
 export type ReplyWatchdog = {
   replyStarted: () => void
+  replyProgress: () => void
   replyDone: () => void
   cancel: () => void
 }
@@ -41,13 +42,19 @@ export function createReplyWatchdog(
       timer = null
     }
   }
+  const arm = () => {
+    cancel()
+    timer = setTimeout(() => {
+      timer = null
+      onStall()
+    }, timeoutMs)
+  }
   return {
-    replyStarted: () => {
-      cancel()
-      timer = setTimeout(() => {
-        timer = null
-        onStall()
-      }, timeoutMs)
+    replyStarted: arm,
+    replyProgress: () => {
+      if (timer !== null) {
+        arm()
+      }
     },
     replyDone: cancel,
     cancel,

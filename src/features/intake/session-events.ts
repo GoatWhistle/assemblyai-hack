@@ -74,6 +74,7 @@ export function agentEventsFor(wiring: SessionWiring): AgentClientEvents {
     },
     onUserTranscript: () => wiring.activity(),
     onReplyAudio: (base64) => {
+      wiring.watchdog.replyProgress()
       wiring.onAgentAudio?.(base64)
       wiring.audio.enqueue(base64)
     },
