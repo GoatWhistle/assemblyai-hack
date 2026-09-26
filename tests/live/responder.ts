@@ -35,6 +35,7 @@ export function responderFor(
   return {
     rules: [
       ...first,
+      rule("directions|instructions|\\bsig\\b|how often|frequency|how should", `sig-${order}`),
       rule("patient", "patient"),
       rule("\\bNPI\\b", "npi"),
       rule("\\bDEA\\b", "dea"),
@@ -43,7 +44,6 @@ export function responderFor(
       rule("\\bform\\b", `form-${order}`),
       rule("route", `route-${order}`),
       rule("quantity|how many", `quantity-${order}`),
-      rule("directions|\\bsig\\b|how often|frequency|instructions", `sig-${order}`),
       rule("refill", "refills"),
       rule("days", `days-${order}`),
     ],

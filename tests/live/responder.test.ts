@@ -69,6 +69,20 @@ describe("the responder answers what the agent asked, not a fixed script", () =>
     expect(ask(scheduler, "I didn't catch the drug name. Could you repeat it?")).toBe(
       "drug-clean",
     )
+    scheduler.callerSpoke()
+    expect(ask(scheduler, "")).toBeNull()
+  })
+
+  it("hears a question about the instructions as the sig, not the drug", () => {
+    const scheduler = createLineScheduler([], responderFor("clean"))
+    expect(ask(scheduler, "What are the instructions for the medication?")).toBe("sig-clean")
+  })
+
+  it("answers a question again when a silent reply cancelled the first answer", () => {
+    const scheduler = createLineScheduler([], responderFor("clean"))
+    expect(ask(scheduler, "Could you please repeat the sig?")).toBe("sig-clean")
+    expect(ask(scheduler, ""), "the tool-only reply that cancelled it").toBe("sig-clean")
+    scheduler.callerSpoke()
     expect(ask(scheduler, "")).toBeNull()
   })
 

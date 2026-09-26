@@ -24,6 +24,7 @@ export type LineScheduler = {
   readonly next: (event: AgentEvent) => DueLine | null
   readonly done: () => boolean
   readonly position: () => number
+  readonly callerSpoke: () => void
 }
 
 export type InjectorConfig = {
@@ -46,6 +47,7 @@ export function createLineScheduler(
 ): LineScheduler {
   let index = 0
   let agentSaid = ""
+  let carried = ""
   let answered = 0
   function lastQuestion(text: string): string {
     const questions = text.split(/(?<=[.?!])\s+/).filter((part) => part.trim().endsWith("?"))
@@ -87,7 +89,10 @@ export function createLineScheduler(
     if (step !== undefined && step.trigger === "reply-done" && matches(step)) {
       return take(step)
     }
-    const line = answer(agentSaid)
+    if (agentSaid.length > 0) {
+      carried = agentSaid
+    }
+    const line = answer(carried)
     if (line === null || responder === undefined) {
       return null
     }
@@ -112,6 +117,9 @@ export function createLineScheduler(
     },
     position(): number {
       return index
+    },
+    callerSpoke(): void {
+      carried = ""
     },
   }
 }
@@ -213,6 +221,7 @@ export function installCallerInjector(config: InjectorConfig): void {
       if (due.answered === true) {
         pendingAnswer = null
       }
+      scheduler.callerSpoke()
       play(due.line, due.step)
     }, due.delayMs)
     if (due.answered === true) {
