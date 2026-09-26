@@ -646,6 +646,82 @@
         "the recognizer model is the one the browser reported from Begin, not one the server observed",
         "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
       ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T18:23:30.443Z",
+      "recordedAt": "2026-09-26T18:23:30.443Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke yeah-no: not observed: the read-back was refused, not confirmed; 5 caller lines played; last agent line: Confirming the drug name: lisinopril. Correct?; the page stopped the call: The connection dropped twice A socket closed unexpectedly, and one reconnect with a freshly minted token was tried. It dropped again, so the session was stopped instead of retrying without end. What to do Start again, or use the replay demonstration if the network is unreliable. Try again Watch the replay Technical reason Reported as reconnect_failed.; socket time is the harness wall clock, an upper bound; the receipt could not be fetched: fetch failed",
+      "socketSeconds": 121.5,
+      "costUsd": 0.1721,
+      "sessionIds": [
+        "68db151d-b463-472d-82dd-b2661ecba0b0"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T18:24:14.081Z",
+      "recordedAt": "2026-09-26T18:24:14.081Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke barge-in: not observed: a reply ended interrupted after the barge-in; 0 caller lines played; last agent line: none; the page stopped the call: The line did not open Neither the token route nor the two sockets answered within 15 seconds, so the attempt was abandoned instead of spinning on. Nothing was recorded, and a socket that opens late is closed at once. What to do Try again, or watch the replay, which needs no connection at all. Try again Watch the replay Technical reason Reported as connect_timed_out.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 23,
+      "costUsd": 0.0326,
+      "sessionIds": [
+        "dab2867c-9b63-4fea-a803-3c716dcbd8d3"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T18:28:55.173Z",
+      "recordedAt": "2026-09-26T18:28:55.173Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke npi-groups: not observed: the ten-digit NPI is in the order; 12 caller lines played; last agent line: What is the prescriber NPI?; the page stopped the call: The line was closed after 90 seconds of silence Nobody spoke and the agent did not reply for 90 seconds. Both sockets bill for as long as they are open, so an idle line is closed rather than left running. What to do Start again when you are ready to dictate. Try again Watch the replay Technical reason Reported as idle_ended.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 271,
+      "costUsd": 0.3839,
+      "sessionIds": [
+        "3c9751d2-21a1-4a80-9c30-a0b1a4e52479"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-26T18:38:06.785Z",
+      "recordedAt": "2026-09-26T18:38:06.785Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke commit-hold: not observed: the early commit was refused in hold; 31 caller lines played; last agent line: The order is placed. Reference A 7 1 5 F D. It is awaiting pharmacist verification.; socket time is the harness wall clock, an upper bound",
+      "socketSeconds": 486.1,
+      "costUsd": 0.6886,
+      "sessionIds": [
+        "342c7771-46fb-46ed-a09d-267414a715fd"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
     }
   ]
 }

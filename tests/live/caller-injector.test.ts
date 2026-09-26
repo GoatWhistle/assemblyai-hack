@@ -9,7 +9,7 @@ import {
 } from "./caller-injector"
 import { CALLER_LINES, type CallerLineId, lineFile } from "./lines"
 import { responderLines } from "./responder"
-import { judgeRun, SCENARIOS } from "./scenarios"
+import { judgeRun, orderCommitted, SCENARIOS } from "./scenarios"
 
 const AGENT = "wss://agents.us.assemblyai.com/v1/ws?token=single-use"
 
@@ -217,6 +217,11 @@ describe("S4: the committed caller lines and scenarios", () => {
       judgeRun(lasa, { orderText: "Committed. Drug name hydromorphone", log }).outcome,
     ).toBe("completed")
     expect(judgeRun(lasa, { orderText: "", log: null }).outcome).toBe("inconclusive")
+  })
+
+  it("treats a committed order as the end of the call, so the harness stops paying for it", () => {
+    expect(orderCommitted({ orderText: "Status Committed", log: null })).toBe(true)
+    expect(orderCommitted({ orderText: "Status In progress", log: null })).toBe(false)
   })
 
   it("judges a barge-in only by an interruption that follows the barge-in line", () => {

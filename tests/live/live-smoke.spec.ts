@@ -7,6 +7,7 @@ import { liveSmokeRefusal, URL_VARIABLE } from "./live-guard"
 import { responderLines } from "./responder"
 import {
   judgeRun,
+  orderCommitted,
   type RunObservation,
   type RunVerdict,
   SCENARIOS,
@@ -151,6 +152,13 @@ for (const scenario of SCENARIOS) {
       await page.waitForTimeout(POLL_MS)
       observation = await observe(page)
       verdict = judgeRun(scenario, observation)
+      if (verdict.outcome !== "completed" && orderCommitted(observation)) {
+        verdict = {
+          outcome: "failed",
+          reason: `${verdict.reason}; the order committed, so the call was over and was stopped`,
+        }
+        break
+      }
       const failure = await pageFailure(page)
       if (failure !== null && verdict.outcome !== "completed") {
         unbilled = NOTHING_BILLED.test(failure) && (await sessionIdOf(page)) === null

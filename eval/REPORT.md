@@ -947,11 +947,11 @@ total. At USD 0.45 per hour for one streaming socket, that recorded time alone c
 recorded duration are not included and their true cost is higher by an amount nobody
 wrote down.
 
-### Since the ledger: 37 runs on 25 and 26 September, 29 of them failed and billed regardless
+### Since the ledger: 41 runs on 25 and 26 September, 33 of them failed and billed regardless
 
-`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 37**,
-**runs that did not complete, still billed: 29**, 10236.468 s of socket-open time and
-**derived total: USD 11.2439**, at
+`npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 41**,
+**runs that did not complete, still billed: 33**, 11138.068 s of socket-open time and
+**derived total: USD 12.5211**, at
 the rates checked on 17 September. It also prints
 **attempts refused before any socket opened, so not billed: 3**: three live-smoke attempts late on 26 September found the day's socket
 budget already spent, so the server minted no token and nothing opened; they stay in the ledger
@@ -962,7 +962,7 @@ not an invoice. By command:
 |---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 |
-| `make live-smoke` | 18 | 2 completed, 16 failed | 6.7227 |
+| `make live-smoke` | 22 | 2 completed, 20 failed | 7.9999 |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 |
 | ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 |
@@ -1028,6 +1028,22 @@ not an invoice. By command:
   which also showed "2 milligrams per milliliter" refused against a recognizer's "2 mg/mL".
   Socket time for every live-smoke run is the harness wall clock across three sockets, an upper
   bound.
+- **The nineteenth to twenty-second `make live-smoke` attempts, on 26 September between 18:21
+  and 18:38 UTC, ran the four remaining scenarios on production and all four failed.** Two failed
+  on this machine's network, not on the product: in the same minutes a script on the same
+  machine could not open TLS to the vendor's agent host (a connect timeout and a reset), and the
+  page reported `reconnect_failed` in `yeah-no` and `connect_timed_out` in `barge-in`. Two found
+  real defects, read from the vendor's own session timelines. In `npi-groups` the server accepted
+  the NPI on its checksum but wrote nothing until two more `read_back` calls, the model never
+  made them and fell silent, and the idle watchdog closed the line after 90 s; an accept now
+  writes at once (docs/spec.md, section 4.3). In the same run our recognizer lost the DEA number,
+  "once daily" and "thirty tablets" while the vendor's heard them, because the browser muted it
+  at `reply.started`, which arrives before seconds of silent tool calls while the caller is still
+  talking; the mute now waits for the reply's first audio. In `commit-hold` the order committed,
+  but the model never tried to commit early, so the hold refusal the scenario looks for never
+  happened, and the harness went on answering "yes" to a finished call for about four minutes;
+  the prompt now sends an early "submit" to `commit_order` so the server's refusal is heard, and
+  the harness stops once the order is committed.
 - **The managed-model probe rows** are scratch drivers, not committed code, that took an agent
   issued by the production token route, spoke to it over the agent socket alone (text through
   `conversation.message`, or SAPI audio through `input.audio`) and posted the caller's words to
@@ -1053,7 +1069,7 @@ not an invoice. By command:
   vendor's own timeline back (the S2 witness); the timeline it read is committed as
   `eval/fixtures/witness/timeline-recorded-shape.json`.
 
-**Paid runs on record, artefacts plus ledger: 44.** The account balance a human last read off
+**Paid runs on record, artefacts plus ledger: 48.** The account balance a human last read off
 the vendor dashboard is USD 149.93 on 17 September; no later reading is recorded, so no
 vendor-verified figure covers the 25 September runs.
 

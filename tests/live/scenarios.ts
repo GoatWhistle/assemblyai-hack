@@ -35,9 +35,15 @@ function answer(
   return { line, trigger: "reply-done", whenAgentSaid, delayMs: 600 }
 }
 
+const COMMITTED_PATTERN = "Committed"
+
+export function orderCommitted(observation: RunObservation): boolean {
+  return new RegExp(COMMITTED_PATTERN, "i").test(observation.orderText)
+}
+
 const COMMITTED: Expectation = {
   kind: "order-text",
-  pattern: "Committed",
+  pattern: COMMITTED_PATTERN,
   label: "the order committed",
 }
 

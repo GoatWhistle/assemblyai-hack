@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T18:24:14.081Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "dab2867c-9b63-4fea-a803-3c716dcbd8d3",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 23,
+    "stt": 23
+  },
+  "costUsd": 0.0326,
+  "outcome": "failed",
+  "reason": "live smoke barge-in: not observed: a reply ended interrupted after the barge-in; 0 caller lines played; last agent line: none; the page stopped the call: The line did not open Neither the token route nor the two sockets answered within 15 seconds, so the attempt was abandoned instead of spinning on. Nothing was recorded, and a socket that opens late is closed at once. What to do Try again, or watch the replay, which needs no connection at all. Try again Watch the replay Technical reason Reported as connect_timed_out.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}
