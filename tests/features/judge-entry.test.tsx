@@ -22,6 +22,7 @@ import {
   ReplayNotice,
 } from "@/features/judge-demo/replay-notice"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
+import { JUDGE_ENTRY_REDIRECTS } from "../../next.config"
 
 function matchMediaReturning(reduced: boolean) {
   return (query: string) =>
@@ -174,10 +175,10 @@ describe("one URL lands a judge in the state worth seeing", () => {
     expect(demo, "an instant entry point that dead-ends is half an entry point").toContain(
       "InstantEntry",
     )
-    const root = readFileSync("app/(pages)/page.tsx", "utf8")
-    expect(root, "an old /?judge=1 link must still land on the replay").toMatch(
-      /params\.judge === "1"[\s\S]*permanentRedirect\(REPLAY_ENTRY_HREF\)/,
-    )
+    expect(
+      JUDGE_ENTRY_REDIRECTS.find((redirect) => redirect.source === "/")?.destination,
+      "an old /?judge=1 link must still land on the replay",
+    ).toBe(REPLAY_ENTRY_HREF)
     const start = readFileSync("app/(pages)/start/page.tsx", "utf8")
     expect(start, "an old /start link must still land on the replay").toContain(
       "permanentRedirect(REPLAY_ENTRY_HREF)",
