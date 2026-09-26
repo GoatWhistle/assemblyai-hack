@@ -14,6 +14,10 @@ import {
 const README: PublicDocument = "README.md"
 const SLIDES: PublicDocument = "docs/slides.md"
 const DECK: PublicDocument = "src/features/deck/slides.ts"
+const EVIDENCE: PublicDocument = "docs/evidence.md"
+const LIMITATIONS: PublicDocument = "docs/limitations.md"
+const SECURITY: PublicDocument = "docs/security.md"
+const VERIFICATION: PublicDocument = "docs/verification.md"
 
 const MUTATIONS = "scripts/checks/gate-mutations.txt"
 const MAKEFILE = "Makefile"
@@ -59,14 +63,16 @@ function constant(name: string): (evidence: string) => string {
 const pairCount = (): string => String(LASA_PAIRS.length)
 
 export const STRUCTURAL_ANCHORS: readonly Anchor[] = [
+  ...[README, EVIDENCE, VERIFICATION].map(
+    (document): Anchor => ({
+      document,
+      locate: /(\d+ of \d+) mutations killed/,
+      source: MUTATIONS,
+      reproduce: (evidence) => `${mutationCount(evidence)} of ${mutationCount(evidence)}`,
+    }),
+  ),
   {
-    document: README,
-    locate: /(\d+ of \d+) mutations killed/,
-    source: MUTATIONS,
-    reproduce: (evidence) => `${mutationCount(evidence)} of ${mutationCount(evidence)}`,
-  },
-  {
-    document: README,
+    document: VERIFICATION,
     locate: /all (\w+) mutations/,
     source: MUTATIONS,
     reproduce: (evidence) => spelled(mutationCount(evidence)),
@@ -80,28 +86,33 @@ export const STRUCTURAL_ANCHORS: readonly Anchor[] = [
     }),
   ),
   {
-    document: README,
+    document: VERIFICATION,
     locate: /(\w+) blocks, no network call/,
     source: HONEST,
     reproduce: () => capitalised(spelled(STEPS.length)),
   },
   {
-    document: README,
-    locate: /(\w+) tests in `tests\/confirmation\/retracted-span\.test\.ts`/,
+    document: LIMITATIONS,
+    locate: /(\w+) tests in\s+`tests\/confirmation\/retracted-span\.test\.ts`/,
     source: VITEST_LIST,
     reproduce: testsIn("tests/confirmation/retracted-span.test.ts"),
   },
   { document: README, locate: /(\d+) curated pairs/, source: PAIRS, reproduce: pairCount },
-  { document: README, locate: /holds (\d+) pairs/, source: PAIRS, reproduce: pairCount },
-  { document: README, locate: /(\d+) hand-curated pairs/, source: PAIRS, reproduce: pairCount },
+  { document: LIMITATIONS, locate: /holds (\d+) pairs/, source: PAIRS, reproduce: pairCount },
   {
-    document: README,
+    document: EVIDENCE,
+    locate: /(\d+) hand-curated pairs/,
+    source: PAIRS,
+    reproduce: pairCount,
+  },
+  {
+    document: VERIFICATION,
     locate: /\| `make eval` \| \*\*yes\*\* \| The ([\w -]+?) set,/,
     source: MAKEFILE,
     reproduce: (evidence) => SET_NAMES[evalSet(evidence)] ?? evalSet(evidence),
   },
   {
-    document: README,
+    document: VERIFICATION,
     locate: /\| `make eval` \| \*\*yes\*\* \| [^|\n]*?(\d+) sessions/,
     source: MAKEFILE,
     reproduce: (evidence) => {
@@ -113,37 +124,37 @@ export const STRUCTURAL_ANCHORS: readonly Anchor[] = [
     },
   },
   {
-    document: README,
+    document: SECURITY,
     locate: /at\s+most (\d+) characters/,
     source: "src/domain/session.ts",
     reproduce: constant("MAX_SESSION_ID_CHARS"),
   },
   {
-    document: README,
+    document: SECURITY,
     locate: /at most (\d+) words per turn/,
     source: "app/api/sessions/[id]/turns/route.ts",
     reproduce: constant("MAX_WORDS_PER_TURN"),
   },
   {
-    document: README,
+    document: SECURITY,
     locate: /(\d+) turns per session/,
     source: "src/tools/intake.ts",
     reproduce: constant("MAX_TURNS_PER_SESSION"),
   },
   {
-    document: README,
+    document: SECURITY,
     locate: /(\d+) concurrent sessions/,
     source: "src/tools/intake-events.ts",
     reproduce: constant("MAX_LIVE_SESSIONS"),
   },
   {
-    document: README,
+    document: VERIFICATION,
     locate: /No file over (\d+) lines/,
     source: "scripts/checks/file-length.sh",
     reproduce: (evidence) => String(integer(evidence, /^LIMIT=(\d+)$/m)),
   },
   {
-    document: README,
+    document: VERIFICATION,
     locate: /No directory over (\d+) sources \/ (\d+) tests/,
     source: "scripts/checks/package-size.sh",
     reproduce: (evidence) =>

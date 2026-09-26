@@ -21,13 +21,6 @@ export const VENDOR_CITED: readonly Cited[] = PUBLIC_DOCUMENTS.flatMap((document
   VENDOR_FIGURES.map((figure) => ({ document, figure, reason: VENDOR })),
 )
 
-export const OWN_CITED: readonly Cited[] = [
-  {
-    document: "README.md",
-    figure: "8 tests",
-    reason:
-      "a quotation of our own withdrawn misreading of another submission's README, not a count of anything in this repository",
-  },
-]
+export const OWN_CITED: readonly Cited[] = []
 
 export const CITED: readonly Cited[] = [...VENDOR_CITED, ...OWN_CITED]

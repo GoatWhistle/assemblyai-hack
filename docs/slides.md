@@ -30,11 +30,11 @@ Source: AssemblyAI, Universal-3.5 Pro Realtime (23 June 2026) and The Voice Agen
 
 The recognizer can be certain and wrong at the same time.
 
-Suppose the prescriber says hydromorphone and the recognizer returns morphine at confidence 1.0, the case our synthesised replay stages. Both drugs exist and pass the catalogue check, and ISMP's 2017 survey reports exactly this mishearing between people.
+Suppose the prescriber says hydromorphone and the recognizer returns morphine at confidence 1.0, the case our synthesised replay stages. Both drugs exist and pass the catalogue check, and ISMP's 2017 verbal-order alert records exactly this mishearing between people: a nurse heard an order for hydromorphone as morphine.
 
 A confidence threshold does not save you here: the confidence is high. A plain read-back does not either: a caller who hears morphine read back can say yes by reflex. What saves you is a published list of confused names and a question the caller can only answer with a name.
 
-Source: the synthesised replay at /demo (not a recorded recognizer output); ISMP List of Confused Drug Names, 2023
+Source: the synthesised replay at /demo (not a recorded recognizer output); ISMP Medication Safety Alert, 18 May 2017; ISMP List of Confused Drug Names, 2023
 
 ---
 
@@ -66,7 +66,7 @@ The third reason is the product. Collapsing it into the first destroys the idea.
 
 ## 6. An invariant, not a policy
 
-A value cannot reach the order around the gate. ConfirmedValue is a branded type, the brand symbol is private to its module, and there is exactly one type assertion in the whole repository, inside gate/confirm().
+A value cannot reach the order around the gate. ConfirmedValue is a branded type, the brand symbol is private to its module, and there is exactly one type assertion to ConfirmedValue in the repository, inside gate/confirm().
 
 So "the LLM decided it was fine" cannot write a value: there is no code path.
 
@@ -108,7 +108,7 @@ Source: make eval-control, 40 utterances
 
 Absence from the catalogue: 21 of 21 errors caught, 0 of 59 correct values asked about.
 
-Pair rule: 0 of 21 errors caught, 21 of 59 correct values given a contrastive question, because the rare names of this corpus sit on the full ISMP list.
+Pair rule: 0 of 21 errors caught, 21 of 59 correct values given a contrastive question: the correct values whose name is on the full ISMP list.
 
 Correct drug names asked about by the shipped gate: 59 of 59, because every drug name is read back once by policy; the threshold and the pair rule change which question is asked, not whether one is.
 
@@ -128,25 +128,25 @@ Source: make ab-gate, 40 candidates: 20 correct, 20 misheard
 
 ---
 
-## 11. We threw away our own flattering numbers
+## 11. What a figure has to survive before it is published
 
-The first measurement gave an EER of 52.5%. Before publishing it we checked the socket close codes: all 21 failures closed with code 1008, all 19 successes with 1000. The measurement measured the new-session rate limiter, not the recognizer. After spacing the runs 24 s apart, no errors were left.
+Recognizer runs are spaced 24 s apart, because a batch measures the new-session rate limiter instead of the recognizer. A pass at 1 s spacing reads as an EER of 52.5%, and its close codes give it away: all 21 failures closed with code 1008, all 19 successes with 1000. The report keeps that pass, marked not kept.
 
-Separately: the claim that NPI and DEA are equally checkable turned out to be true for NPI and false by 4.8% for DEA, over an exhaustive enumeration of 32,080 mutations. The policy did not change; the claim was corrected.
+The two checksums are not equally strong. The claim that NPI and DEA are equally checkable is false by 4.8% for DEA, over an exhaustive enumeration of 32,080 mutations: NPI catches every single-digit substitution, DEA misses one that changes a weight-2 digit by five. Arithmetic still replaces the read-back for both.
 
-Source: the discarded pass and its close codes in eval/REPORT.md; make audit-checksums, 32,080 mutations
+Source: the 1 s pass and its close codes in eval/REPORT.md (make live-runs); make audit-checksums, 32,080 mutations
 
 ---
 
-## 12. The gate refused to confirm a federally impossible order
+## 12. A federally impossible order is not accepted as heard
 
-deaSchedule sat in the data for 193 drugs and was read by nobody. Morphine sulfate with five refills was accepted with a green verdict.
+Morphine sulfate with five refills is a real drug and a plausible number. Under 21 CFR 1306.12(a), refilling a Schedule II drug is prohibited.
 
-Under 21 CFR 1306.12(a), refilling a Schedule II drug is prohibited. Now the gate refuses it and hands the agent a line that cites the regulation, and it does not ask you to spell it out, because this is a prohibition, not a typo.
+A deaSchedule field that sat in the data for 193 drugs, read by no rule, would let that order through with a green verdict. The gate reads it: it does not accept the refills as heard, the decision cites the regulation, the agent states the prohibition and offers to record none, and it does not ask for a spelling, because this is a prohibition, not a typo.
 
-This is worse than a mishearing: a misheard value looks uncertain, whereas an order like that looked proven.
+This is worse than a mishearing: a misheard value looks uncertain, whereas an order like this one looks proven.
 
-Source: data/catalog.json as counted in eval/REPORT.md; 21 CFR 1306.12(a)
+Source: npx tsx scripts/measure/schedule-census.ts over data/catalog.json; 21 CFR 1306.12(a)
 
 ---
 
@@ -176,7 +176,7 @@ Source: ICAO Annex 11 §3.7.3.1; Joint Commission National Patient Safety Goals
 
 The unit of the market is a prescription intake workstation, not an abstract volume: every pharmacy and every delivery service that takes a prescription by voice has a finite number of them, and each one falls under the read-back requirement.
 
-SAM is those already deploying voice agents into intake. Several dozen teams at this hackathon are building voice intake for healthcare right now, and none we found checks for homophony.
+SAM is those already deploying voice agents into intake.
 
 We publish no TAM estimate in money, because we did not measure it, and a project rule forbids a figure without a method and a set size. Everything we did measure sits in eval/REPORT.md with a command above every line.
 
@@ -194,9 +194,9 @@ A compliance report: the provenance of every field, with source words, timecodes
 
 ## 17. What makes this different
 
-Voice agents for medical intake are not a new idea, and there are several at this hackathon. Some use the same two AssemblyAI sockets and likewise keep the model from writing a value directly.
+Voice agents for medical intake are not a new idea, and keeping the model from writing a value directly is not new either.
 
-The difference is what overrides certainty. The gates we found fire on low confidence, a failed validator, or a value missing from a known set. A confidently pronounced wrong drug that exists in the catalogue passes all three.
+The difference is what overrides certainty. The usual gates fire on low confidence, a failed validator, or a value missing from a known set. A confidently pronounced wrong drug that exists in the catalogue passes all three.
 
 Here a published sound-alike list overrides confidence 1.0: a drug name in a published LASA pair is re-asked even when the recognizer is certain and the drug is valid, and the re-ask has to be answered with the name, not a yes.
 
@@ -218,13 +218,13 @@ Source: make gate-mutation, as recorded in eval/REPORT.md
 
 ## 19. Honest limitations
 
-Provenance is computed in the browser. The browser holds the recognizer socket, word timings never pass through our server, so this is client-supplied data. Doing it otherwise means bringing back the always-on host we deliberately removed.
+Provenance is computed in the browser. The browser holds the recognizer socket, so word timings never pass through our server and are client-supplied data. At finalize the server checks each field against the agent's own transcript, fetched from the vendor with its own key, which the browser cannot write; that still does not prove a person spoke.
 
-The corpus is synthesised. We found no open English corpus of human speech reading drug names.
+Every corpus is synthesised speech, and the full calls on the production deployment used a synthesised caller. No human voice has been measured.
 
 The product rule is the full 2023 ISMP list, 514 pairs parsed from the PDF with the page and row of each kept. The 20 curated pairs, each checked by hand against its row, are the evaluation core and the demo.
 
-Some lines in the report honestly read "not measured": everything that requires a live agent socket.
+What is not measured is marked "not measured" in the report, with the command that would measure it.
 
 Source: LASA_PAIRS in src/lasa/pairs.ts
 
@@ -232,11 +232,11 @@ Source: LASA_PAIRS in src/lasa/pairs.ts
 
 ## 20. Next
 
-Immediately: turn-to-turn latency on a live deployment, the only block of measurements that cannot be obtained offline.
+Human voices: three team members record the voice set, and make eval-live sends it through the recognizer.
 
-Then: human voices from three team members (make eval-live), and a second run of one set for reproducibility (make eval-repeat).
+Turn-to-turn latency on the live deployment, which needs the agent socket and the browser.
 
-Product-wise: the pair rule already applies to every published pair, and its cost on correct values is measured. A pair we derived ourselves still does not go into the table of published ones.
+Then: a second run of one unchanged set for reproducibility (make eval-repeat), and completed production runs of the two scripted calls that have none yet.
 
 ---
 
@@ -246,7 +246,7 @@ We do not claim to recognize speech better. We claim that we know when we have n
 
 12 of 12 gate mutations are killed by their own tests.
 
-Two of our own checks we bypassed and fixed ourselves: the gate invariant let through an angle-bracket cast, and the key check let through a directory named api at any depth. Both were green until they were attacked.
+Every ratchet check has a positive control: a test plants a violation and requires the check to fail, so a check that checks nothing cannot stay green.
 
 Every figure in the report carries its command and its set size. Numbers without a method we do not publish.
 

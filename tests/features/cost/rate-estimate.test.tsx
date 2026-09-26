@@ -23,10 +23,10 @@ import {
 } from "@/features/cost/published-rate"
 import { RateEstimate } from "@/features/cost/rate-estimate"
 
-const GUARDRAILS = readFileSync("docs/cost-guardrails.md", "utf8")
+const GUARDRAILS = readFileSync("docs/cost-and-budget.md", "utf8")
 
 describe("the rate the counter multiplies by is the published one, not a remembered number", () => {
-  it("takes every rate from the price table in docs/cost-guardrails.md", () => {
+  it("takes every rate from the price table in docs/cost-and-budget.md", () => {
     for (const rate of PUBLISHED_RATES) {
       expect(
         GUARDRAILS,

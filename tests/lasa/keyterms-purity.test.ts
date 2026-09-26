@@ -81,7 +81,7 @@ describe("keyterms purity", () => {
     const keyterms = buildKeyterms()
     expect(
       keyterms.length,
-      `${keyterms.length} terms; keyterms_prompt max is ${KEYTERMS_MAX}. Terms beyond the limit are silently ignored - the recognizer will not error.`,
+      `${keyterms.length} terms; keyterms_prompt max is ${KEYTERMS_MAX}. The vendor rejects a list over the limit.`,
     ).toBeLessThanOrEqual(KEYTERMS_MAX)
   })
 

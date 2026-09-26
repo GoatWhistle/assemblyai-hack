@@ -1,328 +1,348 @@
 # Limitations
 
-Everything this project cannot prove, in one file, at full strength. The short
-version lives in [README.md](README.md); this is the complete account with nothing
-softened. A limitation discovered by a reader is worth less than one stated by the
-author, so it is stated here first.
+> Everything this project cannot prove, in one file, at full strength. The gate proves that a
+> value traces to words the session reported and passed a validator or a spoken
+> confirmation; it does not prove that a person said those words, and a hostile client can
+> fabricate them. The evidence behind every figure is synthesised speech, and the live calls
+> that reached a committed order on production used a synthesised caller, not a human voice.
 
-Each entry carries the same status vocabulary the README uses: what is **measured**,
-what is **enforced** by a machine check, what is **assumed**, and what is simply
-**false and admitted**.
+**Read this if** you are deciding how far to trust a result, or looking for the weakest point
+before someone else finds it · **Related:** [evidence](evidence.md) ·
+[security](security.md) · [design decisions](design-decisions.md) · [sources](sources.md) ·
+[eval/REPORT.md](../eval/REPORT.md)
+
+Each entry carries a status from the vocabulary in [evidence](evidence.md#how-is-each-claim-graded).
+Every heading below also appears on the site at `/docs/limitations`.
+
+---
 
 ## The evidentiary chain does not survive a hostile client
 
-**Status: false, and stated as false.**
+**Status: False, and stated as false.**
 
-Provenance is computed in the browser. The browser holds the AssemblyAI streaming
-socket directly, so `words[]` with its timings and per-word confidences never passes
-through our server; the client posts it to `POST /api/sessions/{id}/turns`, which is
-deliberately unauthenticated, because a browser cannot hold the shared tool secret
-without publishing it.
+Provenance is computed in the browser. The browser holds the AssemblyAI streaming socket
+directly, so `words[]` with its timings and per-word confidences never passes through our
+server; the client posts it to `POST /api/sessions/{id}/turns`, which is deliberately
+unauthenticated, because a browser cannot hold the shared tool secret without publishing it.
 
-Stated at full strength: **anyone with DevTools can post arbitrary words with
-arbitrary timings and arbitrary confidences, and the gate will accept a value
-carrying that provenance.** The gate verifies that a value traces to words the
-session reported. It does not, and cannot, verify that those words were spoken.
+Stated at full strength: **anyone with DevTools can post arbitrary words with arbitrary
+timings and arbitrary confidences, and the gate will accept a value carrying that
+provenance.** The gate verifies that a value traces to words the session reported. It does
+not, and cannot, verify that those words were spoken. The gate is built to stop a recognizer
+from quietly mishearing a drug name, not a caller deceiving themselves; in the
+malicious-client threat model the chain is worth nothing. The route enforces resource bounds
+instead of a secret, listed in
+[security](security.md#provenance-is-client-supplied-so-the-gate-proves-provenance-not-truth).
 
-Forging your own transcript is lying to yourself, and the gate is not built to stop a
-caller who wants to deceive themselves. It is built to stop a recognizer from quietly
-mishearing a drug name. In the malicious-client threat model the chain is worth
-nothing, and that is the honest sentence.
+### What the vendor witness adds, and where it stops
 
-What the route *does* enforce, because bounds are the only defence available without
-a secret: a validated session id (`[A-Za-z0-9._-]`, never `..`, at most 128
-characters, so a session id can neither address another tenant's blob nor escape the
-`sessions/` prefix); at most 200 words per turn; 400 turns per session; 64 concurrent
-sessions, evicted least-recently-used; and word timings bounded by the three-hour
-socket cap.
+At finalize the server fetches the agent socket's own transcript from AssemblyAI with its own
+key and seals a `witnessed`, `not_witnessed` or `unavailable` verdict for every written field
+into the receipt ([security](security.md#a-second-channel-witnesses-the-words-after-the-call)).
+A browser that forges its turns cannot forge the vendor's record. Two boundaries: the
+timeline appears only seconds after the session ends, so the witness cannot block a commit
+during the call; and it proves the vendor heard the words, not that a person rather than a
+client sending synthesised speech to both sockets said them.
 
 ### The alternative, and what it costs
 
-Relaying audio through our own backend is the correct fix, and at least one other
-team in this field made exactly that choice for exactly this reason. It is worth
-stating their argument in their own words rather than ours: *an untrusted browser
-must not be the authority on what was committed.* We agree with the sentence. We did
-not follow it, and the reasoning should be judged rather than assumed.
+Relaying audio through our own backend is the correct fix, and at least one other team in
+this field made exactly that choice, arguing that *an untrusted browser must not be the
+authority on what was committed.* We agree with the sentence and did not follow it.
 
-Routing audio server-side means an always-on host. Vercel caps a serverless function
-at 300 s on the Hobby tier while these sessions run two to ten minutes, so the relay
-cannot be a function; it becomes a process, a second deployment target, and a second
-thing that can be down during a demo. The earlier design of this project did proxy
-both sockets through a FastAPI backend, and removing the proxy is what removed the
-constraint. That is a deployment argument, not a trust argument, and it does not
-answer their point.
+Routing audio server-side means an always-on host. Vercel caps a function at 300 s on the
+Hobby tier while these sessions run two to ten minutes, so the relay cannot be a function; it
+becomes a process, a second deployment target, and a second thing that can be down during a
+demo. That is a deployment argument, not a trust argument, and it does not answer theirs.
 
-What it buys, and this is the part that is easy to miss: **granularity survives the
-choice we made.** A server-side relay does not automatically give better evidence
-than a client-side one. The team that relays audio reports resolution *per clause*,
-with character offsets produced by linear interpolation across the clause, because
-their speech provider returns no character alignment - their own README says so. Our
-provenance is genuine `words[]` with per-word millisecond start and end times and a
-per-word confidence, straight from the recognizer, because the browser holds that
-socket directly.
+What the choice keeps is granularity. The team that relays audio reports resolution *per
+clause*, with character offsets interpolated across the clause, because their speech provider
+returns no character alignment. Our provenance is genuine `words[]` with per-word millisecond
+start and end times and a per-word confidence, straight from the recognizer.
 
-So the honest summary is a trade with a named direction, not a concession: we hold
-**finer-grained evidence that a hostile client could fabricate**, they hold
-**coarser-grained evidence that a hostile client could not**. For the failure this
-product exists to catch - a recognizer mishearing a drug name while reporting high
-confidence - word-level timings and per-word confidence are the input the gate
-actually needs, and a caller forging their own transcript is not the adversary. For
-an audit trail that must hold up against the person who created it, their choice is
-the right one and ours is not.
+The trade has a named direction: we hold **finer-grained evidence that a hostile client could
+fabricate**, they hold **coarser-grained evidence that a hostile client could not**. For the
+failure this product exists to catch, a recognizer mishearing a drug name while reporting high
+confidence, per-word timings and confidences are the input the gate needs. For an audit trail
+that must hold up against the person who created it, their choice is the right one and ours is
+not.
 
-Server-side numbers remain honest: `GET /v1/sessions/{id}` returns
-`time_to_first_audio_ms` and tool-call timings. It does **not** return word-level
-timings, so word-to-gate latency is a browser measurement and is labelled as one
-everywhere it appears.
+The vendor's session record returns turn-level timings (`time_to_first_audio_ms`) and
+tool-call timings, not word-level ones, so word-to-gate latency could only be a browser
+measurement, and it is not measured.
 
 ## A caller who corrects themselves inside one utterance is detected only through six markers
 
-**Status: measured behaviour, pinned by tests; the gap is narrowed, not closed.**
+**Status: Enforced by tests for the six markers; the gap is narrowed, not closed.**
 
-If someone says "Lisinopril, no wait, Losartan", the server refuses lisinopril as a value
-the caller took back: reconciling the proposed value against the words of its turn fails
-`spoken_support` with `E_RETRACTED_VALUE`, and `propose_field` answers
-`E_VALIDATOR_COMBO`. That is the second reason to re-ask, not a fourth. Losartan, the
-value the caller settled on, goes on to its own checks.
+If someone says "Lisinopril, no wait, Losartan", the server refuses lisinopril as a value the
+caller took back: reconciling the proposed value against the words of its turn fails
+`spoken_support` with `E_RETRACTED_VALUE`, and `propose_field` answers `E_VALIDATOR_COMBO`.
+That is the second reason to re-ask, not a fourth. Losartan, the value the caller settled on,
+goes on to its own checks.
 
-The markers are "no wait", "sorry", "I mean", "actually", "scratch that" and
-"not X, Y", and the replacement has to follow within four words.
+The markers are "no wait", "sorry", "I mean", "actually", "scratch that" and "not X, Y", and
+the replacement has to follow within four words
+([`src/confirmation/self-correction.ts`](../src/confirmation/self-correction.ts)).
 `tests/confirmation/self-correction.test.ts` pins each marker, a number corrected by a
 number, and the phrases that must not fire: "lisinopril, not losartan", "lisinopril sorry
-about that", a "sorry" followed by a value of another field, and a value said again after
-its own correction. `tests/api/self-correction.test.ts` drives the same through the tool
-route.
+about that", a "sorry" followed by a value of another field, and a value said again after its
+own correction. `tests/api/self-correction.test.ts` drives the same through the tool route.
 
-Still not detected: a correction without one of these markers, such as a pause and a
-different name, a correction spread across two turns, and markers in other words
-("rather", "make that"). There the read-back remains the mitigation. The provenance
-matcher still finds a span for the retracted word, because it was said; four tests in
-`tests/confirmation/retracted-span.test.ts` pin that, and the refusal is spoken support's.
+Not detected: a correction without one of these markers, such as a pause and a different
+name; a correction spread across two turns; and markers in other words ("rather", "make
+that"). There the read-back is the mitigation. The provenance matcher still finds a span for
+the retracted word, because it was said, and the refusal is spoken support's. Four tests in
+`tests/confirmation/retracted-span.test.ts` pin that provenance side.
 
 ## The pair rule covers the 2023 ISMP list and nothing else
 
-**Status: measured.**
+**Status: Measured.**
 
-`data/lasa-pairs.json` is parsed from the ISMP List of Confused Drug Names, updated
-through February 2023, downloaded from ismp.org; the file records the URL and the PDF's
-sha256. It carries 514 pairs over 754 names with the page and row of each, and the
-product rule, `lasaRiskFor`, checks every one of them; `npx tsx
-scripts/measure/ismp-coverage.ts` prints the count. The curated table in
-`src/lasa/pairs.ts` holds 20 of those pairs, each checked by hand against its row, and it
-is the core of the demo and of the evaluation corpora.
+The rule, `lasaRiskFor`, checks every pair of the ISMP List of Confused Drug Names, updated
+through February 2023: 514 pairs over 754 names in `data/lasa-pairs.json`, which records the
+source URL and the PDF's sha256. The curated table in
+[`src/lasa/pairs.ts`](../src/lasa/pairs.ts) holds 20 pairs, each checked by hand against its
+row; it is the core of the demo and of the evaluation corpora. Both counts come from
+`npx tsx scripts/measure/ismp-coverage.ts`; the coverage method is in
+[evidence](evidence.md#how-much-of-the-published-list-does-the-rule-cover).
 
-An earlier version of this section said the list had moved to ECRI and was no longer at a
-stable public URL, so only the curated table could ship. That was wrong: the 2023 PDF is
-on ismp.org. Earlier still, a design target of about 240 pairs was written down as though
-it had been measured.
+**A published list only catches the pairs it publishes.** Lisinopril misheard as bisoprolol is
+AssemblyAI's own example of the failure this product exists for, and it is on no list we have
+found, the full 2023 ISMP list included. The gate would not re-ask it on the pair rule: it
+would pass on confidence and a valid catalogue entry, and only the plain read-back, which a
+reflex "yes" passes, would stand between it and the order. A pair we derive ourselves is never
+added.
 
-What remains a limit: the rule knows only what the list publishes. Lisinopril and
-bisoprolol, AssemblyAI's own example of a confident mishearing, are on neither tier, so
-they get the standing read-back and nothing more. The list is from 2023; a newer edition
-means rebuilding with `make data`, and `scripts/build/lasa.ts` refuses to overwrite the
-snapshot when a parse yields fewer than 40 pairs. A brand name is recognised only when the
-catalogue lists it under `proprietaryNames`. And the rule has a price, measured rather
-than assumed: 502 of 3730 catalogue drugs carry a listed name, and 21 of the 59 correct
-values of the recorded corpus got a contrastive question.
+A newer edition of the list means rebuilding with `make data`; `scripts/build/lasa.ts` refuses
+to overwrite the snapshot when a parse falls below its 40-pair floor. A brand name is recognised
+only when the catalogue lists it under `proprietaryNames`. The rule has a price, from the same
+command: 502 of 3730 catalogue drugs carry a listed name, and 21 of the 59 correct values of
+the control corpus get a contrastive question.
 
 ## The evaluation corpus is synthesised
 
-**Status: measured against synthetic speech, and labelled everywhere.**
+**Status: Measured against synthetic speech, and labelled everywhere.**
 
-We found no open English corpus of human speech reading drug names. Entity Error Rate
-in [eval/REPORT.md](../eval/REPORT.md) measures the recognizer against synthetic speech,
-not human speech. Every figure derived from it inherits that boundary.
+We found no open English corpus of human speech reading drug names. Entity Error Rate in
+[eval/REPORT.md](../eval/REPORT.md) measures the live recognizer against speech from a desktop
+speech synthesiser: synthetic audio, real recognition. Every figure derived from it inherits
+that boundary.
 
-Related things we deliberately do not measure:
+### The confident mishearing the product is built around has not been observed
+
+Every listed name in our synthesised corpora was re-recognized live through a telephone band,
+white noise at 10 and 5 dB and a speed-up: 188 utterances, 186 of them scored (two sessions
+closed on a transport error, 1006 and 1008, and are excluded rather than counted as
+mishearings). None came back as its published partner, and none of the 18 errors reached the
+0.95 threshold (`npx tsx scripts/measure/analyse-stress.ts`). Some did become other real
+drugs (azacitidine as azithromycin, silodosin as thalidomide), which is the shape of the
+error, one step short. The replay that shows hydromorphone heard as morphine at 1.00 is
+staged and labelled so. The pair rule rests on the published list and on people mishearing
+these names, not on our corpus.
+
+### Live calls on production used a synthesised caller
+
+**Status: Observed.** The production live runs in `eval/live/runs.json` drive a real browser
+(Firefox, `--project firefox-fake-caller`) against the production deployment, with both real
+AssemblyAI sockets, the vendor's recognizer and managed language model, our server, the gate
+and the order store. The caller is synthesised: prepared speech injected into the page's
+microphone track through WebAudio, with the answer to each agent question chosen by a regular
+expression over the agent's own words (`tests/live/responder.ts`). No human spoke and no
+microphone was used.
+
+On the current deployment `clean-order` and `lasa-named` committed their orders, and
+`yeah-no` and `barge-in` completed; `npi-groups` and `commit-hold` have no completed run. The
+scenario table, with every billed and refused attempt, is in
+[eval/REPORT.md](../eval/REPORT.md#live-runs-on-production).
+`.github/workflows/live-smoke.yml` runs the same calls against a deployed URL on demand.
+
+### What is deliberately not measured
 
 | Not measured | Reason |
 |---|---|
-| Accuracy on human speech | We found no open corpus; synthesising is the honest fallback and the limitation travels with the number |
-| NPI existence against the live registry | Our NPI numbers are synthetic, generated to satisfy the checksum. The real registry would return "not found" for arithmetically valid numbers and add only noise |
-| Threshold optima | Thresholds are chosen defaults, reasoned from the cost of an error per field before any audio existed, and not tuned on any set. The held-out set, sealed on 16 September, measured the result once |
-| Keyterms including drug names | Methodologically invalid as a product option: it biases the recognizer toward the exact strings the rules check. If run at all it is a diagnostic that sizes the sacrifice, never an alternative configuration |
-| Market size in money | We have not estimated it. A TAM figure we cannot source would contradict the only rule this project is about |
+| Accuracy on human speech | No open corpus found; the synthetic figure carries that label |
+| A live call with a human voice | Not run; every live call used a synthesised caller |
+| NPI existence in the live registry | Our NPIs are synthetic, built to pass the checksum; the registry would answer "not found" and add only noise |
+| Threshold optima | Thresholds are chosen defaults; see the next section |
+| Keyterms including drug names | Biases the recognizer toward the strings the rules check; at most a diagnostic of the cost, never a configuration |
+| Word-to-gate latency | Word timings never reach the server; it would be a browser measurement |
+| Market size in money | Not estimated; a figure we cannot source is exactly what this project refuses to publish |
 
 ## Thresholds are chosen defaults, not measured optima
 
-**Status: assumption, stated at the head of the report.**
+**Status: Assumption, not result, stated at the head of the report.**
 
-Every threshold in `eval/REPORT.md` is a chosen default. They are reasoned from the
-cost of an error in each field before any audio existed, were not tuned on any set, and
-are reported against a held-out set sealed on 16 September and opened once. Reporting a number obtained on the
-tuning set as a generalisation estimate is the specific failure the strongest
-competitor in this field honestly admitted to, and it is the one we take most care
-not to repeat.
+Every threshold in `eval/REPORT.md` is a chosen default, reasoned from the cost of an error in
+each field before any audio existed. None was tuned on any set. The held-out set was sealed
+before it was opened, `make heldout-seal` fails if it changes, and it has been opened once.
 
 ## Our own pre-registered hypothesis failed
 
-**Status: not supported, published anyway.**
+**Status: Assumption, not result: not supported, published anyway.**
 
-We predicted that rare drug names would be measurably harder to recognise than common
-ones. The prediction, the decision rule and the falsification condition were written
-to `eval/heldout-preregistration.md` **before the audio existed**. The rule required
-non-overlapping 95% Wilson intervals between the rare and common strata.
+We predicted that rare drug names would be measurably harder to recognise than common ones.
+The prediction, the decision rule and the falsification condition are in
+[`eval/heldout-preregistration.md`](../eval/heldout-preregistration.md), written before the
+held-out audio existed. The rule required non-overlapping 95% Wilson intervals between the
+rare and common strata.
 
-They overlap heavily, and the rare and mid strata are identical at 30.0% each. The
-control corpus had suggested 43.8% against 16.7%; that gap did not replicate and on
-the evidence was sampling noise in a set of forty.
+They overlap heavily, and the rare and mid strata are identical at 30.0% each
+(`npx tsx scripts/measure/analyse-rarity.ts --set eval/heldout --strata 3`). The control
+corpus suggests 43.8% against 16.7% (`npx tsx scripts/measure/analyse-rarity.ts --set
+eval/control`); that gap does not replicate and on the evidence is sampling noise in a set of
+forty. The negative result stays in the report, because a sealed set can be opened only once
+and dropping a failed pre-registered hypothesis is what makes published benchmarks
+untrustworthy.
 
-The negative result stays in the report. Dropping a pre-registered hypothesis that
-failed is the practice that makes published benchmarks untrustworthy, and a sealed
-set can only be opened once.
+What does replicate is the part the product rests on: an overall entity error rate of 26.7%
+[17.1%, 39.0%] on the held-out set against 27.5% on the control corpus. Four of sixteen
+scored held-out errors sit at or above the 0.95 threshold; two of those four are misspellings
+in the spoken form our sampler drew from the FDA catalogue, so two genuine recognizer errors
+(`oteseconazole`, `chlorthalidone`) would have passed a threshold alone and been written into
+an order by a confidence check.
 
-What did replicate is the part the product rests on: an overall entity error rate of
-26.7% [17.1%, 39.0%] against 27.5% on the control corpus. Four of sixteen scored errors
-sat at or above the 0.95 threshold; two of those four are our sampler's typos, so two
-genuine recognizer errors (`oteseconazole`, `chlorthalidone`) would have passed a threshold
-alone and been written into an order by a confidence check.
+## Two guarantees rest on checks reading the tree correctly
 
-## Two of our own guarantees were bypassable
+**Status: Enforced; each forgery is planted by a test that requires the check to fail.**
 
-**Status: found by attack, fixed, exploits kept as tests.**
+- **The gate invariant.** TypeScript can assert a type in more than one way. `make
+  gate-invariant` fails on `as ConfirmedValue` or `<ConfirmedValue>` anywhere but
+  `src/gate/confirm.ts`, on any `as unknown as` or type-checker suppression in product code,
+  and on the disappearance of the one assertion inside `confirm.ts`
+  ([verification](verification.md#one-constructor-for-a-confirmed-value)). A check that
+  scanned for one syntax would pass a forged value while the linter and the type checker were
+  green too.
+- **The key boundary.** `make secrets` allows `ASSEMBLYAI_API_KEY` only under the path
+  `app/api/`, not in any directory merely named `api`, fails if no file there names it, and,
+  when a build is present, fails if a server secret's name appears under `.next/static`
+  ([verification](verification.md#the-secrets-check-reads-the-built-bundle)).
 
-`make gate-invariant` scanned for `as ConfirmedValue` and not for the older
-angle-bracket assertion form, so a file could forge a confirmed value while
-`biome check`, `npx tsc` and the invariant check were all green simultaneously.
-`make secrets` used `grep --exclude-dir=api`, which excludes any directory named
-`api` at any depth, so a file at `src/features/api/leak.ts` could read the API key
-and pass.
+The residual risk is the class, not these instances: a check that passes when the thing it
+checks is missing is worse than no check, because it produces confidence. Every ratchet in
+`VERIFY_STEPS` either has a positive control in
+`tests/scripts/ratchet-positive-control.test.ts`, which plants a violation and requires the
+check to fail, or is excluded there by name with a stated reason
+([verification](verification.md#every-ratchet-is-proved-to-bite)).
 
-Both are closed, and both fixes were verified by writing the exploit, watching it
-pass, applying the fix and watching the same exploit fail. The details are in
-[eval/REPORT.md](../eval/REPORT.md).
+## Known security weaknesses left open
 
-The general lesson cost us three separate incidents: **absence must never read as
-success.** A check that passes when the thing it checks is missing is worse than no
-check, because it produces confidence. Every ratchet now has a positive control in
-`tests/scripts/ratchet-positive-control.test.ts`.
+**Status: Assumption, not result: each is defensible for a demonstration on synthetic data
+and none would be for real orders.**
 
-## Security hardening we recorded and did not do
+Ten known weaknesses of low severity are open:
 
-A security review on 25 September found no P0, two P1 (both fixed: tool URLs built from
-a request's own host, and one visitor able to spend the whole daily budget) and eleven
-P2, of which one was fixed. The other ten are here, because each is defensible for a
-demonstration on synthetic data and none would be for real orders.
-
-- **A session id is a bearer capability.** Whoever holds one can post turns to it,
-  finalize it and mint a reconnect token for it. Ids are random UUIDs, never listed by any
-  route, and reach only the owning browser and the `/order/{id}` link after a commit.
+- **A session id is a bearer capability.** Whoever holds one can post turns to it, finalize
+  it and mint a reconnect token for it. Ids are random UUIDs, never listed by any route, and
+  reach only the owning browser and the `/order/{id}` link after a commit.
 - **Unknown session ids cost storage listings.** A lookup of an id that was never stored
   makes up to three Blob `list` calls; it is anonymous and repeatable.
 - **Finalize trusts an explicit `?origin=`.** A missing or unknown label still defaults to
-  `live`, so nothing inflates a measured set by accident, but the session's holder can
-  label it on purpose.
+  `live`, so nothing inflates a measured set by accident, but the session's holder can label
+  it on purpose.
 - **A misconfigured tool secret is named in the 401.** A wrong secret gets the generic
   message; only a deployment with no secret, or one too short, says so.
-- **The agent's own hint is quoted back in `say_to_caller`.** The prompt marks tool
-  results as untrusted data, so this is a spoken echo, not an instruction channel.
-- **Store errors reach the client as text.** A Redis error reply appears in the 503 body;
-  a test pins that no token or URL is ever included.
+- **The agent's own hint is quoted back in `say_to_caller`.** The prompt marks tool results as
+  untrusted data, so this is a spoken echo, not an instruction channel.
+- **Store errors reach the client as text.** A Redis error reply appears in the 503 body; a
+  test pins that no token or URL is ever included.
 - **Bodies are parsed before bounds.** Size is limited by the platform, not by us; tool
   routes authenticate first, `/turns` and `/api/demo/run` are public.
-- **`/api/metrics` is uncached,** so every view re-reads every stored session.
+- **`/api/metrics` is uncached,** so every view re-reads every stored session it counts.
 - **Blob objects are public**, and the UUID in the path is the only secret.
-- **Six dependency advisories remain** after the non-breaking fix (four high, two
-  moderate, `npm audit --omit=dev` on 25 September), all reached through
-  `@vercel/blob` 1.x (`undici`) or `next` 15 (`postcss`, and `playwright` as an optional
-  peer that a production build does not install). Each fix is a major-version upgrade,
-  which we did not make during the submission week.
+- **Six dependency advisories remain** under `npm audit --omit=dev`, four high and two
+  moderate. Four sit in `next` 15 and its `postcss`, and in `@vercel/blob` 1.x and its
+  `undici`, each fixed only by a major-version upgrade that has not been made. Two sit in
+  Playwright, a test dependency the audit counts because `next` declares it as an optional
+  peer.
 
 ## Close codes are observations, not specification
 
-**Status: observed; the vendor documents none.**
+**Status: Observed; the vendor documents none.**
 
-Verified 17 September 2026 against the streaming API reference: AssemblyAI documents
-**no WebSocket close codes at all**. Every entry in `src/realtime/close-codes.ts` is
-therefore an observation, and each records whose. We measured 1000 and 1008
-ourselves, and 1006 once, in the 25 September stress run, where 1008 is what the rate limiter actually sends and we have never once
-observed the 3009 that the documented condition is supposed to produce. 3006 comes
-from another team's measurement. 3007, 3008 and 3009 come from vendor prose rather
-than from a close-code table.
-
-None of them may be presented to a reviewer as specification.
+AssemblyAI's streaming API reference documents **no WebSocket close codes at all**. Every
+entry in [`src/realtime/close-codes.ts`](../src/realtime/close-codes.ts) is therefore an
+observation, and each records whose. We measured 1000 and 1008 ourselves, and 1006 once; 1008
+is what the rate limiter actually sends, and 3009, which vendor prose names for that
+condition, has never been observed. 3006 comes from another team's measurement. 3007, 3008 and
+3009 come from vendor prose rather than from a close-code table. None of them may be presented
+to a reviewer as specification.
 
 ## Voice audio leaves this application and goes to a third-party vendor
 
-**Status: disclosed, not independently verified.**
+**Status: Cited for the endpoints; the vendor's retention terms are not verified.**
 
-Both AssemblyAI sockets are held directly by the browser, so the caller's voice is
-streamed to `wss://streaming.assemblyai.com`, the global recognizer endpoint, and to
-`wss://agents.us.assemblyai.com`, the voice agent's US region. The agent is pinned to
-one region for a functional reason, not a data-residency one: stored agents live in one
-region, and the global host sent a US server and a European browser to two different
-stores (`src/domain/live/agent-region.ts`, measured 26 September 2026). So the agent
-audio of every caller, wherever they are, goes to the US region. No data-residency
-choice was made or evaluated for either socket; the EU endpoints
-(`streaming.eu.assemblyai.com`, `agents.eu.assemblyai.com`, and a `.eu.` LLM Gateway
-host) are not used.
+Both AssemblyAI sockets are held directly by the browser, so the caller's voice is streamed
+to `wss://streaming.assemblyai.com`, the global recognizer endpoint, and to
+`wss://agents.us.assemblyai.com`, the voice agent's US region. The agent is pinned to one
+region for a functional reason, not a data-residency one: stored agents live in one region,
+and the unqualified host sends a US server and a European browser to two different stores
+([`src/domain/live/agent-region.ts`](../src/domain/live/agent-region.ts)). So the agent audio
+of every caller, wherever they are, goes to the US region. No data-residency choice was made
+or evaluated for either socket, and the EU endpoints are not used.
 
-What AssemblyAI retains from a session, for how long, and under what policy is
-governed by AssemblyAI's own terms and privacy policy, not by this repository. We
-have not read those documents closely enough to summarise their retention terms here,
-and a summary we had not verified would be exactly the kind of unsourced figure this
-project refuses to publish elsewhere. The honest statement is the absence of one: a
-caller's voice is sent to AssemblyAI, consent to that is implied by using the
-application at all, and no separate consent screen names the vendor or link to its
-policy before a session starts. All data used in this project's own demonstrations
-and evaluation runs is synthetic, generated by a desktop speech synthesiser — see
-*The evaluation corpus is synthesised*, above — so this limitation concerns real use
-of the application, not anything published in `eval/REPORT.md`.
+What AssemblyAI retains from a session, for how long, and under what policy is governed by
+AssemblyAI's own terms and privacy policy, not by this repository. We have not summarised
+their retention terms, because an unverified summary would be exactly the kind of unsourced
+claim this project refuses to publish. Consent to sending the voice to AssemblyAI is implied
+by using the application; no consent screen names the vendor or links its policy before a
+session starts. All data in this project's own demonstrations and evaluation runs is
+synthetic, so this limitation concerns real use of the application, not anything published in
+`eval/REPORT.md`.
 
 ## In a real emergency, do not use this application
 
-**Status: disclaimer, with an action rather than only a refusal.**
+**Status: Disclaimer, with an action rather than only a refusal.**
 
-The existing disclaimer states what this project is not; it does not yet tell a
-caller what to do if they are in the situation the product's own domain implies. If
-this were a real prescription intake and something is wrong right now — an allergic
-reaction, a medication error already taken, any symptom that feels like an emergency —
-**call 911, or 988 for a mental health crisis, immediately.** This application does
-not call emergency services, does not triage symptoms, and nothing in its design
-routes an emergency to a human faster than a phone would. `DISCLAIMER_BODY` and
-`DISCLAIMER_AFFILIATION` in `src/shared/ui/states/disclaimer/index.tsx` are the
-existing, code-owned wording; this paragraph is the one addition this file proposes
-for that component, stated here because the wording change itself belongs to Agent B.
+If something is wrong right now, such as an allergic reaction, a medication error already
+taken, or any symptom that feels like an emergency, **call 911, or 988 for a mental health
+crisis, immediately.** This application does not call emergency services, does not triage
+symptoms, and nothing in its design routes an emergency to a human faster than a phone
+would.
+
+The instruction appears on the site's limitations page. The shared disclaimer shown on every
+page (`DISCLAIMER_BODY` in
+[`src/shared/ui/states/disclaimer/index.tsx`](../src/shared/ui/states/disclaimer/index.tsx))
+states what the project is not, and does not carry the emergency numbers.
 
 ## This is not a medical device
 
-A technology demonstration. All data is synthetic: no real patients, no real
-prescriptions, no clinical use, no claim of regulatory approval or review.
+**Status: Disclaimer.**
 
-This project quotes ISMP, the FDA, the Joint Commission and 21 CFR. It is **not
-affiliated with, endorsed by, or reviewed by any of them.** The citations establish
-that read-back is an existing requirement; they establish nothing about this
-software.
+A technology demonstration. All data is synthetic: no real patients, no real prescriptions,
+no clinical use, no claim of regulatory approval or review.
+
+This project quotes ISMP, the FDA, the Joint Commission and 21 CFR. It is **not affiliated
+with, endorsed by, or reviewed by any of them.** The citations establish that read-back is an
+existing requirement; they establish nothing about this software.
 
 Do not enter real patient data into this application.
 
 ## The regulatory citations, and what we have not sourced about them
 
-**Status: cited by clause number, without a penalty figure we have not verified.**
+**Status: Cited by clause number, without a penalty figure.**
 
-Three citations recur through this project, each with the clause that requires
-read-back rather than a paraphrase of one:
+The exact wording of each clause is quoted in [sources](sources.md#what-requires-read-back).
+What each citation does not establish:
 
-- **ICAO Annex 11, §3.7.3.1 and §3.7.3.1.2** — §3.7.3.1 requires the flight crew to read
-  back safety-related parts of ATC clearances and instructions transmitted by voice, and
-  §3.7.3.1.2 requires the controller to correct any discrepancy the read-back reveals. It governs flight crews, not prescription intake; we cite it because
-  medicine's own read-back requirement is documented as borrowed from aviation
-  practice, not because this project is subject to it.
-- **Joint Commission, a National Patient Safety Goal from 2003** (NPSG.02.01.01; ISMP
-  placed it at PC.02.01.03 EP 20 in 2017; its 2026 location is not verified by us) — requires
-  verifying a complete verbal or telephone order, or a critical test result, by having
-  the receiver read the complete order back. This is the clause that applies most
-  directly to the domain this project simulates.
-- **21 CFR 1306.12(a)** — prohibits refilling a Schedule II prescription outright.
-  `eval/REPORT.md` documents a case where the gate would have confirmed exactly that
-  refusal-worthy order before this rule was wired into `src/gate/`.
+- **ICAO Annex 11, §3.7.3.1 and §3.7.3.1.2** govern flight crews and controllers, not
+  prescription intake. They are cited because medicine's read-back requirement comes from
+  aviation practice, not because this project is subject to them.
+- **Joint Commission NPSG.02.01.01**, a National Patient Safety Goal since 2003, is the clause
+  that applies most directly to the domain this project simulates. ISMP placed it at
+  PC.02.01.03 EP 20 in 2017; its 2026 location is not verified.
+- **21 CFR 1306.12(a)** prohibits refilling a Schedule II prescription. The gate refuses a
+  Schedule II order with refills and cites the clause in its reason
+  ([`src/domain/verdict.ts`](../src/domain/verdict.ts)). It is the one controlled-substance
+  rule implemented; state rules vary by jurisdiction and are deliberately absent.
 
-**What we do not publish here: a penalty or sanction figure attached to any of the
-three.** We have not located a sourced, current civil-penalty or licensure-sanction
-number for a Joint Commission NPSG lapse or a 21 CFR 1306.12(a) violation that we can
-verify against a primary source rather than a secondhand summary, and this project's
-own rule against unsourced figures applies to us here more than anywhere: a
-frightening-sounding penalty number would be the single easiest thing in this section
-to write without checking. If a reader needs the current civil-penalty schedule or
-enforcement record for either clause, that belongs to the regulator's own published
-material, not to a number invented for this document.
+**No penalty or sanction figure is published for any of the three.** We have not located a
+current civil-penalty or licensure-sanction figure for a Joint Commission NPSG lapse or a
+21 CFR 1306.12(a) violation that we can verify against a primary source, and a
+frightening-sounding penalty number would be the easiest thing in this section to write
+without checking. A reader who needs the current penalty schedule belongs at the regulator's
+own published material.
+
+---
+
+<sub>[Documentation index](README.md) · [Project README](../README.md)</sub>

@@ -14,16 +14,16 @@ const TRUST: readonly Limitation[] = [
   {
     id: "bypassable",
     group: "trust",
-    title: "Two of our own guarantees were bypassable",
-    status: "Found by attack, fixed, exploits kept as tests",
-    body: "The gate-invariant check scanned for one type-assertion syntax and missed the angle-bracket form, so a value could be forged while every check was green. The secrets check excluded any directory named api at any depth. Both fixes were verified by writing the exploit, watching it pass, fixing, and watching it fail; every ratchet now has a positive control, because a check that passes when its subject is missing manufactures confidence.",
+    title: "Two guarantees rest on checks reading the tree correctly",
+    status: "Enforced, each exploit kept as a test",
+    body: "The gate-invariant check refuses a ConfirmedValue assertion in either TypeScript syntax outside the gate, any double assertion through unknown, and any type-checker suppression in product code. The secrets check reads the path app/api, not any directory merely named api, and fails when the key is absent from it. Each exploit is kept as a test, and every ratchet has a positive control, because a check that passes when its subject is missing manufactures confidence.",
   },
   {
     id: "hardening",
     group: "trust",
-    title: "Security hardening we recorded and did not do",
-    status: "Ten findings open, each defensible for synthetic data only",
-    body: "A review on 25 September found no P0, two P1, both fixed, and eleven P2, one fixed. The ten left open:",
+    title: "Known security weaknesses left open",
+    status: "Ten open, each defensible for synthetic data only",
+    body: "Ten known weaknesses of low severity are open:",
     points: [
       "A session id is a bearer capability: its holder can post turns, finalize and mint a reconnect token.",
       "Looking up an unknown session id costs up to three storage listings, anonymously.",
@@ -34,7 +34,7 @@ const TRUST: readonly Limitation[] = [
       "Bodies are parsed before bounds are checked; the platform limits their size.",
       "The metrics route is uncached, so every view re-reads every stored session.",
       "Blob objects are public, and the random id in the path is the only secret.",
-      "Six dependency advisories remain, each fixed only by a major-version upgrade not made in submission week.",
+      "Six dependency advisories remain: four fixed only by a major upgrade of next or @vercel/blob, not made, and two in Playwright, a test dependency counted through an optional peer of next.",
     ],
   },
 ]

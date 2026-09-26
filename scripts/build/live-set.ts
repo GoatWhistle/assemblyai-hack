@@ -36,7 +36,7 @@ export function buildLiveManifest(markdown: string, builtAt: string): LiveManife
     builtAt,
     source: VOICE_SET_DOC,
     method:
-      "three team members read docs/voice-set.md once each into 16 kHz mono PCM16 WAV; the sha256 of each file is recorded so a later run can prove it used the same audio",
+      "three team members read eval/live/voice-set.md once each into 16 kHz mono PCM16 WAV; the sha256 of each file is recorded so a later run can prove it used the same audio",
     count: items.length,
     present: items.filter((item) => item.present).length,
     items,

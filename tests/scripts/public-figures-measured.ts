@@ -18,6 +18,7 @@ const ISMP = "npx tsx scripts/measure/ismp-coverage.ts"
 const SLIDES: PublicDocument = "docs/slides.md"
 const DECK: PublicDocument = "src/features/deck/slides.ts"
 const README: PublicDocument = "README.md"
+const EVIDENCE: PublicDocument = "docs/evidence.md"
 
 const NPI_ROW = /\| NPI[^|]*\| \d+ \| (\d+)\/(\d+) = [^|]*\| (\d+)\/(\d+) = /
 const DEA_ROW = /\| DEA[^|]*\| \d+ \| (\d+)\/(\d+) = [^|]*\| (\d+)\/(\d+) = /
@@ -144,58 +145,60 @@ export const MEASURED_ANCHORS: readonly Anchor[] = [
   ...ON_THE_DECK.flatMap(([locate, source, reproduce]) =>
     [SLIDES, DECK].map((document): Anchor => ({ document, locate, source, reproduce })),
   ),
+  ...[README, EVIDENCE].flatMap((document): readonly Anchor[] => [
+    {
+      document,
+      locate:
+        /(\d+) of (\d+) correct drug names are asked about: (\d+) by the standing read-back, (\d+) by the threshold, (\d+) by a contrastive question/,
+      source: COVERAGE,
+      reproduce: row(ASKED_SPLIT),
+    },
+    {
+      document,
+      locate:
+        /Without the pair rule a reflex yes writes (\d+) of (\d+) pair mishearings; with it, (\d+)/,
+      source: AB_GATE,
+      reproduce: reflexWrites,
+    },
+    {
+      document,
+      locate: /carries (\d+) pairs over (\d+) names/,
+      source: ISMP,
+      reproduce: row(ISMP_SIZE),
+    },
+    {
+      document,
+      locate: /(\d+) of (\d+) catalogue drugs carry a listed name/,
+      source: ISMP,
+      reproduce: row(ISMP_CATALOGUE),
+    },
+    {
+      document,
+      locate: /DEA catches ([\d.]+%)/,
+      source: CHECKSUMS,
+      reproduce: (output) => percent(integer(output, DEA_ROW, 0), integer(output, DEA_ROW, 1)),
+    },
+    {
+      document,
+      locate: /NPI catches ([\d.]+%) of substitutions/,
+      source: CHECKSUMS,
+      reproduce: (output) => {
+        const caught = integer(output, NPI_ROW, 0)
+        const total = integer(output, NPI_ROW, 1)
+        return caught === total ? "100%" : percent(caught, total)
+      },
+    },
+    {
+      document,
+      locate: /(?<!\d[ ,]?|\d of )(\d[\d ]*\d) (?:exhaustive )?mutations/,
+      source: CHECKSUMS,
+      reproduce: mutationTotal(" "),
+    },
+  ]),
   {
-    document: README,
-    locate:
-      /(\d+) of (\d+) correct drug names are asked about: (\d+) by the standing read-back, (\d+) by the threshold, (\d+) by a contrastive question/,
-    source: COVERAGE,
-    reproduce: row(ASKED_SPLIT),
-  },
-  {
-    document: README,
-    locate:
-      /Without the pair rule a reflex yes writes (\d+) of (\d+) pair mishearings; with it, (\d+)/,
-    source: AB_GATE,
-    reproduce: reflexWrites,
-  },
-  {
-    document: README,
-    locate: /carries (\d+) pairs over (\d+) names/,
-    source: ISMP,
-    reproduce: row(ISMP_SIZE),
-  },
-  {
-    document: README,
-    locate: /(\d+) of (\d+) catalogue drugs carry a listed name/,
-    source: ISMP,
-    reproduce: row(ISMP_CATALOGUE),
-  },
-  {
-    document: README,
+    document: EVIDENCE,
     locate: /\*\*Measured, and ([\d.]+%) false of DEA\*\*/,
     source: CHECKSUMS,
     reproduce: deaMissRate,
-  },
-  {
-    document: README,
-    locate: /DEA catches ([\d.]+%)/,
-    source: CHECKSUMS,
-    reproduce: (output) => percent(integer(output, DEA_ROW, 0), integer(output, DEA_ROW, 1)),
-  },
-  {
-    document: README,
-    locate: /NPI catches ([\d.]+%) of substitutions/,
-    source: CHECKSUMS,
-    reproduce: (output) => {
-      const caught = integer(output, NPI_ROW, 0)
-      const total = integer(output, NPI_ROW, 1)
-      return caught === total ? "100%" : percent(caught, total)
-    },
-  },
-  {
-    document: README,
-    locate: /(?<!\d[ ,]?|\d of )(\d[\d ]*\d) (?:exhaustive )?mutations/,
-    source: CHECKSUMS,
-    reproduce: mutationTotal(" "),
   },
 ]

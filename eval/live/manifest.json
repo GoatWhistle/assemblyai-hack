@@ -1,7 +1,7 @@
 {
-  "builtAt": "2026-09-25T15:20:47.784Z",
-  "source": "docs/voice-set.md",
-  "method": "three team members read docs/voice-set.md once each into 16 kHz mono PCM16 WAV; the sha256 of each file is recorded so a later run can prove it used the same audio",
+  "builtAt": "2026-09-26T21:45:20.859Z",
+  "source": "eval/live/voice-set.md",
+  "method": "three team members read eval/live/voice-set.md once each into 16 kHz mono PCM16 WAV; the sha256 of each file is recorded so a later run can prove it used the same audio",
   "count": 75,
   "present": 0,
   "items": [
@@ -402,11 +402,11 @@
       "speaker": "s2",
       "line": "10",
       "file": "eval/live/audio/s2-10.wav",
-      "text": "Rifabutin three hundred milligrams, by mouth once daily.",
+      "text": "Rifaximin five hundred fifty milligrams, by mouth twice daily.",
       "kind": "lasa",
-      "expectedDrug": "rifabutin",
+      "expectedDrug": "rifaximin",
       "lasaPartners": [
-        "rifapentine"
+        "rifampin"
       ],
       "expectedIdentifier": null,
       "expectedAnswer": null,
@@ -521,11 +521,11 @@
       "speaker": "s3",
       "line": "03",
       "file": "eval/live/audio/s3-03.wav",
-      "text": "Buprenorphine eight milligrams, under the tongue once daily.",
+      "text": "Bupropion one hundred fifty milligrams, by mouth once daily.",
       "kind": "lasa",
-      "expectedDrug": "buprenorphine",
+      "expectedDrug": "bupropion",
       "lasaPartners": [
-        "hydromorphone"
+        "buspirone"
       ],
       "expectedIdentifier": null,
       "expectedAnswer": null,
@@ -537,11 +537,11 @@
       "speaker": "s3",
       "line": "04",
       "file": "eval/live/audio/s3-04.wav",
-      "text": "Bupropion one hundred fifty milligrams, by mouth once daily.",
+      "text": "Buspirone ten milligrams, by mouth twice daily.",
       "kind": "lasa",
-      "expectedDrug": "bupropion",
+      "expectedDrug": "buspirone",
       "lasaPartners": [
-        "buspirone"
+        "bupropion"
       ],
       "expectedIdentifier": null,
       "expectedAnswer": null,
@@ -675,13 +675,11 @@
       "speaker": "s3",
       "line": "12",
       "file": "eval/live/audio/s3-12.wav",
-      "text": "Levetiracetam five hundred milligrams, by mouth twice daily.",
+      "text": "Liothyronine twenty-five micrograms, by mouth once daily.",
       "kind": "lasa",
-      "expectedDrug": "levetiracetam",
+      "expectedDrug": "liothyronine",
       "lasaPartners": [
-        "lamotrigine",
-        "levocarnitine",
-        "levofloxacin"
+        "levothyroxine"
       ],
       "expectedIdentifier": null,
       "expectedAnswer": null,
@@ -743,12 +741,10 @@
       "speaker": "s1",
       "line": "16",
       "file": "eval/live/audio/s1-16.wav",
-      "text": "Atorvastatin twenty milligrams, by mouth at bedtime.",
+      "text": "Simvastatin twenty milligrams, by mouth at bedtime.",
       "kind": "safe",
-      "expectedDrug": "atorvastatin",
-      "lasaPartners": [
-        "atomoxetine"
-      ],
+      "expectedDrug": "simvastatin",
+      "lasaPartners": [],
       "expectedIdentifier": null,
       "expectedAnswer": null,
       "present": false,
@@ -899,12 +895,10 @@
       "speaker": "s2",
       "line": "16",
       "file": "eval/live/audio/s2-16.wav",
-      "text": "Atorvastatin twenty milligrams, by mouth at bedtime.",
+      "text": "Simvastatin twenty milligrams, by mouth at bedtime.",
       "kind": "safe",
-      "expectedDrug": "atorvastatin",
-      "lasaPartners": [
-        "atomoxetine"
-      ],
+      "expectedDrug": "simvastatin",
+      "lasaPartners": [],
       "expectedIdentifier": null,
       "expectedAnswer": null,
       "present": false,
@@ -1055,12 +1049,10 @@
       "speaker": "s3",
       "line": "16",
       "file": "eval/live/audio/s3-16.wav",
-      "text": "Atorvastatin twenty milligrams, by mouth at bedtime.",
+      "text": "Simvastatin twenty milligrams, by mouth at bedtime.",
       "kind": "safe",
-      "expectedDrug": "atorvastatin",
-      "lasaPartners": [
-        "atomoxetine"
-      ],
+      "expectedDrug": "simvastatin",
+      "lasaPartners": [],
       "expectedIdentifier": null,
       "expectedAnswer": null,
       "present": false,

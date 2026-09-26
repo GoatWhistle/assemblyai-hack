@@ -1,9 +1,15 @@
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { ISMP_PAIRS, LASA_PAIRS } from "@/lasa"
 
 const BUILT = "data/lasa-pairs.json"
-const DOCS = ["README.md", "CLAUDE.md"] as const
+const DOCS: readonly string[] = [
+  "README.md",
+  "CLAUDE.md",
+  ...readdirSync("docs")
+    .filter((name) => name.endsWith(".md"))
+    .map((name) => `docs/${name}`),
+]
 
 type BuiltFile = {
   readonly source: string

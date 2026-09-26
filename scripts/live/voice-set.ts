@@ -1,7 +1,7 @@
 import { classifyCallerReply, spokenValueTokens } from "@/confirmation"
 import { lasaRiskFor } from "@/lasa"
 
-export const VOICE_SET_DOC = "docs/voice-set.md"
+export const VOICE_SET_DOC = "eval/live/voice-set.md"
 
 const LIVE_AUDIO_DIR = "eval/live/audio"
 

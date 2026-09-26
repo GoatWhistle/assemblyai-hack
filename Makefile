@@ -56,7 +56,7 @@ help:
 	@printf "    \033[36m%-16s\033[0m %s\n" "doctor" "The reference agent matches the source and its tool webhooks answer. Opens no socket"
 	@printf "    \033[36m%-16s\033[0m %s\n" "spend" "What the paid API has cost, from the recorded run ledger"
 	@printf "    \033[36m%-16s\033[0m %s\n" "live-runs" "How many paid runs happened, including the discarded ones"
-	@printf "    \033[36m%-16s\033[0m %s\n" "live-set" "Build the human voice manifest from docs/voice-set.md"
+	@printf "    \033[36m%-16s\033[0m %s\n" "live-set" "Build the human voice manifest from eval/live/voice-set.md"
 	@printf "    \033[36m%-16s\033[0m %s\n" "live-report" "The human voice stratum, or not measured when no run exists"
 	@printf "    \033[36m%-16s\033[0m %s\n" "keyterms-ablation" "Human voices with and without LASA names in keyterms, from recorded runs"
 	@printf "    \033[36m%-16s\033[0m %s\n" "verify-receipt" "Check an order receipt offline: make verify-receipt FILE=path"

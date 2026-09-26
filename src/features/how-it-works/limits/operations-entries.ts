@@ -6,7 +6,7 @@ export const OPERATIONS_LIMITATIONS: readonly Limitation[] = [
     group: "operations",
     title: "Close codes are observations, not specification",
     status: "Observed; the vendor documents none",
-    body: "AssemblyAI documents no WebSocket close codes at all, checked on 17 September 2026. We measured 1000 and 1008 ourselves, and 1006 once; 1008 is what the rate limiter actually sends, and we have never observed the 3009 its condition is supposed to produce. 3006 comes from another team's measurement, and 3007, 3008 and 3009 from vendor prose.",
+    body: "AssemblyAI documents no WebSocket close codes at all. We measured 1000 and 1008 ourselves, and 1006 once; 1008 is what the rate limiter actually sends, and we have never observed the 3009 its condition is supposed to produce. 3006 comes from another team's measurement, and 3007, 3008 and 3009 from vendor prose.",
     link: { href: "/metrics/operations#close-codes", label: "The counted close codes" },
   },
   {
