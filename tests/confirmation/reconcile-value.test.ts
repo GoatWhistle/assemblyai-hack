@@ -138,4 +138,21 @@ describe("reconciling a proposed value against the words of its turn", () => {
       "the caller-facing sentence has to quote what was actually heard so the disagreement is nameable out loud",
     ).toContain("lisinopril")
   })
+
+  it("reads a slash in the recognizer's text as the per the caller said", () => {
+    expect(
+      reconcileValue({
+        value: "2 milligrams per milliliter",
+        turn: turn("Hydromorphone, 2 mg/mL."),
+      }).supported,
+    ).toBe(true)
+    expect(
+      reconcileValue({ value: "2 mg/mL", turn: turn("two milligrams per millilitre") })
+        .supported,
+    ).toBe(true)
+    expect(
+      reconcileValue({ value: "4 milligrams per milliliter", turn: turn("2 mg/mL.") })
+        .supported,
+    ).toBe(false)
+  })
 })

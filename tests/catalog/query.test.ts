@@ -148,4 +148,34 @@ describe("catalogue access", () => {
   it("fails with a clear error when the data file is not a catalogue", () => {
     expect(() => loadCatalogFrom("package.json")).toThrow(CatalogUnavailableError)
   })
+
+  it("covers a spoken dosage form by the catalogue form it heads, and nothing else", () => {
+    const injection = catalogFromFile({
+      ...fixture,
+      drugs: [
+        {
+          nonproprietaryName: "hydromorphone hydrochloride",
+          proprietaryNames: [],
+          deaSchedule: "CII",
+          combos: [
+            {
+              strength: "2 mg/mL",
+              dosageForm: "INJECTION, SOLUTION",
+              route: "INTRAMUSCULAR; INTRAVENOUS; SUBCUTANEOUS",
+            },
+          ],
+        },
+      ],
+    })
+    const query = {
+      drugName: "hydromorphone",
+      strength: "2 mg/ml",
+      dosageForm: "INJECTION",
+      route: "INTRAVENOUS",
+    }
+    expect(comboExists(injection, query)).toBe(true)
+    expect(comboExists(injection, { ...query, dosageForm: "INJECT" })).toBe(false)
+    expect(comboExists(injection, { ...query, dosageForm: "TABLET" })).toBe(false)
+    expect(comboExists(injection, { ...query, strength: "4 mg/ml" })).toBe(false)
+  })
 })

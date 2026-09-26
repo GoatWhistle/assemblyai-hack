@@ -14,12 +14,6 @@ function normalizeStrengthText(strength: string): string {
     .replace(/µg/g, "ug")
 }
 
-function productKey(combo: CatalogCombo): string {
-  return [normalizeStrengthText(combo.strength), combo.dosageForm.trim().toLowerCase()].join(
-    "|",
-  )
-}
-
 function routeSet(route: string): ReadonlySet<string> {
   return new Set(
     route
@@ -106,15 +100,20 @@ export function combosFor(index: CatalogIndex, drugName: string): readonly Catal
   return match === null ? [] : match.drug.combos
 }
 
+function formCovered(requested: string, listed: string): boolean {
+  const wanted = requested.trim().toLowerCase()
+  const offered = listed.trim().toLowerCase()
+  return wanted.length > 0 && (offered === wanted || offered.startsWith(`${wanted},`))
+}
+
 export function comboExists(index: CatalogIndex, query: ComboQuery): boolean {
   const combos = combosFor(index, query.drugName)
-  const wanted = productKey({
-    strength: query.strength,
-    dosageForm: query.dosageForm,
-    route: query.route,
-  })
+  const strength = normalizeStrengthText(query.strength)
   return combos.some(
-    (combo) => productKey(combo) === wanted && routeCovered(query.route, combo.route),
+    (combo) =>
+      normalizeStrengthText(combo.strength) === strength &&
+      formCovered(query.dosageForm, combo.dosageForm) &&
+      routeCovered(query.route, combo.route),
   )
 }
 

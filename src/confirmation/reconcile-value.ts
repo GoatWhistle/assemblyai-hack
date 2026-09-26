@@ -56,6 +56,7 @@ const SKELETON_FLOOR = 4
 
 function pieces(text: string): readonly string[] {
   return collapseThousandsSeparators(text.toLowerCase())
+    .replace(/\//g, " per ")
     .replace(/[^a-z0-9%]+/g, " ")
     .replace(/([a-z])(\d)/g, "$1 $2")
     .replace(/(\d)([a-z])/g, "$1 $2")
