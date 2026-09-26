@@ -138,6 +138,9 @@
 
   --rail-width: 20rem;
   --content-max: 75rem;
+  --app-max: 120rem;
+  --page-gutter: clamp(var(--space-4), 3.2vw, var(--space-8));
+  --stage-width: clamp(20rem, 24vw, 26rem);
   --target-touch: 2.75rem;
 
   --docs-max: 90rem;

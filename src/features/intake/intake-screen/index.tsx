@@ -18,6 +18,7 @@ import { type SessionFault, SessionPhase } from "../session-status"
 import type { Solicited } from "../solicited-field"
 import { CallStage } from "./call-stage"
 import { CALL_MAIN_ID } from "./landmarks"
+import { ProofMap } from "./proof-map"
 import styles from "./styles.module.css"
 import { Thesis } from "./thesis"
 
@@ -95,46 +96,64 @@ export function IntakeScreen({
       />
 
       <main id={CALL_MAIN_ID} tabIndex={-1} className={styles.main}>
-        <Thesis started={started} />
+        <div className={`${styles.workspace} ${started ? styles.live : styles.resting}`}>
+          {started ? (
+            <Thesis started />
+          ) : (
+            <div className={styles.thesisArea}>
+              <Thesis started={false} />
+            </div>
+          )}
 
-        <CallStage
-          phase={phase}
-          fault={fault}
-          faultDetail={faultDetail}
-          budgetPaused={budgetPaused}
-          started={started}
-          agentSpeaking={agentSpeaking}
-          turnInFlight={turnInFlight}
-          readBackState={readBack.state}
-          solicited={solicited}
-          level={level}
-          elapsedMs={elapsedMs}
-          echoDiscards={echoDiscards}
-          patience={patience}
-          onStart={onStart}
-          onStop={onStop}
-          onFinishAnswer={onFinishAnswer}
-        />
+          <div className={styles.callArea}>
+            <CallStage
+              phase={phase}
+              fault={fault}
+              faultDetail={faultDetail}
+              budgetPaused={budgetPaused}
+              started={started}
+              agentSpeaking={agentSpeaking}
+              turnInFlight={turnInFlight}
+              readBackState={readBack.state}
+              solicited={solicited}
+              level={level}
+              elapsedMs={elapsedMs}
+              echoDiscards={echoDiscards}
+              patience={patience}
+              onStart={onStart}
+              onStop={onStop}
+              onFinishAnswer={onFinishAnswer}
+            />
+          </div>
 
-        {alert === null ? null : (
-          <p className={styles.alert} role="alert">
-            {alert}
-          </p>
-        )}
+          {started ? null : (
+            <div className={styles.mapArea}>
+              <ProofMap />
+            </div>
+          )}
 
-        {started && inCall !== null ? (
-          <inCall.CallPanels
-            candidates={candidates}
-            decisions={decisions}
-            transcript={transcript}
-            readBack={readBack}
-            fastPath={fastPath}
-            summary={summary}
-            snapshot={snapshot}
-            echoDiscards={echoDiscards}
-            onListen={onListen}
-          />
-        ) : null}
+          {alert === null ? null : (
+            <p className={styles.alert} role="alert">
+              {alert}
+            </p>
+          )}
+
+          {started && inCall !== null ? (
+            <div className={styles.panels}>
+              <inCall.CallPanels
+                candidates={candidates}
+                decisions={decisions}
+                transcript={transcript}
+                readBack={readBack}
+                fastPath={fastPath}
+                summary={summary}
+                snapshot={snapshot}
+                echoDiscards={echoDiscards}
+                onListen={onListen}
+              />
+            </div>
+          ) : null}
+        </div>
 
         {telemetry === undefined ? null : (
           <div className={styles.technical}>

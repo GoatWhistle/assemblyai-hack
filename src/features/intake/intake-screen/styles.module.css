@@ -1,15 +1,28 @@
 .page {
-  max-width: var(--content-max);
+  max-width: var(--app-max);
   margin: 0 auto;
-  padding: 0 var(--space-5) var(--space-6);
+  padding: 0 var(--page-gutter) var(--space-6);
 }
 
 .main:focus {
   outline: none;
 }
 
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+.thesisArea,
+.callArea,
+.mapArea,
+.panels {
+  min-width: 0;
+}
+
 .alert {
-  margin: var(--space-4) 0 0;
+  margin: 0;
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--state-escalated-line);
   border-radius: var(--radius-md);
@@ -19,8 +32,62 @@
   color: var(--text-primary);
 }
 
+@media (min-width: 62rem) {
+  .resting {
+    grid-template-columns: minmax(24rem, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "thesis map"
+      "stage map"
+      "alert alert";
+    gap: var(--space-6) clamp(var(--space-6), 5vw, var(--space-8));
+    align-items: start;
+  }
+
+  .resting .thesisArea {
+    grid-area: thesis;
+  }
+
+  .resting .callArea {
+    grid-area: stage;
+  }
+
+  .resting .mapArea {
+    grid-area: map;
+    padding-top: var(--space-7);
+  }
+
+  .resting .alert {
+    grid-area: alert;
+  }
+}
+
+@media (min-width: 80rem) {
+  .live {
+    grid-template-columns: var(--stage-width) minmax(0, 1fr);
+    gap: var(--space-5) var(--space-7);
+    align-items: start;
+  }
+
+  .live .callArea {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    position: sticky;
+    top: var(--space-5);
+  }
+
+  .live .alert,
+  .live .panels {
+    grid-column: 2;
+  }
+
+  .live .panels > :first-child {
+    margin-top: 0;
+  }
+}
+
 .technical {
-  margin-top: var(--space-6);
+  margin-top: var(--space-8);
 }
 
 .summary {
@@ -35,18 +102,16 @@
 }
 
 .legal {
-  margin: var(--space-5) auto 0;
+  margin: var(--space-5) 0 0;
   max-width: var(--measure-prose);
 }
 
 @media (max-width: 62rem) {
   .page {
-    padding: 0 var(--space-4) var(--space-7);
+    padding-bottom: var(--space-7);
   }
-}
 
-@media (max-width: 30rem) {
-  .page {
-    padding: 0 var(--space-4) var(--space-6);
+  .technical {
+    margin-top: var(--space-7);
   }
 }

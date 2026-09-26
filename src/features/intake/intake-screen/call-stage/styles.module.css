@@ -26,3 +26,13 @@
     translate: 0 -4px;
   }
 }
+
+@media (min-width: 62rem) {
+  .stage {
+    min-height: 0;
+    padding: 0 var(--space-5) var(--space-6);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-rail);
+    box-shadow: var(--hairline);
+  }
+}

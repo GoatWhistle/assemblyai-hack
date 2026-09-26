@@ -24,6 +24,9 @@ function dotClass(phase: SessionPhase): string {
 
 export function PhaseDot({ phase, fault = null, paused = false }: PhaseDotProps) {
   const held = paused && phase === SessionPhase.Idle && fault === null
+  if (phase === SessionPhase.Idle && fault === null && !held) {
+    return null
+  }
   return (
     <span className={styles.phase}>
       <span
