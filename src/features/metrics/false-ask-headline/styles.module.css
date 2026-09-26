@@ -29,6 +29,7 @@
 
 .split {
   display: flex;
+  flex-wrap: wrap;
   gap: 2px;
   min-width: 0;
 }
@@ -37,7 +38,7 @@
   display: grid;
   gap: var(--space-1);
   flex-basis: 0;
-  min-width: 5.5rem;
+  min-width: 7.5rem;
   padding: var(--space-3);
   background-color: var(--surface-sunken);
 }
@@ -68,6 +69,7 @@
 }
 
 .partLabel {
+  text-wrap: balance;
   font-size: var(--text-xs);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
