@@ -50,6 +50,43 @@ describe("read_back", () => {
     }
   })
 
+  it("tells the agent what is left once a value is written, so a lost candidate is handed back", async () => {
+    await seedTurn("patient Maria Lopez quantity thirty", 0.99)
+    const patient = await (
+      await proposeField(
+        call("propose-field", {
+          field: "patient_name",
+          value: "Maria Lopez",
+          transcript_hint: "Maria Lopez",
+        }),
+      )
+    ).json()
+    const quantity = await (
+      await proposeField(
+        call("propose-field", {
+          field: "quantity",
+          value: "thirty",
+          transcript_hint: "thirty",
+        }),
+      )
+    ).json()
+    expect(quantity.next).toContain("read_back")
+
+    const body = await (await answer(quantity.candidate_id, "yes")).json()
+
+    expect(body.written_to_order).toBe(true)
+    expect(body.after_this.still_to_read_back).toEqual([
+      {
+        field: "patient_name",
+        candidate_id: patient.candidate_id,
+        say_to_caller: patient.say_to_caller,
+      },
+    ])
+    expect(body.after_this.still_missing).toContain("drug_name")
+    expect(body.after_this.still_missing).not.toContain("quantity")
+    expect(body.after_this.next).toContain("patient_name")
+  })
+
   it("writes the value only on an explicit yes", async () => {
     const candidateId = await proposeQuantity()
     const body = await (await answer(candidateId, "yes")).json()

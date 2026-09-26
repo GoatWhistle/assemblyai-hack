@@ -18,6 +18,7 @@ import {
   writeConfirmed,
 } from "./intake"
 import type { IntakeEvent } from "./intake-events"
+import { orderNext } from "./next-step"
 import { applyNamedPartner, contrastiveFor, pairRuleFor, reaskLine } from "./pair-rule"
 import type { ToolPayload } from "./respond"
 
@@ -215,5 +216,6 @@ export function applyConfirmation(state: IntakeState, event: ConfirmationEvent):
     confirmation_mode: value.confirmationMode,
     read_back_utterance: event.utterance,
     evidence: evidenceSummary(evidence),
+    after_this: orderNext(state),
   }
 }

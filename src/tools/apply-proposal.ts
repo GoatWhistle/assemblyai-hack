@@ -36,6 +36,7 @@ import {
   rememberDecision,
 } from "./intake"
 import type { IntakeEvent } from "./intake-events"
+import { proposalNext } from "./next-step"
 import type { ToolPayload } from "./respond"
 
 type ProposalEvent = Extract<IntakeEvent, { type: "proposal" }>
@@ -92,6 +93,7 @@ function decided(input: {
     say_to_caller: decision.agentUtterance,
     written_to_order: false,
     confirmation_mode: decision.confirmationMode,
+    next: proposalNext(decision),
     evidence: {
       min_confidence: decision.evidence.minConfidence,
       threshold: decision.evidence.threshold,
