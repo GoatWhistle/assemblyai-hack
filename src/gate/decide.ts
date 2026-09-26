@@ -127,7 +127,7 @@ export function decide(c: FieldCandidate, policy: FieldPolicy): GateDecision {
         agentUtterance: catalogUtterance(c),
         extra: { failedValue: c.rawValue },
       })
-    case "__never__":
+    case VerdictOutcome.InconsistentCombo:
       return d({
         action: GateAction.AskWhichPart,
         reasonCode: ReasonCode.ValidatorCombo,
