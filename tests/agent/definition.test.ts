@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { buildAgentDefinition, DEFAULT_LLM_MODEL, SYSTEM_PROMPT, TURN_DETECTION } from "@/agent"
+import { AGENT_MODEL_NOTE, buildAgentDefinition, SYSTEM_PROMPT, TURN_DETECTION } from "@/agent"
 import { lasaCheckedTerms, normalizeTerm } from "@/lasa"
 
 const definition = buildAgentDefinition({
@@ -42,10 +42,9 @@ describe("agent definition", () => {
     }
   })
 
-  it("picks a model that supports tool calling and streaming", () => {
-    expect(definition.model).toBe(DEFAULT_LLM_MODEL)
-    expect(definition.model).not.toBe("qwen3.5-4b-32k-fast")
-    expect(definition.model).not.toBe("gpt-oss-120b")
+  it("sends no model field, because the vendor ignores it and a sent one would claim a choice that was never made", () => {
+    expect("model" in definition).toBe(false)
+    expect(AGENT_MODEL_NOTE).toMatch(/llm: \[\]/)
   })
 
   it("leaves the silence bounds to the vendor rather than fixing them", () => {

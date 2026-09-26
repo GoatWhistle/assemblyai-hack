@@ -17,7 +17,6 @@ function buildFromEnv(): ReturnType<typeof buildAgentDefinition> {
   const definition = buildAgentDefinition({
     baseUrl,
     toolSecret: process.env.AGENT_TOOL_SECRET ?? "unset",
-    model: process.env.AGENT_LLM_MODEL,
   })
 
   for (const tool of definition.tools) {

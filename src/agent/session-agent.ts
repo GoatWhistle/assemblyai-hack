@@ -46,7 +46,6 @@ export async function createSessionAgent(input: {
   baseUrl: string
   toolSecret: string
   sessionId: string
-  model?: string
   doFetch?: AgentFetch
   readBackPauseMs?: number
 }): Promise<string> {
@@ -54,7 +53,6 @@ export async function createSessionAgent(input: {
     baseUrl: input.baseUrl,
     toolSecret: input.toolSecret,
     sessionId: input.sessionId,
-    model: input.model,
   })
   const doFetch = input.doFetch ?? fetch
   const response = await doFetch(AGENTS_URL, {

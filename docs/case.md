@@ -239,7 +239,7 @@ if event["type"] == "reply.done":
     pending.clear()
 ```
 
-The asymmetry between `arguments` (an object) and `result` (a string) is real and not obvious. The LLM Gateway model has to be picked from those capable of tool calling: `gemini-2.5-flash`, `gpt-5-mini`, `claude-haiku-4-5`. The default in the documentation's examples, `qwen3.5-4b-32k-fast`, **cannot** do tool calling, per the capabilities table in [assemblyai-api.md](assemblyai-api.md), which is a trap worth a line in the README.
+The asymmetry between `arguments` (an object) and `result` (a string) is real and not obvious. A stored voice agent does not pick an LLM Gateway model at all: the create-agent schema has no model field, a sent one is ignored, and the session runs the vendor's managed model (`llm: []`, measured 26 September 2026). If a gateway model is ever chosen elsewhere, it has to be one capable of tool calling; the default in the documentation's examples, `qwen3.5-4b-32k-fast`, **cannot** do tool calling, per the capabilities table in [assemblyai-api.md](assemblyai-api.md).
 
 The agent's tools:
 

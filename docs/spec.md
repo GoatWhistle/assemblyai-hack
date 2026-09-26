@@ -356,18 +356,19 @@ field is the gate visible live. That refusal is the demo.
 
 ### 4.6 The LLM Gateway model
 
-`gemini-2.5-flash`, selected in `src/agent/session-config.ts` and overridable by
-environment variable rather than by a code edit — at a hackathon that is the difference
-between a minute and half an hour.
+**None is selected, and an earlier version of this section said otherwise.** The design
+chose `gemini-2.5-flash` and sent it as a `model` field in the stored agent definition. On
+26 September 2026 the live runs showed that the create-agent schema has no such field: the
+vendor accepted it and ignored it, and every session configuration reported `llm: []`, the
+vendor's managed model. This account has no access to the LLM Gateway models either (every
+one answered 400), so the voice agent runs on the managed model and the field was removed
+(`AGENT_MODEL_NOTE` in `src/agent/session-config.ts`, pinned by a test). What made the live
+calls complete was the prompt and the tool responses, not a model choice; `eval/REPORT.md`
+records the runs.
 
-Two models in the gateway's capability table are disqualified outright, and one of them is
-the default in the vendor's own examples: `qwen3.5-4b-32k-fast` does not support tool
-calling, so the agent would simply ignore the tools, and `gpt-oss-120b` cannot stream,
-which a voice agent needs. Of the remainder, `gemini-2.5-flash` has tool calling,
-structured outputs and streaming, sits in the cheap group, and its context removes any
-question about prompt length or history. `gpt-5-mini` is the fallback, in case the
-per-model rate limit — documented as a 60-second window with the exact rate unpublished —
-starts to bite during a demonstration.
+The gateway capability notes still hold for anyone who gains access: `qwen3.5-4b-32k-fast`,
+the default in the vendor's own examples, does not support tool calling, and `gpt-oss-120b`
+cannot stream, which a voice agent needs.
 
 ### 4.7 What a session must record
 

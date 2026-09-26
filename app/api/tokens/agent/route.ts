@@ -81,7 +81,6 @@ async function newBinding(input: {
       baseUrl: input.baseUrl,
       toolSecret: input.toolSecret,
       sessionId,
-      model: configured(process.env.AGENT_LLM_MODEL) ?? undefined,
     })
     await registerIntake({ sessionId, agentId })
     return { sessionId, agentId }

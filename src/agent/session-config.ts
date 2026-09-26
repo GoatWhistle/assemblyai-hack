@@ -3,7 +3,8 @@ import { buildKeyterms } from "@/lasa"
 import { GREETING, SYSTEM_PROMPT } from "./prompt"
 import { type AgentTool, buildTools } from "./tools"
 
-export const DEFAULT_LLM_MODEL = "gemini-2.5-flash"
+export const AGENT_MODEL_NOTE =
+  "the stored agent definition names no language model: the create-agent schema has no model field, a model we sent was accepted and ignored, and every session configuration showed llm: [], the vendor's managed model. This account has no access to the LLM Gateway models that could replace it. Measured 26 September 2026; see eval/REPORT.md"
 
 export type TurnDetection = {
   readonly vad_threshold: number
@@ -35,7 +36,6 @@ export const AGENT_INPUT_UNSENT_FIELDS = Object.freeze([
 
 export type AgentDefinition = {
   readonly name: string
-  readonly model: string
   readonly voice: { readonly voice_id: string }
   readonly system_prompt: string
   readonly greeting: string
@@ -57,7 +57,6 @@ export function buildAgentDefinition(input: {
   baseUrl: string
   toolSecret: string
   sessionId?: string
-  model?: string
   voice?: string
 }): AgentDefinition {
   for (const field of ADAPTIVE_PACING_DISABLING_FIELDS) {
@@ -72,7 +71,6 @@ export function buildAgentDefinition(input: {
       input.sessionId === undefined
         ? AGENT_NAME_PREFIX
         : `${AGENT_NAME_PREFIX}-${input.sessionId}`,
-    model: input.model ?? DEFAULT_LLM_MODEL,
     voice: { voice_id: input.voice ?? DEFAULT_VOICE_ID },
     system_prompt: SYSTEM_PROMPT,
     greeting: GREETING,
