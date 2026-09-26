@@ -12,7 +12,7 @@ import {
   type SmokeScenario,
 } from "./scenarios"
 
-const AGENT_HOST = "agents.assemblyai.com"
+const AGENT_HOST = "agents.us.assemblyai.com"
 const SCENARIO_BUDGET_MS = 240_000
 const SESSION_SPACING_MS = 30_000
 const POLL_MS = 2_000

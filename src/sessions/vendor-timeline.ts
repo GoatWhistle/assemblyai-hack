@@ -1,4 +1,4 @@
-import type { OrderWitness } from "@/domain"
+import { AGENT_API_BASE, type OrderWitness } from "@/domain"
 import {
   parseTimeline,
   type SessionTimeline,
@@ -9,7 +9,7 @@ import {
   witnessOrderFields,
 } from "./witness"
 
-export const VENDOR_SESSIONS_URL = "https://agents.assemblyai.com/v1/sessions"
+export const VENDOR_SESSIONS_URL = `${AGENT_API_BASE}/sessions`
 
 const WITNESS_RETRY_DELAYS_MS: readonly number[] = [0, 2000, 3000, 4000]
 

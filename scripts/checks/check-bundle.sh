@@ -18,7 +18,7 @@ fi
 LABELS=()
 PATTERNS=()
 
-for marker in ASSEMBLYAI_API_KEY BLOB_READ_WRITE_TOKEN UPSTASH_REDIS_REST_TOKEN KV_REST_API_TOKEN AGENT_TOOL_SECRET "readback:intake:" "readback:budget:" "https://agents.assemblyai.com/v1/agents" "x-readback-tool-secret"; do
+for marker in ASSEMBLYAI_API_KEY BLOB_READ_WRITE_TOKEN UPSTASH_REDIS_REST_TOKEN KV_REST_API_TOKEN AGENT_TOOL_SECRET "readback:intake:" "readback:budget:" "the agent creation response carried no agent id" "x-readback-tool-secret"; do
   LABELS+=("the marker $marker")
   PATTERNS+=("$marker")
 done

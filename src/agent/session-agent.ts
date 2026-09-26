@@ -1,7 +1,7 @@
-import { UpstreamError } from "@/domain"
+import { AGENT_API_BASE, UpstreamError } from "@/domain"
 import { buildAgentDefinition } from "./session-config"
 
-export const AGENTS_URL = "https://agents.assemblyai.com/v1/agents"
+export const AGENTS_URL = `${AGENT_API_BASE}/agents`
 
 export type AgentFetch = (url: string, init: RequestInit) => Promise<Response>
 

@@ -13,7 +13,7 @@ import { isRegisteredSession } from "@/tools"
 import { AGENT, registerSession, resetToolEnvironment, SESSION } from "./harness"
 
 const KEY = "a-real-looking-key"
-const AGENTS = "https://agents.assemblyai.com/v1/agents"
+const AGENTS = "https://agents.us.assemblyai.com/v1/agents"
 const original = globalThis.fetch
 
 type Deletion = { readonly url: string; readonly authorization: string }

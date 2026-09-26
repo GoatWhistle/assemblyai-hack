@@ -4,8 +4,8 @@ import { createMemoryEventStore, installIntakeEventStore } from "@/tools"
 
 export const VENDOR_KEY = "a-real-looking-key"
 export const VENDOR_TOOL_SECRET = "a-tool-secret-long-enough-to-pass"
-export const AGENTS_URL_PREFIX = "https://agents.assemblyai.com/v1/agents"
-export const AGENT_TOKEN_URL_PREFIX = "https://agents.assemblyai.com/v1/token"
+export const AGENTS_URL_PREFIX = "https://agents.us.assemblyai.com/v1/agents"
+export const AGENT_TOKEN_URL_PREFIX = "https://agents.us.assemblyai.com/v1/token"
 export const STT_TOKEN_URL_PREFIX = "https://streaming.assemblyai.com/v3/token"
 
 export type VendorCall = {

@@ -1,10 +1,9 @@
-import type { SessionBinding } from "@/domain"
+import { AGENT_SOCKET_URL, type SessionBinding } from "@/domain"
 import { EXPECTED_STT_MODEL } from "./stt-model"
 
 export const STT_TOKEN_ROUTE = "/api/tokens/stt"
 export const AGENT_TOKEN_ROUTE = "/api/tokens/agent"
 const STT_SOCKET_URL = "wss://streaming.assemblyai.com/v3/ws"
-const AGENT_SOCKET_URL = "wss://agents.assemblyai.com/v1/ws"
 
 export class TokenMintError extends Error {
   readonly code = "TOKEN_MINT_FAILED"

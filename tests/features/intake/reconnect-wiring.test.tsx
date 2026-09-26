@@ -55,7 +55,7 @@ describe("T8: the product path calls reconnect on an unexpected close", () => {
     await settle()
     expect(rig.tokenRequests).toContain("/api/tokens/agent?sessionId=server-session-1")
     expect(socketCount(rig, "agents")).toBe(2)
-    const second = rig.sockets.filter((s) => s.url.includes("agents.assemblyai.com"))[1]
+    const second = rig.sockets.filter((s) => s.url.includes("agents.us.assemblyai.com"))[1]
     expect(second?.url, "a single-use token must never be reused").not.toContain(
       new URL(rig.sockets[0]?.url ?? "wss://x").searchParams.get("token") ?? "none",
     )

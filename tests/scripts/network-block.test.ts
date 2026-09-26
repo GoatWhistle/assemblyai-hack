@@ -9,7 +9,7 @@ describe("H6: tests cannot reach the network, by mechanism rather than by review
   })
 
   it("refuses to open a WebSocket", () => {
-    expect(() => new WebSocket("wss://agents.assemblyai.com/v1/ws")).toThrow(
+    expect(() => new WebSocket("wss://agents.us.assemblyai.com/v1/ws")).toThrow(
       NETWORK_BLOCK_MESSAGE,
     )
   })

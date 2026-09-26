@@ -53,7 +53,7 @@ export function createRig(): SessionRig {
 }
 
 export function latestSocket(rig: SessionRig, host: "agents" | "streaming"): MemoryTransport {
-  const found = rig.sockets.filter((socket) => socket.url.includes(`${host}.assemblyai.com`))
+  const found = rig.sockets.filter((socket) => socket.url.startsWith(`wss://${host}.`))
   const last = found[found.length - 1]
   if (last === undefined) {
     throw new Error(`no ${host} socket was opened`)
@@ -62,7 +62,7 @@ export function latestSocket(rig: SessionRig, host: "agents" | "streaming"): Mem
 }
 
 export function socketCount(rig: SessionRig, host: "agents" | "streaming"): number {
-  return rig.sockets.filter((socket) => socket.url.includes(`${host}.assemblyai.com`)).length
+  return rig.sockets.filter((socket) => socket.url.startsWith(`wss://${host}.`)).length
 }
 
 export function renderSession(useSession: typeof UseSession, rig: SessionRig) {

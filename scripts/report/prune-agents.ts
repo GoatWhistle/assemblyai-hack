@@ -1,8 +1,9 @@
 #!/usr/bin/env -S npx tsx
 
 import { AGENT_NAME_PREFIX } from "@/agent"
+import { AGENT_API_BASE } from "@/domain"
 
-const AGENTS_URL = "https://agents.assemblyai.com/v1/agents"
+const AGENTS_URL = `${AGENT_API_BASE}/agents`
 
 const ORPHAN_TTL_HOURS = 24
 

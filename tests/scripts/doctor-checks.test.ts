@@ -142,7 +142,7 @@ describe("runAllChecks fails loudly rather than reading empty state as success",
       doFetch: jsonFetch(200, "{}"),
     })
     expect(results.map((r) => r.name)).toEqual([
-      "GET https://agents.assemblyai.com/v1/agents/agent-1",
+      "GET https://agents.us.assemblyai.com/v1/agents/agent-1",
       "tool lookup_drug (https://readback.example.com/api/tools/lookup-drug)",
     ])
   })

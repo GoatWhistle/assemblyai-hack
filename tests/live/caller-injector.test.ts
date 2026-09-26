@@ -10,7 +10,7 @@ import {
 import { CALLER_LINES, type CallerLineId, lineFile } from "./lines"
 import { judgeRun, SCENARIOS } from "./scenarios"
 
-const AGENT = "wss://agents.assemblyai.com/v1/ws?token=single-use"
+const AGENT = "wss://agents.us.assemblyai.com/v1/ws?token=single-use"
 
 class FakeSocket extends EventTarget {
   constructor(readonly url: string) {
@@ -103,7 +103,11 @@ describe("S4: the injector script, evaluated as the browser receives it", () => 
     page = { WebSocket: FakeSocket }
     media = {}
     const lines = { a: btoa("x".repeat(32000)), b: btoa("y".repeat(64000)) }
-    const script = injectorScript({ agentHost: "agents.assemblyai.com", steps: STEPS, lines })
+    const script = injectorScript({
+      agentHost: "agents.us.assemblyai.com",
+      steps: STEPS,
+      lines,
+    })
     new Function("window", "navigator", "AudioContext", script)(
       page,
       { mediaDevices: media },

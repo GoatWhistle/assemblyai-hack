@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto"
-import type { VendorView } from "@/domain"
+import { AGENT_HOST, type VendorView } from "@/domain"
 
 export const VENDOR_HOSTS = {
-  agents: "agents.assemblyai.com",
+  agents: AGENT_HOST,
   streaming: "streaming.assemblyai.com",
 } as const
 

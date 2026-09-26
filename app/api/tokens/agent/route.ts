@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto"
 import { NextResponse } from "next/server"
 import { createSessionAgent, toolBaseUrl } from "@/agent"
 import {
+  AGENT_API_BASE,
   type AgentTokenResponse,
   admitAgainstRateBrake,
   allowlistedTokenFields,
@@ -18,7 +19,7 @@ import {
 import { budgetForClient, mintWithinBudget } from "@/sessions"
 import { loadIntake, registerIntake } from "@/tools"
 
-const AGENT_TOKEN_URL = "https://agents.assemblyai.com/v1/token"
+const AGENT_TOKEN_URL = `${AGENT_API_BASE}/token`
 
 export const dynamic = "force-dynamic"
 

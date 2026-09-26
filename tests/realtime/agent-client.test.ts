@@ -38,7 +38,7 @@ describe("AgentClient session", () => {
   it("opens the agent socket with a minted token and sends session.update first", async () => {
     const client = new AgentClient({ transport: factory })
     await client.connect()
-    expect(urls[0]).toContain("wss://agents.assemblyai.com/v1/ws")
+    expect(urls[0]).toContain("wss://agents.us.assemblyai.com/v1/ws")
     expect(urls[0]).toContain("token=agent-token-1")
     const first = sockets[0]?.sentJson()[0]
     expect(first?.type).toBe("session.update")

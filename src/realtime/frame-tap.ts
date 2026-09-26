@@ -1,3 +1,4 @@
+import { AGENT_HOST } from "@/domain"
 import type { TransportFactory } from "./transport"
 
 export type TappedSocket = "stt" | "agent"
@@ -23,7 +24,7 @@ function isAudioFrameType(type: string): boolean {
 }
 
 function socketOfUrl(url: string): TappedSocket {
-  return url.includes("agents.assemblyai.com") ? "agent" : "stt"
+  return url.includes(AGENT_HOST) ? "agent" : "stt"
 }
 
 function readFrame(data: unknown): { type: string; frame: unknown } | null {

@@ -1,6 +1,7 @@
 import type { AgentTool } from "@/agent"
+import { AGENT_API_BASE } from "@/domain"
 
-const AGENTS_URL = "https://agents.assemblyai.com/v1/agents"
+const AGENTS_URL = `${AGENT_API_BASE}/agents`
 
 export type CheckResult = {
   readonly name: string

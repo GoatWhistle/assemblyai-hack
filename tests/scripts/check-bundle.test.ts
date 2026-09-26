@@ -48,7 +48,7 @@ describe("H11: the client bundle is grepped for secrets and server-only markers"
   for (const marker of [
     "process.env.ASSEMBLYAI_API_KEY",
     "readback:intake:",
-    "https://agents.assemblyai.com/v1/agents",
+    "the agent creation response carried no agent id",
   ]) {
     it(`fails on ${marker}`, () => {
       expect(run(bundle({ "leak.js": `const x = "${marker}"` })).ok).toBe(false)

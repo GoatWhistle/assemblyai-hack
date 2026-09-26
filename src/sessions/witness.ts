@@ -3,7 +3,7 @@ import { reconcileValue, type TurnRecord } from "@/confirmation"
 import type { FieldName, FieldWitness } from "@/domain"
 
 export const WITNESS_SOURCE =
-  "GET https://agents.assemblyai.com/v1/sessions?agent_id={agent} lists the vendor sessions of this call's own agent; GET /v1/sessions/{id} returns artifacts[] whose timeline entry is a pre-signed JSON with turns[] carrying user_transcript, user_confidence, agent_text, status and trigger. Observed 25 September 2026 (scripts/report/probe-witness.ts): the artifacts list was empty 0 s and 2 s after session.ended and present at 5 s"
+  "GET https://agents.us.assemblyai.com/v1/sessions?agent_id={agent} lists the vendor sessions of this call's own agent; GET /v1/sessions/{id} returns artifacts[] whose timeline entry is a pre-signed JSON with turns[] carrying user_transcript, user_confidence, agent_text, status and trigger. Observed 25 September 2026 (scripts/report/probe-witness.ts): the artifacts list was empty 0 s and 2 s after session.ended and present at 5 s"
 
 const timelineTurnSchema = z
   .object({

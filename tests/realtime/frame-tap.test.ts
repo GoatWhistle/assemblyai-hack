@@ -22,7 +22,7 @@ function rig() {
 describe("the frame tap records protocol frames on both sockets and never audio", () => {
   it("names the socket from its host and records both directions", () => {
     const { frames, opened, factory } = rig()
-    const agent = factory("wss://agents.assemblyai.com/v1/ws?token=t", {
+    const agent = factory("wss://agents.us.assemblyai.com/v1/ws?token=t", {
       onOpen: () => undefined,
       onMessage: () => undefined,
       onClose: () => undefined,
@@ -47,7 +47,7 @@ describe("the frame tap records protocol frames on both sockets and never audio"
       onError: () => undefined,
     })
     stt.send(new Uint8Array([1, 2, 3]))
-    const agent = factory("wss://agents.assemblyai.com/v1/ws?token=t", {
+    const agent = factory("wss://agents.us.assemblyai.com/v1/ws?token=t", {
       onOpen: () => undefined,
       onMessage: () => undefined,
       onClose: () => undefined,

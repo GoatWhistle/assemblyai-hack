@@ -1,8 +1,8 @@
 import { ADAPTIVE_PACING_DISABLING_FIELDS, type AgentDefinition } from "@/agent"
-import { canonicalJson, sha256Hex } from "@/domain"
+import { AGENT_API_BASE, canonicalJson, sha256Hex } from "@/domain"
 import type { CheckResult, FetchLike } from "./doctor-checks"
 
-const AGENTS_URL = "https://agents.assemblyai.com/v1/agents"
+const AGENTS_URL = `${AGENT_API_BASE}/agents`
 
 type LiveTool = { readonly name?: unknown; readonly http?: { readonly url?: unknown } }
 

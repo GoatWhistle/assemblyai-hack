@@ -6,7 +6,7 @@ const CONTENT_SECURITY_POLICY = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self' https://streaming.assemblyai.com wss://streaming.assemblyai.com https://agents.assemblyai.com wss://agents.assemblyai.com",
+  "connect-src 'self' https://streaming.assemblyai.com wss://streaming.assemblyai.com https://agents.us.assemblyai.com wss://agents.us.assemblyai.com",
   "media-src 'self' blob:",
   "worker-src 'self' blob:",
   "object-src 'none'",

@@ -2,13 +2,13 @@
 
 import { writeFileSync } from "node:fs"
 import WebSocket from "ws"
-import { ratePerHourFor } from "@/domain"
+import { AGENT_API_BASE, AGENT_SOCKET_URL, ratePerHourFor } from "@/domain"
 import { readWav, resampleLinear } from "../eer/wav"
 import { appendPaidRun, paidRunOf } from "./record-spend"
 
-const TOKEN_URL = "https://agents.assemblyai.com/v1/token"
-const SOCKET_URL = "wss://agents.assemblyai.com/v1/ws"
-const SESSIONS_URL = "https://agents.assemblyai.com/v1/sessions"
+const TOKEN_URL = `${AGENT_API_BASE}/token`
+const SOCKET_URL = AGENT_SOCKET_URL
+const SESSIONS_URL = `${AGENT_API_BASE}/sessions`
 const RATE = 24000
 const CHUNK_MS = 50
 const CHUNK_SAMPLES = (RATE * CHUNK_MS) / 1000

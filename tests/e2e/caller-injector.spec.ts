@@ -17,7 +17,7 @@ test("S4: the scripted caller is heard on the page's microphone track after repl
   })
   await page.addInitScript({
     content: injectorScript({
-      agentHost: "agents.assemblyai.com",
+      agentHost: "agents.us.assemblyai.com",
       steps: [{ line: "yes", trigger: "reply-done", delayMs: 100 }],
       lines: { yes: readFileSync(lineFile("yes")).toString("base64") },
     }),
@@ -38,7 +38,7 @@ test("S4: the scripted caller is heard on the page's microphone track after repl
       requestAnimationFrame(sample)
     }
     sample()
-    scope.agent = new WebSocket("wss://agents.assemblyai.com/v1/ws?token=proof")
+    scope.agent = new WebSocket("wss://agents.us.assemblyai.com/v1/ws?token=proof")
     await new Promise((resolve) => scope.agent.addEventListener("open", resolve))
   })
   await expect.poll(() => agent.push !== null).toBe(true)
