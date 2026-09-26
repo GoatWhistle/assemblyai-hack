@@ -13,9 +13,31 @@ export const CALLER_LINES = {
   "name-hydromorphone": "Hydromorphone.",
   "barge-in": "Sorry, wait, one moment please.",
   "commit-early": "That is everything. Please submit the order now.",
+  patient: "The patient is Maria Lopez.",
+  npi: "The NPI is 1 2 3 4 5 6 7 8 9 3.",
+  dea: "The DEA number is A B 1 2 3 4 5 6 3.",
+  "drug-clean": "Lisinopril, ten milligrams, tablet, by mouth.",
+  "strength-clean": "Ten milligrams.",
+  "form-clean": "Tablet.",
+  "route-clean": "By mouth.",
+  "quantity-clean": "Thirty tablets.",
+  "sig-clean": "Once daily.",
+  "days-clean": "Thirty days supply.",
+  "drug-lasa": "Hydromorphone, two milligrams per millilitre, injection, intravenous.",
+  "strength-lasa": "Two milligrams per millilitre.",
+  "form-lasa": "Injection.",
+  "route-lasa": "Intravenous.",
+  "quantity-lasa": "Ten vials.",
+  "sig-lasa": "Every four hours as needed.",
+  "days-lasa": "Three days supply.",
+  refills: "No refills.",
 } as const
 
 export type CallerLineId = keyof typeof CALLER_LINES
+
+export function isCallerLine(id: string): id is CallerLineId {
+  return Object.hasOwn(CALLER_LINES, id)
+}
 
 export function lineFile(id: CallerLineId): string {
   return `tests/live/lines/${id}.wav`

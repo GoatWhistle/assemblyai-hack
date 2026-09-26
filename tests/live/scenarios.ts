@@ -1,5 +1,6 @@
 import type { InjectorLog, LineStep } from "./caller-injector"
 import type { CallerLineId } from "./lines"
+import { CONTRASTIVE, namedAnswer, READ_BACK, type Responder, responderFor } from "./responder"
 
 export type Expectation =
   | { readonly kind: "order-text"; readonly pattern: string; readonly label: string }
@@ -9,6 +10,7 @@ export type SmokeScenario = {
   readonly id: string
   readonly title: string
   readonly steps: readonly (LineStep & { readonly line: CallerLineId })[]
+  readonly responder: Responder
   readonly expect: readonly Expectation[]
 }
 
@@ -22,10 +24,6 @@ export type RunVerdict = {
   readonly reason: string
 }
 
-const READ_BACK = "correct|right\\?|confirm|is that"
-
-const CONTRASTIVE = "hydromorphone.*morphine|morphine.*hydromorphone"
-
 function opening(line: CallerLineId): LineStep & { readonly line: CallerLineId } {
   return { line, trigger: "reply-done", delayMs: 800 }
 }
@@ -35,10 +33,6 @@ function answer(
   whenAgentSaid: string,
 ): LineStep & { readonly line: CallerLineId } {
   return { line, trigger: "reply-done", whenAgentSaid, delayMs: 600 }
-}
-
-function yesTimes(count: number): (LineStep & { readonly line: CallerLineId })[] {
-  return Array.from({ length: count }, () => answer("yes", READ_BACK))
 }
 
 const COMMITTED: Expectation = {
@@ -51,13 +45,15 @@ export const SCENARIOS: readonly SmokeScenario[] = [
   {
     id: "clean-order",
     title: "a clean order commits after its read-backs",
-    steps: [opening("order-clean"), ...yesTimes(8)],
+    steps: [opening("order-clean")],
+    responder: responderFor("clean"),
     expect: [COMMITTED],
   },
   {
     id: "lasa-named",
     title: "the contrastive question is answered by naming hydromorphone",
-    steps: [opening("order-lasa"), answer("name-hydromorphone", CONTRASTIVE), ...yesTimes(8)],
+    steps: [opening("order-lasa"), answer("name-hydromorphone", CONTRASTIVE)],
+    responder: responderFor("lasa", [namedAnswer("name-hydromorphone")]),
     expect: [
       { kind: "order-text", pattern: "hydromorphone", label: "hydromorphone is in the order" },
       COMMITTED,
@@ -67,6 +63,7 @@ export const SCENARIOS: readonly SmokeScenario[] = [
     id: "yeah-no",
     title: "yeah, no is read as a refusal",
     steps: [opening("order-clean"), answer("yeah-no", READ_BACK)],
+    responder: responderFor("clean"),
     expect: [
       {
         kind: "order-text",
@@ -82,6 +79,7 @@ export const SCENARIOS: readonly SmokeScenario[] = [
       opening("order-clean"),
       { line: "barge-in", trigger: "reply-started", delayMs: 1500 },
     ],
+    responder: responderFor("clean"),
     expect: [
       {
         kind: "interrupted-after-barge-in",
@@ -92,7 +90,8 @@ export const SCENARIOS: readonly SmokeScenario[] = [
   {
     id: "npi-groups",
     title: "an NPI dictated in digit groups arrives whole",
-    steps: [opening("order-no-npi"), answer("npi-groups", "NPI"), ...yesTimes(8)],
+    steps: [opening("order-no-npi"), answer("npi-groups", "NPI")],
+    responder: responderFor("clean"),
     expect: [
       { kind: "order-text", pattern: "1234567893", label: "the ten-digit NPI is in the order" },
     ],
@@ -100,7 +99,8 @@ export const SCENARIOS: readonly SmokeScenario[] = [
   {
     id: "commit-hold",
     title: "commitOrder is refused in hold, then accepted",
-    steps: [opening("order-clean"), answer("commit-early", READ_BACK), ...yesTimes(10)],
+    steps: [opening("order-clean"), answer("commit-early", READ_BACK)],
+    responder: responderFor("clean"),
     expect: [
       {
         kind: "order-text",
@@ -151,6 +151,6 @@ export function judgeRun(scenario: SmokeScenario, observation: RunObservation): 
   const lastAgent = [...log.events].reverse().find((event) => event.type === "transcript.agent")
   return {
     outcome: "failed",
-    reason: `${scenario.id}: not observed: ${missing.map((e) => e.label).join(", ")}; ${log.played.length} of ${scenario.steps.length} caller lines played; last agent line: ${lastAgent?.text ?? "none"}`,
+    reason: `${scenario.id}: not observed: ${missing.map((e) => e.label).join(", ")}; ${log.played.length} caller lines played; last agent line: ${lastAgent?.text ?? "none"}`,
   }
 }

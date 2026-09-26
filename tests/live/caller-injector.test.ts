@@ -8,6 +8,7 @@ import {
   type LineStep,
 } from "./caller-injector"
 import { CALLER_LINES, type CallerLineId, lineFile } from "./lines"
+import { responderLines } from "./responder"
 import { judgeRun, SCENARIOS } from "./scenarios"
 
 const AGENT = "wss://agents.us.assemblyai.com/v1/ws?token=single-use"
@@ -163,13 +164,20 @@ describe("S4: the injector script, evaluated as the browser receives it", () => 
 
 describe("S4: the committed caller lines and scenarios", () => {
   it("has a 16 kHz mono PCM16 WAV for every line a scenario uses", () => {
-    const used = new Set(SCENARIOS.flatMap((s) => s.steps.map((step) => step.line)))
+    const used = new Set<string>(
+      SCENARIOS.flatMap((s) => [
+        ...s.steps.map((step) => step.line),
+        ...responderLines(s.responder),
+      ]),
+    )
     for (const id of Object.keys(CALLER_LINES) as CallerLineId[]) {
       expect(used.has(id), `${id} is generated but no scenario says it`).toBe(true)
     }
     for (const id of used) {
-      expect(existsSync(lineFile(id)), lineFile(id)).toBe(true)
-      const wav = readFileSync(lineFile(id))
+      expect(Object.hasOwn(CALLER_LINES, id), `${id} is not a caller line`).toBe(true)
+      const file = lineFile(id as CallerLineId)
+      expect(existsSync(file), file).toBe(true)
+      const wav = readFileSync(file)
       expect(wav.toString("ascii", 0, 4)).toBe("RIFF")
       expect(wav.toString("ascii", 8, 12)).toBe("WAVE")
       const fmt = wav.indexOf("fmt ")

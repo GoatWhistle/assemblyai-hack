@@ -1,3 +1,5 @@
+import type { Responder } from "./responder"
+
 export type LineStep = {
   readonly line: string
   readonly trigger: "reply-done" | "reply-started"
@@ -15,6 +17,7 @@ export type DueLine = {
   readonly line: string
   readonly delayMs: number
   readonly step: number
+  readonly answered?: boolean
 }
 
 export type LineScheduler = {
@@ -26,6 +29,7 @@ export type LineScheduler = {
 export type InjectorConfig = {
   readonly agentHost: string
   readonly steps: readonly LineStep[]
+  readonly responder?: Responder
   readonly lines: Readonly<Record<string, string>>
 }
 
@@ -36,9 +40,38 @@ export type InjectorLog = {
   finished: boolean
 }
 
-export function createLineScheduler(steps: readonly LineStep[]): LineScheduler {
+export function createLineScheduler(
+  steps: readonly LineStep[],
+  responder?: Responder,
+): LineScheduler {
   let index = 0
   let agentSaid = ""
+  let answered = 0
+  function lastQuestion(text: string): string {
+    const questions = text.split(/(?<=[.?!])\s+/).filter((part) => part.trim().endsWith("?"))
+    return questions[questions.length - 1] ?? text
+  }
+  function answer(said: string): string | null {
+    if (responder === undefined || said.length === 0 || answered >= responder.maxLines) {
+      return null
+    }
+    const question = lastQuestion(said)
+    const test = (pattern: string, text: string) => new RegExp(pattern, "i").test(text)
+    const always = responder.rules.find(
+      (rule) => rule.evenOnReadBack === true && test(rule.whenAgentAsks, said),
+    )
+    if (always !== undefined) {
+      return always.line
+    }
+    const asks = test(responder.ask, question)
+    if (!question.includes("?") || (test(responder.readBack, question) && !asks)) {
+      return responder.fallback
+    }
+    const rule =
+      responder.rules.find((r) => test(r.whenAgentAsks, question)) ??
+      (asks ? responder.rules.find((r) => test(r.whenAgentAsks, said)) : undefined)
+    return rule?.line ?? responder.fallback
+  }
   function matches(step: LineStep): boolean {
     if (step.whenAgentSaid === undefined) {
       return true
@@ -49,6 +82,17 @@ export function createLineScheduler(steps: readonly LineStep[]): LineScheduler {
     const due = { line: step.line, delayMs: step.delayMs, step: index }
     index += 1
     return due
+  }
+  function afterReply(step: LineStep | undefined): DueLine | null {
+    if (step !== undefined && step.trigger === "reply-done" && matches(step)) {
+      return take(step)
+    }
+    const line = answer(agentSaid)
+    if (line === null || responder === undefined) {
+      return null
+    }
+    answered += 1
+    return { line, delayMs: responder.delayMs, step: -1, answered: true }
   }
   return {
     next(event: AgentEvent): DueLine | null {
@@ -61,12 +105,7 @@ export function createLineScheduler(steps: readonly LineStep[]): LineScheduler {
         agentSaid = `${agentSaid} ${event.text ?? ""}`.trim()
         return null
       }
-      if (event.type === "reply.done") {
-        return step !== undefined && step.trigger === "reply-done" && matches(step)
-          ? take(step)
-          : null
-      }
-      return null
+      return event.type === "reply.done" ? afterReply(step) : null
     },
     done(): boolean {
       return index >= steps.length
@@ -79,7 +118,8 @@ export function createLineScheduler(steps: readonly LineStep[]): LineScheduler {
 
 export function installCallerInjector(config: InjectorConfig): void {
   const scope = window as unknown as { readbackCallerInjector?: InjectorLog }
-  const scheduler = createLineScheduler(config.steps)
+  const scheduler = createLineScheduler(config.steps, config.responder)
+  let pendingAnswer: ReturnType<typeof setTimeout> | null = null
   const log: InjectorLog = { played: [], events: [], errors: [], finished: false }
   scope.readbackCallerInjector = log
   let context: AudioContext | null = null
@@ -161,9 +201,22 @@ export function installCallerInjector(config: InjectorConfig): void {
       return
     }
     log.events.push(event)
+    if (event.type === "reply.started" && pendingAnswer !== null) {
+      clearTimeout(pendingAnswer)
+      pendingAnswer = null
+    }
     const due = scheduler.next(event)
-    if (due !== null) {
-      setTimeout(() => play(due.line, due.step), due.delayMs)
+    if (due === null) {
+      return
+    }
+    const timer = setTimeout(() => {
+      if (due.answered === true) {
+        pendingAnswer = null
+      }
+      play(due.line, due.step)
+    }, due.delayMs)
+    if (due.answered === true) {
+      pendingAnswer = timer
     }
   }
 

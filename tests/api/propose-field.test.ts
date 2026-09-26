@@ -1,7 +1,8 @@
 import { POST as proposeField } from "@app/api/tools/propose-field/route"
+import { POST as readBack } from "@app/api/tools/read-back/route"
 import { beforeEach, describe, expect, it } from "vitest"
 import { setQuotationWait } from "@/tools"
-import { call, intake, resetToolEnvironment, seedTurn } from "./harness"
+import { call, intake, readBackAloud, resetToolEnvironment, seedTurn } from "./harness"
 
 beforeEach(resetToolEnvironment)
 
@@ -89,5 +90,99 @@ describe("propose_field", () => {
     await seedTurn("thirty", 0.99)
     const response = await propose("blood_type", "A positive", "thirty")
     expect(response.status).toBe(400)
+  })
+})
+
+describe("what a tool result tells the agent to do next", () => {
+  const READ_BACK = "Confirming the quantity: 30. Correct?"
+
+  async function answer(candidateId: string, callerAnswer: string): Promise<Response> {
+    await readBackAloud(READ_BACK, callerAnswer)
+    return readBack(
+      call("read-back", {
+        field: "quantity",
+        candidate_id: candidateId,
+        utterance: READ_BACK,
+        caller_answer: callerAnswer,
+      }),
+    )
+  }
+
+  it("tells the agent what is left once a value is written, so a lost candidate is handed back", async () => {
+    await seedTurn("patient Maria Lopez quantity thirty", 0.99)
+    const patient = await (
+      await proposeField(
+        call("propose-field", {
+          field: "patient_name",
+          value: "Maria Lopez",
+          transcript_hint: "Maria Lopez",
+        }),
+      )
+    ).json()
+    const quantity = await (
+      await proposeField(
+        call("propose-field", {
+          field: "quantity",
+          value: "thirty",
+          transcript_hint: "thirty",
+        }),
+      )
+    ).json()
+    expect(quantity.next).toContain("read_back")
+
+    const body = await (await answer(quantity.candidate_id, "yes")).json()
+
+    expect(body.written_to_order).toBe(true)
+    expect(body.after_this.still_to_read_back).toEqual([
+      {
+        field: "patient_name",
+        candidate_id: patient.candidate_id,
+        say_to_caller: patient.say_to_caller,
+        accepted: false,
+      },
+    ])
+    expect(body.after_this.still_missing).toContain("drug_name")
+    expect(body.after_this.still_missing).not.toContain("quantity")
+    expect(body.after_this.next).toContain("patient_name")
+  })
+
+  it("writes an accepted value on the second call without waiting for a yes", async () => {
+    await seedTurn("NPI 1234567893", 0.99)
+    const npi = await (
+      await proposeField(
+        call("propose-field", {
+          field: "prescriber_npi",
+          value: "1234567893",
+          transcript_hint: "1234567893",
+        }),
+      )
+    ).json()
+    expect(npi.action).toBe("accept")
+    expect(npi.next).toContain("at once")
+    const sentence = npi.say_to_caller
+    const registered = await (
+      await readBack(
+        call("read-back", {
+          field: "prescriber_npi",
+          candidate_id: npi.candidate_id,
+          utterance: sentence,
+        }),
+      )
+    ).json()
+    expect(registered.awaiting).toBe("nothing")
+    expect(registered.written_to_order).toBe(false)
+
+    const written = await (
+      await readBack(
+        call("read-back", {
+          field: "prescriber_npi",
+          candidate_id: npi.candidate_id,
+          utterance: sentence,
+          caller_answer: "NPI 1234567893",
+        }),
+      )
+    ).json()
+    expect(written.written_to_order).toBe(true)
+    expect(written.confirmation_mode).toBe("validator")
   })
 })

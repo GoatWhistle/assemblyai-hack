@@ -2,8 +2,9 @@ import { spawnSync } from "node:child_process"
 import { readFileSync } from "node:fs"
 import { expect, type Page, test } from "@playwright/test"
 import { type InjectorLog, injectorScript } from "./caller-injector"
-import { type CallerLineId, lineFile } from "./lines"
+import { type CallerLineId, isCallerLine, lineFile } from "./lines"
 import { liveSmokeRefusal, URL_VARIABLE } from "./live-guard"
+import { responderLines } from "./responder"
 import {
   judgeRun,
   type RunObservation,
@@ -13,14 +14,17 @@ import {
 } from "./scenarios"
 
 const AGENT_HOST = "agents.us.assemblyai.com"
-const SCENARIO_BUDGET_MS = 240_000
+const SCENARIO_BUDGET_MS = 480_000
 const SESSION_SPACING_MS = 30_000
 const POLL_MS = 2_000
 
 let lastRunEndedAt = 0
 
 function linesFor(scenario: SmokeScenario): Record<string, string> {
-  const ids = new Set<CallerLineId>(scenario.steps.map((step) => step.line))
+  const ids = new Set<CallerLineId>([
+    ...scenario.steps.map((step) => step.line),
+    ...responderLines(scenario.responder).filter(isCallerLine),
+  ])
   return Object.fromEntries(
     [...ids].map((id) => [id, readFileSync(lineFile(id)).toString("base64")]),
   )
@@ -100,6 +104,7 @@ for (const scenario of SCENARIOS) {
       content: injectorScript({
         agentHost: AGENT_HOST,
         steps: scenario.steps,
+        responder: scenario.responder,
         lines: linesFor(scenario),
       }),
     })
