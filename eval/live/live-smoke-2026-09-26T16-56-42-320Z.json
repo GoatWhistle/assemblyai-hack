@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-26T16:56:42.320Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "unbound-barge-in-1790441801301",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 0,
+    "stt": 0
+  },
+  "costUsd": 0,
+  "outcome": "failed",
+  "reason": "the page never bound a server session (unbound-barge-in-1790441801301), so no receipt exists; live smoke barge-in: not observed: a reply ended interrupted after the barge-in; 0 caller lines played; last agent line: none; the page stopped the call: The live-call budget refused this call A live-call budget cap refused this call, so no token was issued and nothing was billed. The daily budget resets at 00:00 UTC. What to do Use the replay demonstration, which runs the same gate without opening a socket, or come back after the daily reset. Moving to the replay demonstration in 7s. It replays a synthesised session, clearly labelled as a replay, never presented as live. Watch it now Stay here Technical reason Live calls run on this project's own AssemblyAI credit, not on yours. The server caps the socket-seconds it mints per day, and how much of that one visitor may use, so no single visitor can spend it for everyone. A cap refused this call, so no token was issued and nothing was billed; the line below says which one. Every token this deployment mints is paid from one AssemblyAI account with a fixed credit, so the server debits the token's whole session ceiling in socket seconds from a daily budget before minting it, refunds it when the vendor refuses, and stops minting for the rest of the UTC day once the budget is spent; the recorded replay needs no token and keeps working. Reported as budget_exhausted, with E_DAILY_BUDGET_EXHAUSTED; socket time is the harness wall clock, an upper bound; correction: the budget cap refused the call before any token was minted, so no socket opened and nothing was billed; socket time is 0 s, not the harness wall clock",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

@@ -108,6 +108,7 @@ const ANCHORS: readonly Anchor[] = [
       "recorded paid runs: 37",
       "runs that did not complete, still billed: 29",
       "derived total: USD 11.2439",
+      "attempts refused before any socket opened, so not billed: 3",
     ],
   },
   {

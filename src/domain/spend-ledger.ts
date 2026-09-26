@@ -48,6 +48,7 @@ export function costOfRun(run: PaidRun): RunCost {
 export type SpendTotal = {
   readonly runCount: number
   readonly failedRunCount: number
+  readonly unbilledCount: number
   readonly totalSeconds: number
   readonly usd: number
   readonly perRun: readonly RunCost[]
@@ -56,9 +57,11 @@ export type SpendTotal = {
 export function totalSpend(runs: readonly PaidRun[]): SpendTotal {
   const perRun = runs.map(costOfRun)
   const usd = perRun.reduce((sum, run) => sum + run.usd, 0)
+  const billed = runs.filter((run) => run.openSeconds > 0)
   return {
-    runCount: runs.length,
-    failedRunCount: runs.filter((run) => run.outcome !== "completed").length,
+    runCount: billed.length,
+    failedRunCount: billed.filter((run) => run.outcome !== "completed").length,
+    unbilledCount: runs.length - billed.length,
     totalSeconds: runs.reduce((sum, run) => sum + run.openSeconds, 0),
     usd: Math.round(usd * 10000) / 10000,
     perRun,

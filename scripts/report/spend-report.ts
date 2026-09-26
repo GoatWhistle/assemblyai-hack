@@ -78,6 +78,11 @@ function main(): void {
     )
   } else {
     process.stdout.write(`runs that did not complete, still billed: ${total.failedRunCount}\n`)
+    if (total.unbilledCount > 0) {
+      process.stdout.write(
+        `attempts refused before any socket opened, so not billed: ${total.unbilledCount}\n`,
+      )
+    }
     process.stdout.write(`total socket-open time: ${total.totalSeconds} s\n`)
     process.stdout.write("\n| Run | Command | Rate per hour | USD |\n|---|---|---|---|\n")
     for (const run of runs) {

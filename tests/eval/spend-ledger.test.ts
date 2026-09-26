@@ -82,6 +82,16 @@ describe("the spend figure is derived from recorded runs, never from a remembere
     ).toBe(1)
   })
 
+  it("does not count an attempt refused before any socket opened as a paid run", () => {
+    const total = totalSpend([
+      run({ outcome: "failed" }),
+      run({ runId: "refused", outcome: "failed", openSeconds: 0 }),
+    ])
+    expect(total.runCount, "a run that opened no socket cost nothing and was not paid").toBe(1)
+    expect(total.failedRunCount, "billed regardless must mean billed").toBe(1)
+    expect(total.unbilledCount, "the refused attempt is still stated, not hidden").toBe(1)
+  })
+
   it("refuses a ledger whose runs are malformed rather than treating it as an empty ledger worth zero", () => {
     expect(
       parseLedger({ runs: [{ runId: "r1" }] }),

@@ -214,12 +214,18 @@ export function reconciliation(
   const overlapping = counted.filter(
     (run) => run.measuredAt !== null && run.measuredAt >= firstLedger,
   )
-  const failed = ledger.filter((run) => run.outcome !== "completed").length
+  const billed = ledger.filter((run) => run.openSeconds > 0)
+  const failed = billed.filter((run) => run.outcome !== "completed").length
+  const unbilled = ledger.length - billed.length
+  const refused =
+    unbilled === 0
+      ? ""
+      : ` A further ${unbilled} ledger attempt${unbilled === 1 ? " was" : "s were"} refused before any socket opened and cost nothing, so ${unbilled === 1 ? "it is" : "they are"} not counted as paid.`
   const relation =
     overlapping.length === 0
       ? `Every run counted above was made before the ledger's first entry (${firstLedger}; the latest artefact is dated ${lastCounted ?? "nowhere"}), so none of them is in the ledger and none of the ledger's runs is among them: the two are disjoint sets, not one behind the other, and the earlier runs are stated rather than back-filled with socket clocks nobody kept.`
       : `${overlapping.length} run(s) counted above were measured after the ledger's first entry (${firstLedger}) and may also be in it: ${overlapping.map((run) => run.file).join(", ")}.`
-  return `${head} ${relation}\npaid runs on record, artefacts plus ledger: ${counted.length + ledger.length}; of the ledger's runs, ${failed} did not complete and were billed regardless.`
+  return `${head} ${relation}\npaid runs on record, artefacts plus ledger: ${counted.length + billed.length}; of the ledger's runs, ${failed} did not complete and were billed regardless.${refused}`
 }
 
 if (process.argv[1]?.includes("live-run-count")) {

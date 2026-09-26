@@ -952,7 +952,10 @@ wrote down.
 `npx tsx scripts/report/spend-report.ts` prints **recorded paid runs: 37**,
 **runs that did not complete, still billed: 29**, 10236.468 s of socket-open time and
 **derived total: USD 11.2439**, at
-the rates checked on 17 September. The figure is our arithmetic over our own recorded seconds,
+the rates checked on 17 September. It also prints
+**attempts refused before any socket opened, so not billed: 3**: three live-smoke attempts late on 26 September found the day's socket
+budget already spent, so the server minted no token and nothing opened; they stay in the ledger
+at 0 s because every attempt is recorded, and they are not counted as paid. The figure is our arithmetic over our own recorded seconds,
 not an invoice. By command:
 
 | Command | Runs | Outcome | USD |

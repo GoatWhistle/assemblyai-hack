@@ -107,6 +107,15 @@ test.beforeAll(() => {
   }
 })
 
+const NOTHING_BILLED = /no token was issued|nothing was billed|live calls paused today/i
+
+async function budgetPaused(page: Page): Promise<string | null> {
+  const paused = page.getByText(/live calls paused today/i)
+  return (await paused.count()) > 0
+    ? "live calls paused today: the daily budget was spent"
+    : null
+}
+
 for (const scenario of SCENARIOS) {
   test(`${scenario.id}: ${scenario.title}`, async ({ page }) => {
     const wait = lastRunEndedAt + SESSION_SPACING_MS - Date.now()
@@ -123,16 +132,28 @@ for (const scenario of SCENARIOS) {
     })
     await page.goto("/")
     const started = Date.now()
-    await page.getByRole("button", { name: "Start listening" }).click()
+    const paused = await budgetPaused(page)
+    let unbilled = paused !== null
+    if (paused === null) {
+      await page.getByRole("button", { name: "Start listening" }).click()
+    }
 
     let observation = await observe(page)
-    let verdict = judgeRun(scenario, observation)
-    while (verdict.outcome !== "completed" && Date.now() - started < SCENARIO_BUDGET_MS) {
+    let verdict: RunVerdict =
+      paused === null
+        ? judgeRun(scenario, observation)
+        : { outcome: "failed", reason: `not started: ${paused}; no token was minted` }
+    while (
+      paused === null &&
+      verdict.outcome !== "completed" &&
+      Date.now() - started < SCENARIO_BUDGET_MS
+    ) {
       await page.waitForTimeout(POLL_MS)
       observation = await observe(page)
       verdict = judgeRun(scenario, observation)
       const failure = await pageFailure(page)
       if (failure !== null && verdict.outcome !== "completed") {
+        unbilled = NOTHING_BILLED.test(failure) && (await sessionIdOf(page)) === null
         verdict = {
           outcome: "failed",
           reason: `${verdict.reason}; the page stopped the call: ${failure}`,
@@ -149,7 +170,12 @@ for (const scenario of SCENARIOS) {
     lastRunEndedAt = Date.now()
 
     const sessionId = await sessionIdOf(page)
-    record({ scenario, verdict, sessionId, seconds: (lastRunEndedAt - started) / 1000 })
+    record({
+      scenario,
+      verdict,
+      sessionId,
+      seconds: unbilled ? 0 : (lastRunEndedAt - started) / 1000,
+    })
     expect(verdict.outcome, verdict.reason).toBe("completed")
   })
 }

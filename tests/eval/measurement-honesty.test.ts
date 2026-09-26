@@ -129,7 +129,8 @@ describe("the count of live runs includes the ones that failed", () => {
       text,
       "the ledger was added after these runs happened, and inventing entries with guessed durations would be worse than publishing the gap",
     ).toMatch(/none of them is in the ledger/)
-    expect(text).toContain(`artefacts plus ledger: ${counted.length + (ledger ?? []).length}`)
+    const billed = (ledger ?? []).filter((run) => run.openSeconds > 0)
+    expect(text).toContain(`artefacts plus ledger: ${counted.length + billed.length}`)
     expect(
       text,
       "the ledger's runs are later ones, so subtracting one count from the other measures nothing",
