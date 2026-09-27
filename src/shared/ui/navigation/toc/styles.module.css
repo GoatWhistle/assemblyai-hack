@@ -36,6 +36,10 @@
   color: var(--text-primary);
 }
 
+.link:active {
+  background-color: var(--ink-a8);
+}
+
 .link[aria-current="location"] {
   background-color: var(--select-surface);
   color: var(--select-ink);

@@ -35,6 +35,10 @@
   background-color: var(--ink-a5);
 }
 
+.tab:active {
+  background-color: var(--ink-a8);
+}
+
 .selected {
   background-color: var(--surface-panel);
   color: var(--text-primary);

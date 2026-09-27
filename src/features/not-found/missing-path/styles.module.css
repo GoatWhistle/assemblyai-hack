@@ -1,0 +1,9 @@
+.path {
+  padding: 0.0625rem var(--space-1);
+  border-radius: var(--radius-xs);
+  background-color: var(--surface-sunken);
+  font-family: var(--font-data);
+  font-size: 0.875em;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}

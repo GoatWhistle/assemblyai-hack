@@ -66,6 +66,10 @@
   color: var(--text-primary);
 }
 
+.link:active {
+  background-color: var(--ink-a8);
+}
+
 .linkActive {
   background-color: var(--ink-a5);
   color: var(--text-primary);

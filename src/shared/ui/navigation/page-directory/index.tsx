@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { ArrowIcon } from "@/shared/ui/icons"
 import type { DocsPage } from "../docs-tree"
 import styles from "./styles.module.css"
 
@@ -21,6 +22,7 @@ export function PageDirectory({
             <span className={styles.label}>{page.label}</span>
             <span className={styles.summary}>{page.summary}</span>
             <span className={styles.path}>{page.href}</span>
+            <ArrowIcon direction="right" className={styles.arrow} />
           </Link>
           {withChildren && page.children !== undefined && page.children.length > 0 ? (
             <PageDirectory pages={page.children} withChildren nested />

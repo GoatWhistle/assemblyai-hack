@@ -2,8 +2,11 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ArrowIcon } from "@/shared/ui/icons"
 import { type DocsPage, flattenPages, pageAt } from "../docs-tree"
 import styles from "./styles.module.css"
+
+export const PAGER_LABEL = "Previous and next page"
 
 export type DocsPagerProps = {
   readonly pages: readonly DocsPage[]
@@ -27,17 +30,18 @@ export function DocsPager({ pages }: DocsPagerProps) {
     return null
   }
   return (
-    <nav className={styles.pager} aria-label="Previous and next page">
-      {previous === null ? (
-        <span />
-      ) : (
+    <nav className={styles.pager} aria-label={PAGER_LABEL}>
+      {previous === null ? null : (
         <Link
           href={previous.href}
-          className={styles.link}
+          className={`${styles.link} ${styles.previous}`}
           rel="prev"
           aria-label={`Previous page: ${previous.label}`}
         >
-          <span className={styles.direction}>Previous</span>
+          <span className={styles.direction}>
+            <ArrowIcon direction="left" className={styles.arrow} />
+            Previous
+          </span>
           <span className={styles.label}>{previous.label}</span>
         </Link>
       )}
@@ -48,7 +52,10 @@ export function DocsPager({ pages }: DocsPagerProps) {
           rel="next"
           aria-label={`Next page: ${next.label}`}
         >
-          <span className={styles.direction}>Next</span>
+          <span className={styles.direction}>
+            Next
+            <ArrowIcon direction="right" className={styles.arrow} />
+          </span>
           <span className={styles.label}>{next.label}</span>
         </Link>
       )}

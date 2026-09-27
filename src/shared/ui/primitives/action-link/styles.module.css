@@ -63,6 +63,23 @@
   color: var(--text-primary);
 }
 
+.icon {
+  flex: 0 0 auto;
+  width: 1em;
+  height: 1em;
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
+@media (hover: hover) {
+  .action:hover .forward {
+    transform: translateX(3px);
+  }
+
+  .action:hover .back {
+    transform: translateX(-3px);
+  }
+}
+
 .large {
   min-height: var(--target-touch);
   padding: 0 var(--space-5);
@@ -89,5 +106,10 @@
 @media (prefers-reduced-motion: reduce) {
   .action:active {
     scale: none;
+  }
+
+  .action:hover .forward,
+  .action:hover .back {
+    transform: none;
   }
 }

@@ -1,0 +1,12 @@
+.link {
+  overflow-wrap: anywhere;
+}
+
+.icon {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-inline-start: 0.2em;
+  vertical-align: -0.05em;
+  opacity: 0.8;
+}

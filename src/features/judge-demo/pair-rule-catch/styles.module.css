@@ -30,13 +30,6 @@
   color: var(--text-muted);
 }
 
-.command {
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  color: var(--text-secondary);
-  overflow-wrap: anywhere;
-}
-
 .method a {
   display: inline-flex;
   align-items: center;

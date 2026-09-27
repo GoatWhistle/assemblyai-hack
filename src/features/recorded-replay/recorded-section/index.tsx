@@ -5,6 +5,9 @@ import { loadPublishedRecording, type RecordingLoad } from "../load-recording"
 import { RecordedPlayer } from "../recorded-player"
 import styles from "./styles.module.css"
 
+export const UNAVAILABLE_NEXT_STEP =
+  "The synthesised replay above still runs the whole pipeline; reload the page to try the recording again."
+
 const NO_RECORDING_NOTE =
   "No recorded live session has been published yet, so the replay above is the synthesised one. When a recorded call is published it plays here with its real audio."
 
@@ -38,7 +41,7 @@ export function RecordedSection({ published = true }: RecordedSectionProps) {
     <p className={styles.note}>
       {load.state === "absent"
         ? NO_RECORDING_NOTE
-        : `Recorded session unavailable: ${load.message}.`}
+        : `Recorded session unavailable: ${load.message}. ${UNAVAILABLE_NEXT_STEP}`}
     </p>
   )
 }

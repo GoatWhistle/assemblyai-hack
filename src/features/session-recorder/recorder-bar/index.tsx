@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import type { LatencySample } from "@/domain"
+import { DownloadIcon } from "@/shared/ui/icons"
 import { Button } from "@/shared/ui/primitives/button"
 import type { SessionRecorder } from "../use-session-recorder"
 import styles from "./styles.module.css"
@@ -36,6 +37,7 @@ export function RecorderBar({ recorder, sessionId, sttModel, latency }: Recorder
           setExported(recording.recordedAt)
         }}
       >
+        <DownloadIcon />
         Export live recording
       </Button>
       {exported === null ? null : (

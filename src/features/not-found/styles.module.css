@@ -1,11 +1,17 @@
 .page {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
+  max-width: 56rem;
   padding-block: var(--space-7) var(--space-8);
 }
 
+.intro {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .title {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
   text-wrap: balance;
@@ -13,6 +19,7 @@
 
 .lead {
   max-width: 60ch;
+  font-size: var(--text-md);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
@@ -21,4 +28,25 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+}
+
+.directory {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.subtitle {
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+@media (max-width: 40rem) {
+  .page {
+    padding-block: var(--space-5) var(--space-7);
+  }
+
+  .title {
+    font-size: var(--text-xl);
+  }
 }

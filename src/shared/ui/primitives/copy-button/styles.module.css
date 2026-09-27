@@ -1,0 +1,98 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid var(--line-divider);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-panel);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-control);
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: var(--target-touch);
+  min-height: var(--target-touch);
+  translate: -50% -50%;
+}
+
+.button:hover {
+  border-color: var(--line-strong);
+  background-color: var(--ink-a5);
+  color: var(--text-primary);
+}
+
+.button:active {
+  background-color: var(--ink-a8);
+  scale: 0.94;
+}
+
+.button[data-state="copied"] {
+  border-color: var(--state-accepted-line);
+  background-color: var(--state-accepted-surface);
+  color: var(--state-accepted-ink);
+}
+
+.button[data-state="failed"] {
+  border-color: var(--state-escalated-line);
+  color: var(--state-escalated-ink);
+}
+
+.icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.note {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--space-1));
+  z-index: var(--z-tooltip);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  font-family: var(--font-ui);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--track-normal);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.note:empty {
+  padding: 0;
+}
+
+.note[data-state="copied"],
+.note[data-state="failed"] {
+  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:active {
+    scale: none;
+  }
+}
+
+@media print {
+  .wrap {
+    display: none;
+  }
+}

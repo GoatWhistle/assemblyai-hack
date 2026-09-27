@@ -1,5 +1,6 @@
 import Link from "next/link"
 import type { BenchmarkRow } from "@/domain"
+import { Command } from "@/shared/ui/data-display/command"
 import styles from "./styles.module.css"
 
 export const CATCH_FIGURES_HREF = "/metrics#headline"
@@ -19,7 +20,7 @@ export function PairRuleCatch({ without, shipped }: PairRuleCatchProps) {
         with it.
       </p>
       <p className={styles.method}>
-        <code className={styles.command}>{shipped.command}</code>
+        <Command value={shipped.command} />
         <span>
           n = {shipped.n ?? "not recorded"} · {shipped.input} ·{" "}
           {shipped.measuredOn ?? "undated"}

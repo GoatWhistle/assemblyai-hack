@@ -1,6 +1,6 @@
 .pager {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
   padding-top: var(--space-5);
   border-top: 1px solid var(--line-hairline);
@@ -10,10 +10,11 @@
   display: grid;
   align-content: center;
   gap: var(--space-1);
-  min-height: var(--target-touch);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--line-hairline);
+  min-height: calc(var(--target-touch) + var(--space-6));
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--line-divider);
   border-radius: var(--radius-md);
+  background-color: var(--surface-panel);
   color: var(--text-primary);
   text-decoration: none;
   transition: var(--transition-control);
@@ -21,20 +22,72 @@
 
 .link:hover {
   border-color: var(--line-strong);
+  background-color: var(--ink-a5);
   color: var(--text-primary);
 }
 
+.link:active {
+  background-color: var(--ink-a8);
+}
+
 .next {
-  grid-column: 2;
+  justify-items: end;
   text-align: right;
 }
 
 .direction {
-  font-size: var(--text-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
+.arrow {
+  flex: 0 0 auto;
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
 .label {
-  font-size: var(--text-base);
+  font-size: var(--text-md);
   font-weight: var(--weight-medium);
+  letter-spacing: var(--track-tight);
+  line-height: var(--leading-snug);
+  color: var(--action-ink);
+  text-wrap: balance;
+}
+
+.link:hover .label {
+  color: var(--action-hover);
+}
+
+@media (hover: hover) {
+  .previous:hover .arrow {
+    transform: translateX(-3px);
+  }
+
+  .next:hover .arrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (min-width: 40rem) {
+  .pager {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .previous {
+    grid-column: 1;
+  }
+
+  .next {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .previous:hover .arrow,
+  .next:hover .arrow {
+    transform: none;
+  }
 }

@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { DocsNav } from "@/shared/ui/navigation/docs-nav"
 import { DocsPager } from "@/shared/ui/navigation/docs-pager"
 import { DocsShell } from "@/shared/ui/navigation/docs-shell"
+import { DocsTreeProvider } from "@/shared/ui/navigation/docs-trail"
 import { Toc } from "@/shared/ui/navigation/toc"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { DOCS_PAGES, REPLAY_HUB } from "./docs-map"
@@ -19,7 +20,7 @@ export default function DocsLayout({ children }: { readonly children: ReactNode 
         toc={<Toc pages={DOCS_PAGES} />}
         mainId={MAIN_ID}
       >
-        {children}
+        <DocsTreeProvider pages={DOCS_PAGES}>{children}</DocsTreeProvider>
         <DocsPager pages={DOCS_PAGES} />
         <Disclaimer />
       </DocsShell>

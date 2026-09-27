@@ -1,0 +1,18 @@
+.command {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.code {
+  min-width: 0;
+  padding: 0.125rem var(--space-2);
+  border-radius: var(--radius-xs);
+  background-color: var(--surface-sunken);
+  font-family: var(--font-data);
+  font-size: var(--text-2xs);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
