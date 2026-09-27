@@ -1,5 +1,7 @@
 const DEFAULT_FRAME = 1024
 
+const RENDER_QUANTUM = 128
+
 class CaptureProcessor extends AudioWorkletProcessor {
   constructor(options) {
     super()
@@ -7,6 +9,7 @@ class CaptureProcessor extends AudioWorkletProcessor {
     this.frameSize = typeof requested === "number" && requested > 0 ? requested : DEFAULT_FRAME
     this.buffer = new Float32Array(this.frameSize)
     this.filled = 0
+    this.silence = new Float32Array(RENDER_QUANTUM)
     this.muted = false
     this.port.onmessage = (event) => {
       const data = event.data
@@ -17,10 +20,7 @@ class CaptureProcessor extends AudioWorkletProcessor {
   }
 
   process(inputs) {
-    const channel = inputs[0] && inputs[0][0]
-    if (!channel) {
-      return true
-    }
+    const channel = (inputs[0] && inputs[0][0]) || this.silence
     let peak = 0
     for (let i = 0; i < channel.length; i += 1) {
       const sample = channel[i]
