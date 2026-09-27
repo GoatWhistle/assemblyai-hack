@@ -27,7 +27,7 @@ export function Captions({ lines, clockMs, voice }: CaptionsProps) {
             No one is speaking.
           </span>
         ) : (
-          <span>
+          <span className={styles.spoken} key={`${line.who} ${line.text}`}>
             <span className={styles.who}>{line.who === "agent" ? "Agent" : "Caller"}</span>{" "}
             {line.text}
           </span>

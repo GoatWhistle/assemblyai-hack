@@ -17,6 +17,7 @@
 .promptArea,
 .promiseArea,
 .mapArea,
+.alertArea,
 .panels {
   min-width: 0;
 }
@@ -100,7 +101,7 @@
     padding-top: var(--space-7);
   }
 
-  .resting .alert {
+  .resting .alertArea {
     grid-column: 1 / -1;
     grid-row: 4;
     margin-top: var(--space-6);
@@ -132,7 +133,7 @@
     overscroll-behavior: contain;
   }
 
-  .live .alert,
+  .live .alertArea,
   .live .panels {
     grid-column: 2;
   }

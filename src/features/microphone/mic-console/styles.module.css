@@ -160,6 +160,13 @@
   height: 100%;
 }
 
+.message {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
 .headline {
   margin: var(--space-2) 0 0;
   font-size: var(--text-2xl);

@@ -71,6 +71,10 @@ export function CopyButton({ value, label }: CopyButtonProps) {
   }
 
   const note = state === "copied" ? COPIED_NOTE : state === "failed" ? COPY_FAILED_NOTE : ""
+  const [shown, setShown] = useState(note)
+  if (note !== "" && note !== shown) {
+    setShown(note)
+  }
 
   return (
     <span className={styles.wrap}>
@@ -83,15 +87,13 @@ export function CopyButton({ value, label }: CopyButtonProps) {
           void onCopy()
         }}
       >
-        {state === "copied" ? (
-          <CheckIcon className={styles.icon} />
-        ) : (
-          <CopyIcon className={styles.icon} />
-        )}
+        <CopyIcon className={`${styles.icon} ${styles.copy}`} />
+        <CheckIcon className={`${styles.icon} ${styles.check}`} />
       </button>
-      <output className={styles.note} data-state={state}>
-        {note}
-      </output>
+      <output className="visually-hidden">{note}</output>
+      <span className={styles.note} data-state={state} aria-hidden="true">
+        {shown}
+      </span>
     </span>
   )
 }

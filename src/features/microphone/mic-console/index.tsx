@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { type Patience, patienceFor } from "@/realtime/patience"
+import { Swap } from "@/shared/ui/motion/swap"
 import { Wordmark } from "@/shared/ui/primitives/wordmark"
 import { FinishAnswer } from "../finish-answer"
 import { KeyHint } from "../key-hint"
@@ -48,6 +49,10 @@ const KEY_HINT: Readonly<Record<MicState, KeyShortcut | null>> = Object.freeze({
   [MicState.Closing]: null,
   [MicState.Blocked]: null,
 })
+
+function messageKey(notice: ReactNode, state: MicState): string {
+  return notice === undefined || notice === null ? state : "notice"
+}
 
 export function MicConsole({
   state,
@@ -101,12 +106,14 @@ export function MicConsole({
 
       <LevelMeter level={level} state={state} />
 
-      {notice ?? (
-        <>
-          <h2 className={styles.headline}>{copy.headline}</h2>
-          <p className={styles.detail}>{copy.detail}</p>
-        </>
-      )}
+      <Swap swapKey={messageKey(notice, state)} className={styles.message}>
+        {notice ?? (
+          <>
+            <h2 className={styles.headline}>{copy.headline}</h2>
+            <p className={styles.detail}>{copy.detail}</p>
+          </>
+        )}
+      </Swap>
 
       {open ? (
         <FinishAnswer live={listening} patience={active} onFinish={onFinishAnswer} />

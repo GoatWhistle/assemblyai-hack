@@ -63,6 +63,11 @@
   border-color: var(--line-strong);
 }
 
+.pick:active {
+  background-color: var(--ink-a8);
+  scale: 0.97;
+}
+
 .upload:has(input:focus-visible) .pick {
   outline: var(--focus-ring-width) solid var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -107,6 +112,12 @@
 @media (max-width: 40rem) {
   .upload {
     padding: var(--space-5) var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pick:active {
+    scale: none;
   }
 }
 

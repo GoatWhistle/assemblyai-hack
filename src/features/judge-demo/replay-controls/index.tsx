@@ -70,7 +70,9 @@ export function ReplayControls({
     <div className={styles.controls} data-mode={mode}>
       <div className={styles.buttons} ref={controls}>
         <Button tone="primary" size="large" onClick={onPrimary}>
-          <TransportIcon glyph={PRIMARY_GLYPH[mode]} />
+          <span className={styles.glyph} key={PRIMARY_GLYPH[mode]}>
+            <TransportIcon glyph={PRIMARY_GLYPH[mode]} />
+          </span>
           {PRIMARY_LABEL[mode]}
         </Button>
         <Button

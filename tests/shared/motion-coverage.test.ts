@@ -141,6 +141,17 @@ describe("AU11: every animated stylesheet takes its timing from the motion token
     expect(missing).toEqual([])
   })
 
+  it("collapses the navigation motion tokens too, which live in their own token file", () => {
+    const source = readFileSync("src/styles/tokens/navigation-motion.css", "utf8")
+    const [base, reduced] = source.split("@media (prefers-reduced-motion: reduce)")
+    const defined = [...(base ?? "").matchAll(/(--dur-[a-z-]+):/g)].map((m) => m[1] ?? "")
+    expect(defined.length).toBeGreaterThan(0)
+    expect(defined.filter((token) => !(reduced ?? "").includes(`${token}: 1ms`))).toEqual([])
+    expect(readFileSync("src/styles/global.css", "utf8")).toContain(
+      '@import "./tokens/navigation-motion.css"',
+    )
+  })
+
   it("stills animations and transitions globally, so a sheet without its own media query is covered", () => {
     const reduced = MOTION.slice(MOTION.indexOf("@media (prefers-reduced-motion: reduce)"))
     expect(reduced).toMatch(/\*,\s*\*::before,\s*\*::after\s*\{/)

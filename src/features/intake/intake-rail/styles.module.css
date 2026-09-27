@@ -28,6 +28,7 @@
   padding: var(--space-2) var(--space-3);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
+  animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart);
   background: none;
   text-align: left;
   font: inherit;

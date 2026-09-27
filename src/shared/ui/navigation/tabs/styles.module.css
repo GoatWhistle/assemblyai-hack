@@ -5,6 +5,8 @@
 }
 
 .list {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
@@ -16,6 +18,8 @@
 }
 
 .tab {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -48,6 +52,38 @@
 
 .selected:hover {
   background-color: var(--surface-panel);
+}
+
+.list[data-glide] > .selected {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.list[data-glide]::before,
+.list[data-glide]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  clip-path: inset(
+    var(--glide-top, 0px) var(--glide-right, 0px) var(--glide-bottom, 0px)
+      var(--glide-left, 0px) round var(--radius-pill)
+  );
+  transition: clip-path var(--dur-slow) var(--ease-out-expo);
+}
+
+.list[data-glide]::before {
+  background-color: var(--line-hairline);
+}
+
+.list[data-glide]::after {
+  background-color: var(--surface-panel);
+  clip-path: inset(
+    calc(var(--glide-top, 0px) + 1px) calc(var(--glide-right, 0px) + 1px)
+      calc(var(--glide-bottom, 0px) + 1px) calc(var(--glide-left, 0px) + 1px) round
+      var(--radius-pill)
+  );
 }
 
 .panel {

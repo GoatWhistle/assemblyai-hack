@@ -5,6 +5,7 @@ import { type GateDecision, LatencyInterval } from "@/domain"
 import { PHASE_TECHNICAL, type SessionPhase } from "@/features/intake/session-status"
 import type { LatencySummary } from "@/features/latency/latency-recorder"
 import type { TappedFrame } from "@/realtime/frame-tap"
+import { useDetailsMotion } from "@/shared/ui/motion/use-details-motion"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { ACTIVITY_LABEL, ACTIVITY_WORD, agentActivityOf } from "../agent-activity"
 import type { DecisionCounts } from "../decision-counts"
@@ -46,6 +47,7 @@ export function TelemetryPanel({
 }: TelemetryPanelProps) {
   const frames = useSyncExternalStore(log.subscribe, log.snapshot, () => NO_FRAMES)
   const activity = agentActivityOf(frames)
+  const frameDetails = useDetailsMotion()
   return (
     <section className={styles.panel} aria-label="Telemetry">
       <div className={styles.status}>
@@ -94,7 +96,7 @@ export function TelemetryPanel({
         <p className={styles.heading}>Decision log</p>
         <DecisionLog decisions={decisions} />
       </div>
-      <details className={styles.block}>
+      <details className={styles.block} ref={frameDetails}>
         <summary className={styles.summary}>Socket frames</summary>
         <FrameFeed log={log} />
       </details>

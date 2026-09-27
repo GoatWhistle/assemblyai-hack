@@ -9,6 +9,7 @@
   display: grid;
   gap: var(--space-4);
   min-width: 0;
+  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
 }
 
 .head {
@@ -103,6 +104,10 @@
   border-color: var(--action-rest);
 }
 
+.button:active {
+  scale: 0.98;
+}
+
 .button:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -181,5 +186,9 @@
 @media (prefers-reduced-motion: reduce) {
   .button {
     transition: none;
+  }
+
+  .button:active {
+    scale: none;
   }
 }

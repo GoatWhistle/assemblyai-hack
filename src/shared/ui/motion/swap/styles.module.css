@@ -1,0 +1,17 @@
+.enter {
+  animation: swap-in var(--dur-base) var(--ease-out-quart);
+}
+
+@keyframes swap-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(3px);
+    filter: blur(1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}

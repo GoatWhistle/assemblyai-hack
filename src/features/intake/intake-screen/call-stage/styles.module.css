@@ -6,19 +6,9 @@
   gap: var(--space-5);
 }
 
-.waiting {
+.waiting,
+.trailing {
+  display: grid;
   width: 100%;
   max-width: var(--measure-prose);
-  opacity: 1;
-  translate: 0 0;
-  transition:
-    opacity var(--dur-base) var(--ease-out-quart),
-    translate var(--dur-base) var(--ease-out-quart);
-}
-
-@starting-style {
-  .waiting {
-    opacity: 0;
-    translate: 0 -4px;
-  }
 }

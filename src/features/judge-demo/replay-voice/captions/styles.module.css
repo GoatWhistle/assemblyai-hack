@@ -21,6 +21,11 @@
   color: var(--text-primary);
 }
 
+.spoken {
+  display: inline-block;
+  animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart);
+}
+
 .who {
   font-weight: var(--weight-semibold);
   color: var(--text-muted);
@@ -28,6 +33,12 @@
 
 .idle {
   color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spoken {
+    animation: none;
+  }
 }
 
 @media (max-width: 40rem) {

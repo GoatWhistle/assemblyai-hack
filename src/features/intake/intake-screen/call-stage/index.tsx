@@ -3,6 +3,7 @@ import { MicState, micStateFor } from "@/features/microphone/mic-state"
 import type { ReadBackState } from "@/features/read-back/read-back-machine"
 import { WaitingIndicator } from "@/features/waiting/waiting-indicator"
 import type { Patience } from "@/realtime/patience"
+import { Swap } from "@/shared/ui/motion/swap"
 import { FIELD_SPOKEN } from "../../field-language"
 import type { FaultDetail } from "../../session-options"
 import { isRestartable, type SessionFault, SessionPhase } from "../../session-status"
@@ -67,6 +68,8 @@ export function CallStage({
   const paused = budgetPaused !== null && resting && phase === SessionPhase.Idle
   const mic = paused ? MicState.Blocked : micStateFor(phase, agentSpeaking, fault)
   const blocked = mic === MicState.Blocked
+  const waiting = !(idle || blocked || mic === MicState.Opening)
+  const trailing = blocked ? null : fault
   const next =
     solicited === undefined || solicited.field === null ? null : FIELD_SPOKEN[solicited.field]
   return (
@@ -88,17 +91,19 @@ export function CallStage({
         onStop={onStop}
         onFinishAnswer={onFinishAnswer}
       />
-      {idle || blocked || mic === MicState.Opening ? null : (
-        <div className={styles.waiting}>
+      <Swap swapKey={waiting ? "waiting" : "none"} className={styles.waiting}>
+        {waiting ? (
           <WaitingIndicator
             signals={{ phase, agentSpeaking, turnInFlight, readBackState }}
             next={next}
           />
-        </div>
-      )}
-      {blocked || fault === null ? null : (
-        <FaultPanel key={fault} fault={fault} faultDetail={faultDetail} canRestart={false} />
-      )}
+        ) : null}
+      </Swap>
+      <Swap swapKey={trailing === null ? "none" : trailing} className={styles.trailing}>
+        {trailing === null ? null : (
+          <FaultPanel fault={trailing} faultDetail={faultDetail} canRestart={false} />
+        )}
+      </Swap>
     </div>
   )
 }

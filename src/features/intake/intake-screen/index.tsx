@@ -9,6 +9,7 @@ import type { ReadBackContext } from "@/features/read-back/read-back-machine"
 import type { TranscriptEntry } from "@/features/transcript-view/transcript-entry"
 import type { Patience } from "@/realtime/patience"
 import { PageShell } from "@/shared/ui/layout/page-shell"
+import { Swap } from "@/shared/ui/motion/swap"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { useInCall } from "../in-call-loader"
@@ -65,6 +66,29 @@ function promptsFor(
 ): boolean {
   const paused = budgetPaused !== null && phase === SessionPhase.Idle
   return fault === null && isRestartable(phase) && !paused
+}
+
+function CallNotices({
+  prompting,
+  alert,
+}: {
+  readonly prompting: boolean
+  readonly alert: string | null
+}) {
+  return (
+    <>
+      <Swap swapKey={prompting ? "prompt" : "none"} className={styles.promptArea}>
+        {prompting ? <IntakePrompt /> : null}
+      </Swap>
+      <Swap swapKey={alert ?? ""} className={styles.alertArea}>
+        {alert === null ? null : (
+          <p className={styles.alert} role="alert">
+            {alert}
+          </p>
+        )}
+      </Swap>
+    </>
+  )
 }
 
 export function IntakeScreen({
@@ -135,17 +159,7 @@ export function IntakeScreen({
             />
           </div>
 
-          {prompting ? (
-            <div className={styles.promptArea}>
-              <IntakePrompt />
-            </div>
-          ) : null}
-
-          {alert === null ? null : (
-            <p className={styles.alert} role="alert">
-              {alert}
-            </p>
-          )}
+          <CallNotices prompting={prompting} alert={alert} />
 
           {started ? null : (
             <>

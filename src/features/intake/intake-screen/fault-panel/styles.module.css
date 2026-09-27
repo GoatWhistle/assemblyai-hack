@@ -98,7 +98,7 @@
   transition: transform var(--dur-base) var(--ease-out-quart);
 }
 
-.technical[open] .chevron {
+.technical[open]:not([data-closing]) .chevron {
   transform: rotate(180deg);
 }
 

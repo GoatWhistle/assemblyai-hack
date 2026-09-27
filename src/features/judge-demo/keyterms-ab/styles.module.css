@@ -51,6 +51,10 @@
   border-color: var(--action-rest);
 }
 
+.arm:active {
+  scale: 0.98;
+}
+
 .arm:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -78,6 +82,7 @@
   gap: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--line-hairline);
+  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
 }
 
 .listBlock,
@@ -236,5 +241,9 @@
 @media (prefers-reduced-motion: reduce) {
   .arm {
     transition: none;
+  }
+
+  .arm:active {
+    scale: none;
   }
 }

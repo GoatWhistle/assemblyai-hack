@@ -25,6 +25,20 @@
   flex: 1 1 auto;
 }
 
+.glyph {
+  display: inline-grid;
+  place-items: center;
+  animation: glyph-in var(--dur-base) var(--ease-out-expo);
+}
+
+@keyframes glyph-in {
+  from {
+    opacity: 0.4;
+    scale: 0.7;
+    filter: blur(1px);
+  }
+}
+
 .clock {
   grid-area: clock;
   display: flex;
@@ -143,6 +157,10 @@
   text-wrap: pretty;
 }
 
+.stage {
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart);
+}
+
 .stageHidden {
   visibility: hidden;
 }
@@ -173,5 +191,12 @@
   .controls {
     align-content: center;
     box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph,
+  .stage {
+    animation: none;
   }
 }

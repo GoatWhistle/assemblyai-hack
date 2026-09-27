@@ -2,7 +2,9 @@ import { readFileSync } from "node:fs"
 import { glob } from "node:fs/promises"
 import { describe, expect, it } from "vitest"
 
-const MOTION = readFileSync("src/styles/tokens/motion.css", "utf8")
+const MOTION = ["src/styles/tokens/motion.css", "src/styles/tokens/navigation-motion.css"]
+  .map((file) => readFileSync(file, "utf8"))
+  .join("\n")
 
 async function stylesheets(): Promise<string[]> {
   const files: string[] = []

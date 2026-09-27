@@ -1,6 +1,15 @@
 "use client"
 
-import { type KeyboardEvent, type ReactNode, useId, useRef } from "react"
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
+import { leave } from "@/shared/ui/motion/leave"
+import { useGlide } from "@/shared/ui/motion/use-glide"
 import styles from "./styles.module.css"
 import { useAnchoredSelection } from "./use-anchored-selection"
 
@@ -37,6 +46,22 @@ export function Tabs({ label, items, defaultId, anchored = false }: TabsProps) {
     root,
   )
   const buttons = useRef<Map<string, HTMLButtonElement>>(new Map())
+  const list = useRef<HTMLDivElement | null>(null)
+  useGlide(list, selected)
+  const panels = useRef<Map<string, HTMLDivElement>>(new Map())
+  const [shown, setShown] = useState(selected)
+  const exited = useRef<Animation | null>(null)
+  useLayoutEffect(() => {
+    if (shown === selected) {
+      exited.current?.cancel()
+      exited.current = null
+      return undefined
+    }
+    return leave(panels.current.get(shown) ?? null, (exit) => {
+      exited.current = exit ?? null
+      setShown(selected)
+    })
+  }, [selected, shown])
   const tabId = (id: string) => (anchored ? `${id}-tab` : `${base}-tab-${id}`)
   const panelId = (id: string) => (anchored ? id : `${base}-panel-${id}`)
 
@@ -57,7 +82,13 @@ export function Tabs({ label, items, defaultId, anchored = false }: TabsProps) {
 
   return (
     <div className={styles.tabs} ref={root}>
-      <div className={styles.list} role="tablist" aria-label={label} onKeyDown={onKeyDown}>
+      <div
+        className={styles.list}
+        ref={list}
+        role="tablist"
+        aria-label={label}
+        onKeyDown={onKeyDown}
+      >
         {items.map((item) => {
           const active = item.id === selected
           return (
@@ -77,6 +108,7 @@ export function Tabs({ label, items, defaultId, anchored = false }: TabsProps) {
               aria-selected={active}
               aria-controls={panelId(item.id)}
               aria-label={item.accessibleLabel}
+              data-glide-key={item.id}
               tabIndex={active ? 0 : -1}
               onClick={() => setSelected(item.id)}
             >
@@ -92,7 +124,14 @@ export function Tabs({ label, items, defaultId, anchored = false }: TabsProps) {
           id={panelId(item.id)}
           className={styles.panel}
           aria-labelledby={tabId(item.id)}
-          hidden={item.id !== selected}
+          ref={(element) => {
+            if (element === null) {
+              panels.current.delete(item.id)
+            } else {
+              panels.current.set(item.id, element)
+            }
+          }}
+          hidden={item.id !== shown}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: the WAI-ARIA tabs pattern puts a panel in the tab order so a panel with no focusable content is still reached after its tab
           tabIndex={0}
         >

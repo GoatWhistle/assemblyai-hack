@@ -24,6 +24,9 @@
   border: 1px solid var(--line-divider);
   border-radius: var(--radius-md);
   background-color: var(--surface-sunken);
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    border-color var(--dur-base) var(--ease-out-quart);
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
@@ -85,6 +88,7 @@
   gap: var(--space-1) var(--space-3);
   padding-block: var(--space-2);
   border-block-end: 1px solid var(--line-hairline);
+  animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart);
 }
 
 .field {

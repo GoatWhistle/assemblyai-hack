@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useId, useRef } from "react"
+import { type ReactNode, useEffect, useId, useRef } from "react"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { useDetailsMotion } from "@/shared/ui/motion/use-details-motion"
 import { readReducedMotion } from "@/shared/ui/motion/use-reduced-motion"
 import { Chevron } from "@/shared/ui/navigation/chevron"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
@@ -17,6 +18,19 @@ function asSentence(text: string): string {
   const trimmed = text.trim()
   const opened = trimmed.charAt(0).toUpperCase() + trimmed.slice(1)
   return /[.!?]$/.test(opened) ? opened : `${opened}.`
+}
+
+function TechnicalReason({ children }: { readonly children: ReactNode }) {
+  const ref = useDetailsMotion()
+  return (
+    <details className={styles.technical} ref={ref}>
+      <summary className={styles.technicalSummary}>
+        Technical reason
+        <Chevron className={styles.chevron} />
+      </summary>
+      {children}
+    </details>
+  )
 }
 
 export type FaultPanelProps = {
@@ -68,11 +82,7 @@ export function FaultPanel({
           <ActionLink href={REPLAY_ENTRY_HREF}>{REPLAY_ACTION_LABEL}</ActionLink>
         </div>
       ) : null}
-      <details className={styles.technical}>
-        <summary className={styles.technicalSummary}>
-          Technical reason
-          <Chevron className={styles.chevron} />
-        </summary>
+      <TechnicalReason>
         {copy.lead === undefined ? null : <p className={styles.technicalBody}>{copy.body}</p>}
         {copy.lead === undefined || faultDetail === null ? null : (
           <p className={styles.technicalBody}>{asSentence(faultDetail.message)}</p>
@@ -83,7 +93,7 @@ export function FaultPanel({
           {faultDetail === null ? null : <code>{faultDetail.code}</code>}
           {faultDetail === null || spent ? null : `: ${faultDetail.message}`}
         </p>
-      </details>
+      </TechnicalReason>
     </div>
   )
 }
@@ -110,16 +120,12 @@ export function BudgetPaused({ detail }: BudgetPausedProps) {
           Watch the replay
         </ActionLink>
       </div>
-      <details className={styles.technical}>
-        <summary className={styles.technicalSummary}>
-          Technical reason
-          <Chevron className={styles.chevron} />
-        </summary>
+      <TechnicalReason>
         <p className={styles.technicalBody}>
           Read before any call from the budget route, reported as <code>{detail.code}</code>:{" "}
           {detail.message}
         </p>
-      </details>
+      </TechnicalReason>
     </section>
   )
 }

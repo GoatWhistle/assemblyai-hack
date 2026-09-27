@@ -126,7 +126,7 @@ export function ScenarioPicker() {
         </fieldset>
       </div>
 
-      <div className={styles.shown}>
+      <div className={styles.shown} key={selected}>
         {serverSide !== null ? (
           <ServerProbePanel probe={serverSide} state={server.state} />
         ) : null}

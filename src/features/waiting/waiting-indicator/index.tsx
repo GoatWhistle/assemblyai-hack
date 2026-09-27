@@ -37,7 +37,7 @@ export function WaitingIndicator({ signals, next = null }: WaitingIndicatorProps
       <span className={styles.badge} title={`Read from ${copy.observedFrom}`}>
         {SIDE_LABEL[copy.side]}
       </span>
-      <span className={styles.text}>
+      <span className={styles.text} key={state}>
         <span className={styles.headline}>{copy.headline}</span>
         {next === null || copy.side !== "human" ? null : (
           <span className={styles.next}>Next: {next}</span>

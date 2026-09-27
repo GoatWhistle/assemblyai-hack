@@ -1,5 +1,8 @@
+"use client"
+
 import Link from "next/link"
-import type { ReactNode } from "react"
+import { type ReactNode, useEffect, useRef, useState } from "react"
+import { useGlide } from "@/shared/ui/motion/use-glide"
 import { Wordmark } from "../wordmark"
 import styles from "./styles.module.css"
 
@@ -35,6 +38,45 @@ const SECTION_OF: Readonly<Record<SiteSection | LegacySection, SiteSection>> = {
   metrics: "docs",
 }
 
+type NavLink = {
+  readonly key: string
+  readonly href: string
+  readonly label: string
+}
+
+type SiteNavProps = {
+  readonly links: readonly NavLink[]
+  readonly section: string | null
+}
+
+let lastShown: string | null = null
+
+function SiteNav({ links, section }: SiteNavProps) {
+  const nav = useRef<HTMLElement | null>(null)
+  const [from] = useState(() => lastShown)
+  useGlide(nav, section, from)
+  useEffect(() => {
+    lastShown = section
+  }, [section])
+  return (
+    <nav className={styles.nav} aria-label="Sections" ref={nav}>
+      {links.map((link) => (
+        <Link
+          key={link.key}
+          className={[styles.link, section === link.key ? styles.linkActive : ""]
+            .filter((value) => value !== "")
+            .join(" ")}
+          href={link.href}
+          data-glide-key={link.key}
+          aria-current={section === link.key ? "page" : undefined}
+        >
+          {link.label}
+        </Link>
+      ))}
+    </nav>
+  )
+}
+
 export function SiteHeader({ current, status }: SiteHeaderProps) {
   const section = current === undefined ? null : SECTION_OF[current]
   return (
@@ -46,20 +88,7 @@ export function SiteHeader({ current, status }: SiteHeaderProps) {
         </span>
       </Link>
 
-      <nav className={styles.nav} aria-label="Sections">
-        {LINKS.map((link) => (
-          <Link
-            key={link.key}
-            className={[styles.link, section === link.key ? styles.linkActive : ""]
-              .filter((value) => value !== "")
-              .join(" ")}
-            href={link.href}
-            aria-current={section === link.key ? "page" : undefined}
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+      <SiteNav links={LINKS} section={section} />
 
       {status === undefined ? null : <div className={styles.status}>{status}</div>}
     </header>

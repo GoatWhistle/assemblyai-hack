@@ -39,6 +39,8 @@
 }
 
 .nav {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -47,6 +49,8 @@
 }
 
 .link {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -68,11 +72,29 @@
 
 .link:active {
   background-color: var(--ink-a8);
+  scale: 0.96;
 }
 
 .linkActive {
   background-color: var(--ink-a5);
   color: var(--text-primary);
+}
+
+.nav[data-glide] > .linkActive:not(:active) {
+  background-color: transparent;
+}
+
+.nav[data-glide]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--ink-a5);
+  pointer-events: none;
+  clip-path: inset(
+    var(--glide-top, 0px) var(--glide-right, 0px) var(--glide-bottom, 0px)
+      var(--glide-left, 0px) round var(--radius-pill)
+  );
+  transition: clip-path var(--dur-slow) var(--ease-out-expo);
 }
 
 .status {
@@ -111,6 +133,12 @@
     flex: 0 0 auto;
     padding: 0 var(--space-2);
     white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link:active {
+    scale: none;
   }
 }
 

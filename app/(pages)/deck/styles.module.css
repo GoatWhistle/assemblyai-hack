@@ -39,6 +39,34 @@
   .item {
     scroll-snap-align: start;
   }
+
+  @supports (animation-timeline: view(inline)) {
+    .item {
+      animation: deck-focus auto var(--ease-constant) both;
+      animation-timeline: view(inline);
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes deck-focus {
+  from,
+  to {
+    opacity: 0.55;
+    scale: 0.94;
+  }
+
+  35%,
+  65% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    animation: none;
+  }
 }
 
 @media screen and (min-width: 120rem) {

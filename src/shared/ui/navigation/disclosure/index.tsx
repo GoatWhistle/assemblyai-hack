@@ -1,4 +1,7 @@
+"use client"
+
 import type { ReactNode } from "react"
+import { useDetailsMotion } from "@/shared/ui/motion/use-details-motion"
 import { Chevron } from "../chevron"
 import styles from "./styles.module.css"
 
@@ -26,11 +29,12 @@ export function Disclosure({
   id,
   meta,
 }: DisclosureProps) {
+  const ref = useDetailsMotion()
   const classes = [styles.disclosure, TONE_CLASS[tone]]
     .filter((value) => value !== "")
     .join(" ")
   return (
-    <details className={classes} open={defaultOpen} id={id}>
+    <details className={classes} open={defaultOpen} id={id} ref={ref}>
       <summary className={styles.summary}>
         <span className={styles.label}>{summary}</span>
         {meta === undefined ? null : <span className={styles.meta}>{meta}</span>}

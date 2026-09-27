@@ -54,8 +54,26 @@
 }
 
 .icon {
+  grid-area: 1 / 1;
   width: 0.875rem;
   height: 0.875rem;
+  transition:
+    opacity var(--dur-base) var(--ease-out-quart),
+    scale var(--dur-base) var(--ease-out-expo),
+    filter var(--dur-base) var(--ease-out-quart);
+}
+
+.check,
+.button[data-state="copied"] .copy {
+  opacity: 0;
+  scale: 0.6;
+  filter: blur(2px);
+}
+
+.button[data-state="copied"] .check {
+  opacity: 1;
+  scale: 1;
+  filter: none;
 }
 
 .note {
@@ -74,6 +92,14 @@
   line-height: var(--leading-snug);
   white-space: nowrap;
   pointer-events: none;
+  transform-origin: right bottom;
+  opacity: 0;
+  translate: 0 2px;
+  scale: 0.96;
+  transition:
+    opacity var(--dur-fast) var(--ease-out-quart),
+    translate var(--dur-fast) var(--ease-out-quart),
+    scale var(--dur-fast) var(--ease-out-quart);
 }
 
 .note:empty {
@@ -82,11 +108,26 @@
 
 .note[data-state="copied"],
 .note[data-state="failed"] {
-  animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
+  opacity: 1;
+  translate: none;
+  scale: 1;
+  transition-duration: var(--dur-base);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .button:active {
+    scale: none;
+  }
+
+  .icon,
+  .check,
+  .button[data-state="copied"] .copy {
+    scale: none;
+    filter: none;
+  }
+
+  .note {
+    translate: none;
     scale: none;
   }
 }

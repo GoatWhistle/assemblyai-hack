@@ -3,6 +3,7 @@
 import { useEffect, useId, useState } from "react"
 import type { OrderReceipt } from "@/domain"
 import { CALL_HREF, REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { Swap } from "@/shared/ui/motion/swap"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { EmptyState } from "@/shared/ui/states/empty-state"
 import { ErrorState } from "@/shared/ui/states/error-state"
@@ -81,17 +82,19 @@ function ServerStatus({
   }
   return (
     <div className={styles.reserved} aria-live="polite">
-      {load.state === "loading" ? (
-        <p className={styles.note}>Fetching the receipt for {sessionId}.</p>
-      ) : null}
-      {load.state === "missing" ? <NoReceipt /> : null}
-      {load.state === "failed" ? (
-        <ErrorState
-          title="The receipt could not be loaded"
-          body={<p>{load.message}</p>}
-          code={load.status === null ? "no response" : `HTTP ${load.status}`}
-        />
-      ) : null}
+      <Swap swapKey={load.state}>
+        {load.state === "loading" ? (
+          <p className={styles.note}>Fetching the receipt for {sessionId}.</p>
+        ) : null}
+        {load.state === "missing" ? <NoReceipt /> : null}
+        {load.state === "failed" ? (
+          <ErrorState
+            title="The receipt could not be loaded"
+            body={<p>{load.message}</p>}
+            code={load.status === null ? "no response" : `HTTP ${load.status}`}
+          />
+        ) : null}
+      </Swap>
     </div>
   )
 }
@@ -168,11 +171,13 @@ export function OrderCheck({ sessionId }: OrderCheckProps) {
         <p className={styles.hint} id={hintId}>
           {FILE_CHECK_HINT}
         </p>
-        {fileError === null ? null : (
-          <p className={styles.error} role="alert">
-            {fileError}
-          </p>
-        )}
+        <Swap swapKey={fileError ?? ""}>
+          {fileError === null ? null : (
+            <p className={styles.error} role="alert">
+              {fileError}
+            </p>
+          )}
+        </Swap>
       </div>
     </div>
   )
