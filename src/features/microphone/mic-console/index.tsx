@@ -39,13 +39,11 @@ const STATE_CLASS: Readonly<Record<MicState, string>> = Object.freeze({
   [MicState.Blocked]: "blocked",
 })
 
-type KeyShortcut = { readonly key: string; readonly shortcut: string; readonly verb: string }
-
-const KEY_HINT: Readonly<Record<MicState, KeyShortcut | null>> = Object.freeze({
-  [MicState.Idle]: { key: "Space", shortcut: "Space", verb: "start" },
-  [MicState.Opening]: { key: "Esc", shortcut: "Escape", verb: "cancel" },
-  [MicState.Listening]: { key: "Esc", shortcut: "Escape", verb: "stop" },
-  [MicState.AgentSpeaking]: { key: "Esc", shortcut: "Escape", verb: "stop" },
+const KEY_SHORTCUT: Readonly<Record<MicState, string | null>> = Object.freeze({
+  [MicState.Idle]: "Space",
+  [MicState.Opening]: "Escape",
+  [MicState.Listening]: "Escape",
+  [MicState.AgentSpeaking]: "Escape",
   [MicState.Closing]: null,
   [MicState.Blocked]: null,
 })
@@ -71,7 +69,7 @@ export function MicConsole({
   const copy = MIC_COPY[state]
   const listening = state === MicState.Listening
   const active = patience ?? patienceFor(null)
-  const hint = available ? KEY_HINT[state] : null
+  const shortcut = available ? KEY_SHORTCUT[state] : null
   const inert = state === MicState.Closing || !available
   const press = open || cancellable ? onStop : onStart
 
@@ -96,7 +94,7 @@ export function MicConsole({
           }}
           aria-disabled={inert ? true : undefined}
           aria-label={copy.action}
-          aria-keyshortcuts={hint?.shortcut}
+          aria-keyshortcuts={shortcut ?? undefined}
         >
           <span className={styles.glyph} aria-hidden="true">
             {open ? <StopGlyph /> : <Wordmark size={44} />}
@@ -119,11 +117,7 @@ export function MicConsole({
         <FinishAnswer live={listening} patience={active} onFinish={onFinishAnswer} />
       ) : null}
 
-      <KeyHint
-        keyName={hint?.key ?? null}
-        verb={hint?.verb ?? null}
-        cancellable={cancellable}
-      />
+      <KeyHint cancellable={cancellable} />
 
       {open || elapsedMs > 0 ? (
         <MicTelemetry

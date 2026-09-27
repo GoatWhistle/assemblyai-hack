@@ -70,47 +70,54 @@
 @media (min-width: 80rem) {
   .resting {
     grid-template-columns: minmax(0, 1fr) minmax(26rem, 34rem) minmax(0, 1fr);
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
     grid-template-areas:
+      ". stage prompt"
       "title stage prompt"
       "promise stage prompt"
       ". stage prompt";
     column-gap: var(--shell-gap);
     row-gap: 0;
-    align-items: start;
+    padding-top: 0;
   }
 
   .resting .titleArea {
     grid-area: title;
-    padding: var(--space-7) 0 var(--space-4);
+    align-self: end;
+    padding-bottom: var(--space-4);
   }
 
   .resting .promiseArea {
     grid-area: promise;
+    align-self: start;
     margin-top: 0;
   }
 
   .resting .callArea {
     grid-area: stage;
+    display: grid;
+    align-content: center;
+    min-height: calc(100svh - var(--hero-offset));
+    padding-top: var(--hero-balance);
     margin-top: 0;
   }
 
   .resting .promptArea {
     grid-area: prompt;
+    align-self: center;
     justify-self: end;
-    padding-top: var(--space-7);
   }
 
   .resting .alertArea {
     grid-column: 1 / -1;
-    grid-row: 4;
+    grid-row: 5;
     margin-top: var(--space-6);
   }
 
   .resting .mapArea {
     grid-column: 1 / -1;
-    grid-row: 5;
-    margin-top: var(--space-8);
+    grid-row: 6;
+    margin-top: var(--space-6);
   }
 }
 

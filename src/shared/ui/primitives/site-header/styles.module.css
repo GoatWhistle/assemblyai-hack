@@ -23,7 +23,7 @@
 }
 
 .name {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   font-weight: var(--weight-medium);
   letter-spacing: -0.028em;
   font-feature-settings: "ss01" on;
@@ -107,6 +107,15 @@
 }
 
 @media (max-width: 40rem) {
+  .brand svg {
+    width: 1.75rem;
+    height: auto;
+  }
+
+  .name {
+    font-size: var(--text-lg);
+  }
+
   .header {
     gap: 0 var(--space-4);
     padding: var(--space-2) 0;

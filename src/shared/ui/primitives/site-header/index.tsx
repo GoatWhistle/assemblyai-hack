@@ -82,7 +82,7 @@ export function SiteHeader({ current, status }: SiteHeaderProps) {
   return (
     <header className={styles.header}>
       <Link className={styles.brand} href="/">
-        <Wordmark />
+        <Wordmark size={32} />
         <span className={styles.name}>
           Read<span className={styles.nameBack}>back</span>
         </span>
