@@ -98,8 +98,8 @@ test.describe("r2: the docs chrome", () => {
     expect(response?.status()).toBe(404)
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     const main = page.getByRole("main")
-    await expect(main.getByRole("link", { name: "Start a call" })).toHaveAttribute("href", "/")
     await expect(main.getByRole("link", { name: /Watch the .*replay/ })).toBeVisible()
+    await expect(main.getByRole("link", { name: "Start a call" })).toHaveAttribute("href", "/")
     await expect(main.getByRole("link", { name: "Read the docs" })).toBeVisible()
   })
 

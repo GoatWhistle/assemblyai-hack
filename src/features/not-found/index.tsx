@@ -46,16 +46,16 @@ export function NotFoundScreen() {
           <div className={styles.intro}>
             <h1 className={styles.title}>There is no page at this address</h1>
             <p className={styles.lead}>
-              <MissingPath /> Nothing was recorded and nothing was ordered. Start a call, watch
-              the replay, or read how the check works.
+              <MissingPath /> Nothing was recorded and nothing was ordered. Watch the replay,
+              start a call, or read how the check works.
             </p>
           </div>
           <nav className={styles.links} aria-label="Where to go instead">
-            <ActionLink href={CALL_HREF} tone="primary" size="large">
-              Start a call
-            </ActionLink>
-            <ActionLink href={REPLAY_ENTRY_HREF} size="large">
+            <ActionLink href={REPLAY_ENTRY_HREF} tone="primary" size="large">
               {`Watch the ${REPLAY_LENGTH_LABEL}`}
+            </ActionLink>
+            <ActionLink href={CALL_HREF} size="large">
+              Start a call
             </ActionLink>
             <ActionLink href="/docs" size="large" tone="quiet" icon="forward">
               Read the docs

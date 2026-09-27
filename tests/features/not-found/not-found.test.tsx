@@ -10,9 +10,14 @@ describe("the missing-page screen", () => {
     expect(screen.getByText("/no-such-page").tagName).toBe("CODE")
   })
 
-  it("offers the call as the one primary way forward, then the replay and the docs", () => {
+  it("offers the free replay first, then the call, which bills, and the docs", () => {
     render(<NotFoundScreen />)
     const nav = screen.getByRole("navigation", { name: "Where to go instead" })
+    const names = within(nav)
+      .getAllByRole("link")
+      .map((link) => link.textContent ?? "")
+    expect(names[0]).toMatch(/Watch the .*replay/)
+    expect(names[1]).toBe("Start a call")
     expect(within(nav).getByRole("link", { name: "Start a call" }).getAttribute("href")).toBe(
       "/",
     )
