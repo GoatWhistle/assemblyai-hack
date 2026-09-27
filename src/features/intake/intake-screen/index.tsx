@@ -3,6 +3,7 @@
 import type { ReactNode } from "react"
 import type { FieldCandidate, GateDecision } from "@/domain"
 import type { ListenHandler } from "@/features/field-card/said-recorded"
+import { MicState, micStateFor } from "@/features/microphone/mic-state"
 import type { LiveOrderSnapshot } from "@/features/order-summary/live-snapshot"
 import type { FastPath } from "@/features/read-back/fast-path"
 import type { ReadBackContext } from "@/features/read-back/read-back-machine"
@@ -13,12 +14,11 @@ import { Swap } from "@/shared/ui/motion/swap"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { useInCall } from "../in-call-loader"
-import { PhaseDot } from "../phase-dot"
 import type { FaultDetail } from "../session-options"
 import { isRestartable, type SessionFault, SessionPhase } from "../session-status"
 import type { Solicited } from "../solicited-field"
+import { CallNotice, type SideNotice } from "./call-notice"
 import { CallStage } from "./call-stage"
-import { IntakePrompt } from "./intake-prompt"
 import { CALL_MAIN_ID } from "./landmarks"
 import { ProofMap } from "./proof-map"
 import styles from "./styles.module.css"
@@ -59,35 +59,32 @@ export type IntakeScreenProps = {
   readonly onFinishAnswer?: () => void
 }
 
-function promptsFor(
+function sideNoticeFor(
   phase: SessionPhase,
   fault: SessionFault | null,
+  faultDetail: FaultDetail | null,
   budgetPaused: FaultDetail | null,
-): boolean {
-  const paused = budgetPaused !== null && phase === SessionPhase.Idle
-  return fault === null && isRestartable(phase) && !paused
+  agentSpeaking: boolean,
+): SideNotice | null {
+  if (fault !== null) {
+    const blocked = micStateFor(phase, agentSpeaking, fault) === MicState.Blocked
+    return { kind: "fault", fault, detail: faultDetail, canRestart: blocked }
+  }
+  if (budgetPaused !== null && phase === SessionPhase.Idle) {
+    return { kind: "paused", detail: budgetPaused }
+  }
+  return isRestartable(phase) ? { kind: "prompt" } : null
 }
 
-function CallNotices({
-  prompting,
-  alert,
-}: {
-  readonly prompting: boolean
-  readonly alert: string | null
-}) {
+function AlertLine({ alert }: { readonly alert: string | null }) {
   return (
-    <>
-      <Swap swapKey={prompting ? "prompt" : "none"} className={styles.promptArea}>
-        {prompting ? <IntakePrompt /> : null}
-      </Swap>
-      <Swap swapKey={alert ?? ""} className={styles.alertArea}>
-        {alert === null ? null : (
-          <p className={styles.alert} role="alert">
-            {alert}
-          </p>
-        )}
-      </Swap>
-    </>
+    <Swap swapKey={alert ?? ""} className={styles.alertArea}>
+      {alert === null ? null : (
+        <p className={styles.alert} role="alert">
+          {alert}
+        </p>
+      )}
+    </Swap>
   )
 }
 
@@ -121,13 +118,12 @@ export function IntakeScreen({
 }: IntakeScreenProps) {
   const started = candidates.length > 0 || transcript.length > 0
   const inCall = useInCall(phase !== SessionPhase.Idle || started)
-  const prompting = !started && promptsFor(phase, fault, budgetPaused)
+  const aside = started
+    ? null
+    : sideNoticeFor(phase, fault, faultDetail, budgetPaused, agentSpeaking)
 
   return (
-    <PageShell
-      current="call"
-      status={<PhaseDot phase={phase} fault={fault} paused={budgetPaused !== null} />}
-    >
+    <PageShell current="call">
       <main id={CALL_MAIN_ID} tabIndex={-1} className={styles.main}>
         <div className={`${styles.workspace} ${started ? styles.live : styles.resting}`}>
           {started ? (
@@ -145,6 +141,7 @@ export function IntakeScreen({
               faultDetail={faultDetail}
               budgetPaused={budgetPaused}
               started={started}
+              noticesAside={!started}
               agentSpeaking={agentSpeaking}
               turnInFlight={turnInFlight}
               readBackState={readBack.state}
@@ -159,7 +156,8 @@ export function IntakeScreen({
             />
           </div>
 
-          <CallNotices prompting={prompting} alert={alert} />
+          <CallNotice notice={aside} className={styles.promptArea} onStart={onStart} />
+          <AlertLine alert={alert} />
 
           {started ? null : (
             <>

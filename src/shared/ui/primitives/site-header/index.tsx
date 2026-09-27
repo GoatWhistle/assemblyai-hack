@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { type ReactNode, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { GitHubIcon } from "@/shared/ui/icons"
 import { useGlide } from "@/shared/ui/motion/use-glide"
 import { EXTERNAL_REL, NEW_TAB_NOTE } from "@/shared/ui/navigation/text-link"
@@ -16,7 +16,6 @@ type LegacySection = "home" | "live" | "how" | "compare" | "demo" | "metrics"
 
 export type SiteHeaderProps = {
   readonly current?: SiteSection | LegacySection
-  readonly status?: ReactNode
 }
 
 const LINKS: readonly {
@@ -81,7 +80,7 @@ function SiteNav({ links, section }: SiteNavProps) {
   )
 }
 
-export function SiteHeader({ current, status }: SiteHeaderProps) {
+export function SiteHeader({ current }: SiteHeaderProps) {
   const section = current === undefined ? null : SECTION_OF[current]
   return (
     <header className={styles.header}>
@@ -98,8 +97,6 @@ export function SiteHeader({ current, status }: SiteHeaderProps) {
         <GitHubIcon className={styles.repoMark} />
         <span className="visually-hidden">{`Source code on GitHub ${NEW_TAB_NOTE}`}</span>
       </a>
-
-      {status === undefined ? null : <div className={styles.status}>{status}</div>}
     </header>
   )
 }

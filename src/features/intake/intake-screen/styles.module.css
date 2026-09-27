@@ -94,11 +94,12 @@
   }
 
   .resting .callArea {
+    --mic-centre: calc(50svh - var(--hero-offset));
+
     grid-area: stage;
     display: grid;
-    align-content: center;
+    align-content: start;
     min-height: calc(100svh - var(--hero-offset));
-    padding-top: var(--hero-balance);
     margin-top: 0;
   }
 

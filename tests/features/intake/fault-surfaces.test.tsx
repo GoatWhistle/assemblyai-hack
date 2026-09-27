@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 import { beforeAll, describe, expect, it } from "vitest"
 import type { GateDecision } from "@/domain"
+import { FAULT_STEPS } from "@/features/intake/fault-steps"
 import { preloadInCall } from "@/features/intake/in-call-loader"
 import { IntakeScreen } from "@/features/intake/intake-screen"
-import { REPLAY_ACTION_LABEL } from "@/features/intake/intake-screen/fault-panel"
+import { RETRY_ACTION_LABEL } from "@/features/intake/intake-screen/fault-panel"
 import { FAULT_COPY, SessionFault, SessionPhase } from "@/features/intake/session-status"
 import {
   LASA_CANDIDATE,
@@ -54,15 +55,44 @@ describe("honest status surfaces", () => {
     it(`explains the ${fault} fault with a remedy`, () => {
       const { unmount } = renderScreen({ fault, phase: SessionPhase.Blocked })
       expect(screen.getByRole("alert")).toBeDefined()
-      expect(screen.getByText(FAULT_COPY[fault].title)).toBeDefined()
-      expect(screen.getByText(FAULT_COPY[fault].remedy)).toBeDefined()
+      const card = screen.getByRole("alert")
+      expect(within(card).getByRole("heading", { name: FAULT_COPY[fault].title })).toBeDefined()
+      for (const step of FAULT_STEPS[fault].steps) {
+        expect(within(card).getByText(step)).toBeDefined()
+      }
       unmount()
     })
   }
 
-  it("offers the replay demonstration as the way past a blocked microphone", () => {
-    renderScreen({ fault: SessionFault.MicrophoneDenied, phase: SessionPhase.Blocked })
-    expect(screen.getByRole("link", { name: REPLAY_ACTION_LABEL })).toBeDefined()
+  it("offers one retry and no replay action on a refused microphone, focused on its title", () => {
+    renderScreen({
+      candidates: [],
+      decisions: new Map(),
+      transcript: [],
+      fault: SessionFault.MicrophoneDenied,
+      phase: SessionPhase.Blocked,
+    })
+    const card = screen.getByRole("alert")
+    expect(screen.getAllByRole("alert")).toHaveLength(1)
+    expect(within(card).getByRole("button", { name: RETRY_ACTION_LABEL })).toBeDefined()
+    expect(
+      within(card).queryByRole("link", { name: /replay/i }),
+      "the fault card offers the retry only",
+    ).toBeNull()
+    expect(document.activeElement).toBe(
+      within(card).getByRole("heading", { name: FAULT_COPY.microphone_denied.title }),
+    )
+  })
+
+  it("keeps the fault card out of the header", () => {
+    renderScreen({
+      candidates: [],
+      decisions: new Map(),
+      transcript: [],
+      fault: SessionFault.MicrophoneDenied,
+      phase: SessionPhase.Blocked,
+    })
+    expect(screen.getByRole("banner").textContent).not.toMatch(/blocked|could not start/i)
   })
 
   it("keeps the recovery actions beside the microphone once a fault has to be read", () => {

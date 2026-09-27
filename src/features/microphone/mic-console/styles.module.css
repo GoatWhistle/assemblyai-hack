@@ -1,8 +1,11 @@
 .console {
+  --console-lead: var(--space-5);
+
   display: grid;
   justify-items: center;
   gap: var(--space-4);
-  padding: var(--space-5) var(--space-5) var(--space-6);
+  padding: var(--console-lead) var(--space-5) var(--space-6);
+  padding-top: max(var(--console-lead), calc(var(--mic-centre, 0px) - var(--mic-size) * 0.72));
   text-align: center;
 }
 
@@ -235,11 +238,11 @@
 
 @media (max-height: 40rem) {
   .console {
-    gap: var(--space-2);
-    padding: var(--space-4) var(--space-5);
-  }
-
-  .console {
+    --console-lead: var(--space-4);
     --mic-size: 5.5rem;
+
+    gap: var(--space-2);
+    padding-inline: var(--space-5);
+    padding-bottom: var(--space-4);
   }
 }

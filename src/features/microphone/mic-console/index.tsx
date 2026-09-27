@@ -17,6 +17,7 @@ export type MicConsoleProps = {
   readonly echoDiscards: number
   readonly patience?: Patience | undefined
   readonly notice?: ReactNode
+  readonly speaks?: boolean
   readonly available?: boolean
   readonly onStart?: (() => void) | undefined
   readonly onStop?: (() => void) | undefined
@@ -48,7 +49,10 @@ const KEY_SHORTCUT: Readonly<Record<MicState, string | null>> = Object.freeze({
   [MicState.Blocked]: null,
 })
 
-function messageKey(notice: ReactNode, state: MicState): string {
+function messageKey(notice: ReactNode, state: MicState, speaks: boolean): string {
+  if (!speaks) {
+    return "silent"
+  }
   return notice === undefined || notice === null ? state : "notice"
 }
 
@@ -59,6 +63,7 @@ export function MicConsole({
   echoDiscards,
   patience,
   notice,
+  speaks = true,
   available = true,
   onStart,
   onStop,
@@ -104,13 +109,15 @@ export function MicConsole({
 
       <LevelMeter level={level} state={state} />
 
-      <Swap swapKey={messageKey(notice, state)} className={styles.message}>
-        {notice ?? (
-          <>
-            <h2 className={styles.headline}>{copy.headline}</h2>
-            <p className={styles.detail}>{copy.detail}</p>
-          </>
-        )}
+      <Swap swapKey={messageKey(notice, state, speaks)} className={styles.message}>
+        {speaks
+          ? (notice ?? (
+              <>
+                <h2 className={styles.headline}>{copy.headline}</h2>
+                <p className={styles.detail}>{copy.detail}</p>
+              </>
+            ))
+          : null}
       </Swap>
 
       {open ? (

@@ -2,7 +2,6 @@ import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { IntakeScreen } from "@/features/intake/intake-screen"
 import { PAUSED_BODY, PAUSED_TITLE } from "@/features/intake/intake-screen/fault-panel"
-import { PAUSED_LABEL } from "@/features/intake/phase-dot"
 import { FAULT_COPY, SessionFault, SessionPhase } from "@/features/intake/session-status"
 import {
   CONNECT_WINDOW_MS,
@@ -64,7 +63,10 @@ describe("r2-A3 A3R2-06: a spent budget is shown before anyone presses the micro
         onStart={onStart}
       />,
     )
-    expect(screen.getByText(PAUSED_LABEL)).toBeTruthy()
+    expect(
+      screen.getByRole("banner").textContent,
+      "the paused state is said at the microphone, never as a header pill",
+    ).not.toMatch(/paused/i)
     const notice = screen.getByRole("region", { name: PAUSED_TITLE })
     expect(within(notice).getByText(PAUSED_BODY)).toBeTruthy()
     expect(within(notice).getByRole("link", { name: "Watch the replay" })).toBeTruthy()

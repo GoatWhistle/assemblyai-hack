@@ -4,14 +4,13 @@ import styles from "./styles.module.css"
 
 export type PageShellProps = {
   readonly current?: SiteHeaderProps["current"]
-  readonly status?: ReactNode
   readonly children: ReactNode
 }
 
-export function PageShell({ current, status, children }: PageShellProps) {
+export function PageShell({ current, children }: PageShellProps) {
   return (
     <div className={styles.shell}>
-      <SiteHeader current={current} status={status} />
+      <SiteHeader current={current} />
       {children}
     </div>
   )

@@ -12,11 +12,15 @@ import { BudgetPaused, FaultPanel } from "../fault-panel"
 import styles from "./styles.module.css"
 
 function noticeFor(
+  aside: boolean,
   paused: FaultDetail | null,
   fault: SessionFault | null,
   faultDetail: FaultDetail | null,
   onStart: (() => void) | undefined,
 ) {
+  if (aside) {
+    return undefined
+  }
   if (paused !== null) {
     return <BudgetPaused detail={paused} />
   }
@@ -32,6 +36,7 @@ export type CallStageProps = {
   readonly faultDetail?: FaultDetail | null
   readonly budgetPaused?: FaultDetail | null
   readonly started: boolean
+  readonly noticesAside?: boolean
   readonly agentSpeaking: boolean
   readonly turnInFlight: boolean
   readonly readBackState: ReadBackState
@@ -51,6 +56,7 @@ export function CallStage({
   faultDetail = null,
   budgetPaused = null,
   started,
+  noticesAside = false,
   agentSpeaking,
   turnInFlight,
   readBackState,
@@ -69,9 +75,8 @@ export function CallStage({
   const mic = paused ? MicState.Blocked : micStateFor(phase, agentSpeaking, fault)
   const blocked = mic === MicState.Blocked
   const waiting = !(idle || blocked || mic === MicState.Opening)
-  const trailing = blocked ? null : fault
-  const next =
-    solicited === undefined || solicited.field === null ? null : FIELD_SPOKEN[solicited.field]
+  const trailing = blocked || noticesAside ? null : fault
+  const next = solicited?.field == null ? null : FIELD_SPOKEN[solicited.field]
   return (
     <div className={styles.column}>
       <MicConsole
@@ -81,11 +86,13 @@ export function CallStage({
         echoDiscards={echoDiscards}
         patience={patience}
         notice={noticeFor(
+          noticesAside,
           paused ? budgetPaused : null,
           blocked ? fault : null,
           faultDetail,
           onStart,
         )}
+        speaks={!(noticesAside && (paused || blocked))}
         available={!paused}
         onStart={onStart}
         onStop={onStop}

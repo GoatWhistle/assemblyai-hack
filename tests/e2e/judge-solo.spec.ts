@@ -158,7 +158,7 @@ test.describe("keyboard reachability", () => {
     ).toBe(false)
   })
 
-  test("a refused microphone stays on the call page with one card and two actions", async ({
+  test("a refused microphone stays on the call page with one card and a retry", async ({
     browser,
   }) => {
     const context = await browser.newContext({ permissions: [] })
@@ -170,9 +170,16 @@ test.describe("keyboard reachability", () => {
     await page.goto("/")
     await page.getByRole("button", { name: "Start listening" }).click()
     const card = page.getByRole("alert")
-    await expect(card.getByRole("heading", { name: /permission was refused/i })).toBeVisible()
+    await expect(card).toHaveCount(1)
+    const title = card.getByRole("heading", { name: /permission was refused/i })
+    await expect(title).toBeVisible()
+    await expect(title, "focus lands on the card so a screen reader starts there").toBeFocused()
     await expect(card.getByRole("button", { name: "Try again" })).toBeInViewport()
-    await expect(card.getByRole("link", { name: "Watch the replay" })).toBeInViewport()
+    await expect(
+      card.getByRole("link", { name: /replay/i }),
+      "the fault card offers the retry only",
+    ).toHaveCount(0)
+    await expect(page.getByRole("banner")).not.toContainText(/blocked/i)
     await page.waitForTimeout(9500)
     await expect(page, "a microphone fault never moves the caller off the call page").toHaveURL(
       /\/$/,

@@ -1,0 +1,38 @@
+.slot {
+  --notice-shift: 0 var(--space-3);
+}
+
+.arrive {
+  animation: notice-in var(--dur-slow) var(--ease-out-expo) both;
+}
+
+.slot[data-leaving] {
+  pointer-events: none;
+  animation: notice-out var(--dur-base) var(--ease-out-quart) forwards;
+}
+
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    translate: var(--notice-shift);
+  }
+}
+
+@keyframes notice-out {
+  to {
+    opacity: 0;
+    translate: var(--notice-shift);
+  }
+}
+
+@media (min-width: 80rem) {
+  .slot {
+    --notice-shift: var(--space-6) 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot {
+    --notice-shift: 0 0;
+  }
+}

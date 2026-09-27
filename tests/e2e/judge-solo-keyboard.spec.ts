@@ -55,7 +55,9 @@ test.describe("the microphone keeps the keyboard's place", () => {
       }),
     )
     await page.goto("/")
-    await expect(page.getByText("Live calls paused today")).toBeVisible()
+    await expect(
+      page.getByRole("region", { name: "Live calls are paused for today" }),
+    ).toBeVisible()
     await expect(page.getByRole("link", { name: "Watch the replay" })).toBeInViewport()
     await expect(page.getByRole("button", { name: "Start listening" })).toHaveAttribute(
       "aria-disabled",

@@ -191,7 +191,6 @@
   --rail-width: 20rem;
   --stage-width: clamp(20rem, 24vw, 26rem);
   --hero-offset: 4.75rem;
-  --hero-balance: 7.5rem;
   --target-touch: 2.75rem;
 
   --docs-sidebar: clamp(14.5rem, 12vw, 17rem);

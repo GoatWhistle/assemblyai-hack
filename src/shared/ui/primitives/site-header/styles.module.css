@@ -123,15 +123,6 @@
   flex: 0 0 auto;
 }
 
-.status {
-  display: flex;
-  align-items: center;
-}
-
-.status:empty {
-  display: none;
-}
-
 @media (max-width: 40rem) {
   .brand svg {
     width: 1.75rem;
@@ -163,11 +154,6 @@
   .repo {
     order: 2;
     margin-inline-start: 0;
-  }
-
-  .status {
-    order: 3;
-    flex-basis: 100%;
   }
 
   .link {

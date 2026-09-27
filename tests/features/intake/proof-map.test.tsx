@@ -9,8 +9,6 @@ import {
   ProofMap,
   proofKindOf,
 } from "@/features/intake/intake-screen/proof-map"
-import { PhaseDot } from "@/features/intake/phase-dot"
-import { SessionPhase } from "@/features/intake/session-status"
 
 function groupOf(kind: ProofKind): HTMLElement {
   const heading = screen.getByRole("heading", { level: 3, name: PROOF_GROUP[kind].title })
@@ -50,17 +48,5 @@ describe("the proof map on the idle call page", () => {
       .getAllByRole("term")
       .map((term) => term.textContent)
     expect(terms).toEqual([FIELD_LABEL[FieldName.DrugName]])
-  })
-})
-
-describe("the header status before a call", () => {
-  it("shows nothing while idle, because Ready told the caller nothing", () => {
-    const { container } = render(<PhaseDot phase={SessionPhase.Idle} />)
-    expect(container.textContent).toBe("")
-  })
-
-  it("still shows live and paused states", () => {
-    render(<PhaseDot phase={SessionPhase.Live} />)
-    expect(screen.getByText("Live")).toBeDefined()
   })
 })

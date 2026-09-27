@@ -14,18 +14,6 @@ export const SessionPhase = {
 
 export type SessionPhase = (typeof SessionPhase)[keyof typeof SessionPhase]
 
-export const PHASE_LABEL: Readonly<Record<SessionPhase, string>> = Object.freeze({
-  [SessionPhase.Idle]: "Ready",
-  [SessionPhase.RequestingMicrophone]: "Asking for the microphone",
-  [SessionPhase.MintingTokens]: "Connecting",
-  [SessionPhase.Live]: "Live",
-  [SessionPhase.Closing]: "Ending the call",
-  [SessionPhase.Closed]: "Call ended",
-  [SessionPhase.Blocked]: "Could not start",
-  [SessionPhase.Reconnecting]: "Reconnecting",
-  [SessionPhase.Degraded]: "Call stopped",
-})
-
 export const PHASE_TECHNICAL: Readonly<Record<SessionPhase, string>> = Object.freeze({
   [SessionPhase.Idle]: "Not connected",
   [SessionPhase.RequestingMicrophone]: "Asking for the microphone",
@@ -37,13 +25,6 @@ export const PHASE_TECHNICAL: Readonly<Record<SessionPhase, string>> = Object.fr
   [SessionPhase.Reconnecting]: "Reconnecting with a fresh token",
   [SessionPhase.Degraded]: "Stopped after a failed reconnect",
 })
-
-export function phaseLabel(phase: SessionPhase, fault: SessionFault | null): string {
-  if (phase === SessionPhase.Blocked && isMicrophoneFault(fault)) {
-    return "Microphone blocked"
-  }
-  return PHASE_LABEL[phase]
-}
 
 export function isRestartable(phase: SessionPhase): boolean {
   return (

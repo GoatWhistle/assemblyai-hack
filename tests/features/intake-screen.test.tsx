@@ -10,7 +10,7 @@ import {
   JUDGE_LINK_LABEL,
 } from "@/features/intake/intake-screen/intake-prompt"
 import { THESIS_PROMISE } from "@/features/intake/intake-screen/thesis"
-import { PHASE_LABEL, SessionPhase } from "@/features/intake/session-status"
+import { SessionPhase } from "@/features/intake/session-status"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import {
   LASA_CANDIDATE,
@@ -18,6 +18,7 @@ import {
   NAME_CANDIDATE,
   NAME_DECISION,
 } from "@/features/judge-demo/scenario"
+import { MIC_COPY, MicState } from "@/features/microphone/mic-state"
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { callerEntry } from "@/features/transcript-view/transcript-entry"
 import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
@@ -121,9 +122,13 @@ describe("the intake screen", () => {
     expect(screen.getByLabelText("Drug name field card")).toBeDefined()
   })
 
-  it("reports the session phase in words", () => {
+  it("reports the session phase in words at the microphone, not in the header", () => {
     renderScreen({ phase: SessionPhase.Live })
-    expect(screen.getByText(PHASE_LABEL.live)).toBeDefined()
+    expect(
+      screen.getByRole("heading", { name: MIC_COPY[MicState.Listening].headline }),
+    ).toBeDefined()
+    const header = screen.getByRole("navigation", { name: "Sections" }).closest("header")
+    expect(header?.textContent).not.toMatch(/live/i)
   })
 
   it("offers a stop control on the microphone while live", async () => {

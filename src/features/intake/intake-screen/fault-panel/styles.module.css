@@ -1,66 +1,118 @@
-.fault {
-  display: grid;
-  gap: var(--space-3);
+.notice {
   width: 100%;
   max-width: var(--measure-prose);
-  padding: var(--panel-pad);
-  border: 1px solid var(--panel-alert-line);
-  border-radius: var(--panel-radius);
-  background-color: var(--panel-surface);
+  margin-inline: auto;
   text-align: start;
-  animation: var(--keyframes-flag) var(--dur-base) var(--ease-out-quart) both;
 }
 
-.paused {
-  border-color: var(--panel-line);
-  animation: none;
+.card {
+  --glyph-size: 2.5rem;
+
+  display: grid;
+  grid-template-columns: var(--glyph-size) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--rhythm-stack) var(--space-4);
 }
 
-.title {
-  font-size: var(--title-block-size);
-  font-weight: var(--title-block-weight);
-  letter-spacing: var(--title-block-track);
-  line-height: var(--title-block-leading);
-  color: var(--mic-blocked-ink);
+.glyph {
+  display: grid;
+  place-items: center;
+  width: var(--glyph-size);
+  height: var(--glyph-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-panel);
+  box-shadow: inset 0 0 0 1px var(--panel-tinted-line);
+  color: var(--text-secondary);
 }
 
-.paused .title {
-  color: var(--text-primary);
+.card[data-alarmed] .glyph {
+  background-color: var(--panel-alert-surface);
+  box-shadow: inset 0 0 0 1px var(--panel-alert-line);
+  color: var(--panel-alert-ink);
+}
+
+.card .title {
+  margin: 0;
+}
+
+.card[data-alarmed] .title {
+  color: var(--panel-alert-ink);
 }
 
 .title:focus {
   outline: none;
 }
 
-.title:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
+.content {
+  grid-column: 2;
+  display: grid;
+  gap: var(--rhythm-stack);
+  min-width: 0;
 }
 
-.body {
-  font-size: var(--text-base);
+.cause {
+  font-size: var(--body-size);
   line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-wrap: pretty;
 }
 
 .remedy {
   display: grid;
-  gap: var(--space-1);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--line-hairline);
+  gap: var(--rhythm-tight);
 }
 
 .remedyLabel {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--text-muted);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--text-secondary);
 }
 
-.remedyText {
-  font-size: var(--text-base);
+.steps {
+  display: grid;
+  gap: var(--rhythm-tight);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.step,
+.single {
+  font-size: var(--body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  column-gap: var(--space-3);
+  counter-increment: step;
+}
+
+.step::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  aspect-ratio: 1;
+  margin-top: 0.0625rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-panel);
+  box-shadow: inset 0 0 0 1px var(--panel-tinted-line);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-secondary);
+}
+
+.note {
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-muted);
   text-wrap: pretty;
 }
 
@@ -68,11 +120,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  padding-top: var(--space-1);
 }
 
 .technical {
-  font-size: var(--text-sm);
+  font-size: var(--meta-size);
   color: var(--text-muted);
 }
 
@@ -81,6 +132,7 @@
   align-items: center;
   gap: var(--space-1);
   min-height: var(--target-touch);
+  margin-block: calc(var(--space-2) * -1);
   list-style: none;
   cursor: pointer;
   color: var(--text-muted);
@@ -104,18 +156,26 @@
 }
 
 .technicalBody {
-  line-height: var(--leading-relaxed);
+  display: grid;
+  gap: var(--rhythm-tight);
+  padding-top: var(--space-2);
+  line-height: var(--meta-leading);
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 30rem) {
-  .fault {
-    padding: var(--space-4);
+@media (max-width: 40rem) {
+  .card {
+    --glyph-size: 2.25rem;
+  }
+
+  .content {
+    grid-column: 1 / -1;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .fault {
-    animation: none;
+@media (min-width: 80rem) {
+  .notice {
+    max-width: 30rem;
+    margin-inline: 0;
   }
 }
