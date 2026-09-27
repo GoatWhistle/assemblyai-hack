@@ -17,7 +17,6 @@ route through the live product, and every page below is one link from it.
 |---|---|
 | [For judges](for-judges.md) | Every route of the deployment, a two-minute walk-through, the attack console, what to try with a microphone, and where each judging criterion is answered |
 | [Product](product.md) | The problem, why pharmacy, what happens in a call, what has and has not been shown, who would pay, what is new, the risks |
-| [Slides](slides.md) | The submission deck as text, generated from `src/features/deck/slides.ts` by `make deck-markdown`; never edited by hand |
 
 ## How is it built?
 
@@ -50,4 +49,4 @@ route through the live product, and every page below is one link from it.
 
 ---
 
-<sub>[Project README](../README.md)</sub>
+<p align="center"><sub><a href="../README.md">Project README</a></sub></p>

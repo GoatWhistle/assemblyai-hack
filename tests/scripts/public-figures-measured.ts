@@ -15,7 +15,6 @@ const CHECKSUMS = "npx tsx scripts/measure/audit-checksums.ts 200"
 const CENSUS = "npx tsx scripts/measure/schedule-census.ts"
 const ISMP = "npx tsx scripts/measure/ismp-coverage.ts"
 
-const SLIDES: PublicDocument = "docs/slides.md"
 const DECK: PublicDocument = "src/features/deck/slides.ts"
 const README: PublicDocument = "README.md"
 const EVIDENCE: PublicDocument = "docs/evidence.md"
@@ -143,7 +142,7 @@ const ON_THE_DECK: readonly (readonly [RegExp, string, (output: string) => strin
 
 export const MEASURED_ANCHORS: readonly Anchor[] = [
   ...ON_THE_DECK.flatMap(([locate, source, reproduce]) =>
-    [SLIDES, DECK].map((document): Anchor => ({ document, locate, source, reproduce })),
+    [DECK].map((document): Anchor => ({ document, locate, source, reproduce })),
   ),
   ...[README, EVIDENCE].flatMap((document): readonly Anchor[] => [
     {

@@ -1,12 +1,7 @@
-export type PublicDocument =
-  | "README.md"
-  | "docs/slides.md"
-  | "src/features/deck/slides.ts"
-  | `docs/${string}.md`
+export type PublicDocument = "README.md" | "src/features/deck/slides.ts" | `docs/${string}.md`
 
 export const PUBLIC_DOCUMENTS: readonly PublicDocument[] = [
   "README.md",
-  "docs/slides.md",
   "src/features/deck/slides.ts",
 ]
 

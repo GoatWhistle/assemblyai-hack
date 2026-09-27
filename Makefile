@@ -20,7 +20,7 @@ VERIFY_STEPS := lint typecheck test file-length package-size import-cycles packa
 	honest audit-checksums audit-catalog coverage-matrix calibration rarity \
 	ab-gate doctor spend live-runs measure \
 	live-set live-report keyterms-ablation eval-live eval-live-keyterms \
-	check-bundle prune-agents verify-receipt live-smoke deck-markdown \
+	check-bundle prune-agents verify-receipt live-smoke \
 	eval eval-control eval-native16 eval-keyterms eval-heldout eval-repeat eval-units \
 	baseline seal-heldout clean
 
@@ -78,7 +78,6 @@ help:
 	@printf "  \033[1m%s\033[0m\n" "Occasional"
 	@printf "    \033[36m%-16s\033[0m %s\n" "build" "Build the production bundle"
 	@printf "    \033[36m%-16s\033[0m %s\n" "fixtures" "Rebuild the socket fixtures the offline checks replay"
-	@printf "    \033[36m%-16s\033[0m %s\n" "deck-markdown" "Regenerate docs/slides.md from the deck in src/features/deck"
 	@printf "    \033[36m%-16s\033[0m %s\n" "corpus" "Build the audio corpora and the control term list"
 	@printf "    \033[36m%-16s\033[0m %s\n" "baseline" "Rewrite every ratchet baseline"
 	@printf "    \033[36m%-16s\033[0m %s\n" "seal-heldout" "Seal the held-out set once, after labelling it"
@@ -243,8 +242,6 @@ prune-agents:
 live-smoke:
 	$(RUN) "npx playwright test --config tests/live/playwright.config.ts"
 
-deck-markdown:
-	$(RUN) "npx tsx scripts/report/deck-markdown.ts"
 
 eval-live:
 	$(RUN) "npx tsx scripts/measure/measure-live.ts --confirm-paid"

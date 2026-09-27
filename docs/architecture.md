@@ -421,4 +421,4 @@ tunnel, and tools are otherwise exercised on a preview deployment.
 
 ---
 
-<sub>[Documentation index](README.md) · [Project README](../README.md)</sub>
+<p align="center"><sub><a href="README.md">Documentation index</a> · <a href="../README.md">Project README</a></sub></p>

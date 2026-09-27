@@ -707,4 +707,4 @@ and `make keyterms-purity` fails the build if one reaches it.
 
 ---
 
-<sub>[Documentation index](../docs/README.md) · [Project README](../README.md)</sub>
+<p align="center"><sub><a href="../docs/README.md">Documentation index</a> · <a href="../README.md">Project README</a></sub></p>

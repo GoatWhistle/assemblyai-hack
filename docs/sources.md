@@ -89,4 +89,4 @@ when a sound-alike name is misheard, recognizer confidence does not reveal it.
 
 ---
 
-<sub>[Documentation index](README.md) · [Project README](../README.md)</sub>
+<p align="center"><sub><a href="README.md">Documentation index</a> · <a href="../README.md">Project README</a></sub></p>
