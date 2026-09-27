@@ -1,6 +1,6 @@
-import Link from "next/link"
 import type { LasaRisk } from "@/domain"
 import { LASA_NOT_AN_ACCUSATION } from "@/features/gate-banner/hypothesis-language"
+import { TextLink } from "@/shared/ui/navigation/text-link"
 import { Chip } from "@/shared/ui/primitives/chip"
 import type { NameAnswerState } from "../field-status"
 import styles from "./styles.module.css"
@@ -61,7 +61,10 @@ export function LasaOverride({
         ))}
       </div>
       <p className={styles.source}>
-        source <Link href={LIST_SOURCE_HREF}>{lasa.source}</Link>
+        source{" "}
+        <TextLink href={LIST_SOURCE_HREF} glyph="document">
+          {lasa.source}
+        </TextLink>
         {lasa.sourceRow === null ? "" : ` · ${lasa.sourceRow}`}
       </p>
     </div>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import type { ReasonCode } from "@/domain"
 import { MOMENTS } from "@/features/compare"
 import { MomentStrip } from "@/features/compare/moment-strip"
@@ -16,6 +15,7 @@ import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
 import { Tabs } from "@/shared/ui/navigation/tabs"
+import { TextLink } from "@/shared/ui/navigation/text-link"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { pageMetadata } from "@/site/page-metadata"
 import { DOCS_PAGES, OVERVIEW_SECTIONS, REPLAY_HUB } from "../docs-map"
@@ -71,7 +71,8 @@ export default function DocsOverviewPage() {
             spoken words that produced it, the recognizer&rsquo;s certainty over those words and
             an independent validator&rsquo;s verdict, and it enters the order only when a
             validator passed it or the caller confirmed it aloud.{" "}
-            <Link href="/docs/limitations">What this cannot prove</Link> is stated as plainly.
+            <TextLink href="/docs/limitations">What this cannot prove</TextLink> is stated as
+            plainly.
           </>
         }
       />
@@ -83,7 +84,8 @@ export default function DocsOverviewPage() {
           <>
             A recognizer can be fully certain it heard morphine while the caller said
             hydromorphone. Certainty describes the acoustics, not which of two similar names was
-            meant: a <Link href={glossaryHref("LASA")}>look-alike, sound-alike</Link> pair.
+            meant: a <TextLink href={glossaryHref("LASA")}>look-alike, sound-alike</TextLink>{" "}
+            pair.
           </>
         }
       >
@@ -165,9 +167,9 @@ export default function DocsOverviewPage() {
           <ul className={styles.hubLinks}>
             {REPLAY_HUB.links.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className={styles.hubLink}>
+                <ActionLink href={link.href} size="small" icon="forward">
                   {link.label}
-                </Link>
+                </ActionLink>
               </li>
             ))}
           </ul>

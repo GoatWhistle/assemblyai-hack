@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { glossaryHref } from "@/features/how-it-works/glossary/terms"
 import { BenchmarkTable } from "@/features/metrics/benchmark-table"
 import { CatchCostHeadline, headlineTitle } from "@/features/metrics/catch-cost-headline"
@@ -21,6 +20,7 @@ import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
+import { TextLink } from "@/shared/ui/navigation/text-link"
 import { pageMetadata } from "@/site/page-metadata"
 import { BENCHMARK_PAGE, METRICS_SECTIONS, OPERATIONS_PAGE } from "../docs-map"
 import styles from "./styles.module.css"
@@ -96,7 +96,7 @@ export default function MetricsPage() {
           <>
             Standing read-back, threshold and contrastive pair rule, as the server publishes
             them. Brackets are{" "}
-            <Link href={glossaryHref("Wilson interval")}>95% Wilson intervals</Link>.
+            <TextLink href={glossaryHref("Wilson interval")}>95% Wilson intervals</TextLink>.
           </>
         }
       >
@@ -141,7 +141,7 @@ export default function MetricsPage() {
               <p className={styles.prose}>
                 The gate&rsquo;s own figures on the held-out set, its catch rate and its
                 false-ask rate, are not scored yet; they read as dashes under{" "}
-                <Link href="/metrics/benchmark#unmeasured">Not measured yet</Link>.
+                <TextLink href="/metrics/benchmark#unmeasured">Not measured yet</TextLink>.
               </p>
             </div>
           </div>

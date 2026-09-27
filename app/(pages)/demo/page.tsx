@@ -86,11 +86,21 @@ export default async function DemoPage({ searchParams }: DemoProps) {
             <Tabs label="More of the demonstration" items={MORE} defaultId={SAY_ID} anchored />
           </div>
           <nav className={styles.onward} aria-label="Where to go next">
-            <ActionLink href="/how-it-works">How the gate works</ActionLink>
-            <ActionLink href="/compare">Compare with and without the gate</ActionLink>
-            <ActionLink href="/metrics">Read the measurements</ActionLink>
-            <ActionLink href="/docs/limitations">What this cannot prove</ActionLink>
-            <ActionLink href="/docs/threat-model">Threat model</ActionLink>
+            <ActionLink href="/how-it-works" icon="forward">
+              How the gate works
+            </ActionLink>
+            <ActionLink href="/compare" icon="forward">
+              Compare with and without the gate
+            </ActionLink>
+            <ActionLink href="/metrics" icon="forward">
+              Read the measurements
+            </ActionLink>
+            <ActionLink href="/docs/limitations" icon="forward">
+              What this cannot prove
+            </ActionLink>
+            <ActionLink href="/docs/threat-model" icon="forward">
+              Threat model
+            </ActionLink>
           </nav>
           <Disclaimer />
         </main>

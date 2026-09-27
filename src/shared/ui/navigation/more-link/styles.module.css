@@ -1,0 +1,76 @@
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-touch);
+  max-width: 100%;
+  color: var(--link-ink);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+  transition: var(--transition-link);
+}
+
+.more:hover {
+  color: var(--link-ink-hover);
+}
+
+.more:active {
+  scale: 0.98;
+}
+
+.label {
+  text-decoration-line: underline;
+  text-decoration-color: var(--link-underline);
+  text-decoration-thickness: var(--link-rule);
+  text-underline-offset: var(--link-offset);
+  text-wrap: pretty;
+  transition: var(--transition-link);
+}
+
+.more:hover .label {
+  text-decoration-color: currentColor;
+}
+
+.badge {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  padding: 0.4rem;
+  font-size: 0.95rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--link-badge);
+  color: var(--link-ink);
+  transition: var(--transition-link);
+}
+
+.more:hover .badge {
+  background-color: var(--link-badge-hover);
+  color: var(--link-badge-ink);
+}
+
+.more:active .badge {
+  background-color: var(--action-active);
+}
+
+.glyph {
+  width: 1em;
+  height: 1em;
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
+@media (hover: hover) {
+  .more:hover .forward {
+    transform: translateX(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .more:active {
+    scale: none;
+  }
+
+  .more:hover .forward {
+    transform: none;
+  }
+}

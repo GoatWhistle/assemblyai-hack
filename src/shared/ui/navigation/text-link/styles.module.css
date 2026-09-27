@@ -1,0 +1,86 @@
+.link {
+  padding-inline: var(--link-pad);
+  margin-inline: calc(var(--link-pad) * -1);
+  border-radius: var(--radius-xs);
+  color: var(--link-ink);
+  font-weight: var(--weight-medium);
+  text-decoration-line: underline;
+  text-decoration-color: var(--link-underline);
+  text-decoration-thickness: var(--link-rule);
+  text-underline-offset: var(--link-offset);
+  text-decoration-skip-ink: auto;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: var(--transition-link);
+}
+
+.link:hover {
+  background-color: var(--link-fill);
+  color: var(--link-ink-hover);
+  text-decoration-color: currentColor;
+}
+
+.link:active {
+  background-color: var(--link-fill-active);
+}
+
+.tail {
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  width: 1.2em;
+  height: 1.2em;
+  margin-inline-start: 0.3em;
+  border-radius: var(--radius-pill);
+  background-color: var(--link-badge);
+  color: var(--link-ink);
+  vertical-align: -0.22em;
+  transition: var(--transition-link);
+}
+
+.link:hover .badge {
+  background-color: var(--link-badge-hover);
+  color: var(--link-badge-ink);
+}
+
+.glyph {
+  width: 0.72em;
+  height: 0.72em;
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
+@media (hover: hover) {
+  .link:hover .forward {
+    transform: translateX(1px);
+  }
+
+  .link:hover .outward {
+    transform: translate(1px, -1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link:hover .forward,
+  .link:hover .outward {
+    transform: none;
+  }
+}
+
+@media print {
+  .link {
+    color: inherit;
+    text-decoration-color: currentColor;
+  }
+
+  .badge {
+    display: none;
+  }
+}
+
+:is(strong, b) .link {
+  font-weight: inherit;
+}

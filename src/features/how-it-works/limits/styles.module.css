@@ -53,14 +53,6 @@
   font-size: var(--text-sm);
 }
 
-@media (pointer: coarse) {
-  .more a {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--target-touch);
-  }
-}
-
 @media (max-width: 40rem) {
   .limit {
     padding-inline: var(--space-4);

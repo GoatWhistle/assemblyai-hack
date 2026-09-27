@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { WITNESS_BOUNDARY_NOTE } from "@/domain"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { MoreLink } from "@/shared/ui/navigation/more-link"
+import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { pageMetadata } from "@/site/page-metadata"
 import { THREAT_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
@@ -69,7 +70,9 @@ export default function ThreatModelPage() {
           </ul>
         </div>
         <p className={styles.more}>
-          <Link href="/docs/limitations#limit-provenance">The limitation at full strength</Link>
+          <MoreLink href="/docs/limitations#limit-provenance">
+            The limitation at full strength
+          </MoreLink>
         </p>
       </DocSection>
 
@@ -123,9 +126,11 @@ export default function ThreatModelPage() {
           longer matches. No sample receipt is published here, because none has come from a
           recorded live call, and a synthesised one would be a record presented as genuine.
         </p>
-        <p className={styles.more}>
-          <Link href="/order">Check a downloaded receipt file</Link>
-        </p>
+        <div>
+          <ActionLink href="/order" icon="forward">
+            Check a downloaded receipt file
+          </ActionLink>
+        </div>
       </DocSection>
     </>
   )

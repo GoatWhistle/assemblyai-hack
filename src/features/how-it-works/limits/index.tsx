@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { MoreLink } from "@/shared/ui/navigation/more-link"
 import { LIMITATIONS } from "./limitation-entries"
 import type { Limitation } from "./limitation-types"
 import styles from "./styles.module.css"
@@ -28,7 +28,7 @@ export function Limits({ entries = LIMITATIONS }: LimitsProps) {
             )}
             {limit.link === undefined ? null : (
               <p className={styles.more}>
-                <Link href={limit.link.href}>{limit.link.label}</Link>
+                <MoreLink href={limit.link.href}>{limit.link.label}</MoreLink>
               </p>
             )}
           </li>

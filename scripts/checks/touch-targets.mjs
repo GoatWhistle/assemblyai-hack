@@ -4,7 +4,6 @@ import { join } from "node:path"
 const TREES = ["src", "app"]
 const TOUCH_TOKEN = "--target-touch"
 const INTERACTIVE = /cursor:\s*pointer|^\s*\.[A-Za-z][\w-]*:(hover|focus-visible)/m
-
 const REM_PX = 16
 const FLOOR_PX = 44
 const HEIGHT_DECLARATION = /(?:^|[;{\s])(?:min-)?height:\s*([^;}]+)/g
@@ -26,6 +25,10 @@ const INLINE_EXEMPT = new Map([
   [
     "src/shared/ui/data-display/word-span-strip/styles.module.css",
     "the same reason as the transcript line: one control per spoken word, laid out as running text rather than as a control surface",
+  ],
+  [
+    "src/shared/ui/navigation/text-link/styles.module.css",
+    "a link inside a sentence takes the height of its line, which WCAG 2.5.8 exempts as an inline target; lifting it to 44px would overlap the lines above and below and take their taps, and a link that ends a block uses the more-link, which clears the floor",
   ],
 ])
 

@@ -1,4 +1,4 @@
-import { ExternalLink } from "@/shared/ui/navigation/external-link"
+import { MoreLink } from "@/shared/ui/navigation/more-link"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { Panel } from "@/shared/ui/primitives/panel"
 import {
@@ -63,9 +63,7 @@ export function RateEstimate({ estimate }: RateEstimateProps) {
       <p className={styles.method}>{METHOD_LINE}</p>
       <p className={styles.method}>{DRIFT_NOTE}</p>
       <p className={styles.source}>
-        <ExternalLink className={styles.link} href={RATE_SOURCE_URL}>
-          the price page these three rates come from
-        </ExternalLink>
+        <MoreLink href={RATE_SOURCE_URL}>the price page these three rates come from</MoreLink>
       </p>
     </Panel>
   )

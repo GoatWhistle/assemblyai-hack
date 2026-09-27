@@ -29,10 +29,3 @@
   font-size: var(--text-sm);
   color: var(--text-muted);
 }
-
-.method a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--target-touch);
-  color: var(--action-ink);
-}

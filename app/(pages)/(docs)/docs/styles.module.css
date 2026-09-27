@@ -71,15 +71,8 @@
 .hubLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) var(--space-4);
-}
-
-.hubLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--target-touch);
-  min-width: var(--target-touch);
-  font-size: var(--text-sm);
+  gap: var(--space-2);
+  margin-top: var(--space-2);
 }
 
 @media (max-width: 40rem) {

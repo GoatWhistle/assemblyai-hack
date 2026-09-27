@@ -1,7 +1,7 @@
-import Link from "next/link"
 import { useId } from "react"
 import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
+import { MoreLink } from "@/shared/ui/navigation/more-link"
 import styles from "./styles.module.css"
 
 export const INTAKE_HINT =
@@ -34,9 +34,9 @@ export function IntakePrompt() {
           </li>
         ))}
       </ul>
-      <Link className={styles.judge} href={REPLAY_ENTRY_HREF}>
-        {JUDGE_LINK_LABEL}
-      </Link>
+      <p className={styles.judge}>
+        <MoreLink href={REPLAY_ENTRY_HREF}>{JUDGE_LINK_LABEL}</MoreLink>
+      </p>
     </section>
   )
 }

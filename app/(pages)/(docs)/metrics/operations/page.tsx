@@ -19,7 +19,7 @@ import { type PanelColumn, PanelTable } from "@/features/metrics/panel-table"
 import { Command } from "@/shared/ui/data-display/command"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
-import { ExternalLink } from "@/shared/ui/navigation/external-link"
+import { TextLink } from "@/shared/ui/navigation/text-link"
 import { pageMetadata } from "@/site/page-metadata"
 import { OPERATIONS_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
@@ -57,7 +57,7 @@ export default function OperationsPage() {
               Together USD {COMBINED_PER_HOUR_USD.toFixed(2)} per hour, about USD{" "}
               {COMBINED_PER_MINUTE_USD.toFixed(3)} per minute of an open call: arithmetic over
               the rate table, not an invoice. Source:{" "}
-              <ExternalLink href={RATE_SOURCE_URL}>{RATE_SOURCE_URL}</ExternalLink>
+              <TextLink href={RATE_SOURCE_URL}>{RATE_SOURCE_URL}</TextLink>
             </>
           }
           columns={RATE_COLUMNS}

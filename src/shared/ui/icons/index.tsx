@@ -59,6 +59,15 @@ export function ExternalIcon({ className }: IconProps) {
   )
 }
 
+export function DocumentIcon({ className }: IconProps) {
+  return (
+    <Glyph className={className}>
+      <path d="M4 2.5h4.75L12 5.75v7.75H4z" />
+      <path d="M8.5 2.5v3.5H12M6 9h4M6 11.25h2.5" />
+    </Glyph>
+  )
+}
+
 export function DownloadIcon({ className }: IconProps) {
   return (
     <Glyph className={className}>

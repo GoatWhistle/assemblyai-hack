@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { AttackConsole } from "@/features/attack-console"
 import { DemoScript } from "@/features/how-it-works/demo-script"
 import {
@@ -13,6 +12,7 @@ import { CALL_HREF, REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes
 import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { TextLink } from "@/shared/ui/navigation/text-link"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { pageMetadata } from "@/site/page-metadata"
 import { HOW_SECTIONS } from "../docs-map"
@@ -39,7 +39,7 @@ export default function HowItWorksPage() {
             since it became a patient safety goal in 2003 (NPSG.02.01.01; ISMP places it at
             PC.02.01.03 EP 20 in 2017; its 2026 location is not verified). We automate a step
             that regulation already requires and practice routinely skips.{" "}
-            <Link href="/docs/glossary#citations">The exact clauses</Link>
+            <TextLink href="/docs/glossary#citations">The exact clauses</TextLink>
           </>
         }
       >
@@ -74,9 +74,9 @@ export default function HowItWorksPage() {
         title={`An extended script: ${SCRIPT_STEPS.length} checks a skeptic would run`}
         lead={
           <>
-            The <Link href="/demo#tour">90-second tour</Link> on the replay hub visits each
-            surface once. This script is its longer continuation, about seven minutes: it adds
-            the checks a skeptic runs, including one the product only partly passes.{" "}
+            The <TextLink href="/demo#tour">90-second tour</TextLink> on the replay hub visits
+            each surface once. This script is its longer continuation, about seven minutes: it
+            adds the checks a skeptic runs, including one the product only partly passes.{" "}
             {MICROPHONE_FREE_STEPS} of these {SCRIPT_STEPS.length} steps need no microphone and
             no second person; the {SCRIPT_STEPS.length - MICROPHONE_FREE_STEPS} that do are
             marked.

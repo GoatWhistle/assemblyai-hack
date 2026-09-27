@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { GLOSSARY, glossaryAnchor, ISMP_SOURCE } from "@/features/how-it-works/glossary/terms"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
-import { ExternalLink } from "@/shared/ui/navigation/external-link"
+import { TextLink } from "@/shared/ui/navigation/text-link"
 import { pageMetadata } from "@/site/page-metadata"
 import { GLOSSARY_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
@@ -70,7 +70,7 @@ export default function GlossaryPage() {
             </li>
             <li>
               <strong>
-                <ExternalLink href={ISMP_SOURCE.url}>{ISMP_SOURCE.title}</ExternalLink>.
+                <TextLink href={ISMP_SOURCE.url}>{ISMP_SOURCE.title}</TextLink>.
               </strong>{" "}
               The published PDF the pair rule is parsed from, with the page and row of every
               pair kept. Its sha256 as parsed:{" "}

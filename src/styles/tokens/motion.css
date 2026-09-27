@@ -25,6 +25,11 @@
     var(--ease-out-quart), border-color var(--dur-fast) var(--ease-out-quart), box-shadow
     var(--dur-fast) var(--ease-out-quart), scale var(--dur-fast) var(--ease-out-quart);
 
+  --transition-link:
+    color var(--dur-fast) var(--ease-out-quart), background-color var(--dur-fast)
+    var(--ease-out-quart), text-decoration-color var(--dur-fast) var(--ease-out-quart), scale
+    var(--dur-fast) var(--ease-out-quart);
+
   --keyframes-fade-rise: readback-fade-rise;
   --keyframes-pulse-ring: readback-pulse-ring;
   --keyframes-breathe: readback-breathe;

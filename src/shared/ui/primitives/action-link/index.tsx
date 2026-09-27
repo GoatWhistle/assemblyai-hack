@@ -1,11 +1,7 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 import { ArrowIcon, ExternalIcon } from "@/shared/ui/icons"
-import {
-  EXTERNAL_REL,
-  isExternalHref,
-  NEW_TAB_NOTE,
-} from "@/shared/ui/navigation/external-link"
+import { EXTERNAL_REL, isExternalHref, NEW_TAB_NOTE } from "@/shared/ui/navigation/text-link"
 import styles from "./styles.module.css"
 
 type ActionLinkTone = "neutral" | "primary" | "quiet"

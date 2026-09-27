@@ -1,6 +1,6 @@
-import Link from "next/link"
 import type { BenchmarkRow } from "@/domain"
 import { Command } from "@/shared/ui/data-display/command"
+import { MoreLink } from "@/shared/ui/navigation/more-link"
 import styles from "./styles.module.css"
 
 export const CATCH_FIGURES_HREF = "/metrics#headline"
@@ -25,7 +25,9 @@ export function PairRuleCatch({ without, shipped }: PairRuleCatchProps) {
           n = {shipped.n ?? "not recorded"},{" "}
           {shipped.input === "text" ? "text candidates" : shipped.input}
         </span>
-        <Link href={CATCH_FIGURES_HREF}>Full figures, and what the rule costs in seconds</Link>
+        <MoreLink href={CATCH_FIGURES_HREF}>
+          Full figures, and what the rule costs in seconds
+        </MoreLink>
       </p>
     </aside>
   )

@@ -27,6 +27,18 @@
   --action-disabled-surface: var(--vellum);
   --action-disabled-ink: var(--stone);
 
+  --link-ink: var(--violet);
+  --link-ink-hover: var(--violet-deep);
+  --link-underline: var(--violet-line);
+  --link-fill: var(--violet-wash);
+  --link-fill-active: var(--violet-line);
+  --link-badge: var(--violet-wash);
+  --link-badge-hover: var(--action-rest);
+  --link-badge-ink: var(--text-on-accent);
+  --link-rule: 2px;
+  --link-offset: 0.24em;
+  --link-pad: 0.12em;
+
   --focus-ring: var(--violet);
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;

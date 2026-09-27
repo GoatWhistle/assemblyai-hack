@@ -87,14 +87,6 @@
   max-width: var(--measure-prose);
 }
 
-@media (pointer: coarse) {
-  .more a {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--target-touch);
-  }
-}
-
 @media (max-width: 40rem) {
   .check {
     grid-template-columns: minmax(0, 1fr);

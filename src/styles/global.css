@@ -77,13 +77,33 @@ textarea {
 }
 
 a {
-  color: var(--action-ink);
+  color: var(--link-ink);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
 
 a:hover {
-  color: var(--action-hover);
+  color: var(--link-ink-hover);
+}
+
+a:not([class]) {
+  border-radius: var(--radius-xs);
+  font-weight: var(--weight-medium);
+  text-decoration-color: var(--link-underline);
+  text-decoration-thickness: var(--link-rule);
+  text-underline-offset: var(--link-offset);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: var(--transition-link);
+}
+
+a:not([class]):hover {
+  background-color: var(--link-fill);
+  text-decoration-color: currentColor;
+}
+
+a:not([class]):active {
+  background-color: var(--link-fill-active);
 }
 
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
