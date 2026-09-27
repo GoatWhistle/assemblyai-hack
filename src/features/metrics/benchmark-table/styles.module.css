@@ -21,19 +21,40 @@
   color: var(--text-muted);
 }
 
+.interval {
+  font-size: var(--meta-size);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--track-normal);
+  color: var(--text-secondary);
+}
+
 .set {
-  margin-left: var(--space-2);
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   white-space: normal;
 }
 
-@container table (width >= 60rem) {
+.set::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-inline: var(--space-2);
+  border-radius: var(--radius-pill);
+  background-color: var(--text-muted);
+  vertical-align: middle;
+}
+
+@container table (width >= 72rem) {
   .set {
     display: block;
     min-width: 10rem;
     margin-top: var(--space-1);
-    margin-left: 0;
+    color: var(--text-muted);
+  }
+
+  .set::before {
+    content: none;
   }
 }

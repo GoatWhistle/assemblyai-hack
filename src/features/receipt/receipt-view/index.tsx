@@ -27,7 +27,7 @@ export type ReceiptViewProps = {
 const CHECK_COLUMNS: readonly TableColumn[] = [
   { key: "check", title: "Check", size: "fit" },
   { key: "result", title: "Result", size: "fit" },
-  { key: "detail", title: "What was recomputed", kind: "muted" },
+  { key: "detail", title: "What was recomputed", kind: "muted", stack: "line" },
 ]
 
 const FIELD_COLUMNS: readonly TableColumn[] = [

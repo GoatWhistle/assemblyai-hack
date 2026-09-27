@@ -169,3 +169,26 @@ describe("the business reading publishes no invented number", () => {
     }
   })
 })
+
+describe("a stacked benchmark row reads as a card", () => {
+  it("quiets the interval beside its point estimate without changing the published text", () => {
+    const entry: BenchmarkEntry = {
+      ...UNMEASURED,
+      id: "planted-interval",
+      row: {
+        ...UNMEASURED.row,
+        value: "26.7% [17.1%, 39.0%]",
+        n: 60,
+        measuredOn: "2026-09-01",
+      },
+    }
+    render(<BenchmarkTable entries={[entry]} />)
+    const value = cell(rowFor(entry.id), "value")
+    expect(value.textContent).toBe("26.7% [17.1%, 39.0%]")
+    const interval = within(value).getByText("[17.1%, 39.0%]")
+    expect(interval.className).not.toBe("")
+    expect(
+      within(cell(rowFor(entry.id), "input")).getByText(INPUT_LABEL["live socket"]),
+    ).toBeDefined()
+  })
+})

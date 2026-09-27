@@ -1,5 +1,6 @@
 import { Command } from "@/shared/ui/data-display/command"
 import { Table, type TableColumn, type TableRow } from "@/shared/ui/data-display/table"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { AbsentValue } from "../absent-value"
 import { type BenchmarkEntry, INPUT_LABEL, NOT_MEASURED_LABEL } from "../benchmark-row"
 import { NO_COMMAND } from "../metric-definitions"
@@ -46,6 +47,20 @@ export function unrepeatedMeaning(
     .join(" ")
 }
 
+const INTERVAL = /^(.*?)\s+(\[[^\]]+\])$/
+
+function Reading({ value }: { readonly value: string | number }) {
+  const parts = INTERVAL.exec(String(value))
+  if (parts === null) {
+    return <>{value}</>
+  }
+  return (
+    <>
+      {parts[1]} <span className={styles.interval}>{parts[2]}</span>
+    </>
+  )
+}
+
 function rowFor(entry: BenchmarkEntry, meaning: string, compact: boolean): TableRow {
   return {
     key: entry.id,
@@ -57,8 +72,8 @@ function rowFor(entry: BenchmarkEntry, meaning: string, compact: boolean): Table
           {compact || meaning === "" ? null : <span className={styles.meaning}>{meaning}</span>}
         </>
       ),
-      value: entry.row.value === null ? <AbsentValue /> : entry.row.value,
-      input: INPUT_LABEL[entry.row.input],
+      value: entry.row.value === null ? <AbsentValue /> : <Reading value={entry.row.value} />,
+      input: <StatusChip status="tag">{INPUT_LABEL[entry.row.input]}</StatusChip>,
       command: NOT_A_COMMAND.has(entry.row.command) ? (
         <span className={styles.noCommand}>{entry.row.command}</span>
       ) : (

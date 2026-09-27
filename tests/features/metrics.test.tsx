@@ -164,7 +164,10 @@ describe("measured figures reach the screen", () => {
     for (const figure of [...errorRateFigures(), ...confidenceFigures()]) {
       expect(screen.getByText(figure.name)).toBeDefined()
       if (figure.value !== null) {
-        expect(screen.getByText(figure.value)).toBeDefined()
+        const shown = [...document.querySelectorAll('td[data-column="value"]')].map(
+          (cell) => cell.textContent,
+        )
+        expect(shown, figure.name).toContain(figure.value)
       }
     }
   })

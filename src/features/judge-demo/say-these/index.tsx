@@ -11,7 +11,7 @@ const SAY_THESE_HEADING = "Say these three things"
 const COLUMNS: readonly TableColumn[] = [
   { key: "say", title: "Say", rowHeader: true },
   { key: "verdict", title: "What the gate does", size: "fit" },
-  { key: "why", title: "Why", kind: "muted" },
+  { key: "why", title: "Why", kind: "muted", stack: "line" },
 ]
 
 export function SayThese() {

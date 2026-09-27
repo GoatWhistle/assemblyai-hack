@@ -43,18 +43,28 @@ describe("Table rows as anchors and command columns", () => {
 
   it("keeps a command or a fitted cell on one line in the full layout and lets it wrap once stacked", () => {
     expect(TABLE_SHEET).toMatch(
-      /\.table :is\(\.number, \.figure, \.command, \.fit\) \{\s*white-space: nowrap;/,
+      /\.table :is\(\.number, \.figure, \.command, \.fit\) \{\s*white-space: var\(--stack-wrap, nowrap\);/,
     )
+    expect(TABLE_SHEET).toMatch(/\.table \.fit \{\s*width: var\(--stack-width, 1%\);/)
     for (const width of ["40rem", "72rem"]) {
       const block = TABLE_SHEET.split(`@container table (width < ${width})`)[1] ?? ""
-      expect(block, width).toMatch(
-        /tbody :is\(\.fit, \.fill, \.command\) \{\s*width: auto;\s*white-space: normal;/,
-      )
+      expect(block, width).toMatch(/--stack-wrap: normal;/)
+      expect(block, width).toMatch(/--stack-width: auto;/)
     }
     expect(TABLE_SHEET, "anywhere would let a fitted column collapse to one letter").toMatch(
       /\.value \{[^}]*overflow-wrap: break-word;/,
     )
     expect(TABLE_SHEET).toMatch(/tr\[id\] \{\s*scroll-margin-top/)
+  })
+
+  it("switches both stacked layouts with one identical set of switches, so they cannot drift", () => {
+    const [, afterRegular = ""] = TABLE_SHEET.split("@container table (width < 40rem)")
+    const [regular = "", dense = ""] = afterRegular.split("@container table (width < 72rem)")
+    const switches = (block: string) =>
+      [...block.matchAll(/(--stack-[a-z-]+): ([^;]+);/g)].map((m) => `${m[1]}: ${m[2]}`)
+    expect(switches(regular)).toContain("--stack-grid: grid")
+    expect(switches(regular)).toContain("--stack-label: block")
+    expect(switches(dense)).toEqual(switches(regular))
   })
 
   it("lets a prose column take the whole stacked row, with its label above or with none", () => {
@@ -74,13 +84,21 @@ describe("Table rows as anchors and command columns", () => {
     expect(cell("meaning")?.getAttribute("data-label")).toBe("Meaning")
     expect(cell("watch")?.className).not.toBe(cell("input")?.className)
     expect(cell("meaning")?.className).not.toBe(cell("watch")?.className)
-    for (const width of ["40rem", "72rem"]) {
-      const block = TABLE_SHEET.split(`@container table (width < ${width})`)[1] ?? ""
-      expect(block, width).toMatch(/:is\(th, \.line, \.bare\) \{[^}]*flex: 1 1 100%;/)
-      expect(block, width).toMatch(/\.bare::before \{\s*content: none;/)
-      expect(block, `${width}: a code column's label reads as a label, not as code`).toMatch(
-        /td::before \{[^}]*font-family: var\(--font-ui\);/,
-      )
-    }
+    expect(TABLE_SHEET, "a stacked row is a two-column grid of label and value").toMatch(
+      /\.table tbody tr \{[^}]*display: var\(--stack-grid, table-row\);[^}]*grid-template-columns: fit-content\(32%\) minmax\(0, 1fr\);/,
+    )
+    expect(TABLE_SHEET, "every field shares the row's label column").toMatch(
+      /\.table tbody td \{[^}]*grid-template-columns: subgrid;/,
+    )
+    expect(TABLE_SHEET).toMatch(
+      /tbody :is\(\.line, \.bare, \.figure\) \{\s*grid-template-columns: minmax\(0, 1fr\);/,
+    )
+    expect(TABLE_SHEET).toMatch(/:is\(\.bare, \.figure\)::before \{\s*content: none;/)
+    expect(TABLE_SHEET, "a label exists only once stacked").toMatch(
+      /td::before \{[^}]*content: attr\(data-label\);[^}]*display: var\(--stack-label, none\);/,
+    )
+    expect(TABLE_SHEET, "a code column's label reads as a label, not as code").toMatch(
+      /td::before \{[^}]*font-family: var\(--font-ui\);/,
+    )
   })
 })
