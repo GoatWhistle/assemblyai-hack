@@ -45,7 +45,7 @@ describe("Table rows as anchors and command columns", () => {
     expect(TABLE_SHEET).toMatch(
       /\.table :is\(\.number, \.figure, \.command, \.fit\) \{\s*white-space: nowrap;/,
     )
-    for (const width of ["40rem", "60rem"]) {
+    for (const width of ["40rem", "72rem"]) {
       const block = TABLE_SHEET.split(`@container table (width < ${width})`)[1] ?? ""
       expect(block, width).toMatch(
         /tbody :is\(\.fit, \.fill, \.command\) \{\s*width: auto;\s*white-space: normal;/,
@@ -74,7 +74,7 @@ describe("Table rows as anchors and command columns", () => {
     expect(cell("meaning")?.getAttribute("data-label")).toBe("Meaning")
     expect(cell("watch")?.className).not.toBe(cell("input")?.className)
     expect(cell("meaning")?.className).not.toBe(cell("watch")?.className)
-    for (const width of ["40rem", "60rem"]) {
+    for (const width of ["40rem", "72rem"]) {
       const block = TABLE_SHEET.split(`@container table (width < ${width})`)[1] ?? ""
       expect(block, width).toMatch(/:is\(th, \.line, \.bare\) \{[^}]*flex: 1 1 100%;/)
       expect(block, width).toMatch(/\.bare::before \{\s*content: none;/)

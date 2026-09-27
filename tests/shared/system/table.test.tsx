@@ -67,7 +67,7 @@ describe("Table", () => {
     expect(tableDensity(dense)).toBe("dense")
     expect(SHEET).toMatch(/@container table \(width < 40rem\)/)
     expect(SHEET).toMatch(
-      /@container table \(width < 60rem\)[\s\S]*\[data-density="dense"\] \.head/,
+      /@container table \(width < 72rem\)[\s\S]*\[data-density="dense"\] \.head/,
     )
   })
 

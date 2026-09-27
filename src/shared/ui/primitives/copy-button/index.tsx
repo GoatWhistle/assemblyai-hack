@@ -46,9 +46,10 @@ export async function copyText(value: string): Promise<boolean> {
 export type CopyButtonProps = {
   readonly value: string
   readonly label: string
+  readonly className?: string
 }
 
-export function CopyButton({ value, label }: CopyButtonProps) {
+export function CopyButton({ value, label, className }: CopyButtonProps) {
   const [state, setState] = useState<CopyState>("idle")
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -77,7 +78,10 @@ export function CopyButton({ value, label }: CopyButtonProps) {
   }
 
   return (
-    <span className={styles.wrap}>
+    <span
+      className={className === undefined ? styles.wrap : `${styles.wrap} ${className}`}
+      data-state={state}
+    >
       <button
         type="button"
         className={styles.button}

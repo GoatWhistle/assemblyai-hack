@@ -1,0 +1,6 @@
+{
+  "src/features/transcript-view/transcript-line/styles.module.css": "each word of the transcript is its own control so a click reveals that word's provenance; a 44px floor here would break the transcript into a grid of buttons and destroy the reading it exists to support",
+  "src/shared/ui/data-display/word-span-strip/styles.module.css": "the same reason as the transcript line: one control per spoken word, laid out as running text rather than as a control surface",
+  "src/shared/ui/data-display/command/styles.module.css": "the command chip is not a control: hovering or focusing it only reveals its copy button, and that button carries its own 44px hit area in the copy-button sheet",
+  "src/shared/ui/navigation/text-link/styles.module.css": "a link inside a sentence takes the height of its line, which WCAG 2.5.8 exempts as an inline target; lifting it to 44px would overlap the lines above and below and take their taps, and a link that ends a block uses the more-link, which clears the floor"
+}

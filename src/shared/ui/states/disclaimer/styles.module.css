@@ -5,7 +5,7 @@
   justify-content: flex-start;
   min-width: var(--target-touch);
   min-height: var(--target-touch);
-  padding: 0 0 0 var(--space-2);
+  padding: 0 0 0 var(--space-3);
   border: 0;
   background: none;
   cursor: pointer;
@@ -16,7 +16,6 @@
   width: var(--notice-mark);
   height: var(--notice-mark);
   border-radius: var(--radius-pill);
-  translate: 0 -1px;
   transition:
     scale var(--dur-fast) var(--ease-out-quart),
     box-shadow var(--dur-fast) var(--ease-out-quart);

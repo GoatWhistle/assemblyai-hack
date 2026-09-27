@@ -3,7 +3,8 @@ import { join } from "node:path"
 
 const TREES = ["src", "app"]
 const TOUCH_TOKEN = "--target-touch"
-const INTERACTIVE = /cursor:\s*pointer|^\s*\.[A-Za-z][\w-]*:(hover|focus-visible)/m
+const INTERACTIVE =
+  /cursor:\s*pointer|^\s*\.[A-Za-z][\w-]*:(?:(?:is|where)\([^)]*:)?(hover|focus-visible)/m
 const REM_PX = 16
 const FLOOR_PX = 44
 const HEIGHT_DECLARATION = /(?:^|[;{\s])(?:min-)?height:\s*([^;}]+)/g
@@ -17,20 +18,13 @@ function reachesFloor(source) {
   })
 }
 
-const INLINE_EXEMPT = new Map([
-  [
-    "src/features/transcript-view/transcript-line/styles.module.css",
-    "each word of the transcript is its own control so a click reveals that word's provenance; a 44px floor here would break the transcript into a grid of buttons and destroy the reading it exists to support",
-  ],
-  [
-    "src/shared/ui/data-display/word-span-strip/styles.module.css",
-    "the same reason as the transcript line: one control per spoken word, laid out as running text rather than as a control surface",
-  ],
-  [
-    "src/shared/ui/navigation/text-link/styles.module.css",
-    "a link inside a sentence takes the height of its line, which WCAG 2.5.8 exempts as an inline target; lifting it to 44px would overlap the lines above and below and take their taps, and a link that ends a block uses the more-link, which clears the floor",
-  ],
-])
+const INLINE_EXEMPT = new Map(
+  Object.entries(
+    JSON.parse(
+      readFileSync(new URL("./touch-target-exemptions.json", import.meta.url), "utf8"),
+    ),
+  ),
+)
 
 function pixelsOf(value) {
   const trimmed = value.trim()
@@ -78,7 +72,8 @@ function shortDeclarations(source) {
   return short
 }
 
-const INTERACTIVE_STATE = /(\.[A-Za-z][\w-]*):(?:hover|focus-visible|active)/g
+const INTERACTIVE_STATE =
+  /(\.[A-Za-z][\w-]*):(?:(?:is|where)\([^)]*:)?(?:hover|focus-visible|active)/g
 const RULE_HEAD = /^[ \t]*([^@{}\r\n][^{}\r\n]*)\{/gm
 
 function rulesFor(source) {

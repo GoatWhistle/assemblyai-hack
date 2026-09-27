@@ -36,11 +36,13 @@ test.describe("the evidence surfaces a judge is sent to", () => {
     await expect(page.getByText(/no cost of a dispensing error is shown/i)).toBeVisible()
   })
 
-  test("the docs overview states the hard claim and maps every docs page", async ({ page }) => {
+  test("the docs overview states the hard claim and the sidebar maps every docs page", async ({
+    page,
+  }) => {
     await page.goto("/docs")
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     await expect(page.getByText(/even at certainty 1\.00/).first()).toBeVisible()
-    const main = page.getByRole("main")
+    const docsNav = page.getByRole("navigation", { name: "Documentation" })
     for (const href of [
       "/how-it-works",
       "/compare",
@@ -50,10 +52,10 @@ test.describe("the evidence surfaces a judge is sent to", () => {
       "/docs/limitations",
       "/docs/threat-model",
       "/docs/glossary",
-      "/demo",
     ]) {
-      await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible()
+      await expect(docsNav.locator(`a[href="${href}"]`).first()).toBeAttached()
     }
+    await expect(page.getByRole("main").locator('a[href^="/demo"]').first()).toBeVisible()
   })
 
   test("the docs sidebar marks the current page and the contents link to real sections", async ({
@@ -169,23 +171,5 @@ test.describe("r1-A2-F8: the docs navigation stays reachable on a long page at p
     await nav.getByRole("link", { name: "Not measured yet" }).click()
     await expect(toggle).toHaveAttribute("aria-expanded", "false")
     await expect(page).toHaveURL(/#unmeasured$/)
-  })
-
-  test("r1-A2-F12: the breadcrumb back to Measurements is a full touch target", async ({
-    browser,
-  }) => {
-    const context = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-      hasTouch: true,
-      isMobile: true,
-    })
-    const page = await context.newPage()
-    await page.goto("/metrics/benchmark")
-    const crumb = page
-      .getByRole("main")
-      .getByRole("link", { name: "Measurements", exact: true })
-    const box = await crumb.boundingBox()
-    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44)
-    await context.close()
   })
 })

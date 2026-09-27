@@ -1,5 +1,4 @@
 import { PageShell } from "@/shared/ui/layout/page-shell"
-import { Breadcrumbs } from "@/shared/ui/navigation/breadcrumbs"
 import { MoreLink } from "@/shared/ui/navigation/more-link"
 import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { OrderCheck } from "../order-check"
@@ -37,12 +36,6 @@ export function OrderPageView({ sessionId }: OrderPageViewProps) {
       <PageShell current="order">
         <main className={styles.page} id={MAIN_ID} tabIndex={-1}>
           <div className={styles.intro}>
-            {sessionId === null ? null : (
-              <Breadcrumbs
-                trail={[{ href: "/order", label: "Receipts" }]}
-                current={`Order ${sessionId}`}
-              />
-            )}
             <Heading level={1}>Order receipt</Heading>
             <Lede rank="page">
               {sessionId === null

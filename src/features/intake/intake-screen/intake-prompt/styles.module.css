@@ -88,7 +88,7 @@
 .quote {
   margin: 0;
   font-size: var(--text-base);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-loose);
   color: var(--text-primary);
   text-wrap: pretty;
 }

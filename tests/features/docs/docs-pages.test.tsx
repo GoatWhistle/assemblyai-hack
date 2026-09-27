@@ -13,7 +13,6 @@ import { cleanup, render, screen, within } from "@testing-library/react"
 import type { ComponentType } from "react"
 import { afterEach, describe, expect, it } from "vitest"
 import { ReasonCode } from "@/domain"
-import { REPLAY_HUB_HREF } from "@/features/judge-demo/entry-routes"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
 import { abCatch } from "@/features/metrics/report-figures"
 import { flattenPages } from "@/shared/ui/navigation/docs-tree"
@@ -146,21 +145,6 @@ describe("the docs overview states the product's hard claim", () => {
       const row = container.querySelector(`tr[data-row="${entry.id}"]`)
       expect(row?.querySelector('[data-column="value"]')?.textContent).toBe(entry.row.value)
       expect(row?.querySelector('[data-column="command"]')?.textContent).toBe(entry.row.command)
-    }
-  })
-
-  it("points at the replay hub once from the map, without repeating its sections", () => {
-    const { container } = render(<DocsOverviewPage />)
-    const map = container.querySelector<HTMLElement>("section#map")
-    expect(map).not.toBeNull()
-    expect(map?.querySelectorAll(`a[href="${REPLAY_HUB_HREF}"]`)).toHaveLength(1)
-    expect(map?.querySelectorAll('a[href^="/demo#"]')).toHaveLength(0)
-  })
-
-  it("maps every other docs page with its summary", () => {
-    render(<DocsOverviewPage />)
-    for (const page of flattenPages(DOCS_PAGES).filter((entry) => entry.href !== "/docs")) {
-      expect(screen.getByText(page.summary)).toBeDefined()
     }
   })
 })

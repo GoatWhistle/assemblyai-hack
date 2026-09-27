@@ -5,11 +5,6 @@
   padding-top: var(--space-5);
 }
 
-.trail {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
 .title {
   font-size: var(--title-page-size);
   font-weight: var(--title-page-weight);
@@ -43,14 +38,5 @@
 
   .lede {
     font-size: var(--lede-section-size);
-  }
-}
-
-@media (pointer: coarse) {
-  .trail a {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--target-touch);
-    min-width: var(--target-touch);
   }
 }

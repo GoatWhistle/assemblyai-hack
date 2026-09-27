@@ -38,7 +38,8 @@
   border-radius: var(--radius-pill);
   background-color: var(--surface-raised);
   color: var(--link-ink);
-  vertical-align: -0.2em;
+  vertical-align: middle;
+  translate: 0 -0.1em;
   transition: var(--transition-link);
 }
 

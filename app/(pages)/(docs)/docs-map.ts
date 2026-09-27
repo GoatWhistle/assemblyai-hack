@@ -8,7 +8,6 @@ export const OVERVIEW_SECTIONS = Object.freeze({
   claim: section("claim", "Certainty cannot tell names apart"),
   reasons: section("reasons", "When the agent asks again"),
   numbers: section("numbers", "The catch and its cost"),
-  map: section("map", "Map of the docs"),
 })
 
 export const HOW_SECTIONS = Object.freeze({

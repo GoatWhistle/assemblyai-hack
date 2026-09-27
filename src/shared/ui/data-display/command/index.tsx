@@ -14,8 +14,10 @@ export function Command({ value, className }: CommandProps) {
   const classes = [styles.command, className ?? ""].filter((part) => part !== "").join(" ")
   return (
     <span className={classes}>
-      <code className={styles.code}>{value}</code>
-      <CopyButton value={value} label={copyCommandLabel(value)} />
+      <code className={styles.code} tabIndex={-1}>
+        {value}
+      </code>
+      <CopyButton value={value} label={copyCommandLabel(value)} className={styles.copy} />
     </span>
   )
 }
