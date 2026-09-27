@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-27T06:55:11.729Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "73f3f2f2-6395-49a8-acf3-aed9ec77f9ff",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 9.4,
+    "stt": 9.4
+  },
+  "costUsd": 0.0133,
+  "outcome": "failed",
+  "reason": "live smoke commit-hold: not observed: the early commit was refused in hold, the order committed; 0 caller lines played; last agent line: none; the page stopped the call: The speech service could not be reached Both short-lived tokens were issued, but the browser could not open its connection to AssemblyAI. The browser does not say whether the network blocked it or the service refused it. It failed before any audio was sent, so nothing was recorded, and a socket that did open was closed at once. What to do Check the network, and whether a firewall, VPN or proxy blocks secure WebSocket (wss) connections to assemblyai.com, then start again: every start mints fresh tokens. The replay demonstration needs no connection. Try again Watch the replay Technical reason Reported as socket_unreachable.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

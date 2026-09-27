@@ -16,7 +16,7 @@ import {
 
 const AGENT_HOST = "agents.us.assemblyai.com"
 const SCENARIO_BUDGET_MS = 480_000
-const SESSION_SPACING_MS = 30_000
+const SESSION_SPACING_MS = 60_000
 const POLL_MS = 2_000
 
 let lastRunEndedAt = 0

@@ -874,6 +874,63 @@
         "the recognizer model is the one the browser reported from Begin, not one the server observed",
         "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
       ]
+    },
+    {
+      "runId": "live_smoke-2026-09-27T06:54:30.290Z",
+      "recordedAt": "2026-09-27T06:54:30.290Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "completed",
+      "reason": "live smoke npi-groups: the ten-digit NPI is in the order; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 155.5,
+      "costUsd": 0.2203,
+      "sessionIds": [
+        "5209753f-09fb-4cc0-998d-33f1b018d1c6"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-27T06:55:11.729Z",
+      "recordedAt": "2026-09-27T06:55:11.729Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke commit-hold: not observed: the early commit was refused in hold, the order committed; 0 caller lines played; last agent line: none; the page stopped the call: The speech service could not be reached Both short-lived tokens were issued, but the browser could not open its connection to AssemblyAI. The browser does not say whether the network blocked it or the service refused it. It failed before any audio was sent, so nothing was recorded, and a socket that did open was closed at once. What to do Check the network, and whether a firewall, VPN or proxy blocks secure WebSocket (wss) connections to assemblyai.com, then start again: every start mints fresh tokens. The replay demonstration needs no connection. Try again Watch the replay Technical reason Reported as socket_unreachable.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 9.4,
+      "costUsd": 0.0133,
+      "sessionIds": [
+        "73f3f2f2-6395-49a8-acf3-aed9ec77f9ff"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-27T07:01:35.766Z",
+      "recordedAt": "2026-09-27T07:01:35.766Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "completed",
+      "reason": "live smoke commit-hold: the early commit was refused in hold, the order committed; socket time is the harness wall clock, an upper bound",
+      "socketSeconds": 244.2,
+      "costUsd": 0.346,
+      "sessionIds": [
+        "fd80595d-0cd6-4a56-bf60-b0d7355bff64"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
     }
   ]
 }

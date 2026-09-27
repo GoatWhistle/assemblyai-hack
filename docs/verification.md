@@ -295,8 +295,8 @@ page, both real AssemblyAI sockets, and a synthesised caller.
 | `lasa-named` | The contrastive question is answered by naming hydromorphone, and hydromorphone is in the committed order | Committed |
 | `yeah-no` | "Yeah, no" is read as a refusal, not a confirmation | Completed |
 | `barge-in` | A reply ends interrupted after the caller cuts in | Completed |
-| `npi-groups` | An NPI dictated in digit groups arrives whole | No passing run recorded |
-| `commit-hold` | An early `commit_order` is refused in hold, then accepted | No passing run recorded |
+| `npi-groups` | An NPI dictated in digit groups arrives whole | Completed |
+| `commit-hold` | An early `commit_order` is refused in hold, then accepted | Committed |
 
 The caller is synthesised speech, not a human voice, and provenance is still computed in the
 browser; every run record carries those boundaries. The harness stops the call once the order

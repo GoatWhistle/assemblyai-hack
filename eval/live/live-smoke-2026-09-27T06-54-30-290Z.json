@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-27T06:54:30.290Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "5209753f-09fb-4cc0-998d-33f1b018d1c6",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 155.5,
+    "stt": 155.5
+  },
+  "costUsd": 0.2203,
+  "outcome": "completed",
+  "reason": "live smoke npi-groups: the ten-digit NPI is in the order; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

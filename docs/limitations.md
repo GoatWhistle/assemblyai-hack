@@ -151,8 +151,8 @@ microphone track through WebAudio, with the answer to each agent question chosen
 expression over the agent's own words (`tests/live/responder.ts`). No human spoke and no
 microphone was used.
 
-On the current deployment `clean-order` and `lasa-named` committed their orders, and
-`yeah-no` and `barge-in` completed; `npi-groups` and `commit-hold` have no completed run. The
+On production `clean-order`, `lasa-named` and `commit-hold` committed their orders, and
+`yeah-no`, `barge-in` and `npi-groups` completed: each scenario has one passing run. The
 scenario table, with every billed and refused attempt, is in
 [eval/REPORT.md](../eval/REPORT.md#live-runs-on-production).
 `.github/workflows/live-smoke.yml` runs the same calls against a deployed URL on demand.

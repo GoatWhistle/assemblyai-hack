@@ -84,14 +84,14 @@ a synthesised caller: the read-back was refused, not confirmed. No human voice h
 The production live runs are recorded in `eval/live/runs.json`. Every caller line is
 synthesised speech injected into the page; no human voice has been through a live call.
 
-| Scenario | Outcome on the current deployment |
+| Scenario | Outcome on production |
 |---|---|
 | `clean-order` | The order committed |
 | `lasa-named` | The order committed with hydromorphone, after the caller said the name |
 | `yeah-no` | Completed: the read-back was refused, not confirmed |
 | `barge-in` | Completed: a reply ended by the interruption |
-| `npi-groups` | Not yet completed |
-| `commit-hold` | Not yet completed |
+| `npi-groups` | Completed: the ten-digit NPI dictated in groups reached the order |
+| `commit-hold` | The early commit was refused in hold, then the order committed |
 
 ## Which mechanism pays for which re-ask?
 

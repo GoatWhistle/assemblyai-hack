@@ -556,30 +556,28 @@ spoke.
 | `lasa-named` | hydromorphone is in the order, the order committed | 3 | 1 | 0 | **Committed**, `live_smoke-2026-09-26T15:06:54.756Z` |
 | `yeah-no` | the read-back was refused, not confirmed | 2 | 1 | 1 | **Completed**, `live_smoke-2026-09-26T19:43:57.004Z` |
 | `barge-in` | a reply ended interrupted after the barge-in | 2 | 1 | 1 | **Completed**, `live_smoke-2026-09-26T19:44:53.984Z` |
-| `npi-groups` | the ten-digit NPI is in the order | 3 | 0 | 2 | **Not observed** |
-| `commit-hold` | the early commit was refused in hold, the order committed | 3 | 0 | 1 | **Not observed** |
+| `npi-groups` | the ten-digit NPI is in the order | 4 | 1 | 2 | **Completed**, `live_smoke-2026-09-27T06:54:30.290Z` |
+| `commit-hold` | the early commit was refused in hold, the order committed | 5 | 1 | 1 | **Committed**, `live_smoke-2026-09-27T07:01:35.766Z` |
 
-The two committed orders, from their artefacts:
+The three committed orders, from their artefacts:
 
 | Scenario | Drug | Fields written by read-back | Fields written by validator |
 |---|---|---|---|
 | `clean-order` | lisinopril 10 mg tablet | drug, strength, form, quantity, sig, patient name | NPI, DEA, route |
 | `lasa-named` | hydromorphone 2 mg/ml injection | drug, strength, form, route, quantity, sig, patient name | NPI, DEA |
+| `commit-hold` | lisinopril 10 mg tablet | drug, strength, route, quantity, sig, patient name | NPI, DEA, form |
 
-For `npi-groups` and `commit-hold`, the first billed attempt of each failed with its reason
-recorded, and one further attempt was refused before any socket opened, because one client may
-spend at most half of the daily socket budget. On the second attempt of `npi-groups` both tokens
-were issued but the browser could not open either socket, and the page now names that fault
-`socket_unreachable` instead of a token failure. On the second attempt of `commit-hold` the hold
-refused the early `commitOrder` as intended, but the order never committed: the agent quoted the
-caller before the recognizer had closed the caller's turn, and the proposals were refused. The
-route now waits longer and answers `E_QUOTATION_NOT_YET_RECEIVED`, a request to retry, while the
-turn is still arriving. The third attempt of each showed the cause underneath: the recognizer's
-word times run on without a gap from one caller line to the next, so no audio reached it
-between lines, and it closed a caller turn up to 100 s after the words were spoken. The capture
-worklet skipped any audio block that arrived without a channel, which is what an idle injected
-track delivers in Firefox; it now sends silence for such a block.
-Neither scenario has a passing run. Seven further billed
+Every scenario has one passing run on production. `npi-groups` and `commit-hold` passed only
+after three defects their earlier attempts exposed were fixed, each attempt recorded with its
+reason. The capture worklet skipped any audio block that arrived without a channel, which is
+what an idle injected track delivers in Firefox, so neither socket received the pauses between
+caller lines and the recognizer closed a caller turn up to 100 s after the words were spoken; it
+now sends silence for such a block. The agent could quote a caller turn the recognizer had not
+closed yet, so the route now waits up to 12 s and answers `E_QUOTATION_NOT_YET_RECEIVED`, a
+request to retry, while the turn is still arriving. And the server's echo check read the caller
+repeating a name as an echo of the agent's read-back; it now compares word order. One
+`commit-hold` attempt that started 40 s after the previous call could not open its sockets and
+is recorded as `socket_unreachable`; the harness now spaces calls 60 s apart. Seven further billed
 attempts, before the series in the table, reached no committed order; each is in
 `eval/live/runs.json` with its reason. Socket time for every live-smoke run is the harness wall
 clock across its sockets, an upper bound.
@@ -624,11 +622,11 @@ on 2026-09-17 against the vendor's pricing page (agent USD 4.50, STT USD 0.45, m
 per hour). It prints:
 
 ```
-recorded paid runs: 47
-runs that did not complete, still billed: 37
+recorded paid runs: 50
+runs that did not complete, still billed: 38
 attempts refused before any socket opened, so not billed: 5
-total socket-open time: 12368.768 s
-derived total: USD 14.2646
+total socket-open time: 12777.868 s
+derived total: USD 14.8442
 ```
 
 The figure is arithmetic over recorded seconds, not an invoice. By command:
@@ -637,7 +635,7 @@ The figure is arithmetic over recorded seconds, not an invoice. By command:
 |---|---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 | a recognizer token and socket check |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 | the stress set, two concurrent sweeps |
-| `make live-smoke` | 28 | 4 completed, 24 failed | 9.7434 | the scenario runs above; 5 more refused at 0 s |
+| `make live-smoke` | 31 | 6 completed, 25 failed | 10.3230 | the scenario runs above; 5 more refused at 0 s |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 | one agent session whose vendor timeline is committed as `eval/fixtures/witness/timeline-recorded-shape.json` |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 | agent seconds on the vendor's session list not itemised by another row |
 | ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 | scripted agent sockets |
@@ -649,7 +647,7 @@ The figure is arithmetic over recorded seconds, not an invoice. By command:
 Probe rows that used the agent socket alone are recorded at the three-socket rate, an upper
 bound.
 
-**Paid runs on record, artefacts plus ledger: 54.** The one figure a human verified against the
+**Paid runs on record, artefacts plus ledger: 57.** The one figure a human verified against the
 vendor is the account balance, USD 149.93 on 17 September, read off the AssemblyAI dashboard; no
 later reading is recorded, so no vendor-verified figure covers the ledger runs.
 

@@ -622,6 +622,42 @@
       ],
       "openSeconds": 486.2,
       "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-27T06:54:30.290Z",
+      "at": "2026-09-27T06:54:30.290Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 155.5,
+      "outcome": "completed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-27T06:55:11.729Z",
+      "at": "2026-09-27T06:55:11.729Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 9.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-27T07:01:35.766Z",
+      "at": "2026-09-27T07:01:35.766Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 244.2,
+      "outcome": "completed"
     }
   ]
 }

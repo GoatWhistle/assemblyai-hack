@@ -173,7 +173,7 @@ Every figure, with its command and set size, is in [evidence](evidence.md) and
 |---|---|---|
 | What does a reflex "yes" write, with the pair rule on and off? | Off: 20 of 20 constructed pair mishearings are ordered. On: 0 of 20, at a cost of 4 contrastive questions on 20 correct values (`npx tsx scripts/measure/ab-gate.ts`) | **Measured**, offline, constructed mishearings |
 | Does the recognizer confidently turn a listed name into its partner? | Not observed: 0 of 186 scored degraded utterances, synthesised voices ([evidence](evidence.md#can-the-recognizer-be-confident-and-wrong)) | **Measured** |
-| Does a whole call reach a committed order? | On production, `clean-order` and `lasa-named` committed; `yeah-no` and `barge-in` completed; `npi-groups` and `commit-hold` have no completed run (`eval/live/runs.json`) | **Observed**, synthesised caller |
+| Does a whole call reach a committed order? | On production, all six scenarios have a passing run: three committed an order, three completed (`eval/live/runs.json`) | **Observed**, synthesised caller |
 | Does any of it hold with a human voice? | No human recording exists; the script is the [voice set](../eval/live/voice-set.md) | **Not measured** |
 
 The second row is the product's weakest point, stated at full strength: the confident
