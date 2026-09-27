@@ -2,25 +2,32 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
-  padding-bottom: var(--space-8);
+  padding-bottom: var(--space-7);
 }
 
 .page :where(a, button, summary, input, [tabindex]) {
-  scroll-margin-top: calc(var(--target-touch) + var(--space-6));
+  scroll-margin-top: var(--space-6);
   scroll-margin-bottom: var(--space-5);
 }
 
-.section {
+.replay {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  scroll-margin-top: var(--space-5);
+}
+
+.more {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line-hairline);
+}
+
+.panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
-  scroll-margin-top: calc(var(--target-touch) + var(--space-6));
-  border-radius: var(--radius-md);
-}
-
-.section:target h2 {
-  border-radius: var(--radius-sm);
-  animation: var(--keyframes-arrive) var(--dur-emphatic) var(--ease-out-quart);
 }
 
 .heading {
@@ -31,57 +38,25 @@
   color: var(--text-primary);
 }
 
-.sayActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-
-.guide,
-.closing {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-6);
-  align-items: start;
-}
-
-.closing {
-  gap: var(--space-5);
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--line-hairline);
-}
-
+.actions,
 .onward {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
 }
 
-@media (min-width: 62rem) {
-  .page {
-    gap: var(--space-7);
-  }
-
-  .closing {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    column-gap: var(--shell-gap);
-  }
-
-  .onward {
-    justify-content: flex-end;
-  }
-}
-
-@media (min-width: 80rem) {
-  .guide {
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    column-gap: var(--shell-gap);
-  }
+.onward {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line-hairline);
 }
 
 @media (max-width: 40rem) {
   .page {
     gap: var(--space-5);
-    padding-bottom: var(--space-7);
+    padding-bottom: var(--space-6);
+  }
+
+  .more {
+    padding-top: var(--space-5);
   }
 }

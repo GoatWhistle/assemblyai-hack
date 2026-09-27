@@ -199,7 +199,7 @@
   }
 }
 
-@media (min-width: 110rem) {
+@media (min-width: 80rem) {
   .said {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
   }

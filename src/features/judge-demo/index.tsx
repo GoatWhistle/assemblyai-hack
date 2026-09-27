@@ -4,6 +4,7 @@ import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { FieldCard } from "@/features/field-card"
 import { GateBanner } from "@/features/gate-banner"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
+import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { DemoArmPanel } from "./demo-arm"
 import {
   DECISION_AT_MS,
@@ -132,11 +133,10 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
   )
   const lede = (
     <p className={styles.body}>
-      One synthesised session, replayed through the whole pipeline, with no microphone and no
-      second person on the line. The two panels run the shipped policy and differ by one flag,
-      the pair rule: both read the drug name back, and only one requires the caller to answer
-      with the name. The replay picks up {sessionSeconds(REPLAY_FROM_MS)} into the session, just
-      before the caller names the drug, so the session clock and the word timecodes agree.
+      One synthesised session through the whole pipeline. The two panels differ by one flag, the
+      pair rule: both read the drug name back, and only one needs the name as the answer. The
+      clock starts {sessionSeconds(REPLAY_FROM_MS)} into the session, so it matches the word
+      timecodes.
     </p>
   )
   const context = (
@@ -205,14 +205,26 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
           className={readingBack ? styles.readingBack : styles.resting}
           data-reading-back={readingBack}
         >
-          <FieldCard
-            key={card.candidate.candidateId}
-            candidate={card.candidate}
-            decision={card.decision}
-            siblings={card.siblings}
-            evidence={card.evidence}
-            decisions={card.decisions}
-          />
+          <Disclosure
+            summary={
+              <>
+                Show how this was decided
+                <span className={styles.summaryNote}>
+                  The field card: what proves the value, the recognizer&rsquo;s certainty and
+                  the spoken words with their timecodes
+                </span>
+              </>
+            }
+          >
+            <FieldCard
+              key={card.candidate.candidateId}
+              candidate={card.candidate}
+              decision={card.decision}
+              siblings={card.siblings}
+              evidence={card.evidence}
+              decisions={card.decisions}
+            />
+          </Disclosure>
         </div>
       </div>
 

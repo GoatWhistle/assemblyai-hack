@@ -108,15 +108,21 @@ describe("U1: the judge hub carries what the old home page carried", () => {
     }
   })
 
-  it("puts the replay first in the section navigation, then the tour", async () => {
+  it("puts the replay first, then the rest of the hub as tabs that answer to their anchors", async () => {
     await renderDemo({})
-    const nav = screen.getByRole("navigation", { name: "On this page" })
-    const targets = within(nav)
-      .getAllByRole("link")
-      .map((link) => link.getAttribute("href"))
-    expect(targets.slice(0, 2)).toEqual(["#replay", "#tour"])
+    const replay = document.getElementById("replay")
+    const list = screen.getByRole("tablist", { name: "More of the demonstration" })
+    expect(replay, "#replay has no section").not.toBeNull()
+    expect(
+      (replay as HTMLElement).compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING,
+      "the replay is the page; everything else waits below it",
+    ).toBeTruthy()
+    const targets = within(list)
+      .getAllByRole("tab")
+      .map((tab) => tab.getAttribute("aria-controls"))
+    expect(targets).toEqual(["say", "tour", "scenarios", "keyterms", "recorded"])
     for (const target of targets) {
-      expect(document.querySelector(String(target)), `${target} has no section`).not.toBeNull()
+      expect(document.getElementById(String(target)), `#${target} has no panel`).not.toBeNull()
     }
   })
 

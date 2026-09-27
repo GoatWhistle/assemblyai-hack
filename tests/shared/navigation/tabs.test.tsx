@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { Tabs } from "@/shared/ui/navigation/tabs"
 
 const ITEMS = [
@@ -68,5 +68,55 @@ describe("tabs follow the WAI-ARIA tabs pattern", () => {
     await user.click(tab("Second"))
     expect(tab("Second").getAttribute("aria-selected")).toBe("true")
     expect(tab("Third").getAttribute("aria-selected")).toBe("false")
+  })
+})
+
+describe("anchored tabs answer to the address", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/")
+  })
+
+  it("uses the item ids as panel ids, so a link to #id names a panel", () => {
+    render(<Tabs label="Reasons" items={ITEMS} anchored />)
+    expect(document.getElementById("two")?.getAttribute("role")).toBe("tabpanel")
+    expect(tab("Second").getAttribute("aria-controls")).toBe("two")
+  })
+
+  it("opens the panel the address names on arrival and scrolls to it", () => {
+    const scrolled = vi.fn()
+    Element.prototype.scrollIntoView = scrolled
+    window.history.replaceState(null, "", "/#three")
+    render(<Tabs label="Reasons" items={ITEMS} anchored />)
+    expect(tab("Third").getAttribute("aria-selected")).toBe("true")
+    expect(document.getElementById("three")?.hasAttribute("hidden")).toBe(false)
+    expect(scrolled).toHaveBeenCalled()
+  })
+
+  it("follows a later hash change and ignores a hash that names no panel", () => {
+    render(<Tabs label="Reasons" items={ITEMS} anchored />)
+    act(() => {
+      window.history.replaceState(null, "", "/#nowhere")
+      window.dispatchEvent(new HashChangeEvent("hashchange"))
+    })
+    expect(tab("First").getAttribute("aria-selected")).toBe("true")
+    act(() => {
+      window.history.replaceState(null, "", "/#two")
+      window.dispatchEvent(new HashChangeEvent("hashchange"))
+    })
+    expect(tab("Second").getAttribute("aria-selected")).toBe("true")
+  })
+
+  it("writes the chosen panel into the address so it can be shared", async () => {
+    const user = userEvent.setup()
+    render(<Tabs label="Reasons" items={ITEMS} anchored />)
+    await user.click(tab("Third"))
+    expect(window.location.hash).toBe("#three")
+  })
+
+  it("leaves the address alone when not anchored", async () => {
+    const user = userEvent.setup()
+    render(<Tabs label="Reasons" items={ITEMS} />)
+    await user.click(tab("Third"))
+    expect(window.location.hash).toBe("")
   })
 })

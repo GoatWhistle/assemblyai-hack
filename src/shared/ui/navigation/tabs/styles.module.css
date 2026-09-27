@@ -1,6 +1,7 @@
 .tabs {
   display: grid;
   gap: var(--space-4);
+  scroll-margin-top: var(--space-5);
 }
 
 .list {

@@ -1,5 +1,4 @@
 .demo {
-  --hub-offset: calc(var(--target-touch) + var(--space-2) * 2);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
@@ -40,7 +39,7 @@
 
 .transport {
   position: sticky;
-  top: var(--hub-offset);
+  top: 0;
   z-index: var(--z-raised);
   margin-inline: calc(-1 * var(--space-2));
   padding: var(--space-2);
@@ -109,6 +108,14 @@
   outline-offset: var(--space-1);
 }
 
+.summaryNote {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+}
+
 .readingBack {
   min-width: 0;
   border-radius: var(--radius-lg);
@@ -118,7 +125,7 @@
 }
 
 .demo > .transport ~ * :where(a, button, summary, [tabindex]) {
-  scroll-margin-top: calc(var(--hub-offset) + 12rem);
+  scroll-margin-top: 12rem;
 }
 
 @media (max-width: 40rem) {
@@ -175,7 +182,7 @@
   }
 
   .demo > .transport ~ * :where(a, button, summary, [tabindex]) {
-    scroll-margin-top: calc(var(--hub-offset) + var(--space-6));
+    scroll-margin-top: var(--space-6);
   }
 
   .intro {
@@ -189,7 +196,7 @@
 
   .result > :first-child {
     position: sticky;
-    top: calc(var(--hub-offset) + var(--space-5));
+    top: var(--space-5);
   }
 }
 

@@ -9,6 +9,9 @@ export const REPLAY_NOTICE_BODY =
 export const REPLAY_NOTICE_INSURANCE =
   "This path exists so the demonstration cannot fail: it needs no microphone, no second person on the line and no working network beyond this page. When we checked, 12 of the 45 submissions then published had a demo link that did not work; that is our own count of the public submission pages, not a published figure."
 
+export const REPLAY_NOTICE_LINE =
+  "No microphone is open and nothing is sent to AssemblyAI. The gate and the pair table deciding here are the shipped ones."
+
 export function ReplayNotice() {
   return (
     <aside className={styles.notice} aria-label={REPLAY_NOTICE_TITLE}>
@@ -16,8 +19,9 @@ export function ReplayNotice() {
         <span className={styles.tag}>replay</span>
         {REPLAY_NOTICE_TITLE}
       </p>
-      <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
-      <Disclosure summary="Why a replay exists at all">
+      <p className={styles.body}>{REPLAY_NOTICE_LINE}</p>
+      <Disclosure summary="What is simulated, and why a replay exists">
+        <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
         <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
       </Disclosure>
     </aside>

@@ -1,10 +1,10 @@
 import { existsSync, readFileSync } from "node:fs"
+import { REPLAY_HUB } from "@app/(pages)/(docs)/docs-map"
 import { act, cleanup, render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { STANCE_LABEL } from "@/features/field-card/field-status"
 import { JudgeDemo } from "@/features/judge-demo"
 import { DEMO_ARMS, SETTLED_AT_MS, SPOKEN_TRUTH } from "@/features/judge-demo/demo-arms"
-import { activeHubSection } from "@/features/judge-demo/hub-nav/active-hub"
 import { DECISION_AT_MS, REPLAY_FROM_MS } from "@/features/judge-demo/replay-clock"
 import { VERDICT_STRIP_LABEL } from "@/features/judge-demo/verdict-strip"
 import { STRIP_ARMS } from "@/features/judge-demo/verdict-strip/strip-lines"
@@ -92,6 +92,18 @@ describe("A3-05: nothing claims a decision before the gate decides", () => {
   })
 })
 
+describe("the replay reads in one screen: the field card's proof waits behind one disclosure", () => {
+  it("keeps the card in the page, folded under a summary that says what opening it shows", () => {
+    render(<JudgeDemo />)
+    const folded = card().closest("details")
+    expect(folded, "the card sits inside a disclosure, not beside the arms").not.toBeNull()
+    expect(folded?.open, "folded by default so the two arms stay the first thing read").toBe(
+      false,
+    )
+    expect(within(folded as HTMLElement).getByText("Show how this was decided")).toBeTruthy()
+  })
+})
+
 describe("A3-06: the settled card agrees with what entered the order", () => {
   it("shows the spoken drug as the value, corrected from the misheard one and confirmed aloud", () => {
     render(<JudgeDemo />)
@@ -105,16 +117,19 @@ describe("A3-06: the settled card agrees with what entered the order", () => {
   })
 })
 
-describe("A2-F6: the hub navigation never keeps a stale current section", () => {
-  it("has no current section above the first one", () => {
-    const boxes = [
-      { id: "replay", top: 600 },
-      { id: "tour", top: 1600 },
-    ]
-    expect(activeHubSection(boxes, 250, false)).toBeNull()
-    expect(activeHubSection(boxes, 700, false)).toBe("replay")
-    expect(activeHubSection(boxes, 1700, false)).toBe("tour")
-    expect(activeHubSection(boxes, 250, true)).toBe("tour")
+describe("A2-F6: every replay hub link still lands on a section of /demo", () => {
+  it("keeps each docs anchor as the replay or as a hash-linked tab of the page", () => {
+    const page = readFileSync("app/(pages)/demo/page.tsx", "utf8")
+    expect(
+      page,
+      "the tabs must answer to the hash or the docs links open the wrong panel",
+    ).toMatch(/<Tabs[^>]* anchored/)
+    for (const link of REPLAY_HUB.links) {
+      const id = link.href.split("#")[1] ?? ""
+      const constant = page.match(new RegExp(`const ([A-Z]+_ID) = "${id}"`))?.[1]
+      expect(constant, `/demo#${id} names no section on the page`).toBeDefined()
+      expect(page).toMatch(new RegExp(`id(: |=[{])${constant}[,}]`))
+    }
   })
 })
 
