@@ -40,6 +40,19 @@ export const STANCE_CHIP: Readonly<Record<FieldStance, ChipTone>> = Object.freez
   aborted: "aborted",
 })
 
+export type ValueMark = "written" | "heldLasa" | "heldAsking" | "heldRefused"
+
+export const STANCE_MARK: Readonly<Record<FieldStance, ValueMark | null>> = Object.freeze({
+  proposed: null,
+  asking: "heldAsking",
+  refused: "heldRefused",
+  lasa: "heldLasa",
+  accepted: "written",
+  confirmed: "written",
+  escalated: "heldRefused",
+  aborted: null,
+})
+
 const VALUE_REFUSED: readonly ReasonCode[] = [
   ReasonCode.NormalizeFailed,
   ReasonCode.ValidatorChecksum,

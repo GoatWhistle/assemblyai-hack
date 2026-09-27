@@ -1,6 +1,7 @@
 .dial {
   --ring-inner: var(--mic-ring-line);
   --ring-outer: var(--mic-ring-quiet);
+  --voice: 0;
 
   position: relative;
   display: grid;
@@ -11,7 +12,11 @@
 
 .dial::before,
 .dial::after,
-.ripple {
+.ripple,
+.trail,
+.voice,
+.emit,
+.emitLate {
   content: "";
   position: absolute;
   border-radius: var(--radius-pill);
@@ -31,14 +36,59 @@
   transition: box-shadow var(--dur-base) var(--ease-out-quart);
 }
 
-.ripple {
+.ripple,
+.trail,
+.voice,
+.emit,
+.emitLate {
   inset: calc(var(--mic-size) * 0.22);
-  box-shadow: 0 0 0 1.5px var(--mic-ripple);
   opacity: 0;
+}
+
+.ripple {
+  box-shadow: 0 0 0 1.5px var(--mic-ripple);
 }
 
 .ready .ripple {
   animation: var(--keyframes-ripple) var(--dur-loop-ripple) var(--ease-constant) infinite;
+}
+
+.voice {
+  background-color: var(--mic-voice-fill);
+  scale: calc(1 + var(--voice) * 0.3);
+  transition:
+    scale var(--dur-base) var(--ease-out-quart),
+    opacity var(--dur-base) var(--ease-out-quart);
+}
+
+.trail {
+  box-shadow: 0 0 0 1px var(--mic-voice-line);
+  scale: calc(1.04 + var(--voice) * 0.4);
+  transition:
+    scale var(--dur-deliberate) var(--ease-out-expo),
+    opacity var(--dur-deliberate) var(--ease-out-expo);
+}
+
+.open .voice {
+  opacity: calc(0.35 + var(--voice) * 0.65);
+}
+
+.open .trail {
+  opacity: calc(0.2 + var(--voice) * 0.8);
+}
+
+.emit,
+.emitLate {
+  box-shadow: 0 0 0 1px var(--mic-agent-line);
+}
+
+.agent .emit,
+.agent .emitLate {
+  animation: var(--keyframes-ripple) var(--dur-loop-pulse-urgent) var(--ease-out-quart) infinite;
+}
+
+.agent .emitLate {
+  animation-delay: calc(var(--dur-loop-pulse-urgent) / -2);
 }
 
 .open {
@@ -46,7 +96,8 @@
   --ring-outer: var(--mic-ring-line);
 }
 
-.quiet {
+.quiet,
+.agent {
   --ring-inner: var(--mic-ring-quiet);
   --ring-outer: var(--mic-ring-quiet);
 }
@@ -57,7 +108,27 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ready .ripple {
+  .ready .ripple,
+  .agent .emit,
+  .agent .emitLate {
     animation: none;
+  }
+
+  .open .voice {
+    opacity: 0.6;
+    scale: 1.12;
+  }
+
+  .open .trail {
+    opacity: 0;
+  }
+
+  .agent .emit {
+    opacity: 0.7;
+    scale: 1.14;
+  }
+
+  .agent .emitLate {
+    opacity: 0;
   }
 }

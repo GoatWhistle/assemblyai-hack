@@ -1,0 +1,43 @@
+.mark {
+  width: 7.5rem;
+  height: 3.125rem;
+  overflow: visible;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: var(--keyframes-sweep) var(--dur-emphatic) var(--ease-out-expo) both;
+}
+
+.pill {
+  fill: var(--surface-panel);
+  stroke: var(--line-strong);
+}
+
+.ruler {
+  stroke: var(--line-strong);
+}
+
+.sheet {
+  fill: var(--surface-panel);
+  stroke: var(--line-strong);
+}
+
+.accent {
+  stroke: var(--action-rest);
+  stroke-width: 2;
+}
+
+.pair {
+  stroke: var(--action-rest);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.seal {
+  fill: var(--surface-panel);
+  stroke: var(--action-rest);
+  stroke-width: 1.5;
+  rotate: -8deg;
+  transform-origin: 39px 26.5px;
+}

@@ -3,6 +3,7 @@ import styles from "./styles.module.css"
 
 export type StateShellProps = {
   readonly glyph: string
+  readonly mark?: ReactNode
   readonly title: string
   readonly body: ReactNode
   readonly actions?: ReactNode
@@ -14,6 +15,7 @@ export type StateShellProps = {
 
 export function StateShell({
   glyph,
+  mark: drawing,
   title,
   body,
   actions,
@@ -31,9 +33,11 @@ export function StateShell({
     .join(" ")
   return (
     <div className={shell} role={alarmed === true ? "alert" : undefined}>
-      <span className={mark} aria-hidden="true">
-        {glyph}
-      </span>
+      {drawing ?? (
+        <span className={mark} aria-hidden="true">
+          {glyph}
+        </span>
+      )}
       <Title className={styles.title}>{title}</Title>
       <div className={styles.body}>{body}</div>
       {note === undefined ? null : <p className={styles.body}>{note}</p>}

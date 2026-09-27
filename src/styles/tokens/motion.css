@@ -18,6 +18,7 @@
   --reduced-fade: 160ms;
   --stagger-step: 80ms;
   --stagger-arm: 60ms;
+  --stagger-trace: 70ms;
 
   --transition-control:
     color var(--dur-fast) var(--ease-out-quart), background-color var(--dur-fast)
@@ -39,6 +40,8 @@
   --keyframes-settle: readback-settle;
   --keyframes-verdict: readback-verdict;
   --keyframes-verdict-emphatic: readback-verdict-emphatic;
+  --keyframes-trace: readback-trace;
+  --keyframes-land: readback-land;
 }
 
 @keyframes readback-fade-rise {
@@ -172,6 +175,28 @@
   }
 }
 
+@keyframes readback-trace {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 1;
+  }
+  45% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes readback-land {
+  from {
+    opacity: 0.6;
+    transform: translate(var(--land-x, 0), var(--land-y, 0));
+    filter: blur(var(--land-blur, 1.5px));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur-instant: 1ms;
@@ -187,6 +212,7 @@
     --dur-loop-ripple: 1ms;
     --stagger-step: 0ms;
     --stagger-arm: 0ms;
+    --stagger-trace: 0ms;
   }
 
   *,

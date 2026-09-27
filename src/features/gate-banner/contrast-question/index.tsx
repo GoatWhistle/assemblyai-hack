@@ -12,6 +12,16 @@ export function spokenChoice(names: readonly string[]): string {
   return `${names.slice(0, -1).join(", ")} or ${names.at(-1) ?? ""}`
 }
 
+export function landingSide(index: number, count: number): string {
+  if (count < 2) {
+    return "0"
+  }
+  if (index === 0) {
+    return "-0.5rem"
+  }
+  return index === count - 1 ? "0.5rem" : "0"
+}
+
 export function ContrastQuestion({ candidates }: ContrastQuestionProps) {
   return (
     <div className={styles.question}>
@@ -30,7 +40,7 @@ export function ContrastQuestion({ candidates }: ContrastQuestionProps) {
             <span
               className={styles.name}
               data-motion="fade"
-              style={{ "--i": index } as CSSProperties}
+              style={{ "--land-x": landingSide(index, candidates.length) } as CSSProperties}
             >
               {name}
             </span>

@@ -80,7 +80,7 @@ export function MicConsole({
 
   return (
     <section className={`${styles.console} ${styles[STATE_CLASS[state]] ?? ""}`}>
-      <MicDial state={state}>
+      <MicDial state={state} level={level}>
         <button
           type="button"
           className={styles.trigger}

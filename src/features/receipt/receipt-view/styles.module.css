@@ -25,11 +25,43 @@
 }
 
 .verdictWord {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border: 2px solid var(--stamp-ink);
+  border-radius: var(--radius-sm);
   font-size: var(--text-3xl);
   font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-display);
+  letter-spacing: var(--track-heading);
   line-height: var(--leading-tight);
-  color: var(--text-primary);
+  color: var(--stamp-ink);
+}
+
+.valid {
+  --stamp-ink: var(--state-accepted-ink);
+}
+
+.tampered {
+  --stamp-ink: var(--state-escalated-ink);
+}
+
+.pending {
+  --stamp-ink: var(--text-muted);
+  border-style: dashed;
+  animation: var(--keyframes-breathe) var(--dur-loop-breathe) var(--ease-in-out) infinite;
+}
+
+.stamped {
+  rotate: -1.5deg;
+  animation: stamp var(--dur-slow) var(--ease-out-expo) both;
+}
+
+@keyframes stamp {
+  from {
+    opacity: 0.5;
+    transform: scale(1.18);
+    rotate: -5deg;
+    filter: blur(1.5px);
+  }
 }
 
 .verdictNote {
@@ -46,6 +78,9 @@
 }
 
 .check {
+  --land-y: 0.25rem;
+  animation: var(--keyframes-land) var(--dur-base) var(--ease-out-expo) both;
+  animation-delay: calc(var(--dur-base) + var(--i, 0) * var(--stagger-trace));
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-3);
@@ -123,5 +158,10 @@
   .verdict {
     border-color: var(--line-strong);
     background-color: transparent;
+  }
+
+  .stamped,
+  .check {
+    animation: none;
   }
 }

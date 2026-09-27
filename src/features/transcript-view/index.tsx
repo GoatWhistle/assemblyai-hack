@@ -43,7 +43,7 @@ export function TranscriptView({
   if (entries.length === 0) {
     return (
       <EmptyState
-        glyph="~"
+        illustration="words"
         title="Nothing has been said yet"
         body="Turns appear here as the recognizer finalises them. Selecting a field highlights the exact words that produced its value, and selecting a word finds the field it fed."
       />

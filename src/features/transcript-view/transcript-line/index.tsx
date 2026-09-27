@@ -1,11 +1,27 @@
 "use client"
 
+import { type CSSProperties, Fragment } from "react"
 import type { WordSpan } from "@/domain"
 import { isWordSelected, type SpanSelection, type TranscriptEntry } from "../transcript-entry"
 import styles from "./styles.module.css"
 
 function classes(...values: (string | undefined | false)[]): string {
   return values.filter((value) => typeof value === "string" && value !== "").join(" ")
+}
+
+const TRACE_CAP = 10
+
+export function traceOrder(
+  words: readonly WordSpan[],
+  selection: SpanSelection,
+): ReadonlyMap<number, number> {
+  const order = new Map<number, number>()
+  for (const word of words) {
+    if (isWordSelected(word, selection)) {
+      order.set(word.startMs, Math.min(order.size, TRACE_CAP))
+    }
+  }
+  return order
 }
 
 export type TranscriptLineProps = {
@@ -22,6 +38,7 @@ export function TranscriptLine({
   onSelectWord,
 }: TranscriptLineProps) {
   const isAgent = entry.speaker === "agent"
+  const traced = traceOrder(entry.words, selection)
   return (
     <article className={styles.turn}>
       <p className={styles.meta}>
@@ -47,20 +64,26 @@ export function TranscriptLine({
         {entry.words.length === 0
           ? entry.text
           : entry.words.map((word) => (
-              <button
-                key={`${entry.id}-${word.startMs}`}
-                type="button"
-                className={classes(
-                  styles.word,
-                  isWordSelected(word, selection) && styles.wordActive,
-                  word.confidence < weakBelow && styles.wordWeak,
-                )}
-                title={`${word.startMs}-${word.endMs} ms, certainty ${word.confidence.toFixed(2)}`}
-                aria-label={`${word.text}, ${word.startMs} to ${word.endMs} ms, recognizer certainty ${word.confidence.toFixed(2)}`}
-                onClick={() => onSelectWord?.(word, entry)}
-              >
-                {word.text}{" "}
-              </button>
+              <Fragment key={`${entry.id}-${word.startMs}`}>
+                <button
+                  type="button"
+                  className={classes(
+                    styles.word,
+                    traced.has(word.startMs) && styles.wordActive,
+                    word.confidence < weakBelow && styles.wordWeak,
+                  )}
+                  style={
+                    traced.has(word.startMs)
+                      ? ({ "--i": traced.get(word.startMs) } as CSSProperties)
+                      : undefined
+                  }
+                  title={`${word.startMs}-${word.endMs} ms, certainty ${word.confidence.toFixed(2)}`}
+                  aria-label={`${word.text}, ${word.startMs} to ${word.endMs} ms, recognizer certainty ${word.confidence.toFixed(2)}`}
+                  onClick={() => onSelectWord?.(word, entry)}
+                >
+                  {word.text}
+                </button>{" "}
+              </Fragment>
             ))}
       </p>
       {entry.discarded && entry.discardReason !== null ? (

@@ -19,6 +19,9 @@
 }
 
 .outcomeWord {
+  --land-blur: 3px;
+  display: inline-block;
+  animation: var(--keyframes-land) var(--dur-base) var(--ease-out-expo) both;
   font-size: var(--text-3xl);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--track-display);
@@ -26,6 +29,7 @@
 }
 
 .pass .outcomeWord {
+  --land-y: -0.375rem;
   color: var(--state-accepted-ink);
 }
 

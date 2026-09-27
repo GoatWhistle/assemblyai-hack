@@ -69,6 +69,55 @@
   overflow-wrap: anywhere;
 }
 
+.written,
+.held {
+  --mark-line: var(--reason-validator-line);
+  --mark-delay: calc(
+    var(--dur-slow) +
+    var(--trace-words, 0) *
+    var(--stagger-trace) +
+    var(--dur-base)
+  );
+  position: relative;
+  justify-self: start;
+}
+
+.written {
+  --land-y: -0.3125rem;
+  animation: var(--keyframes-land) var(--dur-base) var(--ease-out-expo) both;
+}
+
+.written::after,
+.held::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  animation: var(--keyframes-sweep) var(--dur-emphatic) var(--ease-out-expo) both;
+  animation-delay: var(--mark-delay);
+}
+
+.written::after {
+  inset-inline: 0;
+  bottom: -0.375rem;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background-color: var(--verdict-committed-line);
+}
+
+.held::after {
+  inset: -0.1875rem -0.5rem;
+  border: 1.5px dashed var(--mark-line);
+  border-radius: var(--radius-sm);
+}
+
+.heldLasa {
+  --mark-line: var(--reason-lasa-line);
+}
+
+.heldAsking {
+  --mark-line: var(--reason-threshold-ink);
+}
+
 .valuePending {
   color: var(--text-muted);
   font-weight: var(--weight-regular);

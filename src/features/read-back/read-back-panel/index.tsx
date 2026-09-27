@@ -51,7 +51,7 @@ export function ReadBackPanel({ context, fastPath = NO_FAST_PATH }: ReadBackPane
   if (context.state === ReadBackState.Idle || context.field === null) {
     return (
       <EmptyState
-        glyph="?"
+        illustration="question"
         title="No read-back in flight"
         body="When the gate asks for a spoken confirmation, the exchange appears here: the phrase the agent said, what the caller answered, and whether the two matched."
       />

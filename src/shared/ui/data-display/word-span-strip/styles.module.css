@@ -11,6 +11,8 @@
 }
 
 .word {
+  position: relative;
+  isolation: isolate;
   display: grid;
   gap: 1px;
   padding: 0.125rem var(--space-2) 0.1875rem;
@@ -20,6 +22,19 @@
   text-align: left;
   cursor: pointer;
   transition: var(--transition-control);
+}
+
+.word::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--span-trace);
+  opacity: 0;
+  pointer-events: none;
+  animation: var(--keyframes-trace) var(--dur-emphatic) var(--ease-out-quart) both;
+  animation-delay: calc(var(--dur-slow) + var(--i, 0) * var(--stagger-trace));
 }
 
 .word:hover {

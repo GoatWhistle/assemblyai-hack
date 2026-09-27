@@ -36,6 +36,7 @@ export type OrderCheckProps = {
 function NoReceipt() {
   return (
     <EmptyState
+      illustration="receipt"
       title={NO_RECEIPT_TITLE}
       body={
         <p>

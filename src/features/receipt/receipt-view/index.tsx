@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { type CSSProperties, useEffect, useState } from "react"
 import {
   type OrderReceipt,
   type ReceiptRecheck,
@@ -57,15 +57,27 @@ export function ReceiptView({ receipt, fhir, serverRecheck, source }: ReceiptVie
         ].join(" ")}
         aria-live="polite"
       >
-        <span className={styles.verdictWord}>{verdict ?? "CHECKING"}</span>
+        <span
+          key={verdict ?? "checking"}
+          className={[
+            styles.verdictWord,
+            verdict === null ? styles.pending : styles.stamped,
+          ].join(" ")}
+        >
+          {verdict ?? "CHECKING"}
+        </span>
         <span className={styles.verdictNote}>
           {source === "file" ? "the file you chose" : "the receipt the server issued"},
           rechecked in this browser: sha256, NPI, DEA and the published pairs
         </span>
       </output>
       <ul className={styles.checks}>
-        {(verification?.checks ?? []).map((entry) => (
-          <li key={`${entry.field}-${entry.check}`} className={styles.check}>
+        {(verification?.checks ?? []).map((entry, index) => (
+          <li
+            key={`${entry.field}-${entry.check}`}
+            className={styles.check}
+            style={{ "--i": Math.min(index, 8) } as CSSProperties}
+          >
             <code className={styles.code}>{entry.check}</code>
             <span>{entry.passed ? "passed" : "failed"}</span>
             <span className={styles.detail}>{entry.detail}</span>

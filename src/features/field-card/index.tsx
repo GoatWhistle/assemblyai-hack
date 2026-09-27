@@ -1,5 +1,6 @@
 "use client"
 
+import type { CSSProperties } from "react"
 import {
   type ConfirmationEvidence,
   type FieldCandidate,
@@ -10,7 +11,7 @@ import {
 import { ConfirmationReceipt } from "@/features/confirmation/confirmation-receipt"
 import { Certainty } from "@/shared/ui/data-display/certainty"
 import { VerdictBlock } from "@/shared/ui/data-display/verdict-block"
-import { WordSpanStrip } from "@/shared/ui/data-display/word-span-strip"
+import { TRACE_CAP, WordSpanStrip } from "@/shared/ui/data-display/word-span-strip"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { describeReason, SEVERITY_TONE } from "../gate-banner/reason-language"
 import { CRITICALITY_LABEL, FIELD_LABEL, FIELD_PROOF_NOTE } from "../intake/field-language"
@@ -24,7 +25,9 @@ import {
   overruledNote,
   STANCE_CHIP,
   STANCE_LABEL,
+  STANCE_MARK,
   stanceOf,
+  type ValueMark,
 } from "./field-status"
 import { LasaOverride } from "./lasa-override"
 import { type PriorAttempt, priorAttemptOf, valueChanged } from "./prior-attempt"
@@ -39,6 +42,23 @@ const CARD_CLASS: Record<string, string> = {
   refused: styles.refusedCard ?? "",
   accepted: styles.acceptedCard ?? "",
   confirmed: styles.acceptedCard ?? "",
+}
+
+const MARK_CLASS: Readonly<Record<string, string>> = {
+  written: styles.written ?? "",
+  heldLasa: `${styles.held ?? ""} ${styles.heldLasa ?? ""}`,
+  heldAsking: `${styles.held ?? ""} ${styles.heldAsking ?? ""}`,
+  heldRefused: styles.held ?? "",
+}
+
+function valueClass(mark: ValueMark | null, pending: boolean): string {
+  return [
+    styles.value,
+    mark === null ? "" : MARK_CLASS[mark],
+    pending ? styles.valuePending : "",
+  ]
+    .filter((value) => value !== undefined && value !== "")
+    .join(" ")
 }
 
 function heardLine(rawValue: string, corrected: PriorAttempt | null): string {
@@ -87,6 +107,7 @@ export function FieldCard({
   const overruled = isConfidenceOverruled(decision, candidate)
   const minConfidence = candidate.provenance.minConfidence
   const aboveThreshold = minConfidence >= policy.autoAcceptThreshold
+  const mark = STANCE_MARK[stance]
   const classes = [styles.card, CARD_CLASS[stance] ?? ""]
     .filter((value) => value !== undefined && value !== "")
     .join(" ")
@@ -97,7 +118,16 @@ export function FieldCard({
     stance === "confirmed" && prior !== null && valueChanged(prior, candidate) ? prior : null
 
   return (
-    <article className={classes} aria-label={`${FIELD_LABEL[candidate.field]} field card`}>
+    <article
+      className={classes}
+      aria-label={`${FIELD_LABEL[candidate.field]} field card`}
+      data-mark={mark ?? undefined}
+      style={
+        {
+          "--trace-words": Math.min(candidate.provenance.words.length, TRACE_CAP),
+        } as CSSProperties
+      }
+    >
       <header className={styles.head}>
         <div className={styles.identity}>
           <p className={styles.name}>
@@ -105,16 +135,7 @@ export function FieldCard({
             <Chip tone="plain">{CRITICALITY_LABEL[policy.criticality]}</Chip>
             <span>attempt {candidate.attempt}</span>
           </p>
-          <p
-            className={[
-              styles.value,
-              candidate.normalizedValue === null ? styles.valuePending : "",
-            ]
-              .filter((value) => value !== undefined && value !== "")
-              .join(" ")}
-          >
-            {displayValue}
-          </p>
+          <p className={valueClass(mark, candidate.normalizedValue === null)}>{displayValue}</p>
           <p className={styles.raw}>{heardLine(candidate.rawValue, corrected)}</p>
         </div>
         <div className={styles.statuses}>

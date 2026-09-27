@@ -33,6 +33,19 @@
   align-items: center;
 }
 
+.alternatives > :nth-child(2),
+.alternatives > :nth-child(n + 4) {
+  animation: var(--keyframes-land) var(--dur-base) var(--ease-out-expo) both;
+}
+
+.alternatives > :nth-child(2) {
+  --land-x: -0.5rem;
+}
+
+.alternatives > :nth-child(n + 4) {
+  --land-x: 0.5rem;
+}
+
 .altLabel {
   font-size: var(--text-xs);
   color: var(--text-secondary);

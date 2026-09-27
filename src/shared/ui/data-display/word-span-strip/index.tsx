@@ -1,7 +1,10 @@
 "use client"
 
+import type { CSSProperties } from "react"
 import type { Provenance, WordSpan } from "@/domain"
 import styles from "./styles.module.css"
+
+export const TRACE_CAP = 10
 
 export type WordSpanStripProps = {
   readonly provenance: Provenance
@@ -19,7 +22,7 @@ export function WordSpanStrip({
   return (
     <div className={styles.strip}>
       <div className={styles.words}>
-        {provenance.words.map((word) => {
+        {provenance.words.map((word, index) => {
           const selected = selectedStartMs === word.startMs
           const classes = [styles.word, word.confidence < weakBelow ? styles.weak : ""]
             .filter((value) => value !== undefined && value !== "")
@@ -29,6 +32,7 @@ export function WordSpanStrip({
               key={`${word.startMs}-${word.text}`}
               type="button"
               className={classes}
+              style={{ "--i": Math.min(index, TRACE_CAP) } as CSSProperties}
               aria-pressed={selected}
               onClick={() => onSelectWord?.(word)}
               aria-label={`${word.text}, ${word.startMs} to ${word.endMs} ms, recognizer certainty ${word.confidence.toFixed(2)}`}

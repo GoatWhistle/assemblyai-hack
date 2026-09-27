@@ -139,6 +139,62 @@
 }
 
 .variant {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.current {
+  opacity: 1;
+  visibility: visible;
+}
+
+.arm:not([data-tone="undecided"]) .current {
+  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
+}
+
+.outcomeValue {
+  position: relative;
+  justify-self: start;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-tight);
+  line-height: var(--leading-tight);
+  color: var(--arm-ink);
+}
+
+.current[data-tone="committed"] .outcomeValue,
+.current[data-tone="refused"] .outcomeValue {
+  --land-y: -0.375rem;
+  animation: var(--keyframes-land) var(--dur-base) var(--ease-out-expo) both;
+}
+
+.current[data-tone="committed"] .outcomeValue::after,
+.current[data-tone="refused"] .outcomeValue::after {
+  inset-inline: 0;
+  bottom: -0.375rem;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background-color: var(--arm-line);
+}
+
+.current[data-tone="lasa"] .outcomeValue::after,
+.current[data-tone="threshold"] .outcomeValue::after {
+  inset: -0.25rem -0.625rem;
+  border: 1.5px dashed var(--arm-ink);
+  border-radius: var(--radius-sm);
+}
+
+.current:not([data-tone="undecided"]) .outcomeValue::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  animation: var(--keyframes-sweep) var(--dur-emphatic) var(--ease-out-expo) both;
+  animation-delay: var(--dur-base);
+}
+
+.variant {
   opacity: 0;
   visibility: hidden;
   filter: blur(2px);
@@ -146,14 +202,6 @@
     opacity var(--dur-fast) var(--ease-out-quart),
     filter var(--dur-fast) var(--ease-out-quart),
     visibility var(--dur-fast) step-end;
-}
-
-.outcomeValue {
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  line-height: var(--leading-tight);
-  color: var(--arm-ink);
 }
 
 .outcomeBody {
