@@ -1,40 +1,7 @@
-.wrap {
-  container-type: inline-size;
-  min-width: 0;
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-panel);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-sm);
-}
-
-.table caption {
-  padding: var(--space-3) var(--space-5);
-  border-bottom: 1px solid var(--line-divider);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  background-color: var(--surface-sunken);
-  text-align: left;
-  font-size: var(--text-xs);
-  line-height: var(--leading-snug);
-  color: var(--text-secondary);
-  text-wrap: pretty;
-}
-
-.table th,
-.table td {
-  padding: 0;
-  text-align: left;
-  font-weight: var(--weight-regular);
-}
-
 .name {
   display: block;
-  font-size: var(--text-base);
-  font-weight: var(--weight-medium);
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
   line-height: var(--leading-snug);
   color: var(--text-primary);
   text-wrap: pretty;
@@ -44,199 +11,28 @@
   display: block;
   max-width: var(--measure-prose);
   margin-top: var(--space-1);
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-weight: var(--weight-regular);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
 
-.table .value {
-  font-family: var(--font-data);
-  font-size: var(--text-base);
-  font-variant-numeric: tabular-nums;
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
-  text-align: right;
-}
-
-.table .alert {
-  color: var(--state-escalated-ink);
-}
-
-.input {
-  font-size: var(--text-2xs);
-  line-height: var(--leading-loose);
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
 .noCommand {
-  font-size: var(--text-xs);
   font-style: italic;
   color: var(--text-muted);
 }
 
-.number {
-  font-family: var(--font-data);
-  font-size: var(--text-xs);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
-}
-
-.n:not([data-absent])::before {
-  content: "n = ";
-  color: var(--text-muted);
-}
-
 .set {
-  font-family: var(--font-ui);
-  font-size: var(--text-xs);
+  margin-left: var(--space-2);
+  font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
   color: var(--text-muted);
+  white-space: normal;
 }
 
-@container (width < 60rem) {
-  .table,
-  .table tbody,
-  .table caption {
-    display: block;
-  }
-
-  .columns {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  .table tbody tr {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-2) var(--space-3);
-    padding: var(--space-4) var(--space-5);
-  }
-
-  .table th,
-  .table td {
-    display: block;
-  }
-
-  .table .figure {
-    flex: 1 1 calc(100% - 14rem);
-    min-width: min(100%, 16rem);
-  }
-
-  .table .value {
-    flex: 0 0 13rem;
-  }
-
-  .table .input {
-    flex: 0 0 auto;
-    order: 2;
-    padding: 0 var(--space-2);
-    border-radius: var(--radius-pill);
-    background-color: var(--ink-a5);
-  }
-
-  .commandCell {
-    flex: 0 1 auto;
-    order: 3;
-    min-width: 0;
-  }
-
-  .n {
-    flex: 0 1 auto;
-    order: 4;
-  }
-
-  .set {
-    margin-left: var(--space-2);
-  }
-}
-
-@container (width < 36rem) {
-  .table caption,
-  .table tbody tr {
-    padding-inline: var(--space-4);
-  }
-
-  .table .figure {
-    flex-basis: 100%;
-  }
-
-  .table .value {
-    flex: 1 1 100%;
-    text-align: left;
-  }
-}
-
-@container (width >= 60rem) {
-  .columns th {
-    position: sticky;
-    top: 0;
-    z-index: var(--z-raised);
-    padding: var(--space-3) var(--space-4);
-    background-color: var(--surface-panel);
-    box-shadow: inset 0 -1px 0 var(--line-divider);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
-    color: var(--text-muted);
-    vertical-align: bottom;
-    white-space: nowrap;
-  }
-
-  .table tbody th,
-  .table tbody td {
-    padding: var(--space-4);
-    vertical-align: top;
-  }
-
-  .table .columns th:first-child,
-  .table tbody th {
-    padding-inline-start: var(--space-5);
-  }
-
-  .table .columns th:last-child,
-  .table tbody td:last-child {
-    padding-inline-end: var(--space-5);
-  }
-
-  .headFigure {
-    width: 36%;
-  }
-
-  .table .headValue {
-    width: 11rem;
-    text-align: right;
-  }
-
-  .headCommand {
-    width: 27%;
-  }
-
-  .headSet {
-    width: 12rem;
-  }
-
-  .table .value,
-  .n {
-    white-space: nowrap;
-  }
-
-  .table .input {
-    padding-top: calc(var(--space-4) + 0.125rem);
-  }
-
+@container table (width >= 60rem) {
   .set {
     display: block;
     margin-top: var(--space-1);
-    white-space: normal;
+    margin-left: 0;
   }
-}
-
-.table tbody tr + tr {
-  border-top: 1px solid var(--line-hairline);
 }

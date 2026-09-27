@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import type { BenchmarkRow } from "@/domain"
-import { Command } from "@/shared/ui/data-display/command"
+import { Method } from "@/shared/ui/data-display/method"
 import { AbsentValue } from "../absent-value"
 import { FalseAskHeadline } from "../false-ask-headline"
 import type { FalseAskTally } from "../measured-figures"
@@ -29,22 +29,6 @@ export function headlineTitle(ab: AbCatch | null, tally: FalseAskTally | null): 
   return `The pair rule stops every seeded mishearing, and puts its longer question to ${tally.byPairRule} of ${tally.of} correct names`
 }
 
-function Method({
-  command,
-  n,
-  input,
-}: {
-  readonly command: string
-  readonly n: string
-  readonly input: string
-}) {
-  return (
-    <span className={styles.method}>
-      <Command value={command} /> <span className={styles.size}>n = {n}</span>, {input}
-    </span>
-  )
-}
-
 function Figure({ value }: { readonly value: string | null | undefined }): ReactNode {
   return value === null || value === undefined ? <AbsentValue /> : value
 }
@@ -69,7 +53,7 @@ function Catch({ ab, compact }: { readonly ab: AbCatch | null; readonly compact:
           {compact
             ? null
             : "Both arms read every drug name back and differ by the pair rule alone. How often a real caller answers a plain read-back by reflex is not measured. "}
-          <Method command={ab.with.command} n={String(ab.with.n)} input="text candidates" />
+          <Method command={ab.with.command} n={String(ab.with.n)} set="text candidates" />
         </p>
       )}
     </article>
@@ -102,7 +86,7 @@ function Catalogue({
           <Method
             command={confident.command}
             n={String(confident.n ?? "")}
-            input="synthesised speech through the live recognizer"
+            set="synthesised speech through the live recognizer"
           />
         )}
       </p>
@@ -126,7 +110,7 @@ function Seconds({ tally }: Pick<CatchCostHeadlineProps, "tally">) {
         n={
           tally === null ? "not recorded" : `${tally.of} plain, ${tally.byPairRule} contrastive`
         }
-        input="synthesised speech"
+        set="synthesised speech"
       />
     </p>
   )

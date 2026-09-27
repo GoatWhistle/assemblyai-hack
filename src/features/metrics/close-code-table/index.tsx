@@ -1,5 +1,5 @@
 import { Command } from "@/shared/ui/data-display/command"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import {
   CLOSE_CODE_REPORT_COMMAND,
   type CloseCodeScope,
@@ -40,7 +40,7 @@ function codeCell(code: number, alertWorthy: boolean) {
       {alertWorthy ? (
         <>
           {" "}
-          <Chip tone="escalated">alert</Chip>
+          <StatusChip status="alert">alert</StatusChip>
         </>
       ) : null}
     </>

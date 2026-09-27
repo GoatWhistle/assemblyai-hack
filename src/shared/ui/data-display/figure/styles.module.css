@@ -1,0 +1,78 @@
+.group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--rhythm-group) var(--shell-gap);
+  min-width: 0;
+}
+
+.figure {
+  display: grid;
+  align-content: start;
+  gap: var(--rhythm-tight);
+  min-width: 0;
+  padding-top: var(--rhythm-stack);
+  border-top: 1px solid var(--line-hairline);
+}
+
+.label {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+.unit {
+  font-weight: var(--weight-regular);
+  color: var(--text-secondary);
+}
+
+.reading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  font-size: var(--figure-size);
+  font-weight: var(--figure-weight);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--figure-track);
+  line-height: var(--figure-leading);
+  color: var(--text-primary);
+}
+
+.interval {
+  font-size: var(--meta-size);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--track-normal);
+  color: var(--text-secondary);
+}
+
+.absent {
+  color: var(--text-muted);
+}
+
+.accepted {
+  color: var(--state-accepted-ink);
+}
+
+.asking {
+  color: var(--state-asking-ink);
+}
+
+.lasa {
+  color: var(--state-lasa-ink);
+}
+
+.alert {
+  color: var(--state-escalated-ink);
+}
+
+.note {
+  max-width: var(--measure-prose);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}

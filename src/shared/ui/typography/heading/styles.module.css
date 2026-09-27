@@ -1,0 +1,48 @@
+.heading {
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.page {
+  font-size: var(--title-page-size);
+  font-weight: var(--title-page-weight);
+  letter-spacing: var(--title-page-track);
+  line-height: var(--title-page-leading);
+}
+
+.section {
+  font-size: var(--title-section-size);
+  font-weight: var(--title-section-weight);
+  letter-spacing: var(--title-section-track);
+  line-height: var(--title-section-leading);
+}
+
+.block {
+  font-size: var(--title-block-size);
+  font-weight: var(--title-block-weight);
+  letter-spacing: var(--title-block-track);
+  line-height: var(--title-block-leading);
+}
+
+.lede {
+  max-width: var(--measure-prose);
+  font-size: var(--lede-section-size);
+  line-height: var(--lede-leading);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.ledePage {
+  font-size: var(--lede-page-size);
+  letter-spacing: var(--track-tight);
+}
+
+@media (max-width: 40rem) {
+  .page {
+    font-size: var(--title-page-size-compact);
+  }
+
+  .ledePage {
+    font-size: var(--lede-section-size);
+  }
+}

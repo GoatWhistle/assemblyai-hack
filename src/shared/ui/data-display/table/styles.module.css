@@ -1,0 +1,244 @@
+.frame {
+  container: table / inline-size;
+  min-width: 0;
+  border: 1px solid var(--table-line);
+  border-radius: var(--table-radius);
+  background-color: var(--panel-surface);
+  overflow: clip;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-primary);
+}
+
+.caption {
+  padding: var(--table-cell-block) var(--table-edge);
+  border-bottom: 1px solid var(--table-head-line);
+  background-color: var(--table-caption-surface);
+  text-align: left;
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.head th {
+  position: sticky;
+  top: var(--table-sticky-top);
+  z-index: var(--z-raised);
+  padding: var(--table-cell-block) var(--table-cell-inline);
+  background-color: var(--panel-surface);
+  box-shadow: inset 0 -1px 0 var(--table-head-line);
+  text-align: left;
+  vertical-align: bottom;
+  font-weight: var(--label-weight);
+  color: var(--table-head-ink);
+  white-space: nowrap;
+}
+
+.table tbody th,
+.table tbody td {
+  padding: var(--table-cell-block) var(--table-cell-inline);
+  text-align: left;
+  vertical-align: top;
+  font-weight: var(--weight-regular);
+}
+
+.table tr > :first-child {
+  padding-inline-start: var(--table-edge);
+}
+
+.table tr > :last-child {
+  padding-inline-end: var(--table-edge);
+}
+
+.table tbody :where(tr + tr) {
+  border-top: 1px solid var(--table-line);
+}
+
+.table .rowHeader {
+  font-weight: var(--label-weight);
+  color: var(--text-primary);
+}
+
+.table .number {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.table tbody .number {
+  font-weight: var(--label-weight);
+}
+
+.table .figure {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.table tbody .figure {
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
+}
+
+.table .code {
+  font-family: var(--font-data);
+  font-size: var(--code-size-fixed);
+}
+
+.table .muted {
+  color: var(--text-secondary);
+}
+
+.table .fit {
+  width: 1%;
+}
+
+.table .fill {
+  width: 100%;
+}
+
+.value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.number .value,
+.figure .value {
+  overflow-wrap: normal;
+}
+
+.table .mutedRow > * {
+  color: var(--table-muted-ink);
+}
+
+.emphasisRow {
+  background-color: var(--table-emphasis-surface);
+}
+
+.table .alertRow :is(.number, .figure) {
+  color: var(--panel-alert-ink);
+}
+
+@container table (width < 40rem) {
+  .head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .table,
+  .table tbody,
+  .caption {
+    display: block;
+  }
+
+  .table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-5);
+    padding: var(--table-cell-block) var(--panel-pad-compact);
+  }
+
+  .table tbody th,
+  .table tbody td,
+  .table tr > :first-child,
+  .table tr > :last-child {
+    padding: 0;
+  }
+
+  .table tbody th {
+    display: block;
+    flex: 1 1 100%;
+  }
+
+  .table tbody td {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    max-width: 100%;
+    width: auto;
+    text-align: start;
+  }
+
+  .table tbody td::before {
+    content: attr(data-label);
+    flex: none;
+    color: var(--table-head-ink);
+  }
+
+  .table tbody .fit,
+  .table tbody .fill {
+    width: auto;
+  }
+
+  .caption {
+    padding-inline: var(--panel-pad-compact);
+  }
+}
+
+@container table (width < 60rem) {
+  [data-density="dense"] .head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  [data-density="dense"] .table,
+  [data-density="dense"] .table tbody,
+  [data-density="dense"] .caption {
+    display: block;
+  }
+
+  [data-density="dense"] .table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-5);
+    padding: var(--table-cell-block) var(--panel-pad-compact);
+  }
+
+  [data-density="dense"] .table tbody th,
+  [data-density="dense"] .table tbody td,
+  [data-density="dense"] .table tr > :first-child,
+  [data-density="dense"] .table tr > :last-child {
+    padding: 0;
+  }
+
+  [data-density="dense"] .table tbody th {
+    display: block;
+    flex: 1 1 100%;
+  }
+
+  [data-density="dense"] .table tbody td {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    max-width: 100%;
+    width: auto;
+    text-align: start;
+  }
+
+  [data-density="dense"] .table tbody td::before {
+    content: attr(data-label);
+    flex: none;
+    color: var(--table-head-ink);
+  }
+
+  [data-density="dense"] .table tbody .fit,
+  [data-density="dense"] .table tbody .fill {
+    width: auto;
+  }
+}

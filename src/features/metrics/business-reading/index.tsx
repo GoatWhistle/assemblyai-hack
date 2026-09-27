@@ -1,4 +1,5 @@
-import { AbsentValue } from "../absent-value"
+import { Figure, FigureGroup } from "@/shared/ui/data-display/figure"
+import { NOT_MEASURED_LABEL } from "../benchmark-row"
 import { type BusinessFigure, COST_OF_ERROR_NOTE } from "../business-figures"
 import styles from "./styles.module.css"
 
@@ -11,24 +12,21 @@ export type BusinessReadingProps = {
 export function BusinessReading({ figures }: BusinessReadingProps) {
   return (
     <div className={styles.reading}>
-      <dl className={styles.list}>
+      <FigureGroup>
         {figures.map((figure) => (
-          <div key={figure.id} className={styles.item} data-figure={figure.id}>
-            <dt className={styles.term}>
-              {figure.figure}
-              <span className={styles.unit}>{figure.unit}</span>
-            </dt>
-            <dd className={styles.value}>
-              {figure.value === null ? <AbsentValue /> : figure.value}
-            </dd>
-            {figure.value === null ? (
-              <dd className={styles.needs}>
-                {NOT_MEASURED_YET}. Needs {figure.needs}
-              </dd>
-            ) : null}
-          </div>
+          <Figure
+            key={figure.id}
+            figureKey={figure.id}
+            label={figure.figure}
+            unit={figure.unit}
+            value={figure.value}
+            absentLabel={NOT_MEASURED_LABEL}
+            note={
+              figure.value === null ? `${NOT_MEASURED_YET}. Needs ${figure.needs}` : undefined
+            }
+          />
         ))}
-      </dl>
+      </FigureGroup>
       <p className={styles.note}>{COST_OF_ERROR_NOTE}</p>
     </div>
   )

@@ -1,5 +1,7 @@
 import type { BenchmarkRow } from "@/domain"
+import { ShareBar, type ShareSegment } from "@/shared/ui/data-display/chart"
 import { Command } from "@/shared/ui/data-display/command"
+import { Method } from "@/shared/ui/data-display/method"
 import { AbsentValue } from "../absent-value"
 import { RAW_RUN_AGREEMENT_TEST } from "../benchmark-row"
 import type { FalseAskTally } from "../measured-figures"
@@ -14,7 +16,7 @@ export type FalseAskHeadlineProps = {
   readonly compact?: boolean
 }
 
-function Method({
+function Account({
   tally,
   contrastive,
 }: {
@@ -37,32 +39,23 @@ function Method({
 }
 
 function Split({ tally }: { readonly tally: FalseAskTally }) {
-  const parts = [
+  const segments: readonly ShareSegment[] = [
     { key: "standing", label: "plain read-back", count: tally.byStandingReadBack },
     {
       key: "threshold",
       label: `threshold re-ask below ${tally.threshold}`,
       count: tally.byThreshold,
+      tone: "threshold",
     },
-    { key: "pair", label: "pair rule: contrastive question", count: tally.byPairRule },
+    {
+      key: "pair",
+      label: "pair rule: contrastive question",
+      count: tally.byPairRule,
+      tone: "lasa",
+    },
   ]
   return (
-    <ul
-      className={styles.split}
-      aria-label="How the shipped gate asked about each correct name"
-    >
-      {parts.map((part) => (
-        <li
-          key={part.key}
-          className={styles.part}
-          data-route={part.key}
-          style={{ flexGrow: Math.max(part.count, 1) }}
-        >
-          <span className={styles.count}>{part.count}</span>
-          <span className={styles.partLabel}>{part.label}</span>
-        </li>
-      ))}
-    </ul>
+    <ShareBar label="How the shipped gate asked about each correct name" segments={segments} />
   )
 }
 
@@ -98,9 +91,11 @@ export function FalseAskHeadline({
         <PairCost tally={tally} contrastive={contrastive} />
         {tally === null ? null : (
           <p className={styles.method}>
-            <Command value={tally.command} />{" "}
-            <span className={styles.size}>n = {tally.of}</span>
-            {contrastive === null ? null : ", scored against the 2023 ISMP list"}
+            <Method
+              command={tally.command}
+              n={tally.of}
+              set={contrastive === null ? undefined : "scored against the 2023 ISMP list"}
+            />
           </p>
         )}
       </div>
@@ -118,7 +113,7 @@ export function FalseAskHeadline({
         {tally === null ? (
           "Not measured yet: no recorded run supplies a correctly heard value to count against."
         ) : (
-          <Method tally={tally} contrastive={contrastive} />
+          <Account tally={tally} contrastive={contrastive} />
         )}
       </p>
       <p className={styles.agreement}>

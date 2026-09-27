@@ -1,0 +1,91 @@
+:root {
+  --title-page-size: var(--text-3xl);
+  --title-page-size-compact: var(--text-2xl);
+  --title-page-weight: var(--weight-regular);
+  --title-page-track: var(--track-display);
+  --title-page-leading: var(--leading-tight);
+
+  --title-section-size: var(--text-xl);
+  --title-section-weight: var(--weight-medium);
+  --title-section-track: var(--track-heading);
+  --title-section-leading: var(--leading-snug);
+
+  --title-block-size: var(--text-md);
+  --title-block-weight: var(--weight-semibold);
+  --title-block-track: var(--track-tight);
+  --title-block-leading: var(--leading-snug);
+
+  --lede-page-size: var(--text-md);
+  --lede-section-size: var(--text-base);
+  --lede-leading: var(--leading-relaxed);
+
+  --body-size: var(--text-base);
+  --body-leading: var(--leading-relaxed);
+  --meta-size: var(--text-sm);
+  --meta-leading: var(--leading-relaxed);
+  --label-size: var(--text-sm);
+  --label-weight: var(--weight-medium);
+  --code-size: 0.875em;
+  --code-size-fixed: var(--text-2xs);
+
+  --figure-size: var(--text-2xl);
+  --figure-size-inline: var(--text-xl);
+  --figure-weight: var(--weight-medium);
+  --figure-track: var(--track-tight);
+  --figure-leading: var(--leading-tight);
+
+  --rhythm-tight: var(--space-2);
+  --rhythm-stack: var(--space-4);
+  --rhythm-group: var(--space-5);
+  --rhythm-section: var(--space-7);
+  --rhythm-section-compact: var(--space-6);
+  --rhythm-rule: var(--space-6);
+  --rhythm-page-end: var(--space-8);
+
+  --panel-radius: var(--radius-md);
+  --panel-pad: var(--space-5);
+  --panel-pad-compact: var(--space-4);
+  --panel-line: var(--line-hairline);
+  --panel-surface: var(--surface-panel);
+  --panel-tinted-surface: var(--surface-sunken);
+  --panel-tinted-line: var(--line-divider);
+  --panel-alert-surface: var(--state-escalated-surface);
+  --panel-alert-line: var(--state-escalated-line);
+  --panel-alert-ink: var(--state-escalated-ink);
+
+  --table-radius: var(--panel-radius);
+  --table-line: var(--line-hairline);
+  --table-head-line: var(--line-divider);
+  --table-head-ink: var(--text-muted);
+  --table-caption-surface: var(--surface-sunken);
+  --table-cell-block: var(--space-3);
+  --table-cell-inline: var(--space-4);
+  --table-edge: var(--space-5);
+  --table-emphasis-surface: var(--select-surface);
+  --table-muted-ink: var(--text-muted);
+  --table-sticky-top: 0px;
+  --table-sticky-top-docs-nav: calc(var(--target-touch) + var(--space-2) * 2);
+
+  --chart-track: var(--surface-sunken);
+  --chart-gap: 2px;
+  --chart-bar: 0.75rem;
+  --chart-segment-min: 7.5rem;
+  --chart-neutral-surface: var(--surface-sunken);
+  --chart-neutral-ink: var(--text-secondary);
+  --chart-neutral-fill: var(--line-strong);
+  --chart-threshold-surface: var(--reason-threshold-surface);
+  --chart-threshold-ink: var(--reason-threshold-ink);
+  --chart-threshold-fill: var(--reason-threshold-ink);
+  --chart-validator-surface: var(--reason-validator-surface);
+  --chart-validator-ink: var(--reason-validator-ink);
+  --chart-validator-fill: var(--reason-validator-ink);
+  --chart-lasa-surface: var(--reason-lasa-surface);
+  --chart-lasa-ink: var(--reason-lasa-ink);
+  --chart-lasa-fill: var(--reason-lasa-line);
+  --chart-accepted-surface: var(--verdict-committed-surface);
+  --chart-accepted-ink: var(--verdict-committed-ink);
+  --chart-accepted-fill: var(--verdict-committed-ink);
+  --chart-refused-surface: var(--verdict-refused-surface);
+  --chart-refused-ink: var(--verdict-refused-ink);
+  --chart-refused-fill: var(--verdict-refused-ink);
+}

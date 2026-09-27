@@ -1,4 +1,5 @@
 import { Command } from "@/shared/ui/data-display/command"
+import { Table, type TableColumn, type TableRow } from "@/shared/ui/data-display/table"
 import { AbsentValue } from "../absent-value"
 import { type BenchmarkEntry, INPUT_LABEL, NOT_MEASURED_LABEL } from "../benchmark-row"
 import { NO_COMMAND } from "../metric-definitions"
@@ -16,15 +17,48 @@ export type BenchmarkTableProps = {
 
 const NOT_A_COMMAND: ReadonlySet<string> = new Set([NO_COMMAND, NOT_MEASURED_LABEL])
 
+const COLUMNS: readonly TableColumn[] = [
+  { key: "figure", title: "Figure", rowHeader: true, size: "fill" },
+  { key: "value", title: "Value", kind: "figure" },
+  { key: "input", title: "Input", kind: "muted", size: "fit" },
+  { key: "command", title: "Command" },
+  { key: "n", title: "n", kind: "number" },
+]
+
 function sentenceCase(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
 }
 
-function valueClass(entry: BenchmarkEntry): string {
-  if (entry.row.value !== null && entry.tone === "alert") {
-    return `${styles.value} ${styles.alert}`
+function rowFor(entry: BenchmarkEntry, compact: boolean): TableRow {
+  return {
+    key: entry.id,
+    tone: entry.row.value !== null && entry.tone === "alert" ? "alert" : "normal",
+    cells: {
+      figure: (
+        <>
+          <span className={styles.name}>{sentenceCase(entry.row.figure)}</span>
+          {compact || entry.meaning === "" ? null : (
+            <span className={styles.meaning}>{entry.meaning}</span>
+          )}
+        </>
+      ),
+      value: entry.row.value === null ? <AbsentValue /> : entry.row.value,
+      input: INPUT_LABEL[entry.row.input],
+      command: NOT_A_COMMAND.has(entry.row.command) ? (
+        <span className={styles.noCommand}>{entry.row.command}</span>
+      ) : (
+        <Command value={entry.row.command} />
+      ),
+      n: (
+        <>
+          {entry.row.n === null ? <AbsentValue /> : entry.row.n}
+          {compact || entry.setDescription === "" ? null : (
+            <span className={styles.set}>{entry.setDescription}</span>
+          )}
+        </>
+      ),
+    },
   }
-  return styles.value ?? ""
 }
 
 export function BenchmarkTable({
@@ -34,62 +68,11 @@ export function BenchmarkTable({
   compact = false,
 }: BenchmarkTableProps) {
   return (
-    <section className={styles.wrap} aria-label={label}>
-      <table className={styles.table}>
-        <caption>{caption}</caption>
-        <thead className={styles.columns}>
-          <tr>
-            <th scope="col" className={styles.headFigure}>
-              Figure
-            </th>
-            <th scope="col" className={styles.headValue}>
-              Value
-            </th>
-            <th scope="col">Input</th>
-            <th scope="col" className={styles.headCommand}>
-              Command
-            </th>
-            <th scope="col" className={styles.headSet}>
-              n
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {entries.map((entry) => (
-            <tr key={entry.id} data-row={entry.id}>
-              <th scope="row" className={styles.figure}>
-                <span className={styles.name}>{sentenceCase(entry.row.figure)}</span>
-                {compact || entry.meaning === "" ? null : (
-                  <span className={styles.meaning}>{entry.meaning}</span>
-                )}
-              </th>
-              <td className={valueClass(entry)} data-column="value">
-                {entry.row.value === null ? <AbsentValue /> : entry.row.value}
-              </td>
-              <td className={styles.input} data-column="input">
-                {INPUT_LABEL[entry.row.input]}
-              </td>
-              <td className={styles.commandCell} data-column="command">
-                {NOT_A_COMMAND.has(entry.row.command) ? (
-                  <span className={styles.noCommand}>{entry.row.command}</span>
-                ) : (
-                  <Command value={entry.row.command} />
-                )}
-              </td>
-              <td
-                className={`${styles.number} ${styles.n}`}
-                data-column="n"
-                data-absent={entry.row.n === null ? "" : undefined}
-              >
-                {entry.row.n === null ? <AbsentValue /> : entry.row.n}
-                {compact || entry.setDescription === "" ? null : (
-                  <span className={styles.set}>{entry.setDescription}</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
+    <Table
+      label={label}
+      caption={caption}
+      columns={COLUMNS}
+      rows={entries.map((entry) => rowFor(entry, compact))}
+    />
   )
 }

@@ -11,16 +11,16 @@
 }
 
 .title {
-  font-size: var(--text-3xl);
-  font-weight: var(--weight-regular);
-  letter-spacing: var(--track-display);
-  line-height: var(--leading-tight);
+  font-size: var(--title-page-size);
+  font-weight: var(--title-page-weight);
+  letter-spacing: var(--title-page-track);
+  line-height: var(--title-page-leading);
   color: var(--text-primary);
 }
 
 .lede {
-  font-size: var(--text-md);
-  line-height: var(--leading-relaxed);
+  font-size: var(--lede-page-size);
+  line-height: var(--lede-leading);
   letter-spacing: var(--track-tight);
   color: var(--text-secondary);
   text-wrap: pretty;
@@ -38,11 +38,11 @@
   }
 
   .title {
-    font-size: var(--text-2xl);
+    font-size: var(--title-page-size-compact);
   }
 
   .lede {
-    font-size: var(--text-base);
+    font-size: var(--lede-section-size);
   }
 }
 
