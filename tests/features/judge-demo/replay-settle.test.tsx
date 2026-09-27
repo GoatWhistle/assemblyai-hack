@@ -13,7 +13,7 @@ import {
   REPLAY_SECONDS,
   replaySeconds,
 } from "@/features/judge-demo/replay-clock"
-import { AB_GATE_SCRIPT, abCatch } from "@/features/metrics/report-figures"
+import { AB_GATE_SCRIPT, abCatch, READ_BACK_COST } from "@/features/metrics/report-figures"
 
 beforeEach(() => {
   vi.useFakeTimers()
@@ -96,12 +96,29 @@ describe("r2-A5 A5-01: the replay carries the measured catch, with its command a
       return
     }
     render(<PairRuleCatch without={ab.without} shipped={ab.with} />)
-    const block = screen.getByRole("complementary", { name: /what the pair rule catches/i })
+    const block = screen.getByRole("region", { name: /what the pair rule catches/i })
     expect(within(block).getByText(ab.without.value ?? "")).toBeTruthy()
     expect(within(block).getByText(ab.with.value ?? "")).toBeTruthy()
     expect(within(block).getByText(AB_GATE_SCRIPT)).toBeTruthy()
     expect(block.textContent).toContain(`n = ${ab.with.n}`)
     expect(ab.without.value).toBe("20/20")
     expect(ab.with.value).toBe("0/20")
+  })
+})
+
+describe("the catch on /demo is published with what the pair rule costs", () => {
+  it("prints the extra seconds of the contrastive question beside the catch, with its command", () => {
+    const ab = abCatch()
+    if (ab === null) {
+      return
+    }
+    render(<PairRuleCatch without={ab.without} shipped={ab.with} tally={null} />)
+    const block = screen.getByRole("region", { name: /what the pair rule catches/i })
+    expect(
+      within(block).getByText(READ_BACK_COST.extraSeconds),
+      "a catch shown without its cost makes the metric one-sided",
+    ).toBeTruthy()
+    expect(within(block).getByText(READ_BACK_COST.command)).toBeTruthy()
+    expect(block.textContent).toContain("n = not recorded")
   })
 })

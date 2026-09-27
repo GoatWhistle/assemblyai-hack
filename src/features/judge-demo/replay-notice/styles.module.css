@@ -1,10 +1,9 @@
 .notice {
-  min-width: 0;
-}
-
-.content {
   display: grid;
   gap: var(--rhythm-tight);
+  align-content: start;
+  min-width: 0;
+  max-width: var(--measure-prose);
 }
 
 .title {
@@ -18,10 +17,13 @@
   color: var(--text-primary);
 }
 
+.name {
+  font-weight: var(--label-weight);
+}
+
 .body,
 .insurance {
   margin: 0;
-  max-width: var(--measure-prose);
   font-size: var(--meta-size);
   line-height: var(--meta-leading);
   color: var(--text-secondary);

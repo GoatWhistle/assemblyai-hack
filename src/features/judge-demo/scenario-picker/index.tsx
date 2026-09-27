@@ -65,7 +65,7 @@ export function ScenarioPicker() {
       <div className={styles.choose}>
         <header className={styles.head}>
           <div className={styles.headTop}>
-            <Heading level={2} id={titleId}>
+            <Heading level={3} id={titleId}>
               {SCENARIO_PICKER_TITLE}
             </Heading>
             <p className={styles.current} aria-live="polite">

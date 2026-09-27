@@ -2,31 +2,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0 var(--space-4);
-}
-
-.line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 var(--space-3);
-  flex: 1 1 24rem;
-  margin: 0;
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-  color: var(--text-secondary);
-  text-wrap: pretty;
+  gap: 0 var(--space-5);
 }
 
 .heading {
+  flex: 1 1 16rem;
   margin: 0;
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  color: var(--text-primary);
-}
-
-.note {
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  line-height: var(--leading-snug);
   color: var(--text-secondary);
 }
 

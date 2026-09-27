@@ -1,6 +1,6 @@
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
-import { Panel } from "@/shared/ui/primitives/panel"
 import { StatusChip } from "@/shared/ui/primitives/status-chip"
+import { REPLAY_FROM_MS, sessionSeconds } from "../replay-clock"
 import styles from "./styles.module.css"
 
 export const REPLAY_NOTICE_TITLE = "Simulated session, not a live call"
@@ -11,31 +11,24 @@ export const REPLAY_NOTICE_BODY =
 export const REPLAY_NOTICE_INSURANCE =
   "This path exists so the demonstration cannot fail: it needs no microphone, no second person on the line and no working network beyond this page. When we checked, 12 of the 45 submissions then published had a demo link that did not work; that is our own count of the public submission pages, not a published figure."
 
+export const REPLAY_NOTICE_CLOCK = `The replay starts ${sessionSeconds(REPLAY_FROM_MS)} into the session, so the session clock under the controls matches the word timecodes in the field card.`
+
 export const REPLAY_NOTICE_LINE =
   "No microphone is open and nothing is sent to AssemblyAI. The gate and the pair table deciding here are the shipped ones."
 
-export type ReplayNoticeProps = {
-  readonly headingLevel?: 2 | 3
-}
-
-export function ReplayNotice({ headingLevel = 3 }: ReplayNoticeProps) {
+export function ReplayNotice() {
   return (
     <aside className={styles.notice} aria-label={REPLAY_NOTICE_TITLE}>
-      <Panel
-        title={REPLAY_NOTICE_TITLE}
-        note={<StatusChip status="tag">replay</StatusChip>}
-        tone="tinted"
-        headingLevel={headingLevel}
-        as="div"
-      >
-        <div className={styles.content}>
-          <p className={styles.body}>{REPLAY_NOTICE_LINE}</p>
-          <Disclosure summary="What is simulated, and why a replay exists">
-            <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
-            <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
-          </Disclosure>
-        </div>
-      </Panel>
+      <p className={styles.title}>
+        <StatusChip status="tag">replay</StatusChip>
+        <strong className={styles.name}>{REPLAY_NOTICE_TITLE}</strong>
+      </p>
+      <p className={styles.body}>{REPLAY_NOTICE_LINE}</p>
+      <Disclosure summary="What is simulated, and why a replay exists">
+        <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
+        <p className={styles.body}>{REPLAY_NOTICE_CLOCK}</p>
+        <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
+      </Disclosure>
     </aside>
   )
 }

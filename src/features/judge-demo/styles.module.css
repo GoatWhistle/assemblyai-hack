@@ -4,19 +4,6 @@
   gap: var(--rhythm-group);
 }
 
-.intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--rhythm-group);
-  align-items: start;
-}
-
-.lede {
-  display: grid;
-  gap: var(--rhythm-tight);
-  max-width: var(--measure-prose);
-}
-
 .transport {
   position: sticky;
   top: 0;
@@ -24,6 +11,13 @@
   margin-inline: calc(-1 * var(--space-2));
   padding: var(--space-2);
   background-color: var(--surface-page);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--rhythm-stack);
+  min-width: 0;
 }
 
 .split {
@@ -43,33 +37,6 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--rhythm-group);
   align-items: start;
-}
-
-.context {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
-  gap: var(--rhythm-stack);
-  align-items: start;
-}
-
-.truth {
-  display: grid;
-  gap: var(--rhythm-tight);
-}
-
-.truthText {
-  font-size: var(--body-size);
-  font-weight: var(--weight-medium);
-  line-height: var(--body-leading);
-  color: var(--text-primary);
-  text-wrap: pretty;
-}
-
-.truthNote {
-  font-size: var(--meta-size);
-  line-height: var(--meta-leading);
-  color: var(--text-secondary);
-  text-wrap: pretty;
 }
 
 .resting {
@@ -99,16 +66,7 @@
   scroll-margin-top: 12rem;
 }
 
-@media (min-width: 56rem) {
-  .demo {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    column-gap: var(--rhythm-group);
-  }
-
-  .demo > * {
-    grid-column: 1 / -1;
-  }
-
+@media (min-width: 44rem) {
   .demo > .transport {
     grid-row: 2;
   }
@@ -118,8 +76,23 @@
     grid-row: 3;
   }
 
+  .stage {
+    gap: 0;
+  }
+
   .split {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 56rem) {
+  .demo {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: var(--rhythm-group);
+  }
+
+  .demo > * {
+    grid-column: 1 / -1;
   }
 }
 
@@ -140,11 +113,6 @@
 
   .demo > .transport ~ * :where(a, button, summary, [tabindex]) {
     scroll-margin-top: var(--space-6);
-  }
-
-  .intro {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
-    column-gap: var(--shell-gap);
   }
 
   .decided {

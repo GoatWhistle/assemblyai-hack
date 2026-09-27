@@ -63,7 +63,7 @@ export const TOUR_STEPS: readonly TourStep[] = Object.freeze([
     seconds: 20,
     click: "Start a live call and say: Hydromorphone, two milligrams.",
     expect:
-      "Observed on production with a synthesised caller, not yet with a human voice: the agent names hydromorphone and every drug the published list pairs with it, and waits for a name, not a yes. The telemetry shows both sockets' frames and the decision log gains E_LASA_HIT.",
+      "Observed on production with a synthesised caller, not yet with a human voice: the agent names hydromorphone and every drug the published list pairs with it, and waits for a name, not a yes. The gate banner names E_LASA_HIT.",
     href: "/",
     go: "Start a call",
     needsMicrophone: true,

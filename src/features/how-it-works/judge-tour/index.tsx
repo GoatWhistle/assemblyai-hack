@@ -8,7 +8,7 @@ export function JudgeTour() {
   const headingId = useId()
   return (
     <section className={styles.tour} aria-labelledby={headingId}>
-      <Heading level={2} id={headingId}>
+      <Heading level={3} id={headingId}>
         The {TOUR_SECONDS}-second tour
       </Heading>
       <ol className={styles.steps}>

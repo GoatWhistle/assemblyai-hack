@@ -32,9 +32,11 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
       aria-label={arm.title}
     >
       <header className={styles.armHead}>
-        <Heading level={headingLevel === "h2" ? 2 : 3} rank="block">
-          {arm.title}
-        </Heading>
+        <div className={styles.armTitle}>
+          <Heading level={headingLevel === "h2" ? 2 : 3} rank="block">
+            {arm.title}
+          </Heading>
+        </div>
         <p className={styles.armNote}>{arm.note}</p>
       </header>
       <div className={styles.said}>

@@ -72,14 +72,22 @@ describe("U1: the root is the call, and every judge entry lands on the replay", 
 })
 
 describe("U1: the judge hub carries what the old home page carried", () => {
-  it("offers the replay and the live call as real links that work before hydration", async () => {
+  it("offers the replay and the live call once each, and both work before hydration", async () => {
     await renderDemo({})
-    const watch = screen.getByRole("link", {
-      name: new RegExp(`watch the ${REPLAY_SECONDS}-second replay`, "i"),
-    })
-    expect(watch.getAttribute("href")).toBe(REPLAY_ENTRY_HREF)
-    const [talk] = screen.getAllByRole("link", { name: /^start a call$/i })
-    expect(talk?.getAttribute("href")).toBe(CALL_HREF)
+    expect(
+      screen.getByRole("button", { name: /play the replay/i }),
+      "the replay's own play control is the way into the replay",
+    ).toBeTruthy()
+    expect(
+      screen.queryByRole("link", {
+        name: new RegExp(`watch the ${REPLAY_SECONDS}-second replay`, "i"),
+      }),
+      "a link to the replay on the replay's own page is a duplicate",
+    ).toBeNull()
+    expect(screen.queryByRole("link", { name: /^start a call$/i })).toBeNull()
+    const call = screen.getAllByRole("link", { name: /^call$/i })
+    expect(call.map((link) => link.getAttribute("href"))).toContain(CALL_HREF)
+    expect(REPLAY_ENTRY_HREF).toBe("/demo?autoplay=1#replay")
     expect(screen.getByText(/who pays/i)).toBeTruthy()
     expect(screen.getByText(/who gets the order/i)).toBeTruthy()
   })

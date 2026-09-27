@@ -1,0 +1,116 @@
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--rhythm-group);
+  align-items: start;
+}
+
+.lead {
+  display: grid;
+  gap: var(--rhythm-tight);
+  max-width: var(--measure-prose);
+}
+
+.setup {
+  display: grid;
+  gap: var(--rhythm-tight);
+  min-width: 0;
+}
+
+.truth {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--rhythm-group);
+  margin: 0;
+}
+
+.fact {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  min-width: 0;
+  padding-top: var(--rhythm-tight);
+  border-top: 2px solid var(--line-strong);
+}
+
+.factLabel {
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--text-secondary);
+}
+
+.factValue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  margin: 0;
+  font-size: var(--title-section-size);
+  font-weight: var(--title-section-weight);
+  letter-spacing: var(--title-section-track);
+  line-height: var(--title-section-leading);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.certainty {
+  font-size: var(--meta-size);
+  font-weight: var(--label-weight);
+  letter-spacing: var(--track-normal);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.note {
+  max-width: var(--measure-prose);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.notice {
+  min-width: 0;
+}
+
+.afterword {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  gap: var(--rhythm-group) var(--shell-gap);
+  align-items: start;
+  padding-top: var(--rhythm-group);
+  border-top: 1px solid var(--line-hairline);
+}
+
+@media (min-width: 62rem) {
+  .head {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "lead setup"
+      "notice setup";
+    grid-template-rows: auto 1fr;
+    column-gap: var(--shell-gap);
+  }
+
+  .head > .lead {
+    grid-area: lead;
+  }
+
+  .head > .setup {
+    grid-area: setup;
+  }
+
+  .head > .notice {
+    grid-area: notice;
+  }
+}
+
+@media (max-width: 40rem) {
+  .truth {
+    gap: var(--rhythm-stack);
+  }
+
+  .factValue {
+    font-size: var(--title-block-size);
+  }
+}

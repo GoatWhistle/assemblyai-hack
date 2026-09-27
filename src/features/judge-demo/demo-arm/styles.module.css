@@ -2,6 +2,7 @@
   --arm-ink: var(--text-primary);
   --arm-surface: var(--state-undecided-surface);
   --arm-line: var(--line-divider);
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--rhythm-stack);
@@ -187,10 +188,22 @@
   text-wrap: pretty;
 }
 
-@media (min-width: 56rem) {
+@media (min-width: 44rem) {
   .arm {
     grid-row: span 3;
     grid-template-rows: subgrid;
+    border-top-width: 0;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  .armTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
 

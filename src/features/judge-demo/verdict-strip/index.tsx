@@ -34,7 +34,13 @@ export function VerdictStrip({ phase }: VerdictStripProps) {
           style={{ "--arm": index } as CSSProperties}
         >
           <p className={styles.arm}>
-            {arm.title} <span className={styles.tag}>{arm.tag}</span>
+            <span
+              className={styles.switch}
+              data-on={arm.id === "pair-rule"}
+              aria-hidden="true"
+            />
+            <span className={styles.title}>{arm.title}</span>
+            <span className={styles.tag}>{arm.tag}</span>
           </p>
           <div className={styles.stack}>
             {STRIP_PHASES.map((entry) => {

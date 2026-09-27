@@ -1,24 +1,15 @@
 "use client"
 
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { FieldCard } from "@/features/field-card"
 import { GateBanner } from "@/features/gate-banner"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
-import { Panel } from "@/shared/ui/primitives/panel"
-import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { DemoArmPanel } from "./demo-arm"
-import {
-  DECISION_AT_MS,
-  DEMO_ARMS,
-  phaseAt,
-  RECOGNIZED_AS,
-  RECOGNIZER_CERTAINTY,
-  SPOKEN_TRUTH,
-} from "./demo-arms"
-import { REPLAY_FROM_MS, REPLAY_LENGTH_LABEL, sessionSeconds } from "./replay-clock"
+import { DECISION_AT_MS, DEMO_ARMS, phaseAt } from "./demo-arms"
+import { sessionSeconds } from "./replay-clock"
 import { ReplayControls } from "./replay-controls"
-import { ReplayNotice, ReplayTag } from "./replay-notice"
+import { ReplayAfterword, ReplayHead } from "./replay-head"
 import { Captions } from "./replay-voice/captions"
 import { highlightedField, REPLAY_LINES } from "./replay-voice/replay-script"
 import {
@@ -33,7 +24,7 @@ import { PLAY_CONTROL, useControlFocus } from "./use-control-focus"
 import { useReplayClock } from "./use-replay-clock"
 import { VerdictStrip } from "./verdict-strip"
 
-export const REPLAY_TITLE = `The ${REPLAY_LENGTH_LABEL}`
+export { REPLAY_TITLE } from "./replay-head"
 
 const ASKED_EARLIER = Object.freeze({
   decision: LASA_DECISION,
@@ -48,10 +39,9 @@ function reducedMotion(): boolean {
 export type JudgeDemoProps = {
   readonly autoplay?: boolean
   readonly headingLevel?: "h1" | "h2"
-  readonly figure?: ReactNode
 }
 
-export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: JudgeDemoProps) {
+export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoProps) {
   const autoplayed = useRef(false)
   const speech = useRef<SpeechTrack | null>(null)
   const [voice, setVoice] = useState<"synthesised" | "silent" | "muted">("muted")
@@ -136,54 +126,10 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
       live={false}
     />
   )
-  const title = <Heading level={headingLevel === "h1" ? 1 : 2}>{REPLAY_TITLE}</Heading>
-  const lede = (
-    <Lede>
-      One synthesised session through the whole pipeline. The two panels differ by one flag, the
-      pair rule: both read the drug name back, and only one needs the name as the answer. The
-      clock starts {sessionSeconds(REPLAY_FROM_MS)} into the session, so it matches the word
-      timecodes.
-    </Lede>
-  )
-  const context = (
-    <div className={styles.context}>
-      <Panel
-        title="Ground truth for this replay"
-        tone="tinted"
-        headingLevel={headingLevel === "h1" ? 2 : 3}
-        as="div"
-      >
-        <div className={styles.truth}>
-          <p className={styles.truthText}>
-            The human said {SPOKEN_TRUTH}. The recognizer heard {RECOGNIZED_AS} and reported{" "}
-            {RECOGNIZER_CERTAINTY.toFixed(2)} certainty.
-          </p>
-          <p className={styles.truthNote}>
-            Both drugs exist, both pass a catalogue lookup, and both are opioid pain medicines
-            dosed differently, which is why a swap between them is dangerous.
-          </p>
-        </div>
-      </Panel>
-      <ReplayNotice headingLevel={headingLevel === "h1" ? 2 : 3} />
-    </div>
-  )
 
   return (
     <div className={styles.demo}>
-      {autoplay ? (
-        <div className={styles.lede}>
-          {title}
-          <ReplayTag />
-        </div>
-      ) : (
-        <div className={styles.intro}>
-          <div className={styles.lede}>
-            {title}
-            {lede}
-          </div>
-          {context}
-        </div>
-      )}
+      <ReplayHead level={headingLevel === "h1" ? 1 : 2} autoplay={autoplay} />
       <div className={styles.transport}>
         <ReplayControls
           mode={mode}
@@ -194,18 +140,18 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
         />
       </div>
 
-      <VerdictStrip phase={phase} />
-
-      <div className={styles.split}>
-        {DEMO_ARMS.map((arm) => (
-          <DemoArmPanel key={arm.id} arm={arm} phase={phase} headingLevel={ArmHeading} />
-        ))}
+      <div className={styles.stage}>
+        <VerdictStrip phase={phase} />
+        <div className={styles.split}>
+          {DEMO_ARMS.map((arm) => (
+            <DemoArmPanel key={arm.id} arm={arm} phase={phase} headingLevel={ArmHeading} />
+          ))}
+        </div>
       </div>
 
       <div className={styles.captions}>
         <Captions lines={REPLAY_LINES} clockMs={sessionMs} voice={voice} />
       </div>
-      {figure}
       <div className={decided ? `${styles.result} ${styles.decided}` : styles.result}>
         {decided ? banner : null}
         <div
@@ -237,12 +183,7 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
         </div>
       </div>
 
-      {autoplay ? (
-        <div className={styles.intro}>
-          <div className={styles.lede}>{lede}</div>
-          {context}
-        </div>
-      ) : null}
+      {autoplay ? <ReplayAfterword /> : null}
     </div>
   )
 }

@@ -1,28 +1,21 @@
 .hero {
   display: grid;
-  gap: var(--rhythm-stack);
-  padding-block: var(--rhythm-group) 0;
-}
-
-.lead {
-  display: grid;
   gap: var(--rhythm-tight);
-  min-width: 0;
-}
-
-.go {
-  display: grid;
-  gap: var(--rhythm-tight);
-  justify-items: start;
+  max-width: 48rem;
+  padding-top: var(--rhythm-section-compact);
 }
 
 .title {
   max-width: 44rem;
 }
 
+.more {
+  max-width: var(--measure-prose);
+  margin-top: var(--rhythm-tight);
+}
+
 .body {
   margin: 0;
-  max-width: var(--measure-prose);
   font-size: var(--body-size);
   line-height: var(--body-leading);
   color: var(--text-secondary);
@@ -31,8 +24,7 @@
 
 .parties {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
-  gap: var(--rhythm-tight) var(--shell-gap);
+  gap: var(--rhythm-tight);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -45,33 +37,4 @@
   line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-
-.caption {
-  margin: 0;
-  font-size: var(--meta-size);
-  color: var(--text-muted);
-}
-
-@media (min-width: 62rem) {
-  .hero {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-    column-gap: var(--shell-gap);
-    padding-block: var(--rhythm-section-compact) 0;
-  }
-
-  .go {
-    justify-items: end;
-  }
-
-  .actions {
-    justify-content: flex-end;
-  }
 }

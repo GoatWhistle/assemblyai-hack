@@ -19,7 +19,7 @@ export function SayThese() {
   return (
     <section className={styles.block} aria-labelledby={headingId}>
       <div className={styles.head}>
-        <Heading level={2} id={headingId}>
+        <Heading level={3} id={headingId}>
           {SAY_THESE_HEADING}
         </Heading>
         <Lede>

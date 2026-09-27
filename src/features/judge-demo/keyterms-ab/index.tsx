@@ -53,7 +53,7 @@ export function KeytermsAb() {
   return (
     <section className={styles.block} aria-labelledby={titleId}>
       <header className={styles.head}>
-        <Heading level={2} id={titleId}>
+        <Heading level={3} id={titleId}>
           {KEYTERMS_AB_TITLE}
         </Heading>
         <Lede>{KEYTERMS_AB_SUMMARY}</Lede>
