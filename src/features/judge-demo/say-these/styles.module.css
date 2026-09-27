@@ -1,6 +1,7 @@
 .block {
   display: grid;
   gap: var(--space-3);
+  container-type: inline-size;
 }
 
 .heading {
@@ -21,7 +22,7 @@
 
 .list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
   margin: 0;
   padding: 0;
@@ -65,4 +66,10 @@
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
+}
+
+@container (min-width: 46rem) {
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

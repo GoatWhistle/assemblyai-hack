@@ -67,9 +67,17 @@
 
 .said {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--space-3) var(--space-6);
+  align-content: start;
   padding-top: var(--space-4);
   border-top: 1px solid var(--line-hairline);
+}
+
+.turn {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  min-width: 0;
 }
 
 .saidWho {
@@ -159,5 +167,18 @@
 @media (prefers-reduced-motion: reduce) {
   .variant {
     filter: none;
+  }
+}
+
+@media (min-width: 56rem) {
+  .arm {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
+}
+
+@media (min-width: 110rem) {
+  .said {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
   }
 }

@@ -1,6 +1,15 @@
 .demo {
+  --hub-offset: calc(var(--target-touch) + var(--space-2) * 2);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
 }
 
 .lede {
@@ -17,9 +26,10 @@
 }
 
 .sectionTitle {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: var(--weight-medium);
   letter-spacing: var(--track-heading);
+  line-height: var(--leading-tight);
 }
 
 .body {
@@ -28,9 +38,30 @@
   color: var(--text-secondary);
 }
 
+.transport {
+  position: sticky;
+  top: var(--hub-offset);
+  z-index: var(--z-raised);
+  margin-inline: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  background-color: var(--surface-page);
+}
+
 .split {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.captions,
+.result {
+  min-width: 0;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
   align-items: start;
 }
@@ -72,16 +103,22 @@
 }
 
 .resting {
+  min-width: 0;
   border-radius: var(--radius-lg);
   outline: 2px solid transparent;
   outline-offset: var(--space-1);
 }
 
 .readingBack {
+  min-width: 0;
   border-radius: var(--radius-lg);
   outline: 2px solid var(--select-line);
   outline-offset: var(--space-1);
   transition: outline-color var(--dur-fast) var(--ease-out-quart);
+}
+
+.demo > .transport ~ * :where(a, button, summary, [tabindex]) {
+  scroll-margin-top: calc(var(--hub-offset) + 12rem);
 }
 
 @media (max-width: 40rem) {
@@ -90,6 +127,78 @@
   }
 
   .sectionTitle {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
+  }
+
+  .truth {
+    padding: var(--space-4);
+  }
+}
+
+@media (min-width: 56rem) {
+  .demo {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: var(--space-5);
+  }
+
+  .demo > * {
+    grid-column: 1 / -1;
+  }
+
+  .demo > .transport {
+    grid-row: 2;
+  }
+
+  .demo > .captions {
+    display: grid;
+    grid-row: 3;
+  }
+
+  .split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 80rem) {
+  .demo > .transport {
+    display: grid;
+    position: static;
+    grid-column: 1;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .demo > .captions {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .demo > .transport ~ * :where(a, button, summary, [tabindex]) {
+    scroll-margin-top: calc(var(--hub-offset) + var(--space-6));
+  }
+
+  .intro {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+    column-gap: var(--shell-gap);
+  }
+
+  .result {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  }
+
+  .result > :first-child {
+    position: sticky;
+    top: calc(var(--hub-offset) + var(--space-5));
+  }
+}
+
+@media (min-width: 120rem) {
+  .demo {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+
+  .result {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   }
 }

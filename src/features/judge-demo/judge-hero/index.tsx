@@ -32,30 +32,34 @@ export function JudgeHero({ headingLevel = "h1", autoplaying = false }: JudgeHer
   const Heading = headingLevel
   return (
     <section className={styles.hero} aria-labelledby={headingId}>
-      <Heading className={styles.title} id={headingId}>
-        {THESIS_TITLE}
-      </Heading>
-      <p className={styles.claim}>{HERO_CLAIM}</p>
-      <Disclosure summary="The mechanism and the business case">
-        <p className={styles.body}>{HERO_BODY}</p>
-        <ul className={styles.parties}>
-          <li className={styles.party}>{WHO_PAYS}</li>
-          <li className={styles.party}>{WHO_GETS}</li>
-        </ul>
-      </Disclosure>
-      <div className={styles.actions}>
-        {autoplaying ? null : (
-          <ActionLink href={REPLAY_ENTRY_HREF} tone="primary" size="large">
-            {WATCH_LABEL}
-          </ActionLink>
-        )}
-        <ActionLink href={CALL_HREF} size="large">
-          {CALL_LABEL}
-        </ActionLink>
+      <div className={styles.lead}>
+        <Heading className={styles.title} id={headingId}>
+          {THESIS_TITLE}
+        </Heading>
+        <p className={styles.claim}>{HERO_CLAIM}</p>
+        <Disclosure summary="The mechanism and the business case">
+          <p className={styles.body}>{HERO_BODY}</p>
+          <ul className={styles.parties}>
+            <li className={styles.party}>{WHO_PAYS}</li>
+            <li className={styles.party}>{WHO_GETS}</li>
+          </ul>
+        </Disclosure>
       </div>
-      {autoplaying ? null : (
-        <p className={styles.caption}>The replay needs no microphone and no key.</p>
-      )}
+      <div className={styles.go}>
+        <div className={styles.actions}>
+          {autoplaying ? null : (
+            <ActionLink href={REPLAY_ENTRY_HREF} tone="primary" size="large">
+              {WATCH_LABEL}
+            </ActionLink>
+          )}
+          <ActionLink href={CALL_HREF} size="large">
+            {CALL_LABEL}
+          </ActionLink>
+        </div>
+        {autoplaying ? null : (
+          <p className={styles.caption}>The replay needs no microphone and no key.</p>
+        )}
+      </div>
     </section>
   )
 }

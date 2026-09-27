@@ -1,6 +1,14 @@
 .block {
   display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.choose,
+.shown {
+  display: grid;
   gap: var(--space-4);
+  min-width: 0;
 }
 
 .head {
@@ -156,6 +164,18 @@
   color: var(--text-secondary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
+}
+
+@media (min-width: 80rem) {
+  .block {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    column-gap: var(--shell-gap);
+  }
+
+  .choose {
+    position: sticky;
+    top: calc(var(--target-touch) + var(--space-6));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

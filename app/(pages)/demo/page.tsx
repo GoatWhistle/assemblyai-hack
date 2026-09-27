@@ -13,8 +13,8 @@ import { ScenarioPicker } from "@/features/judge-demo/scenario-picker"
 import { abCatch } from "@/features/metrics/report-figures"
 import { RECORDING_PUBLISHED } from "@/features/recorded-replay/published"
 import { RecordedSection } from "@/features/recorded-replay/recorded-section"
+import { PageShell } from "@/shared/ui/layout/page-shell"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
-import { SiteHeader } from "@/shared/ui/primitives/site-header"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import styles from "./styles.module.css"
 
@@ -54,58 +54,63 @@ export default async function DemoPage({ searchParams }: DemoProps) {
   const ab = abCatch()
   const figure = ab === null ? null : <PairRuleCatch without={ab.without} shipped={ab.with} />
   return (
-    <div className={styles.shell}>
+    <>
       <a className="skip-link" href={`#${REPLAY_ID}`}>
         Skip to the replay
       </a>
-      <SiteHeader current="replay" />
-      <main className={styles.page} id={MAIN_ID}>
-        <JudgeHero headingLevel="h1" autoplaying={autoplay} />
-        <HubNav sections={SECTIONS} />
-        <section className={styles.section} id={REPLAY_ID} aria-label="Replay">
-          {autoplay ? <InstantEntry /> : null}
-          <JudgeDemo autoplay={autoplay} headingLevel="h2" figure={figure} />
-        </section>
-        <div className={styles.section} id={TOUR_ID}>
-          <JudgeTour />
-        </div>
-        <div className={styles.section} id={SAY_ID}>
-          <SayThese />
-          <div className={styles.sayActions}>
-            <ActionLink href={CALL_HREF} tone="primary">
-              Try them on a live call
-            </ActionLink>
+      <PageShell current="replay">
+        <main className={styles.page} id={MAIN_ID}>
+          <JudgeHero headingLevel="h1" autoplaying={autoplay} />
+          <HubNav sections={SECTIONS} />
+          <section className={styles.section} id={REPLAY_ID} aria-label="Replay">
+            {autoplay ? <InstantEntry /> : null}
+            <JudgeDemo autoplay={autoplay} headingLevel="h2" figure={figure} />
+          </section>
+          <div className={styles.guide}>
+            <div className={styles.section} id={TOUR_ID}>
+              <JudgeTour />
+            </div>
+            <div className={styles.section} id={SAY_ID}>
+              <SayThese />
+              <div className={styles.sayActions}>
+                <ActionLink href={CALL_HREF} tone="primary">
+                  Try them on a live call
+                </ActionLink>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className={styles.section} id={SCENARIOS_ID}>
-          <ScenarioPicker />
-        </div>
-        <div className={styles.section} id={KEYTERMS_ID}>
-          <KeytermsAb />
-        </div>
-        <div className={styles.section} id={RECORDED_ID}>
-          <h2 className={styles.heading}>Recorded audio</h2>
-          <RecordedSection published={RECORDING_PUBLISHED} />
-        </div>
-        <nav className={styles.onward} aria-label="Where to go next">
-          <ActionLink href="/how-it-works" size="large">
-            How the gate works
-          </ActionLink>
-          <ActionLink href="/compare" size="large">
-            Compare with and without the gate
-          </ActionLink>
-          <ActionLink href="/metrics" size="large">
-            Read the measurements
-          </ActionLink>
-          <ActionLink href="/docs/limitations" size="large">
-            What this cannot prove
-          </ActionLink>
-          <ActionLink href="/docs/threat-model" size="large">
-            Threat model
-          </ActionLink>
-        </nav>
-        <Disclaimer />
-      </main>
-    </div>
+          <div className={styles.section} id={SCENARIOS_ID}>
+            <ScenarioPicker />
+          </div>
+          <div className={styles.section} id={KEYTERMS_ID}>
+            <KeytermsAb />
+          </div>
+          <div className={styles.closing}>
+            <div className={styles.section} id={RECORDED_ID}>
+              <h2 className={styles.heading}>Recorded audio</h2>
+              <RecordedSection published={RECORDING_PUBLISHED} />
+            </div>
+            <nav className={styles.onward} aria-label="Where to go next">
+              <ActionLink href="/how-it-works" size="large">
+                How the gate works
+              </ActionLink>
+              <ActionLink href="/compare" size="large">
+                Compare with and without the gate
+              </ActionLink>
+              <ActionLink href="/metrics" size="large">
+                Read the measurements
+              </ActionLink>
+              <ActionLink href="/docs/limitations" size="large">
+                What this cannot prove
+              </ActionLink>
+              <ActionLink href="/docs/threat-model" size="large">
+                Threat model
+              </ActionLink>
+            </nav>
+          </div>
+          <Disclaimer />
+        </main>
+      </PageShell>
+    </>
   )
 }

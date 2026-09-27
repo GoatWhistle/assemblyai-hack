@@ -138,25 +138,27 @@ export function KeytermsAb() {
           )}
         </div>
 
-        <dl className={styles.effects}>
-          <dt className={styles.effectTerm}>What the recognizer is pushed toward</dt>
-          <dd className={styles.effectBody}>{arm.pushedToward}</dd>
-          <dt className={styles.effectTerm}>What a read-back then proves</dt>
-          <dd className={styles.effectBody}>{arm.readBackThenProves}</dd>
-        </dl>
+        <div className={styles.explain}>
+          <dl className={styles.effects}>
+            <dt className={styles.effectTerm}>What the recognizer is pushed toward</dt>
+            <dd className={styles.effectBody}>{arm.pushedToward}</dd>
+            <dt className={styles.effectTerm}>What a read-back then proves</dt>
+            <dd className={styles.effectBody}>{arm.readBackThenProves}</dd>
+          </dl>
 
-        {arm.runnable ? (
-          <p className={styles.measured}>{MEASURED_ARM_NOTE}</p>
-        ) : (
-          <div className={styles.refusal}>
-            <p className={styles.refusalTitle}>Why this arm has no switch</p>
-            <p className={styles.refusalBody}>{arm.whyNotRunnable}</p>
-            <p className={styles.refusalBody}>
-              The prompt that travels with it reads{" "}
-              <q className={styles.quote}>{COMPETITOR_PROMPT_LINE}</q>. {COMPETITOR_CITATION}
-            </p>
-          </div>
-        )}
+          {arm.runnable ? (
+            <p className={styles.measured}>{MEASURED_ARM_NOTE}</p>
+          ) : (
+            <div className={styles.refusal}>
+              <p className={styles.refusalTitle}>Why this arm has no switch</p>
+              <p className={styles.refusalBody}>{arm.whyNotRunnable}</p>
+              <p className={styles.refusalBody}>
+                The prompt that travels with it reads{" "}
+                <q className={styles.quote}>{COMPETITOR_PROMPT_LINE}</q>. {COMPETITOR_CITATION}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <Disclosure summary="Why the biased arm is invalid, not merely worse">

@@ -189,7 +189,7 @@ export const DEMO_STAGES: readonly DemoStage[] = [
   },
   {
     atMs: NAMED_ANSWER_AT_MS,
-    label: "Caller answers: names hydromorphone on the left, says yes on the right",
+    label: "Caller answers: names hydromorphone with the pair rule, says yes without it",
   },
   {
     atMs: SETTLED_AT_MS,

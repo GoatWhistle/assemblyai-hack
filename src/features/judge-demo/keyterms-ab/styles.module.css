@@ -80,9 +80,12 @@
   border-top: 1px solid var(--line-hairline);
 }
 
-.listBlock {
+.listBlock,
+.explain {
   display: grid;
   gap: var(--space-3);
+  align-content: start;
+  min-width: 0;
 }
 
 .listLabel {
@@ -211,6 +214,23 @@
   color: var(--text-faint);
   max-width: var(--measure-prose);
   text-wrap: pretty;
+}
+
+@media (min-width: 62rem) {
+  .block {
+    padding: var(--space-6);
+  }
+
+  .panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--shell-gap);
+  }
+}
+
+@media (max-width: 40rem) {
+  .block {
+    padding: var(--space-4);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

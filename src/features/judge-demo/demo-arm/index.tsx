@@ -36,23 +36,27 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
         <p className={styles.armNote}>{arm.note}</p>
       </header>
       <div className={styles.said}>
-        <p className={styles.saidWho}>
-          {asked
-            ? `What the agent said at ${(DECISION_AT_MS / 1000).toFixed(1)} seconds`
-            : "What the agent will say"}
-        </p>
-        <p className={styles.saidText}>{arm.agentLine}</p>
-        <p className={styles.saidWho}>
-          decided by the same gate function, reason code{" "}
-          <code className={styles.reasonCode}>{arm.decision.reasonCode}</code>
-        </p>
-        <p className={styles.saidWho}>
-          {phase === "settled" ? "What the caller answered" : "What the caller will answer"}
-        </p>
-        <p className={styles.saidText}>&ldquo;{arm.answer.callerSaid}&rdquo;</p>
-        <p className={styles.saidWho}>
-          read as <code className={styles.reasonCode}>{arm.answer.reasonCode}</code>
-        </p>
+        <div className={styles.turn}>
+          <p className={styles.saidWho}>
+            {asked
+              ? `What the agent said at ${(DECISION_AT_MS / 1000).toFixed(1)} seconds`
+              : "What the agent will say"}
+          </p>
+          <p className={styles.saidText}>{arm.agentLine}</p>
+          <p className={styles.saidWho}>
+            decided by the same gate function, reason code{" "}
+            <code className={styles.reasonCode}>{arm.decision.reasonCode}</code>
+          </p>
+        </div>
+        <div className={styles.turn}>
+          <p className={styles.saidWho}>
+            {phase === "settled" ? "What the caller answered" : "What the caller will answer"}
+          </p>
+          <p className={styles.saidText}>&ldquo;{arm.answer.callerSaid}&rdquo;</p>
+          <p className={styles.saidWho}>
+            read as <code className={styles.reasonCode}>{arm.answer.reasonCode}</code>
+          </p>
+        </div>
       </div>
       <div className={styles.outcome}>
         <p className={styles.outcomeLabel}>{arm.outcomeLabel}</p>

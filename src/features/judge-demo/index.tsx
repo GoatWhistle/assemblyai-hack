@@ -164,24 +164,25 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
           <ReplayTag />
         </div>
       ) : (
-        <>
+        <div className={styles.intro}>
           <div className={styles.lede}>
             {title}
             {lede}
           </div>
           {context}
-        </>
+        </div>
       )}
-      <ReplayControls
-        mode={mode}
-        sessionMs={sessionMs}
-        controls={controls}
-        onPrimary={primary}
-        onStop={stop}
-      />
+      <div className={styles.transport}>
+        <ReplayControls
+          mode={mode}
+          sessionMs={sessionMs}
+          controls={controls}
+          onPrimary={primary}
+          onStop={stop}
+        />
+      </div>
 
       <VerdictStrip phase={phase} />
-      {figure}
 
       <div className={styles.split}>
         {DEMO_ARMS.map((arm) => (
@@ -189,32 +190,37 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
         ))}
       </div>
 
-      <Captions lines={REPLAY_LINES} clockMs={sessionMs} voice={voice} />
-      <GateBanner
-        decision={reached ? LASA_DECISION : null}
-        candidate={LASA_CANDIDATE}
-        confirmed={confirmed}
-        live={false}
-      />
-      <div
-        className={readingBack ? styles.readingBack : styles.resting}
-        data-reading-back={readingBack}
-      >
-        <FieldCard
-          key={card.candidate.candidateId}
-          candidate={card.candidate}
-          decision={card.decision}
-          siblings={card.siblings}
-          evidence={card.evidence}
-          decisions={card.decisions}
+      <div className={styles.captions}>
+        <Captions lines={REPLAY_LINES} clockMs={sessionMs} voice={voice} />
+      </div>
+      {figure}
+      <div className={styles.result}>
+        <GateBanner
+          decision={reached ? LASA_DECISION : null}
+          candidate={LASA_CANDIDATE}
+          confirmed={confirmed}
+          live={false}
         />
+        <div
+          className={readingBack ? styles.readingBack : styles.resting}
+          data-reading-back={readingBack}
+        >
+          <FieldCard
+            key={card.candidate.candidateId}
+            candidate={card.candidate}
+            decision={card.decision}
+            siblings={card.siblings}
+            evidence={card.evidence}
+            decisions={card.decisions}
+          />
+        </div>
       </div>
 
       {autoplay ? (
-        <>
+        <div className={styles.intro}>
           <div className={styles.lede}>{lede}</div>
           {context}
-        </>
+        </div>
       ) : null}
     </div>
   )
