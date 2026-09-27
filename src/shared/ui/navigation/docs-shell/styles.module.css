@@ -29,8 +29,29 @@
   max-width: var(--measure-prose);
 }
 
+.main [data-arrival] {
+  position: relative;
+  isolation: isolate;
+}
+
+.main :is(h1, h2, h3, h4)[data-arrival] {
+  width: fit-content;
+}
+
+.main [data-arrival]::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
+  z-index: -1;
+  border-radius: var(--radius-sm);
+  background-color: var(--select-surface);
+  pointer-events: none;
+  animation: var(--keyframes-arrival) var(--dur-arrival) var(--ease-out-quart) both;
+}
+
 .toc {
   display: none;
+  view-transition-name: docs-toc;
 }
 
 @media (min-width: 56rem) {
@@ -71,5 +92,11 @@
 @media (max-width: 40rem) {
   .main {
     gap: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main [data-arrival]::before {
+    animation: none;
   }
 }

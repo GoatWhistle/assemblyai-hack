@@ -4,16 +4,18 @@
 
 /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
 ::view-transition-old(root) {
-  animation: readback-route-out var(--dur-fast) var(--ease-out-quart) both;
+  animation: var(--keyframes-route-out) var(--dur-route-out) var(--ease-out-quart) both;
 }
 
 /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
 ::view-transition-new(root) {
-  animation: readback-route-in var(--dur-base) var(--ease-out-quart) both;
+  animation: var(--keyframes-route-in) var(--dur-route-in) var(--ease-out-expo)
+    var(--dur-route-lag) both;
 }
 
 ::view-transition-group(site-header),
 ::view-transition-group(docs-nav),
+::view-transition-group(docs-toc),
 ::view-transition-new(site-header),
 ::view-transition-new(docs-nav) {
   animation: none;
@@ -24,21 +26,26 @@
   display: none;
 }
 
-@keyframes readback-route-out {
-  to {
-    opacity: 0;
-  }
+::view-transition-old(docs-toc),
+::view-transition-old(site-header):only-child,
+::view-transition-old(docs-nav):only-child {
+  display: block;
+  animation: var(--keyframes-route-out) var(--dur-route-out) var(--ease-out-quart) both;
 }
 
-@keyframes readback-route-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+::view-transition-new(docs-toc) {
+  animation: var(--keyframes-route-hold) var(--dur-route-in) var(--ease-out-quart)
+    var(--dur-route-lag) both;
+}
+
+::view-transition-new(site-header):only-child,
+::view-transition-new(docs-nav):only-child {
+  animation: var(--keyframes-route-hold) var(--dur-route-in) var(--ease-out-quart)
+    var(--dur-route-lag) both;
+}
+
+html[data-route-enter] main {
+  animation: var(--keyframes-route-in) var(--dur-route-in) var(--ease-out-expo) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -50,6 +57,10 @@
   ::view-transition-old(root),
   /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
     ::view-transition-new(root) {
+    animation: none;
+  }
+
+  html[data-route-enter] main {
     animation: none;
   }
 }

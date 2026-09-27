@@ -1,0 +1,77 @@
+:root {
+  --dur-glide: 300ms;
+  --dur-drawer-in: 240ms;
+  --dur-drawer-out: 160ms;
+  --dur-arrival: 1500ms;
+  --dur-route-out: 110ms;
+  --dur-route-in: 260ms;
+  --dur-route-lag: 50ms;
+  --route-rise: 8px;
+  --drawer-lift: -6px;
+
+  --transition-glide: transform var(--dur-glide) var(--ease-out-expo);
+
+  --keyframes-arrival: readback-arrival;
+  --keyframes-route-in: readback-route-in;
+  --keyframes-route-out: readback-route-out;
+  --keyframes-route-hold: readback-route-hold;
+}
+
+@keyframes readback-arrival {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 1;
+  }
+  22% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  60% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 0;
+  }
+}
+
+@keyframes readback-route-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes readback-route-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--route-rise));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes readback-route-hold {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-glide: 1ms;
+    --dur-drawer-in: 1ms;
+    --dur-drawer-out: 1ms;
+    --dur-arrival: 1ms;
+    --dur-route-out: 1ms;
+    --dur-route-in: 1ms;
+    --dur-route-lag: 1ms;
+    --route-rise: 0px;
+    --drawer-lift: 0px;
+  }
+}

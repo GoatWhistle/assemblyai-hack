@@ -4,11 +4,21 @@ import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useLayoutEffect, useRef } from "react"
 import { REDUCED_MOTION_QUERY } from "../use-reduced-motion"
 
-type Starter = (callback: () => Promise<void>) => { readonly finished: Promise<void> }
+type Transition = {
+  readonly finished: Promise<void>
+  readonly ready?: Promise<void>
+  readonly skipTransition?: () => void
+}
+
+type Starter = (callback: () => Promise<void>) => Transition
 
 export const ROUTE_RENDER_WAIT_MS = 300
 
 export const NO_TRANSITION_ATTRIBUTE = "data-no-transition"
+
+export const ROUTE_ENTER_ATTRIBUTE = "data-route-enter"
+
+export const ROUTE_ENTER_CLEAR_MS = 700
 
 function transitionStarter(): Starter | null {
   const target = globalThis.document as Document & {
@@ -19,6 +29,23 @@ function transitionStarter(): Starter | null {
     return null
   }
   return start.bind(target) as Starter
+}
+
+export function enterWithoutTransition(root: HTMLElement): () => void {
+  if (globalThis.window?.matchMedia?.(REDUCED_MOTION_QUERY)?.matches === true) {
+    return () => undefined
+  }
+  root.removeAttribute(ROUTE_ENTER_ATTRIBUTE)
+  root.getBoundingClientRect()
+  root.setAttribute(ROUTE_ENTER_ATTRIBUTE, "")
+  const timer = globalThis.setTimeout(
+    () => root.removeAttribute(ROUTE_ENTER_ATTRIBUTE),
+    ROUTE_ENTER_CLEAR_MS,
+  )
+  return () => {
+    globalThis.clearTimeout(timer)
+    root.removeAttribute(ROUTE_ENTER_ATTRIBUTE)
+  }
 }
 
 function modified(event: globalThis.MouseEvent): boolean {
@@ -51,6 +78,7 @@ export function RouteTransition() {
   const pathname = usePathname()
   const pending = useRef<(() => void) | null>(null)
   const shown = useRef(pathname)
+  const entering = useRef<() => void>(() => undefined)
 
   useLayoutEffect(() => {
     if (shown.current === pathname) {
@@ -59,8 +87,15 @@ export function RouteTransition() {
     shown.current = pathname
     const resolve = pending.current
     pending.current = null
-    resolve?.()
+    if (resolve !== null) {
+      resolve()
+      return
+    }
+    entering.current()
+    entering.current = enterWithoutTransition(globalThis.document.documentElement)
   }, [pathname])
+
+  useEffect(() => () => entering.current(), [])
 
   useEffect(() => {
     const start = transitionStarter()
@@ -84,10 +119,15 @@ export function RouteTransition() {
         return
       }
       event.preventDefault()
-      start(
+      let skip: () => void = () => undefined
+      const transition = start(
         () =>
           new Promise<void>((resolve) => {
-            const timer = globalThis.setTimeout(resolve, ROUTE_RENDER_WAIT_MS)
+            const timer = globalThis.setTimeout(() => {
+              pending.current = null
+              resolve()
+              skip()
+            }, ROUTE_RENDER_WAIT_MS)
             pending.current = () => {
               globalThis.clearTimeout(timer)
               resolve()
@@ -95,6 +135,9 @@ export function RouteTransition() {
             router.push(href)
           }),
       )
+      transition.ready?.catch(() => undefined)
+      transition.finished.catch(() => undefined)
+      skip = () => transition.skipTransition?.()
     }
 
     globalThis.window.addEventListener("click", onClick, { capture: true })

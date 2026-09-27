@@ -91,6 +91,17 @@ describe("the docs sidebar", () => {
     expect(document.activeElement).toBe(toggle)
   })
 
+  it("closes the drawer on a press outside it, since it now floats over the page", async () => {
+    const user = userEvent.setup()
+    render(<DocsNav pages={PAGES} />)
+    const toggle = screen.getByRole("button", { name: /Docs/ })
+    await user.click(toggle)
+    await user.click(screen.getByRole("list", { name: "Sections of Guide" }))
+    expect(toggle.getAttribute("aria-expanded")).toBe("true")
+    await user.click(document.body)
+    expect(toggle.getAttribute("aria-expanded")).toBe("false")
+  })
+
   it("r1-A2-F8: closes the drawer when a section link is followed", async () => {
     const user = userEvent.setup()
     route.path = "/guide"
@@ -102,21 +113,14 @@ describe("the docs sidebar", () => {
     expect(toggle.getAttribute("aria-expanded")).toBe("false")
   })
 
-  it("r1-A1-06: lists a related group of links beside the docs pages", () => {
-    render(
-      <DocsNav
-        pages={PAGES}
-        related={{
-          label: "Replay hub",
-          summary: "The judge's page.",
-          links: [{ href: "/demo#replay", label: "Replay" }],
-        }}
-      />,
-    )
-    const group = screen.getByRole("list", { name: "Replay hub" })
-    expect(within(group).getByRole("link", { name: "Replay" }).getAttribute("href")).toBe(
-      "/demo#replay",
-    )
+  it("r1-A1-06: lists the docs pages and their sections, and nothing else", () => {
+    render(<DocsNav pages={PAGES} />)
+    const nav = screen.getByRole("navigation", { name: "Documentation" })
+    const known = new Set(["/guide", "/numbers", "/numbers/detail", "#first", "#second"])
+    const hrefs = within(nav)
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href") ?? "")
+    expect(hrefs.filter((href) => !known.has(href))).toEqual([])
   })
 })
 

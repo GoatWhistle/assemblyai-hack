@@ -4,7 +4,7 @@ import GlossaryPage from "@app/(pages)/(docs)/docs/glossary/page"
 import LimitationsPage from "@app/(pages)/(docs)/docs/limitations/page"
 import DocsOverviewPage from "@app/(pages)/(docs)/docs/page"
 import ThreatModelPage from "@app/(pages)/(docs)/docs/threat-model/page"
-import { DOCS_PAGES, REPLAY_HUB } from "@app/(pages)/(docs)/docs-map"
+import { DOCS_PAGES } from "@app/(pages)/(docs)/docs-map"
 import HowItWorksPage from "@app/(pages)/(docs)/how-it-works/page"
 import BenchmarkPage from "@app/(pages)/(docs)/metrics/benchmark/page"
 import OperationsPage from "@app/(pages)/(docs)/metrics/operations/page"
@@ -13,6 +13,7 @@ import { cleanup, render, screen, within } from "@testing-library/react"
 import type { ComponentType } from "react"
 import { afterEach, describe, expect, it } from "vitest"
 import { ReasonCode } from "@/domain"
+import { REPLAY_HUB_HREF } from "@/features/judge-demo/entry-routes"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
 import { abCatch } from "@/features/metrics/report-figures"
 import { flattenPages } from "@/shared/ui/navigation/docs-tree"
@@ -148,11 +149,12 @@ describe("the docs overview states the product's hard claim", () => {
     }
   })
 
-  it("maps the replay hub's sections, so the two navigation systems reference each other", () => {
+  it("points at the replay hub once from the map, without repeating its sections", () => {
     const { container } = render(<DocsOverviewPage />)
-    for (const link of REPLAY_HUB.links) {
-      expect(container.querySelector(`a[href="${link.href}"]`), link.href).not.toBeNull()
-    }
+    const map = container.querySelector<HTMLElement>("section#map")
+    expect(map).not.toBeNull()
+    expect(map?.querySelectorAll(`a[href="${REPLAY_HUB_HREF}"]`)).toHaveLength(1)
+    expect(map?.querySelectorAll('a[href^="/demo#"]')).toHaveLength(0)
   })
 
   it("maps every other docs page with its summary", () => {

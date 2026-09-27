@@ -12,17 +12,6 @@ export type DocsPage = {
   readonly children?: readonly DocsPage[]
 }
 
-export type DocsLink = {
-  readonly href: string
-  readonly label: string
-}
-
-export type DocsLinkGroup = {
-  readonly label: string
-  readonly summary: string
-  readonly links: readonly DocsLink[]
-}
-
 export function flattenPages(pages: readonly DocsPage[]): readonly DocsPage[] {
   return pages.flatMap((page) => [page, ...flattenPages(page.children ?? [])])
 }

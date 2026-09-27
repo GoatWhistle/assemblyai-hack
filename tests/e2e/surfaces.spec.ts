@@ -50,8 +50,7 @@ test.describe("the evidence surfaces a judge is sent to", () => {
       "/docs/limitations",
       "/docs/threat-model",
       "/docs/glossary",
-      "/demo#replay",
-      "/demo#tour",
+      "/demo",
     ]) {
       await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible()
     }

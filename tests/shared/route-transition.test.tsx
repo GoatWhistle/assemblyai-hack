@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { act, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -8,13 +9,19 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: navigation.push }),
 }))
 
-const { RouteTransition, ROUTE_RENDER_WAIT_MS, transitionTarget } = await import(
-  "@/shared/ui/motion/route-transition"
-)
+const {
+  ROUTE_ENTER_ATTRIBUTE,
+  ROUTE_ENTER_CLEAR_MS,
+  RouteTransition,
+  ROUTE_RENDER_WAIT_MS,
+  transitionTarget,
+} = await import("@/shared/ui/motion/route-transition")
 
 type Callback = () => Promise<void>
 
 let callbacks: Callback[] = []
+
+let skipped = 0
 
 function anchor(href: string, attributes: Record<string, string> = {}): HTMLAnchorElement {
   const link = document.createElement("a")
@@ -35,13 +42,19 @@ function click(link: HTMLAnchorElement, init: MouseEventInit = {}): MouseEvent {
 
 beforeEach(() => {
   callbacks = []
+  skipped = 0
   navigation.pathname = "/docs"
   navigation.push.mockReset()
   window.history.replaceState(null, "", "/docs")
   Object.assign(document, {
     startViewTransition: (callback: Callback) => {
       callbacks.push(callback)
-      return { finished: Promise.resolve() }
+      return {
+        finished: Promise.resolve(),
+        skipTransition: () => {
+          skipped += 1
+        },
+      }
     },
   })
   vi.stubGlobal("matchMedia", () => ({
@@ -56,6 +69,7 @@ afterEach(() => {
   vi.unstubAllGlobals()
   vi.useRealTimers()
   document.body.innerHTML = ""
+  document.documentElement.removeAttribute("data-route-enter")
 })
 
 describe("the route transition never hijacks an in-page jump", () => {
@@ -142,5 +156,59 @@ describe("a real route change waits for the new page before the new snapshot", (
     render(<RouteTransition />)
     expect(click(anchor("/metrics")).defaultPrevented).toBe(false)
     expect(callbacks).toHaveLength(0)
+  })
+})
+
+describe("a page change animates even where the view transition cannot", () => {
+  it("skips a transition whose page came too late, rather than fading the old page into itself", async () => {
+    vi.useFakeTimers()
+    render(<RouteTransition />)
+    click(anchor("/compare"))
+    void callbacks[0]?.()
+    await vi.advanceTimersByTimeAsync(ROUTE_RENDER_WAIT_MS)
+    expect(skipped).toBe(1)
+  })
+
+  it("lets the late page enter on its own once it arrives", async () => {
+    vi.useFakeTimers()
+    const view = render(<RouteTransition />)
+    click(anchor("/compare"))
+    void callbacks[0]?.()
+    await vi.advanceTimersByTimeAsync(ROUTE_RENDER_WAIT_MS)
+    navigation.pathname = "/compare"
+    view.rerender(<RouteTransition />)
+    expect(document.documentElement.hasAttribute(ROUTE_ENTER_ATTRIBUTE)).toBe(true)
+    await vi.advanceTimersByTimeAsync(ROUTE_ENTER_CLEAR_MS)
+    expect(document.documentElement.hasAttribute(ROUTE_ENTER_ATTRIBUTE)).toBe(false)
+  })
+
+  it("animates the new main column in a browser without view transitions", () => {
+    Reflect.deleteProperty(document, "startViewTransition")
+    const view = render(<RouteTransition />)
+    navigation.pathname = "/metrics"
+    view.rerender(<RouteTransition />)
+    expect(document.documentElement.hasAttribute(ROUTE_ENTER_ATTRIBUTE)).toBe(true)
+  })
+
+  it("does not animate the page change for a viewer who asked for reduced motion", () => {
+    Reflect.deleteProperty(document, "startViewTransition")
+    vi.stubGlobal("matchMedia", () => ({
+      matches: true,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    }))
+    const view = render(<RouteTransition />)
+    navigation.pathname = "/metrics"
+    view.rerender(<RouteTransition />)
+    expect(document.documentElement.hasAttribute(ROUTE_ENTER_ATTRIBUTE)).toBe(false)
+  })
+
+  it("keeps the header and the docs sidebar still and the table of contents in place", () => {
+    const sheet = readFileSync("src/styles/tokens/route-motion.css", "utf8")
+    expect(sheet).toMatch(/::view-transition-group\(docs-toc\)/)
+    expect(sheet).toMatch(/html\[data-route-enter\] main \{\s*animation:/)
+    const shell = readFileSync("src/shared/ui/navigation/docs-shell/styles.module.css", "utf8")
+    expect(shell).toContain("view-transition-name: docs-toc")
+    expect(shell).toContain("view-transition-name: docs-nav")
   })
 })

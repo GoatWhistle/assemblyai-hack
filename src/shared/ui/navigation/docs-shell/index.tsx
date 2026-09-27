@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { PageShell } from "@/shared/ui/layout/page-shell"
+import { AnchorArrival } from "./anchor-arrival"
 import { RouteFocus } from "./route-focus"
 import styles from "./styles.module.css"
 
@@ -14,6 +15,7 @@ export function DocsShell({ nav, toc, mainId, children }: DocsShellProps) {
   return (
     <PageShell current="docs">
       <RouteFocus mainId={mainId} />
+      <AnchorArrival mainId={mainId} />
       <div className={styles.grid}>
         <div className={styles.nav}>{nav}</div>
         <main className={styles.main} id={mainId}>

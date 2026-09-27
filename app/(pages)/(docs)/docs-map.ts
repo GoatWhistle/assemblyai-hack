@@ -1,4 +1,4 @@
-import type { DocsLinkGroup, DocsPage, DocsSection } from "@/shared/ui/navigation/docs-tree"
+import type { DocsPage, DocsSection } from "@/shared/ui/navigation/docs-tree"
 
 function section(id: string, label: string): DocsSection {
   return Object.freeze({ id, label })
@@ -142,17 +142,3 @@ export const DOCS_PAGES: readonly DocsPage[] = Object.freeze([
   THREAT_PAGE,
   GLOSSARY_PAGE,
 ])
-
-export const REPLAY_HUB: DocsLinkGroup = Object.freeze({
-  label: "Replay hub",
-  summary:
-    "The judge's page: the replay, a 90-second tour of every surface, and the synthesised scenarios.",
-  links: Object.freeze([
-    Object.freeze({ href: "/demo#replay", label: "Replay" }),
-    Object.freeze({ href: "/demo#tour", label: "90-second tour" }),
-    Object.freeze({ href: "/demo#say", label: "What to say live" }),
-    Object.freeze({ href: "/demo#scenarios", label: "Scenarios" }),
-    Object.freeze({ href: "/demo#keyterms", label: "Keyterms A/B" }),
-    Object.freeze({ href: "/demo#recorded", label: "Recorded call (none yet)" }),
-  ]),
-})

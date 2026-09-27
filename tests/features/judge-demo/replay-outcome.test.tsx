@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "node:fs"
-import { REPLAY_HUB } from "@app/(pages)/(docs)/docs-map"
+import { glob } from "node:fs/promises"
 import { act, cleanup, render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { STANCE_LABEL } from "@/features/field-card/field-status"
@@ -117,17 +117,35 @@ describe("A3-06: the settled card agrees with what entered the order", () => {
   })
 })
 
-describe("A2-F6: every replay hub link still lands on a section of /demo", () => {
-  it("keeps each docs anchor as the replay or as a hash-linked tab of the page", () => {
+const DEMO_ANCHOR = /(?:\/demo|REPLAY_HUB_HREF\})(?:\?[^"'`#\s]*)?#([a-z][a-z-]*)/g
+
+async function demoAnchors(): Promise<ReadonlyMap<string, string>> {
+  const found = new Map<string, string>()
+  for (const pattern of ["app/**/*.{ts,tsx}", "src/**/*.{ts,tsx}"]) {
+    for await (const file of glob(pattern)) {
+      for (const match of readFileSync(file, "utf8").matchAll(DEMO_ANCHOR)) {
+        found.set(match[1] ?? "", file.replaceAll("\\", "/"))
+      }
+    }
+  }
+  return found
+}
+
+describe("A2-F6: every link into /demo#section still lands on a section of /demo", () => {
+  it("keeps each anchor as the replay or as a hash-linked tab of the page", async () => {
     const page = readFileSync("app/(pages)/demo/page.tsx", "utf8")
     expect(
       page,
-      "the tabs must answer to the hash or the docs links open the wrong panel",
+      "the tabs must answer to the hash or the links into them open the wrong panel",
     ).toMatch(/<Tabs[^>]* anchored/)
-    for (const link of REPLAY_HUB.links) {
-      const id = link.href.split("#")[1] ?? ""
+    const anchors = await demoAnchors()
+    expect(anchors.size, "no link into a /demo section was found").toBeGreaterThan(0)
+    for (const [id, file] of anchors) {
       const constant = page.match(new RegExp(`const ([A-Z]+_ID) = "${id}"`))?.[1]
-      expect(constant, `/demo#${id} names no section on the page`).toBeDefined()
+      expect(
+        constant,
+        `${file} links /demo#${id}, which names no section on the page`,
+      ).toBeDefined()
       expect(page).toMatch(new RegExp(`id(: |=[{])${constant}[,}]`))
     }
   })

@@ -4,7 +4,7 @@ import { MOMENTS } from "@/features/compare"
 import { MomentStrip } from "@/features/compare/moment-strip"
 import { GATE_REASONS, STANDING_READ_BACK_LINE } from "@/features/how-it-works/gate-reasons"
 import { glossaryHref } from "@/features/how-it-works/glossary/terms"
-import { REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
+import { REPLAY_ENTRY_HREF, REPLAY_HUB_HREF } from "@/features/judge-demo/entry-routes"
 import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { BenchmarkTable } from "@/features/metrics/benchmark-table"
 import { CatchCostHeadline, headlineTitle } from "@/features/metrics/catch-cost-headline"
@@ -18,7 +18,7 @@ import { Tabs } from "@/shared/ui/navigation/tabs"
 import { TextLink } from "@/shared/ui/navigation/text-link"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { pageMetadata } from "@/site/page-metadata"
-import { DOCS_PAGES, OVERVIEW_SECTIONS, REPLAY_HUB } from "../docs-map"
+import { DOCS_PAGES, OVERVIEW_SECTIONS } from "../docs-map"
 import styles from "./styles.module.css"
 
 const ISMP_COMMAND = "npx tsx scripts/measure/ismp-coverage.ts"
@@ -155,25 +155,16 @@ export default function DocsOverviewPage() {
       <DocSection
         id={OVERVIEW_SECTIONS.map.id}
         title="Map of the docs"
-        lead="Each page opens with a short lead and puts its evidence directly beneath it. The replay hub holds the judge's material."
+        lead="Each page opens with a short lead and puts its evidence directly beneath it."
       >
         <PageDirectory
           pages={DOCS_PAGES.filter((page) => page.href !== "/docs")}
           withChildren
         />
-        <div className={styles.hub}>
-          <p className={styles.hubTitle}>{REPLAY_HUB.label}</p>
-          <p className={styles.note}>{REPLAY_HUB.summary}</p>
-          <ul className={styles.hubLinks}>
-            {REPLAY_HUB.links.map((link) => (
-              <li key={link.href}>
-                <ActionLink href={link.href} size="small" icon="forward">
-                  {link.label}
-                </ActionLink>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <p className={styles.note}>
+          The replay, the 90-second tour and the synthesised scenarios are not docs pages; they
+          live on the <TextLink href={REPLAY_HUB_HREF}>replay hub</TextLink>.
+        </p>
       </DocSection>
     </>
   )

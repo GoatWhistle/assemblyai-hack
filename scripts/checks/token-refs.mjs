@@ -9,6 +9,7 @@ const TOKEN_FILES = [
   "src/styles/tokens/semantic.css",
   "src/styles/tokens/typography.css",
   "src/styles/tokens/motion.css",
+  "src/styles/tokens/navigation-motion.css",
 ]
 
 const defined = new Set()

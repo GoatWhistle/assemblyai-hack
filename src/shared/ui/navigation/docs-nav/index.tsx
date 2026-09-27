@@ -3,22 +3,18 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { type KeyboardEvent, type MouseEvent, useEffect, useId, useRef, useState } from "react"
+import { useGlideMarker } from "@/shared/ui/motion/use-glide"
 import { Chevron } from "../chevron"
-import {
-  containsPage,
-  type DocsLinkGroup,
-  type DocsPage,
-  pageAt,
-  sectionHref,
-} from "../docs-tree"
+import { containsPage, type DocsPage, pageAt, sectionHref } from "../docs-tree"
 import { useActiveSection } from "../use-active-section"
 import styles from "./styles.module.css"
 
 export type DocsNavProps = {
   readonly pages: readonly DocsPage[]
-  readonly related?: DocsLinkGroup
   readonly label?: string
 }
+
+const CURRENT_PAGE = '[aria-current="page"]'
 
 type ItemProps = {
   readonly page: DocsPage
@@ -73,33 +69,17 @@ function NavItem({ page, current, active, onJump }: ItemProps) {
   )
 }
 
-function RelatedGroup({ group }: { readonly group: DocsLinkGroup }) {
-  const headingId = useId()
-  return (
-    <div className={styles.related}>
-      <p className={styles.relatedTitle} id={headingId}>
-        {group.label}
-      </p>
-      <ul className={styles.list} aria-labelledby={headingId}>
-        {group.links.map((link) => (
-          <li key={link.href} className={styles.item}>
-            <Link href={link.href} className={styles.link}>
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-export function DocsNav({ pages, related, label = "Documentation" }: DocsNavProps) {
+export function DocsNav({ pages, label = "Documentation" }: DocsNavProps) {
   const pathname = usePathname()
   const current = pageAt(pages, pathname)
   const active = useActiveSection(current?.sections.map((section) => section.id) ?? [])
   const [open, setOpen] = useState(false)
   const panelId = useId()
   const toggle = useRef<HTMLButtonElement>(null)
+  const root = useRef<HTMLElement>(null)
+  const rail = useRef<HTMLDivElement>(null)
+  const marker = useRef<HTMLSpanElement>(null)
+  useGlideMarker(rail, marker, CURRENT_PAGE, current?.href ?? null)
 
   useEffect(() => {
     if (pathname !== null) {
@@ -112,6 +92,19 @@ export function DocsNav({ pages, related, label = "Documentation" }: DocsNavProp
     window.addEventListener("hashchange", close)
     return () => window.removeEventListener("hashchange", close)
   }, [])
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+    const onOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && root.current?.contains(event.target) !== true) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener("pointerdown", onOutside)
+    return () => document.removeEventListener("pointerdown", onOutside)
+  }, [open])
 
   const onJump = (event: MouseEvent<HTMLAnchorElement>) => {
     event.stopPropagation()
@@ -128,7 +121,7 @@ export function DocsNav({ pages, related, label = "Documentation" }: DocsNavProp
   }
 
   return (
-    <nav className={styles.nav} aria-label={label} onKeyDown={onKeyDown}>
+    <nav ref={root} className={styles.nav} aria-label={label} onKeyDown={onKeyDown}>
       <button
         ref={toggle}
         type="button"
@@ -148,18 +141,20 @@ export function DocsNav({ pages, related, label = "Documentation" }: DocsNavProp
         <Chevron className={styles.toggleChevron} />
       </button>
       <div id={panelId} className={open ? `${styles.panel} ${styles.open}` : styles.panel}>
-        <ul className={styles.list}>
-          {pages.map((page) => (
-            <NavItem
-              key={page.href}
-              page={page}
-              current={current}
-              active={active}
-              onJump={onJump}
-            />
-          ))}
-        </ul>
-        {related === undefined ? null : <RelatedGroup group={related} />}
+        <div className={styles.rail} ref={rail}>
+          <span className={styles.marker} ref={marker} aria-hidden="true" />
+          <ul className={styles.list}>
+            {pages.map((page) => (
+              <NavItem
+                key={page.href}
+                page={page}
+                current={current}
+                active={active}
+                onJump={onJump}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </nav>
   )

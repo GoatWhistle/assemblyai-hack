@@ -11,6 +11,28 @@
   color: var(--text-muted);
 }
 
+.rail {
+  position: relative;
+  isolation: isolate;
+}
+
+.marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: var(--radius-sm);
+  background-color: var(--select-surface);
+  opacity: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  transition: var(--transition-glide);
+}
+
+.rail[data-glide] > .marker {
+  opacity: 1;
+}
+
 .list {
   display: grid;
   gap: 1px;
@@ -44,6 +66,10 @@
   background-color: var(--select-surface);
   color: var(--select-ink);
   font-weight: var(--weight-medium);
+}
+
+.rail[data-glide] .link[aria-current="location"] {
+  background-color: transparent;
 }
 
 @media (pointer: coarse) {

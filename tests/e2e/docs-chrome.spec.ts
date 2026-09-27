@@ -110,4 +110,100 @@ test.describe("r2: the docs chrome", () => {
     await expect(table.getByRole("row", { name: /^1006/ })).toBeVisible()
     await expect(table.getByText("npx tsx scripts/report/live-run-count.ts")).toBeVisible()
   })
+
+  test("owner r3: the docs sidebar lists the docs and nothing else", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto("/docs")
+    const hrefs = await page
+      .getByRole("navigation", { name: "Documentation" })
+      .getByRole("link")
+      .evaluateAll((links) => links.map((link) => link.getAttribute("href") ?? ""))
+    const foreign = hrefs.filter((href) => !href.startsWith("#") && !DOCS_PATHS.includes(href))
+    expect(foreign).toEqual([])
+  })
+
+  test("owner r3: a contents jump glides to the section and marks where it landed", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto("/how-it-works")
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior),
+      "at rest the page scrolls instantly, so focus moves and page changes never glide",
+    ).toBe("auto")
+    await page
+      .getByRole("navigation", { name: "On this page" })
+      .getByRole("link", { name: "Attack console" })
+      .click()
+    await expect(page).toHaveURL(/#attack$/)
+    const heading = page.locator("#attack-title")
+    await expect(heading).toHaveAttribute("data-arrival", "")
+    await expect(heading).toBeFocused()
+    const top = await heading.evaluate((node) => node.getBoundingClientRect().top)
+    expect(top).toBeGreaterThanOrEqual(0)
+    expect(top).toBeLessThan(120)
+    await expect(heading).not.toHaveAttribute("data-arrival", "", { timeout: 4000 })
+    await page.goBack()
+    await expect(page).toHaveURL(/\/how-it-works$/)
+  })
+
+  test("owner r3: the phone contents drawer animates open and closed", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto("/how-it-works")
+    const nav = page.getByRole("navigation", { name: "Documentation" })
+    const toggle = nav.getByRole("button")
+    const panel = page.locator(`#${await toggle.getAttribute("aria-controls")}`)
+    const style = () =>
+      panel.evaluate((node) => {
+        const computed = getComputedStyle(node)
+        return { visibility: computed.visibility, duration: computed.transitionDuration }
+      })
+    expect((await style()).visibility).toBe("hidden")
+    expect((await style()).duration).not.toMatch(/^0s(, 0s)*$/)
+    await toggle.click()
+    await expect.poll(async () => (await style()).visibility).toBe("visible")
+    await nav.getByRole("link", { name: "Attack console" }).click()
+    await expect(toggle).toHaveAttribute("aria-expanded", "false")
+    await expect.poll(async () => (await style()).visibility).toBe("hidden")
+    await expect(page).toHaveURL(/#attack$/)
+  })
+
+  test("owner r3: with reduced motion the jump is instant", async ({ browser }) => {
+    const context = await browser.newContext({
+      reducedMotion: "reduce",
+      viewport: { width: 1440, height: 900 },
+    })
+    const page = await context.newPage()
+    await page.goto("/how-it-works")
+    await page
+      .getByRole("navigation", { name: "On this page" })
+      .getByRole("link", { name: "Attack console" })
+      .click()
+    const landed = await page.evaluate(
+      () =>
+        new Promise<number>((resolve) =>
+          requestAnimationFrame(() =>
+            resolve(document.getElementById("attack-title")?.getBoundingClientRect().top ?? -1),
+          ),
+        ),
+    )
+    expect(landed).toBeGreaterThanOrEqual(0)
+    expect(landed).toBeLessThan(120)
+    await context.close()
+  })
+
+  test("A2 N2r: every page change lands at the top, even mid-way down a long page", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto("/how-it-works")
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+    await page
+      .getByRole("navigation", { name: "Documentation" })
+      .getByRole("link", { name: "Glossary" })
+      .click()
+    await expect(page).toHaveURL(/\/docs\/glossary$/)
+    await expect(page.getByRole("heading", { level: 1 })).toBeInViewport()
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+  })
 })

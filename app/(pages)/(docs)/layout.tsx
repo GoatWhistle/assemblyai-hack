@@ -5,7 +5,7 @@ import { DocsShell } from "@/shared/ui/navigation/docs-shell"
 import { DocsTreeProvider } from "@/shared/ui/navigation/docs-trail"
 import { Toc } from "@/shared/ui/navigation/toc"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
-import { DOCS_PAGES, REPLAY_HUB } from "./docs-map"
+import { DOCS_PAGES } from "./docs-map"
 
 const MAIN_ID = "main"
 
@@ -16,7 +16,7 @@ export default function DocsLayout({ children }: { readonly children: ReactNode 
         Skip to the content
       </a>
       <DocsShell
-        nav={<DocsNav pages={DOCS_PAGES} related={REPLAY_HUB} />}
+        nav={<DocsNav pages={DOCS_PAGES} />}
         toc={<Toc pages={DOCS_PAGES} />}
         mainId={MAIN_ID}
       >
