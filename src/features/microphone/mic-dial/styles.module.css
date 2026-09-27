@@ -1,0 +1,63 @@
+.dial {
+  --ring-inner: var(--mic-ring-line);
+  --ring-outer: var(--mic-ring-quiet);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--mic-size) * 0.22);
+  isolation: isolate;
+}
+
+.dial::before,
+.dial::after,
+.ripple {
+  content: "";
+  position: absolute;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dial::before {
+  inset: calc(var(--mic-size) * 0.11);
+  box-shadow: inset 0 0 0 1px var(--ring-inner);
+  transition: box-shadow var(--dur-base) var(--ease-out-quart);
+}
+
+.dial::after {
+  inset: 0;
+  box-shadow: inset 0 0 0 1px var(--ring-outer);
+  transition: box-shadow var(--dur-base) var(--ease-out-quart);
+}
+
+.ripple {
+  inset: calc(var(--mic-size) * 0.22);
+  box-shadow: 0 0 0 1.5px var(--mic-ripple);
+  opacity: 0;
+}
+
+.ready .ripple {
+  animation: var(--keyframes-ripple) var(--dur-loop-ripple) var(--ease-constant) infinite;
+}
+
+.open {
+  --ring-inner: var(--mic-listening-line);
+  --ring-outer: var(--mic-ring-line);
+}
+
+.quiet {
+  --ring-inner: var(--mic-ring-quiet);
+  --ring-outer: var(--mic-ring-quiet);
+}
+
+.blocked {
+  --ring-inner: var(--mic-blocked-line);
+  --ring-outer: var(--mic-ring-quiet);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ready .ripple {
+    animation: none;
+  }
+}

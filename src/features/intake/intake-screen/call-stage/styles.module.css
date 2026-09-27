@@ -6,10 +6,6 @@
   gap: var(--space-5);
 }
 
-.stage {
-  min-height: calc(100vh - 20rem);
-}
-
 .waiting {
   width: 100%;
   max-width: var(--measure-prose);
@@ -24,15 +20,5 @@
   .waiting {
     opacity: 0;
     translate: 0 -4px;
-  }
-}
-
-@media (min-width: 62rem) {
-  .stage {
-    min-height: 0;
-    padding: 0 var(--space-5) var(--space-6);
-    border-radius: var(--radius-lg);
-    background-color: var(--surface-rail);
-    box-shadow: var(--hairline);
   }
 }

@@ -42,33 +42,35 @@ export function CallPanels({
   )
   const shownDecision = selected === null ? null : (decisions.get(selected.candidateId) ?? null)
   return (
-    <div className={styles.shell}>
-      <div className={styles.main}>
-        {candidates.length === 0 ? null : (
-          <GateBanner decision={shownDecision} candidate={selected} />
-        )}
-        {summary}
-        <FieldCards
+    <div className={styles.frame}>
+      <div className={styles.shell}>
+        <div className={styles.main}>
+          {candidates.length === 0 ? null : (
+            <GateBanner decision={shownDecision} candidate={selected} />
+          )}
+          {summary}
+          <FieldCards
+            candidates={candidates}
+            decisions={decisions}
+            snapshot={snapshot}
+            selectedWordStartMs={selection?.startMs ?? null}
+            onSelectWord={selectWord}
+            onListen={onListen}
+          />
+        </div>
+
+        <IntakeRail
           candidates={candidates}
-          decisions={decisions}
-          snapshot={snapshot}
-          selectedWordStartMs={selection?.startMs ?? null}
+          selectedCandidateId={selected?.candidateId ?? null}
+          transcript={transcript}
+          selection={selection}
+          readBack={readBack}
+          {...(fastPath === undefined ? {} : { fastPath })}
+          echoDiscards={echoDiscards}
+          onSelectCandidate={selectCandidate}
           onSelectWord={selectWord}
-          onListen={onListen}
         />
       </div>
-
-      <IntakeRail
-        candidates={candidates}
-        selectedCandidateId={selected?.candidateId ?? null}
-        transcript={transcript}
-        selection={selection}
-        readBack={readBack}
-        {...(fastPath === undefined ? {} : { fastPath })}
-        echoDiscards={echoDiscards}
-        onSelectCandidate={selectCandidate}
-        onSelectWord={selectWord}
-      />
     </div>
   )
 }

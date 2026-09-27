@@ -4,6 +4,7 @@ import { Wordmark } from "@/shared/ui/primitives/wordmark"
 import { FinishAnswer } from "../finish-answer"
 import { KeyHint } from "../key-hint"
 import { LevelMeter } from "../level-meter"
+import { MicDial } from "../mic-dial"
 import { isBusy, isCancellable, isOpen, MIC_COPY, MicState } from "../mic-state"
 import { useMicKeys } from "../use-mic-keys"
 import styles from "./styles.module.css"
@@ -79,22 +80,24 @@ export function MicConsole({
 
   return (
     <section className={`${styles.console} ${styles[STATE_CLASS[state]] ?? ""}`}>
-      <button
-        type="button"
-        className={styles.trigger}
-        onClick={() => {
-          if (!inert) {
-            press?.()
-          }
-        }}
-        aria-disabled={inert ? true : undefined}
-        aria-label={copy.action}
-        aria-keyshortcuts={hint?.shortcut}
-      >
-        <span className={styles.glyph} aria-hidden="true">
-          {open ? <StopGlyph /> : <Wordmark size={44} />}
-        </span>
-      </button>
+      <MicDial state={state}>
+        <button
+          type="button"
+          className={styles.trigger}
+          onClick={() => {
+            if (!inert) {
+              press?.()
+            }
+          }}
+          aria-disabled={inert ? true : undefined}
+          aria-label={copy.action}
+          aria-keyshortcuts={hint?.shortcut}
+        >
+          <span className={styles.glyph} aria-hidden="true">
+            {open ? <StopGlyph /> : <Wordmark size={44} />}
+          </span>
+        </button>
+      </MicDial>
 
       <LevelMeter level={level} state={state} />
 

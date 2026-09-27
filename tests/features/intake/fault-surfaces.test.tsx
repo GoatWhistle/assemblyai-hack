@@ -65,17 +65,16 @@ describe("honest status surfaces", () => {
     expect(screen.getByRole("link", { name: REPLAY_ACTION_LABEL })).toBeDefined()
   })
 
-  it("drops the viewport-tall idle stage once a fault has to be read", () => {
-    const { container, unmount } = renderScreen({
+  it("keeps the recovery actions beside the microphone once a fault has to be read", () => {
+    const { unmount } = renderScreen({
       candidates: [],
       decisions: new Map(),
       transcript: [],
     })
-    const idleStage = container.querySelector('[class*="stage"]')
     expect(
-      idleStage,
-      "the idle screen centres the microphone in the viewport on purpose",
-    ).not.toBeNull()
+      screen.getByRole("region", { name: "What to say" }),
+      "the idle hero pairs the microphone with what to say into it",
+    ).toBeDefined()
     unmount()
 
     renderScreen({
@@ -86,12 +85,12 @@ describe("honest status surfaces", () => {
       phase: SessionPhase.Blocked,
     })
     expect(
-      screen.getByRole("alert").parentElement?.querySelector('[class*="stage"]'),
-      "a viewport-tall stage above the fault pushes the recovery actions below the fold, which is where a judge without a microphone stops",
+      screen.queryByRole("region", { name: "What to say" }),
+      "dictation examples beside a refused microphone compete with the only actions that help",
     ).toBeNull()
     expect(
       document.querySelector('[class*="stage"]'),
-      "measured at 1440x900 the recovery actions sat at y=1084 with the stage and y=772 without it",
+      "measured at 1440x900 the recovery actions sat at y=1084 under a viewport-tall stage and y=772 without it",
     ).toBeNull()
   })
 

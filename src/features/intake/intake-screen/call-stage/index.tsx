@@ -8,7 +8,6 @@ import type { FaultDetail } from "../../session-options"
 import { isRestartable, type SessionFault, SessionPhase } from "../../session-status"
 import type { Solicited } from "../../solicited-field"
 import { BudgetPaused, FaultPanel } from "../fault-panel"
-import { IntakePrompt } from "../intake-prompt"
 import styles from "./styles.module.css"
 
 function noticeFor(
@@ -70,9 +69,8 @@ export function CallStage({
   const blocked = mic === MicState.Blocked
   const next =
     solicited === undefined || solicited.field === null ? null : FIELD_SPOKEN[solicited.field]
-  const classes = [styles.column, resting ? styles.stage : ""].filter((value) => value !== "")
   return (
-    <div className={classes.join(" ")}>
+    <div className={styles.column}>
       <MicConsole
         state={mic}
         level={level}
@@ -101,7 +99,6 @@ export function CallStage({
       {blocked || fault === null ? null : (
         <FaultPanel key={fault} fault={fault} faultDetail={faultDetail} canRestart={false} />
       )}
-      {resting && idle && !paused ? <IntakePrompt /> : null}
     </div>
   )
 }

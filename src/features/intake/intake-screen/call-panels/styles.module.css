@@ -1,9 +1,13 @@
-.shell {
+.frame {
   margin-top: var(--space-6);
+  container-type: inline-size;
+}
+
+.shell {
   animation: var(--keyframes-enter) var(--dur-slow) var(--ease-out-quart) both;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--rail-width);
-  gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
   align-items: start;
 }
 
@@ -13,10 +17,10 @@
   min-width: 0;
 }
 
-@media (max-width: 62rem) {
+@container (min-width: 52rem) {
   .shell {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-5);
+    grid-template-columns: minmax(0, 1fr) var(--rail-width);
+    gap: var(--space-6);
   }
 }
 

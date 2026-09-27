@@ -56,3 +56,28 @@
   background-color: var(--ink-a5);
   text-decoration-color: currentColor;
 }
+
+@media (min-width: 80rem) {
+  .prompt,
+  .examples {
+    justify-items: start;
+  }
+
+  .prompt {
+    max-width: 30rem;
+    text-align: start;
+  }
+
+  .examples {
+    gap: var(--space-3);
+  }
+
+  .example {
+    font-size: var(--text-base);
+    text-wrap: pretty;
+  }
+
+  .judge {
+    margin-inline-start: calc(var(--space-3) * -1);
+  }
+}

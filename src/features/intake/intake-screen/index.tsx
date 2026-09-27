@@ -8,19 +8,20 @@ import type { FastPath } from "@/features/read-back/fast-path"
 import type { ReadBackContext } from "@/features/read-back/read-back-machine"
 import type { TranscriptEntry } from "@/features/transcript-view/transcript-entry"
 import type { Patience } from "@/realtime/patience"
+import { PageShell } from "@/shared/ui/layout/page-shell"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
-import { SiteHeader } from "@/shared/ui/primitives/site-header"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { useInCall } from "../in-call-loader"
 import { PhaseDot } from "../phase-dot"
 import type { FaultDetail } from "../session-options"
-import { type SessionFault, SessionPhase } from "../session-status"
+import { isRestartable, type SessionFault, SessionPhase } from "../session-status"
 import type { Solicited } from "../solicited-field"
 import { CallStage } from "./call-stage"
+import { IntakePrompt } from "./intake-prompt"
 import { CALL_MAIN_ID } from "./landmarks"
 import { ProofMap } from "./proof-map"
 import styles from "./styles.module.css"
-import { Thesis } from "./thesis"
+import { ThesisPromise, ThesisTitle } from "./thesis"
 
 export const LEGAL_SUMMARY =
   "A technology demonstration, not a medical device. Use made-up details, never a real patient's."
@@ -57,6 +58,15 @@ export type IntakeScreenProps = {
   readonly onFinishAnswer?: () => void
 }
 
+function promptsFor(
+  phase: SessionPhase,
+  fault: SessionFault | null,
+  budgetPaused: FaultDetail | null,
+): boolean {
+  const paused = budgetPaused !== null && phase === SessionPhase.Idle
+  return fault === null && isRestartable(phase) && !paused
+}
+
 export function IntakeScreen({
   candidates,
   decisions,
@@ -87,21 +97,20 @@ export function IntakeScreen({
 }: IntakeScreenProps) {
   const started = candidates.length > 0 || transcript.length > 0
   const inCall = useInCall(phase !== SessionPhase.Idle || started)
+  const prompting = !started && promptsFor(phase, fault, budgetPaused)
 
   return (
-    <div className={styles.page}>
-      <SiteHeader
-        current="call"
-        status={<PhaseDot phase={phase} fault={fault} paused={budgetPaused !== null} />}
-      />
-
+    <PageShell
+      current="call"
+      status={<PhaseDot phase={phase} fault={fault} paused={budgetPaused !== null} />}
+    >
       <main id={CALL_MAIN_ID} tabIndex={-1} className={styles.main}>
         <div className={`${styles.workspace} ${started ? styles.live : styles.resting}`}>
           {started ? (
-            <Thesis started />
+            <ThesisTitle started />
           ) : (
-            <div className={styles.thesisArea}>
-              <Thesis started={false} />
+            <div className={styles.titleArea}>
+              <ThesisTitle started={false} />
             </div>
           )}
 
@@ -126,16 +135,27 @@ export function IntakeScreen({
             />
           </div>
 
-          {started ? null : (
-            <div className={styles.mapArea}>
-              <ProofMap />
+          {prompting ? (
+            <div className={styles.promptArea}>
+              <IntakePrompt />
             </div>
-          )}
+          ) : null}
 
           {alert === null ? null : (
             <p className={styles.alert} role="alert">
               {alert}
             </p>
+          )}
+
+          {started ? null : (
+            <>
+              <div className={styles.promiseArea}>
+                <ThesisPromise />
+              </div>
+              <div className={styles.mapArea}>
+                <ProofMap />
+              </div>
+            </>
           )}
 
           {started && inCall !== null ? (
@@ -191,6 +211,6 @@ export function IntakeScreen({
           </Disclosure>
         </div>
       </main>
-    </div>
+    </PageShell>
   )
 }

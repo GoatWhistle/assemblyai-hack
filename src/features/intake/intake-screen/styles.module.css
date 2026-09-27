@@ -1,7 +1,5 @@
-.page {
-  max-width: var(--app-max);
-  margin: 0 auto;
-  padding: 0 var(--page-gutter) var(--space-6);
+.main {
+  padding-bottom: var(--space-7);
 }
 
 .main:focus {
@@ -14,11 +12,32 @@
   gap: var(--space-6);
 }
 
-.thesisArea,
+.titleArea,
 .callArea,
+.promptArea,
+.promiseArea,
 .mapArea,
 .panels {
   min-width: 0;
+}
+
+.resting {
+  gap: var(--space-5);
+  padding-top: var(--space-5);
+}
+
+.resting .promiseArea {
+  margin-top: var(--space-2);
+}
+
+.resting .mapArea {
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  box-shadow: inset 0 1px 0 var(--line-divider);
+}
+
+.live {
+  --mic-size: var(--mic-compact);
 }
 
 .alert {
@@ -32,40 +51,74 @@
   color: var(--text-primary);
 }
 
-@media (min-width: 62rem) {
+@media (min-width: 40rem) {
   .resting {
-    grid-template-columns: minmax(24rem, 5fr) minmax(0, 7fr);
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-      "thesis map"
-      "stage map"
-      "alert alert";
-    gap: var(--space-6) clamp(var(--space-6), 5vw, var(--space-8));
-    align-items: start;
-  }
-
-  .resting .thesisArea {
-    grid-area: thesis;
-  }
-
-  .resting .callArea {
-    grid-area: stage;
-  }
-
-  .resting .mapArea {
-    grid-area: map;
     padding-top: var(--space-7);
   }
 
-  .resting .alert {
-    grid-area: alert;
+  .resting .titleArea {
+    order: -2;
+  }
+
+  .resting .promiseArea {
+    order: -1;
+    margin-top: calc(var(--space-2) * -1);
   }
 }
 
 @media (min-width: 80rem) {
+  .resting {
+    grid-template-columns: minmax(0, 1fr) minmax(26rem, 34rem) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "title stage prompt"
+      "promise stage prompt"
+      ". stage prompt";
+    column-gap: var(--shell-gap);
+    row-gap: 0;
+    align-items: start;
+  }
+
+  .resting .titleArea {
+    grid-area: title;
+    padding: var(--space-7) 0 var(--space-4);
+  }
+
+  .resting .promiseArea {
+    grid-area: promise;
+    margin-top: 0;
+  }
+
+  .resting .callArea {
+    grid-area: stage;
+    margin-top: 0;
+  }
+
+  .resting .promptArea {
+    grid-area: prompt;
+    justify-self: end;
+    padding-top: var(--space-7);
+  }
+
+  .resting .alert {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: var(--space-6);
+  }
+
+  .resting .mapArea {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    margin-top: var(--space-8);
+  }
+}
+
+@media (min-width: 62rem) {
   .live {
+    --mic-size: var(--mic-console);
+
     grid-template-columns: var(--stage-width) minmax(0, 1fr);
-    gap: var(--space-5) var(--space-7);
+    gap: var(--space-5) var(--shell-gap);
     align-items: start;
   }
 
@@ -83,6 +136,12 @@
 
   .live .panels > :first-child {
     margin-top: 0;
+  }
+}
+
+@media (min-width: 120rem) {
+  .live {
+    --rail-width: 24rem;
   }
 }
 
@@ -107,10 +166,6 @@
 }
 
 @media (max-width: 62rem) {
-  .page {
-    padding-bottom: var(--space-7);
-  }
-
   .technical {
     margin-top: var(--space-7);
   }
