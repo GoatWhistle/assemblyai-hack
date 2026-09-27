@@ -7,6 +7,12 @@
   padding: var(--space-4) 0;
 }
 
+.identity {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -153,12 +159,12 @@
 
   .repo {
     order: 2;
-    margin-inline-start: 0;
+    margin-inline: 0 calc(-1 * var(--space-3));
   }
 
   .link {
     flex: 0 0 auto;
-    padding: 0 var(--space-2);
+    padding: 0 calc(var(--space-2) * 0.75);
     white-space: nowrap;
   }
 }

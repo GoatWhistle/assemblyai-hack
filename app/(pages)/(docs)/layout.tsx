@@ -4,7 +4,6 @@ import { DocsPager } from "@/shared/ui/navigation/docs-pager"
 import { DocsShell } from "@/shared/ui/navigation/docs-shell"
 import { DocsTreeProvider } from "@/shared/ui/navigation/docs-trail"
 import { Toc } from "@/shared/ui/navigation/toc"
-import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { DOCS_PAGES } from "./docs-map"
 
 const MAIN_ID = "main"
@@ -22,7 +21,6 @@ export default function DocsLayout({ children }: { readonly children: ReactNode 
       >
         <DocsTreeProvider pages={DOCS_PAGES}>{children}</DocsTreeProvider>
         <DocsPager pages={DOCS_PAGES} />
-        <Disclaimer />
       </DocsShell>
     </>
   )

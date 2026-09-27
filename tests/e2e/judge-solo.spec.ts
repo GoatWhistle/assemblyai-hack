@@ -1,6 +1,13 @@
-import { expect, test } from "@playwright/test"
+import { expect, type Page, test } from "@playwright/test"
 
 const REPLAY_ENTRY = "/demo?autoplay=1#replay"
+
+async function expectDisclaimerOnHover(page: Page): Promise<void> {
+  const mark = page.getByRole("button", { name: /^Medical disclaimer: .*not a medical device/ })
+  await expect(mark).toBeVisible()
+  await mark.hover()
+  await expect(page.getByText(/not a medical device/i).first()).toBeVisible()
+}
 
 test.describe("a judge alone, with no microphone and no key", () => {
   test("the root is the call, with one visible step to the replay", async ({ page }) => {
@@ -10,24 +17,23 @@ test.describe("a judge alone, with no microphone and no key", () => {
     await expect(
       page.getByRole("link", { name: /judging\? watch the \d+-second replay/i }),
     ).toHaveAttribute("href", REPLAY_ENTRY)
-    await expect(page.getByText(/not a medical device/i).first()).toBeVisible()
+    await expectDisclaimerOnHover(page)
   })
 
-  test("the judge hub names both ways in and the business case", async ({ page }) => {
+  test("the judge hub offers the replay and the call once each, and the business case", async ({
+    page,
+  }) => {
     await page.goto("/demo")
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     await page.getByText("The mechanism and the business case").click()
     await expect(page.getByText(/who pays/i)).toBeVisible()
     await expect(page.getByText(/who gets the order/i)).toBeVisible()
+    await expect(page.getByRole("button", { name: /play the replay/i })).toBeVisible()
     await expect(
-      page.getByRole("link", { name: /watch the \d+-second replay/i }).first(),
-    ).toHaveAttribute("href", REPLAY_ENTRY)
-    await expect(page.getByRole("link", { name: /^start a call$/i }).first()).toHaveAttribute(
-      "href",
-      "/",
-    )
+      page.getByRole("banner").getByRole("link", { name: /^call$/i }),
+    ).toHaveAttribute("href", "/")
     await expect(page.getByRole("region", { name: "Say these three things" })).toBeVisible()
-    await expect(page.getByText(/not a medical device/i).first()).toBeVisible()
+    await expectDisclaimerOnHover(page)
   })
 
   for (const entry of ["/?judge=1", REPLAY_ENTRY]) {
@@ -92,7 +98,7 @@ test.describe("a judge alone, with no microphone and no key", () => {
     await page.goto("/live")
     await expect(page).toHaveURL(/\/$/)
     await expect(page.getByRole("button", { name: "Start listening" })).toBeVisible()
-    await expect(page.getByText("Technical details")).toBeVisible()
+    await expect(page.getByText("Technical details")).toHaveCount(0)
   })
 })
 
@@ -103,19 +109,13 @@ test.describe("with scripts disabled", () => {
     test.setTimeout(90000)
     await page.goto("/demo")
     await page
-      .getByRole("link", { name: /watch the \d+-second replay/i })
-      .first()
-      .click()
-    await expect(page).toHaveURL(/\/demo\?autoplay=1#replay$/)
-    await expect(page.getByRole("region", { name: "Replay" }).first()).toBeVisible()
-    await page.goto("/demo")
-    await page
-      .getByRole("link", { name: /^start a call$/i })
-      .first()
+      .getByRole("banner")
+      .getByRole("link", { name: /^call$/i })
       .click()
     await expect(page).toHaveURL(/\/$/)
     await page.getByRole("link", { name: /judging\? watch the \d+-second replay/i }).click()
     await expect(page).toHaveURL(/\/demo\?autoplay=1#replay$/)
+    await expect(page.getByRole("region", { name: "Replay" }).first()).toBeVisible()
   })
 
   test("the three things to say and their reason codes are server-rendered", async ({

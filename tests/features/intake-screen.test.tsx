@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event"
 import { beforeAll, describe, expect, it, vi } from "vitest"
 import type { GateDecision } from "@/domain"
 import { preloadInCall } from "@/features/intake/in-call-loader"
-import { IntakeScreen, LEGAL_SUMMARY } from "@/features/intake/intake-screen"
+import { IntakeScreen } from "@/features/intake/intake-screen"
 import {
   CALL_EXAMPLES,
   INTAKE_HINT,
@@ -21,7 +21,7 @@ import {
 import { MIC_COPY, MicState } from "@/features/microphone/mic-state"
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { callerEntry } from "@/features/transcript-view/transcript-entry"
-import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
+import { DISCLAIMER_TITLE, NOTICE_LABEL } from "@/shared/ui/states/disclaimer"
 
 beforeAll(async () => {
   await preloadInCall()
@@ -173,7 +173,12 @@ describe("the intake screen", () => {
       "a judge who opens the user page still needs one visible step to the replay",
     ).toBe(REPLAY_ENTRY_HREF)
     for (const line of CALL_EXAMPLES) {
-      expect(screen.getByText(`“${line}”`)).toBeDefined()
+      expect(
+        screen.getByText(
+          (_, node) => node?.textContent === `“${line}”` && node.tagName === "P",
+        ),
+        "each example is still said in full, even though the words that become values are marked",
+      ).toBeDefined()
     }
     expect(
       screen.queryByRole("link", { name: /no microphone\? watch the recording/i }),
@@ -196,21 +201,27 @@ describe("the intake screen", () => {
     expect(screen.getAllByRole("link", { name: /^Docs$/i })).toHaveLength(1)
   })
 
-  it("keeps the telemetry present but folded behind Technical details", () => {
-    renderScreen({ telemetry: <p>telemetry body</p> })
-    const details = screen.getByText("Technical details").closest("details")
-    expect(details, "the telemetry must stay on the page, one click away").not.toBeNull()
-    expect(details?.open, "an ordinary caller should not face socket frames first").toBe(false)
-    expect(details?.textContent).toContain("telemetry body")
+  it("carries no technical-details panel on the call page", () => {
+    renderScreen()
+    expect(
+      screen.queryByText("Technical details"),
+      "sockets, frames and latency readouts are not the caller's business and left the call page",
+    ).toBeNull()
+    expect(screen.queryByRole("region", { name: "Telemetry" })).toBeNull()
   })
 
-  it("shows the disclaimer's substance in one line and keeps the full text one click away", () => {
+  it("keeps the disclaimer in the header mark rather than a block or a disclosure in main", () => {
     renderScreen({ candidates: [], decisions: new Map(), transcript: [] })
-    expect(screen.getByText(LEGAL_SUMMARY)).toBeDefined()
-    expect(LEGAL_SUMMARY).toMatch(/not a medical device/i)
-    expect(LEGAL_SUMMARY).toMatch(/never a real patient/i)
-    const details = screen.getByText(LEGAL_SUMMARY).closest("details")
-    expect(details?.textContent).toContain(DISCLAIMER_TITLE)
+    const mark = screen.getByRole("button", { name: NOTICE_LABEL })
+    expect(mark.closest("header"), "the mark sits in the site header").not.toBeNull()
+    const main = screen.getByRole("main")
+    expect(main.textContent).not.toContain(DISCLAIMER_TITLE)
+    expect(main.querySelector("details aside")).toBeNull()
+  })
+
+  it("exposes the server-issued session id on main for the live harness", () => {
+    renderScreen({ sessionId: "srv-9" })
+    expect(screen.getByRole("main").getAttribute("data-session-id")).toBe("srv-9")
   })
 
   it("selects a field from the order rail and highlights its span", async () => {

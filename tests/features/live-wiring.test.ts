@@ -137,24 +137,16 @@ describe("the live order screen renders what the server decided", () => {
   })
 })
 
-describe("the public refusal counter and the waiting indicator ship, not merely exist", () => {
-  it("tallies refusals from something that renders", async () => {
-    const callers = await callersOf(
-      "tallyRefusals",
-      "src/features/gate-ledger/refusal-tally.ts",
-    )
-    expect(
-      callers.some((file) => file.includes("intake-screen")),
-      "a public refusal counter is the promised demo; a tally nothing renders shows a judge nothing",
-    ).toBe(true)
-  })
-
-  it("feeds the counter the decision history rather than the latest decision alone", async () => {
-    const client = readFileSync("app/(pages)/intake-client.tsx", "utf8")
-    expect(
-      client,
-      "keying decisions by candidate loses every earlier refusal, so the counter would undercount the gate",
-    ).toContain("decisionHistory")
+describe("the waiting indicator ships, not merely exists, and the technical panel is gone", () => {
+  it("renders no technical ledger or telemetry panel from the call screen", () => {
+    const screenSource = readFileSync("src/features/intake/intake-screen/index.tsx", "utf8")
+    const inCall = readFileSync("src/features/intake/in-call/index.ts", "utf8")
+    for (const name of ["TechnicalLedger", "TelemetryPanel"]) {
+      expect(
+        screenSource.includes(name) || inCall.includes(name),
+        `${name} left the call page with the Technical details disclosure`,
+      ).toBe(false)
+    }
   })
 
   it("derives who is waiting from something that renders", async () => {
@@ -175,26 +167,7 @@ describe("the public refusal counter and the waiting indicator ship, not merely 
   })
 })
 
-describe("the rejected-values table and the automatic degradation ship, not merely exist", () => {
-  it("derives its rows from something that renders", async () => {
-    const callers = await callersOf("rejectedRows", "src/features/gate-ledger/rejected-rows.ts")
-    expect(
-      callers.some((file) => file.includes("rejected-table")),
-      "a filter over rejected rows nobody renders shows a judge nothing",
-    ).toBe(true)
-  })
-
-  it("reaches the live order screen, not only its own tests", async () => {
-    const callers = await callersOf(
-      "RejectedTable",
-      "src/features/gate-ledger/rejected-table/index.tsx",
-    )
-    expect(
-      callers.some((file) => file.includes("intake-screen")),
-      "the table exists next to the refusal counter or it is dead weight one indirection away",
-    ).toBe(true)
-  })
-
+describe("the automatic degradation ships, not merely exists", () => {
   it("reaches the live order screen from AutoDegrade, not only its own tests", async () => {
     const callers = await callersOf("AutoDegrade", "src/features/intake/auto-degrade/index.tsx")
     expect(

@@ -32,35 +32,3 @@ export const COMBINED_PER_HOUR_USD: number = PUBLISHED_RATES.reduce(
 )
 
 export const COMBINED_PER_MINUTE_USD: number = COMBINED_PER_HOUR_USD / 60
-
-export type CostEstimate = {
-  readonly elapsedMs: number
-  readonly usd: number
-  readonly perHourUsd: number
-  readonly socketsCounted: number
-}
-
-const NO_ELAPSED_TIME: null = null
-
-export function estimateFromElapsed(elapsedMs: number): CostEstimate | null {
-  if (!Number.isFinite(elapsedMs) || elapsedMs <= 0) {
-    return NO_ELAPSED_TIME
-  }
-  return {
-    elapsedMs,
-    usd: (elapsedMs / 3600000) * COMBINED_PER_HOUR_USD,
-    perHourUsd: COMBINED_PER_HOUR_USD,
-    socketsCounted: PUBLISHED_RATES.length,
-  }
-}
-
-export function formatUsd(usd: number): string {
-  if (usd < 0.01) {
-    return `$${usd.toFixed(4)}`
-  }
-  return `$${usd.toFixed(3)}`
-}
-
-export function formatPerHour(perHourUsd: number): string {
-  return `$${perHourUsd.toFixed(2)}/hr`
-}

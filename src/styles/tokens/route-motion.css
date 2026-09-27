@@ -2,6 +2,10 @@
   navigation: auto;
 }
 
+::view-transition {
+  pointer-events: none;
+}
+
 /* biome-ignore lint/correctness/noUnknownTypeSelector: root names the view transition group, not an element */
 ::view-transition-old(root) {
   animation: var(--keyframes-route-out) var(--dur-route-out) var(--ease-out-quart) both;

@@ -11,8 +11,6 @@ import type { TranscriptEntry } from "@/features/transcript-view/transcript-entr
 import type { Patience } from "@/realtime/patience"
 import { PageShell } from "@/shared/ui/layout/page-shell"
 import { Swap } from "@/shared/ui/motion/swap"
-import { Disclosure } from "@/shared/ui/navigation/disclosure"
-import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { useInCall } from "../in-call-loader"
 import type { FaultDetail } from "../session-options"
 import { isRestartable, type SessionFault, SessionPhase } from "../session-status"
@@ -23,12 +21,6 @@ import { CALL_MAIN_ID } from "./landmarks"
 import { ProofMap } from "./proof-map"
 import styles from "./styles.module.css"
 import { ThesisPromise, ThesisTitle } from "./thesis"
-
-export const LEGAL_SUMMARY =
-  "A technology demonstration, not a medical device. Use made-up details, never a real patient's."
-
-export const TECHNICAL_HINT =
-  "Sockets, recognizer model, latency, cost, refusals and raw frames"
 
 export type IntakeScreenProps = {
   readonly candidates: readonly FieldCandidate[]
@@ -41,12 +33,10 @@ export type IntakeScreenProps = {
   readonly faultDetail?: FaultDetail | null
   readonly budgetPaused?: FaultDetail | null
   readonly alert?: string | null
-  readonly telemetry?: ReactNode
   readonly summary?: ReactNode
   readonly snapshot?: LiveOrderSnapshot | null
+  readonly sessionId?: string | null
   readonly onListen?: ListenHandler
-  readonly decisionHistory?: readonly GateDecision[]
-  readonly turnsHeld?: number | null
   readonly turnInFlight?: boolean
   readonly solicited?: Solicited
   readonly echoDiscards: number
@@ -99,12 +89,10 @@ export function IntakeScreen({
   faultDetail = null,
   budgetPaused = null,
   alert = null,
-  telemetry,
   summary,
   snapshot = null,
+  sessionId = null,
   onListen,
-  decisionHistory,
-  turnsHeld = null,
   turnInFlight = false,
   solicited,
   echoDiscards,
@@ -124,7 +112,12 @@ export function IntakeScreen({
 
   return (
     <PageShell current="call">
-      <main id={CALL_MAIN_ID} tabIndex={-1} className={styles.main}>
+      <main
+        id={CALL_MAIN_ID}
+        tabIndex={-1}
+        className={styles.main}
+        data-session-id={sessionId ?? undefined}
+      >
         <div className={`${styles.workspace} ${started ? styles.live : styles.resting}`}>
           {started ? (
             <ThesisTitle started />
@@ -185,41 +178,6 @@ export function IntakeScreen({
               />
             </div>
           ) : null}
-        </div>
-
-        {telemetry === undefined ? null : (
-          <div className={styles.technical}>
-            <Disclosure
-              summary={
-                <span className={styles.summary}>
-                  <span>Technical details</span>
-                  <span className={styles.hint}>{TECHNICAL_HINT}</span>
-                </span>
-              }
-            >
-              {telemetry}
-              {started && inCall !== null ? (
-                <inCall.TechnicalLedger
-                  decisionHistory={decisionHistory ?? []}
-                  turnsHeld={turnsHeld}
-                  elapsedMs={elapsedMs}
-                />
-              ) : null}
-            </Disclosure>
-          </div>
-        )}
-
-        <div className={styles.legal}>
-          <Disclosure
-            summary={
-              <span className={styles.summary}>
-                <span>{LEGAL_SUMMARY}</span>
-                <span className={styles.hint}>Read the full notice</span>
-              </span>
-            }
-          >
-            <Disclaimer />
-          </Disclosure>
         </div>
       </main>
     </PageShell>

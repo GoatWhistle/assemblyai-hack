@@ -50,12 +50,12 @@ export const SCRIPT_STEPS: readonly ScriptStep[] = Object.freeze([
   }),
   Object.freeze({
     id: "counters",
-    action: "Open Technical details during a call and read the refusal counter.",
+    action: "Open the measurements and read what the pair rule costs beside what it catches.",
     watchFor:
-      "The refusal counter sits beside the catches under Technical details on the call page, and how often the gate asked when the value was already right is published beside the catches on the measurements page. A counter that only showed the catches would make the metric one-sided.",
-    href: "/",
-    linkLabel: "Start a call",
-    needsMicrophone: true,
+      "How often the gate asked when the value was already right is published beside the catches on the measurements page. A counter that only showed the catches would make the metric one-sided.",
+    href: "/metrics",
+    linkLabel: "Open the measurements",
+    needsMicrophone: false,
   }),
   Object.freeze({
     id: "interrupt",

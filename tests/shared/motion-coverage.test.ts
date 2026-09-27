@@ -10,7 +10,6 @@ const VERDICT_SHEETS = [
   "src/features/field-card/styles.module.css",
   "src/features/field-card/lasa-override/styles.module.css",
   "src/features/attack-console/styles.module.css",
-  "src/features/gate-ledger/refusal-counter/styles.module.css",
   "src/features/gate-banner/contrast-question/styles.module.css",
   "src/features/gate-banner/signature-line/styles.module.css",
   "src/features/judge-demo/verdict-strip/styles.module.css",

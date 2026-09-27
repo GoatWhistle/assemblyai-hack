@@ -1,17 +1,11 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { FieldName, GateAction, type GateDecision, ReasonCode } from "@/domain"
-import { NOT_OBSERVED, RefusalCounter } from "@/features/gate-ledger/refusal-counter"
-import {
-  countFor,
-  NOTHING_OBSERVED,
-  RefusalReason,
-  tallyRefusals,
-} from "@/features/gate-ledger/refusal-tally"
 import { IntakeRail } from "@/features/intake/intake-rail"
 import { confidenceFigures, errorRateFigures } from "@/features/metrics/measured-figures"
 import { initialContext } from "@/features/read-back/read-back-machine"
 import { Figure, FigureGroup } from "@/shared/ui/data-display/figure"
+
+const NOT_OBSERVED = "not observed yet"
 
 const ABSENCE_NOTE = "Nothing has been observed, so this is absence rather than a clean run."
 
@@ -71,61 +65,6 @@ describe("a figure keeps a measured zero apart from an unmeasured absence", () =
       screen.queryByText(/of 7/),
       "a denominator beside an unobserved count implies a measurement that never ran",
     ).toBeNull()
-  })
-})
-
-describe("the refusal tally reports absence rather than a run of zeroes", () => {
-  it("returns null counts when no decision has been made", () => {
-    expect(
-      NOTHING_OBSERVED.toolCalls,
-      "zero tool calls and no session are different statements",
-    ).toBeNull()
-    expect(NOTHING_OBSERVED.blocked).toBeNull()
-    expect(NOTHING_OBSERVED.confirmed).toBeNull()
-    expect(countFor(NOTHING_OBSERVED, RefusalReason.LasaPair)).toBeNull()
-  })
-
-  it("returns null for an empty decision list, not a tally of zeroes", () => {
-    expect(
-      tallyRefusals([]).blocked,
-      "an empty list means the gate was never asked, which is not a gate that refused nothing",
-    ).toBeNull()
-  })
-
-  it("returns a real zero once a decision exists but nothing was blocked", () => {
-    const accepted: GateDecision = {
-      action: GateAction.Accept,
-      reasonCode: ReasonCode.ValidatorPassedHighConf,
-      field: FieldName.PrescriberNpi,
-      candidateId: "cand-accept",
-      agentUtterance: "Written on independent proof.",
-      evidence: { threshold: 0.9 },
-      confirmationMode: null,
-    }
-    const tally = tallyRefusals([accepted])
-    expect(
-      tally.blocked,
-      "once the gate has decided, a zero is a published measurement and must not read as absence",
-    ).toBe(0)
-    expect(countFor(tally, RefusalReason.LasaPair)).toBe(0)
-  })
-})
-
-describe("the turns-held figure distinguishes an unreported count from zero", () => {
-  it("says the count was not reported rather than printing a zero", () => {
-    render(<RefusalCounter tally={NOTHING_OBSERVED} turnsHeld={null} />)
-    expect(
-      screen.getByText(/has not been reported/),
-      "a server that omitted turnsHeld must not be rendered as a server that held zero turns",
-    ).toBeDefined()
-  })
-
-  it("prints a reported zero as zero", () => {
-    render(<RefusalCounter tally={NOTHING_OBSERVED} turnsHeld={0} />)
-    expect(
-      screen.getByText(/Over 0 caller turns held for this session/),
-      "a genuine zero is a measurement and is published",
-    ).toBeDefined()
   })
 })
 

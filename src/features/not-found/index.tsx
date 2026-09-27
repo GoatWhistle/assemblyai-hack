@@ -4,7 +4,6 @@ import { PageShell } from "@/shared/ui/layout/page-shell"
 import type { DocsPage } from "@/shared/ui/navigation/docs-tree"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
-import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { Heading } from "@/shared/ui/typography/heading"
 import { MissingPath } from "./missing-path"
 import styles from "./styles.module.css"
@@ -68,7 +67,6 @@ export function NotFoundScreen() {
             </Heading>
             <PageDirectory pages={NOT_FOUND_DESTINATIONS} />
           </section>
-          <Disclaimer />
         </main>
       </PageShell>
     </>

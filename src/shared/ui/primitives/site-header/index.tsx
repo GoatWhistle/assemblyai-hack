@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { GitHubIcon } from "@/shared/ui/icons"
 import { useGlide } from "@/shared/ui/motion/use-glide"
 import { EXTERNAL_REL, NEW_TAB_NOTE } from "@/shared/ui/navigation/text-link"
+import { DisclaimerNotice } from "@/shared/ui/states/disclaimer"
 import { Wordmark } from "../wordmark"
 import styles from "./styles.module.css"
 
@@ -84,12 +85,15 @@ export function SiteHeader({ current }: SiteHeaderProps) {
   const section = current === undefined ? null : SECTION_OF[current]
   return (
     <header className={styles.header}>
-      <Link className={styles.brand} href="/">
-        <Wordmark size={32} />
-        <span className={styles.name}>
-          Read<span className={styles.nameBack}>back</span>
-        </span>
-      </Link>
+      <div className={styles.identity}>
+        <Link className={styles.brand} href="/">
+          <Wordmark size={32} />
+          <span className={styles.name}>
+            Read<span className={styles.nameBack}>back</span>
+          </span>
+        </Link>
+        <DisclaimerNotice />
+      </div>
 
       <SiteNav links={LINKS} section={section} />
 

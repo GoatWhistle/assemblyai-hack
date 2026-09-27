@@ -100,6 +100,7 @@ const PAIRS = [
   ["link-ink", "state-lasa-surface"],
   ["link-ink", "state-asking-surface"],
   ["link-ink-hover", "link-fill"],
+  ["link-ink", "link-rest"],
   ["link-ink-hover", "link-fill-active"],
   ["action-disabled-ink", "action-disabled-surface"],
   ["select-ink", "select-surface"],

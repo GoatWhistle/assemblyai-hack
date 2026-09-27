@@ -56,14 +56,12 @@ async function pageFailure(page: Page): Promise<string | null> {
 }
 
 async function sessionIdOf(page: Page): Promise<string | null> {
-  const term = page.getByText("Session issued by the server", { exact: true })
-  if ((await term.count()) === 0) {
+  const main = page.locator("main[data-session-id]")
+  if ((await main.count()) === 0) {
     return null
   }
-  const text = (
-    (await term.first().locator("xpath=following-sibling::dd").textContent()) ?? ""
-  ).trim()
-  return text.length === 0 || text === "not bound yet" ? null : text
+  const text = ((await main.first().getAttribute("data-session-id")) ?? "").trim()
+  return text.length === 0 ? null : text
 }
 
 function record(input: {

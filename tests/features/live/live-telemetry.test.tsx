@@ -57,8 +57,8 @@ const LASA_DECISION = decide(LASA, policyFor(LASA.field))
 beforeEach(resetRig)
 afterEach(releaseRig)
 
-describe("U8 and U6: telemetry and the order panel are fed by the product path", () => {
-  it("shows socket frames, the decision log and the commit block from real responses", async () => {
+describe("U6: the order panel is fed by the product path, with no technical panel on the call page", () => {
+  it("shows the commit block from real responses and binds the session on main", async () => {
     rig.route = (url) =>
       url.endsWith("/turns")
         ? json({ turnsHeld: 1, candidates: [LASA], decisions: [LASA_DECISION] })
@@ -68,12 +68,15 @@ describe("U8 and U6: telemetry and the order panel are fed by the product path",
       socket("agents").deliverJson({ type: "reply.started", reply_id: "r-1" })
     })
     await callerSays("Morphine")
-    const telemetry = screen.getByRole("region", { name: "Telemetry" })
-    expect(within(telemetry).getByText("Speaking")).toBeTruthy()
-    expect(within(telemetry).getAllByText("reply.started").length).toBeGreaterThan(0)
-    expect(within(telemetry).getByText("Live: two sockets")).toBeTruthy()
-    expect(within(telemetry).getAllByText(LASA_DECISION.reasonCode).length).toBeGreaterThan(0)
-    expect(within(telemetry).getByText("srv-7")).toBeTruthy()
+    expect(
+      screen.queryByRole("region", { name: "Telemetry" }),
+      "socket frames, the decision log and latency readouts no longer sit on the call page",
+    ).toBeNull()
+    expect(screen.queryByText("Technical details")).toBeNull()
+    expect(
+      document.querySelector("main")?.getAttribute("data-session-id"),
+      "the live harness reads the server-issued session id from main now that the panel is gone",
+    ).toBe("srv-7")
     const order = screen.getByRole("region", { name: "Order summary" })
     expect(within(order).getByText("Commit blocked")).toBeTruthy()
     expect(
@@ -82,7 +85,7 @@ describe("U8 and U6: telemetry and the order panel are fed by the product path",
     ).toBeTruthy()
   })
 
-  it("shows the recognizer model Begin reported", async () => {
+  it("reports the recognizer model Begin reported to the server", async () => {
     await startTheCall(IntakeClient)
     await act(async () => {
       socket("streaming").deliverJson({
@@ -93,8 +96,6 @@ describe("U8 and U6: telemetry and the order panel are fed by the product path",
       })
     })
     await advance(0)
-    const telemetry = screen.getByRole("region", { name: "Telemetry" })
-    expect(within(telemetry).getByText("universal-3-5-pro")).toBeTruthy()
     const reported = rig.requests.find(
       (entry) =>
         entry.url.endsWith("/turns") && String(entry.init?.body).includes("recognizer"),
@@ -108,17 +109,5 @@ describe("U8 and U6: telemetry and the order panel are fed by the product path",
       expectedModel: "universal-3-5-pro",
     })
     expect(reported?.url).toBe("/api/sessions/srv-7/turns")
-  })
-
-  it("measures end of turn to first agent audio in this browser and shows n", async () => {
-    await startTheCall(IntakeClient)
-    await callerSays("Morphine")
-    await act(async () => {
-      socket("agents").deliverJson({ type: "reply.started", reply_id: "r-2" })
-      socket("agents").deliverJson({ type: "reply.audio", data: "AAAA" })
-    })
-    await advance(0)
-    const telemetry = screen.getByRole("region", { name: "Telemetry" })
-    expect(within(telemetry).getByText(/n=\s*1/)).toBeTruthy()
   })
 })

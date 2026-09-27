@@ -1,7 +1,6 @@
 import { PageShell } from "@/shared/ui/layout/page-shell"
 import { Breadcrumbs } from "@/shared/ui/navigation/breadcrumbs"
 import { MoreLink } from "@/shared/ui/navigation/more-link"
-import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { OrderCheck } from "../order-check"
 import styles from "./styles.module.css"
@@ -71,9 +70,6 @@ export function OrderPageView({ sessionId }: OrderPageViewProps) {
             <p className={styles.more}>
               <MoreLink href="/docs/threat-model#receipt">How a receipt is sealed</MoreLink>
             </p>
-          </div>
-          <div className={styles.foot}>
-            <Disclaimer />
           </div>
         </main>
       </PageShell>

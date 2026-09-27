@@ -80,8 +80,7 @@ textarea {
 
 a {
   color: var(--link-ink);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
+  text-decoration: none;
 }
 
 a:hover {
@@ -89,19 +88,19 @@ a:hover {
 }
 
 a:not([class]) {
+  padding: var(--link-pad-block) var(--link-pad);
   border-radius: var(--radius-xs);
+  background-color: var(--link-rest);
   font-weight: var(--weight-medium);
-  text-decoration-color: var(--link-underline);
-  text-decoration-thickness: var(--link-rule);
-  text-underline-offset: var(--link-offset);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   transition: var(--transition-link);
 }
 
-a:not([class]):hover {
+a:not([class]):hover,
+a:not([class]):focus-visible {
   background-color: var(--link-fill);
-  text-decoration-color: currentColor;
+  color: var(--link-ink-hover);
 }
 
 a:not([class]):active {

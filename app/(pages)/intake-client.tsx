@@ -14,15 +14,12 @@ import { type CallerTurn, useSession } from "@/features/intake/use-session"
 import { groupOrder } from "@/features/order-summary/order-groups"
 import { useReadBack } from "@/features/read-back/use-read-back"
 import { useSessionRecorder } from "@/features/session-recorder/use-session-recorder"
-import { countDecisions } from "@/features/telemetry/decision-counts"
 import { useTelemetry } from "@/features/telemetry/use-telemetry"
 import {
   agentEntry,
   callerEntry,
   type TranscriptEntry,
 } from "@/features/transcript-view/transcript-entry"
-
-const LIVE_MODE = { kind: "live" } as const
 
 export function IntakeClient() {
   const [transcript, setTranscript] = useState<readonly TranscriptEntry[]>([])
@@ -97,10 +94,7 @@ export function IntakeClient() {
     onSessionBound: order.bind,
     onSessionClosed: order.finalize,
     onRecognizerModel: order.recordRecognizer,
-    onFrame: (frame) => {
-      telemetry.onFrame(frame)
-      recorder.frame(frame)
-    },
+    onFrame: recorder.frame,
     onCallerAudio: recorder.callerAudio,
     onAgentAudio,
     solicited,
@@ -179,8 +173,6 @@ export function IntakeClient() {
         faultDetail={session.faultDetail}
         budgetPaused={budgetPaused}
         alert={order.lastError}
-        decisionHistory={order.decisionHistory}
-        turnsHeld={order.turnsHeld}
         turnInFlight={order.turnInFlight}
         solicited={solicited}
         echoDiscards={session.echoDiscards}
@@ -192,6 +184,7 @@ export function IntakeClient() {
         onStop={stop}
         onFinishAnswer={session.finishAnswer}
         snapshot={order.snapshot}
+        sessionId={session.sessionId}
         onListen={listen}
         summary={
           inCall === null ? null : (
@@ -200,24 +193,6 @@ export function IntakeClient() {
               snapshot={order.snapshot}
               sessionId={session.sessionId}
               witness={order.witness}
-            />
-          )
-        }
-        telemetry={
-          inCall === null ? null : (
-            <inCall.TelemetryPanel
-              mode={LIVE_MODE}
-              phase={session.phase}
-              sttModel={session.sttModel}
-              sessionId={session.sessionId}
-              log={telemetry.log}
-              counts={countDecisions({
-                candidates: order.candidates,
-                decisionHistory: order.decisionHistory,
-                snapshot: order.snapshot,
-              })}
-              decisions={order.decisionHistory}
-              latency={telemetry.latency}
             />
           )
         }

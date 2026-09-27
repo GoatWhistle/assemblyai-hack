@@ -14,8 +14,6 @@ import {
 } from "@/features/gate-banner/hypothesis-language"
 import { REASON_LANGUAGE } from "@/features/gate-banner/reason-language"
 import { RECOVERY_STEP } from "@/features/gate-banner/recovery-language"
-import { RE_ASK_IS_NOT_A_FINDING, REFUSAL_COPY } from "@/features/gate-ledger/refusal-language"
-import { RefusalReason } from "@/features/gate-ledger/refusal-tally"
 import {
   CIRCULARITY,
   COMPETITOR_CITATION,
@@ -72,13 +70,11 @@ describe("a pair hit is stated as a hypothesis, not as a finding against the cal
       ...Object.values(RECOVERY_STEP)
         .filter((step) => step !== null)
         .flatMap((step) => [step.label, step.detail]),
-      ...Object.values(REFUSAL_COPY).map((copy) => copy.label),
       ...Object.values(STANCE_LABEL),
       LASA_STANCE.claim,
       LASA_STANCE.notClaim,
       LASA_STANCE.askedOf,
       LASA_NOT_AN_ACCUSATION,
-      RE_ASK_IS_NOT_A_FINDING,
       CIRCULARITY,
       KEYTERMS_AB_LEDE,
       COMPETITOR_CITATION,
@@ -154,28 +150,5 @@ describe("the field card frames the pair hit as something to confirm", () => {
       screen.getByText(LASA_NOT_AN_ACCUSATION),
       "a stance that renders only when the block is mounted directly is the dead-component defect one indirection away",
     ).toBeTruthy()
-  })
-})
-
-describe("the public counter says a count of re-asks is not a count of errors", () => {
-  it("states that a re-ask on a correct value is a cost, not a catch", () => {
-    expect(
-      RE_ASK_IS_NOT_A_FINDING.toLowerCase(),
-      "a bare tally beside three reason labels reads as three kinds of caller error unless the screen says otherwise",
-    ).toContain("not an error found")
-  })
-
-  it("refuses to quote a false-ask figure from this session", () => {
-    expect(
-      RE_ASK_IS_NOT_A_FINDING.toLowerCase(),
-      "false-ask rate is measured on the evaluation set; deriving it from whatever the judge happened to say is a number with no method",
-    ).toContain("measured on the evaluation set")
-  })
-
-  it("labels the pair reason as sent back for confirming", () => {
-    expect(
-      REFUSAL_COPY[RefusalReason.LasaPair].label.toLowerCase(),
-      "being named on a list reads as being listed as an offender; being sent back for confirming reads as the procedure it is",
-    ).toContain("confirm")
   })
 })

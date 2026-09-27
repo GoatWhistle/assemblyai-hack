@@ -29,15 +29,16 @@
 
   --link-ink: var(--violet);
   --link-ink-hover: var(--violet-deep);
-  --link-underline: var(--violet-line);
-  --link-fill: var(--violet-wash);
+  --link-rest: var(--violet-wash);
+  --link-fill: var(--violet-tint);
   --link-fill-active: var(--violet-line);
+  --link-line: var(--violet-line);
+  --link-line-hover: var(--violet-soft);
   --link-badge: var(--violet-wash);
   --link-badge-hover: var(--action-rest);
   --link-badge-ink: var(--text-on-accent);
-  --link-rule: 2px;
-  --link-offset: 0.24em;
-  --link-pad: 0.12em;
+  --link-pad: 0.22em;
+  --link-pad-block: 0.04em;
 
   --focus-ring: var(--violet);
   --focus-ring-width: 2px;
@@ -46,6 +47,9 @@
   --select-surface: var(--violet-wash);
   --select-line: var(--violet);
   --select-ink: var(--violet-deep);
+
+  --value-mark: var(--violet-tint);
+  --value-ink: var(--text-primary);
 
   --selection-surface: var(--violet-line);
   --selection-ink: var(--carbon);
@@ -166,6 +170,13 @@
   --shadow-raise: 0 8px 30px var(--ink-a5);
   --shadow-float: 0 27px 104px var(--ink-a12);
   --shadow-inset: inset 0 1px 0 var(--paper);
+  --shadow-popover: 0 1px 2px var(--ink-a5), 0 16px 40px var(--ink-a8);
+
+  --notice-ink: var(--refused);
+  --notice-surface: var(--refused-wash);
+  --notice-on-ink: var(--paper);
+  --notice-mark: 1.25rem;
+  --notice-sheet-width: 26rem;
 
   --z-base: 0;
   --z-raised: 10;
