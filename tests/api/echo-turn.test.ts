@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { FieldName } from "@/domain"
+import { FieldName, QUOTATION_NOT_YET_RECEIVED_CODE } from "@/domain"
 import { POST as postTurn } from "../../app/api/sessions/[id]/turns/route"
 import { POST as proposeField } from "../../app/api/tools/propose-field/route"
 import { call, resetToolEnvironment, SESSION } from "./harness"
@@ -180,8 +180,71 @@ describe("a turn spoken by the agent can never become a source of provenance, se
       )
     ).json()
     expect(
-      proposed.reason_code,
+      proposed.candidate_id,
       "the agent's own words must never become the provenance of a value",
-    ).toBe("E_PROVENANCE_NOT_FOUND")
+    ).toBeNull()
+    expect(
+      proposed.reason_code,
+      "a refused echo is not the caller's reply, so the server is still waiting for one",
+    ).toBe(QUOTATION_NOT_YET_RECEIVED_CODE)
+  })
+
+  describe("the commit-hold run of 27 September: a caller repeating a value before the agent read it back", () => {
+    const dictation =
+      "Hi, this is Dr. Alan Brown, NPI 1234567893. The patient is Maria Lopez. Lisinopril, 10 mg Tablet, by mouth, once daily."
+
+    async function gateLineForPatient(): Promise<string> {
+      await postTurn(
+        turnRequest({
+          turnOrder: 0,
+          transcript: dictation,
+          isFormatted: true,
+          words: words(dictation.replace(/[^a-zA-Z0-9 ]/g, ""), 0.97),
+        }),
+        params(),
+      )
+      const proposed = await (
+        await proposeField(
+          call("propose-field", {
+            field: FieldName.PatientName,
+            value: "Maria Lopez",
+            transcript_hint: "Maria Lopez",
+          }),
+        )
+      ).json()
+      return String(proposed.say_to_caller)
+    }
+
+    async function caller(turnOrder: number, transcript: string): Promise<number> {
+      const response = await postTurn(
+        turnRequest({
+          turnOrder,
+          transcript,
+          isFormatted: true,
+          words: words(transcript.replace(/[^a-zA-Z0-9 ]/g, ""), 0.97),
+        }),
+        params(),
+      )
+      return response.status
+    }
+
+    it("accepts the caller's own sentence even though every word of it is in the gate's line", async () => {
+      const line = await gateLineForPatient()
+      expect(line).toBe("Let me confirm the patient name: Maria Lopez. Is that right?")
+      expect(
+        await caller(1, "The patient is Maria Lopez."),
+        "refused with overlap 1.00 in production, because the measure ignored word order",
+      ).toBe(200)
+    })
+
+    it("still refuses a contiguous fragment of that line", async () => {
+      const line = await gateLineForPatient()
+      const fragment = line
+        .replace(/^Let me /, "")
+        .replace(/[.?:,]/g, "")
+        .split(" ")
+        .slice(0, 6)
+      expect(await caller(1, fragment.join(" "))).toBe(422)
+    })
   })
 })

@@ -4,8 +4,6 @@ import {
   normalizeFieldValue,
   type ProvenanceMatch,
   sameKindFor,
-  searchedTurns,
-  searchedTurnText,
   spokenSupportVerdict,
   type TurnRecord,
 } from "@/confirmation"
@@ -37,31 +35,10 @@ import {
   writeAccepted,
 } from "./intake"
 import type { IntakeEvent } from "./intake-events"
-import { orderNext, proposalNext } from "./next-step"
+import { orderNext, proposalNext, quotationNotFound } from "./next-step"
 import type { ToolPayload } from "./respond"
 
 type ProposalEvent = Extract<IntakeEvent, { type: "proposal" }>
-
-function untraceable(input: {
-  field: FieldName
-  quotation: string
-  turns: readonly TurnRecord[]
-}): ToolPayload {
-  return {
-    action: GateAction.AskConfirm,
-    reason_code: "E_PROVENANCE_NOT_FOUND",
-    field: input.field,
-    candidate_id: null,
-    say_to_caller: `I cannot find "${input.quotation}" in what you said. Could you repeat the last part?`,
-    written_to_order: false,
-    evidence: {
-      quotation: input.quotation,
-      quoted_span: null,
-      searched_turns: [...searchedTurns(input.turns)],
-      searched_turn_text: searchedTurnText(input.turns),
-    },
-  }
-}
 
 function stale(input: { field: FieldName; source: number; newer: TurnRecord }): ToolPayload {
   return {
@@ -159,7 +136,7 @@ export function applyProposal(
     sessionId: state.sessionId,
   })
   if (matched === null) {
-    return untraceable({ field, quotation: event.transcriptHint, turns: state.turns })
+    return quotationNotFound(state, { field, value, quotation: event.transcriptHint })
   }
 
   const newer = state.turns.find(

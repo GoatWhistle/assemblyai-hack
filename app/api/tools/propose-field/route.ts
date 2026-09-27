@@ -7,7 +7,7 @@ import { spokenValueField, utteranceField } from "@/tools/input-bounds"
 
 export const dynamic = "force-dynamic"
 
-export const maxDuration = 15
+export const maxDuration = 20
 
 const schema = z.object({
   field: z.enum(FIELD_NAMES as [FieldName, ...FieldName[]]),

@@ -3,7 +3,12 @@ import { type AgentDispatchEvents, buildSessionUpdate, dispatchRaw } from "./age
 import { type CloseExplanation, explainClose, isAlertWorthy } from "./close-codes"
 import { guardAgentInput, guardAgentSession } from "./param-guard"
 import { AGENT_TOKEN_ROUTE, agentSocketUrl, mintAgentToken } from "./tokens"
-import { type Transport, type TransportFactory, webSocketTransport } from "./transport"
+import {
+  SocketOpenError,
+  type Transport,
+  type TransportFactory,
+  webSocketTransport,
+} from "./transport"
 
 const SESSION_END_TIMEOUT_MS = 4000
 
@@ -92,14 +97,14 @@ export class AgentClient {
           this.releaseWaiters()
           if (!settled) {
             settled = true
-            reject(new Error(`the agent socket closed before opening: ${code}`))
+            reject(new SocketOpenError("agent", code))
           }
         },
         onError: (error) => {
           this.events.onError?.(error)
           if (!settled) {
             settled = true
-            reject(error instanceof Error ? error : new Error("agent socket error"))
+            reject(new SocketOpenError("agent", null))
           }
         },
       })

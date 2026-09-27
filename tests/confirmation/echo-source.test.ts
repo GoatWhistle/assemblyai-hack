@@ -91,3 +91,53 @@ describe("the contrastive read-back and the echo layer do not fight", () => {
     })
   }
 })
+
+describe("an echo is an in-order slice of the agent's line, not a bag of its words", () => {
+  const gateLine = "Let me confirm the patient name: Maria Lopez. Is that right?"
+  const reask = contrastiveUtterance("morphine", ["hydromorphone"])
+  const echoOf = (transcript: string, agentLine: string) =>
+    matchesServerRecordedAgentLine({ transcript, agentLine }).matchesAgent
+
+  it("accepts the caller's own sentence that shares every word with the line in another order", () => {
+    expect(
+      echoOf("The patient is Maria Lopez.", gateLine),
+      "the commit-hold run of 27 September refused this genuine turn with overlap 1.00",
+    ).toBe(false)
+    expect(echoOf("Yes, the quantity is 30", "Confirming the quantity: 30. Correct?")).toBe(
+      false,
+    )
+  })
+
+  for (const fragment of [
+    "confirm the patient name Maria Lopez",
+    "Let me confirm the patient name Maria Lopez is that right",
+    "the patient name Maria Lopez",
+  ]) {
+    it(`refuses "${fragment}", a contiguous slice of the read-back`, () => {
+      expect(echoOf(fragment, gateLine)).toBe(true)
+    })
+  }
+
+  for (const fragment of [
+    "Which morphine M O R or hydromorphone H Y D",
+    "morphine and hydromorphone are on a published",
+    "morphine or hydromorphone",
+  ]) {
+    it(`refuses "${fragment}", a slice of the re-ask naming both drugs`, () => {
+      expect(echoOf(fragment, reask)).toBe(true)
+    })
+  }
+
+  it("still refuses a long echo with one word misrecognised, which breaks the contiguous run", () => {
+    expect(
+      echoOf(
+        "I heard bisoprolol that name is in the published confused drug names list",
+        "I heard Bisoprolol. That name is on the published confused-drug-names list together with Lisinopril.",
+      ),
+    ).toBe(true)
+  })
+
+  it("does not let a short chain with a skipped word count as an echo", () => {
+    expect(echoOf("the patient was Maria Lopez", gateLine)).toBe(false)
+  })
+})

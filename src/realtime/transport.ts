@@ -13,6 +13,22 @@ export type Transport = {
 
 export type TransportFactory = (url: string, listeners: TransportListeners) => Transport
 
+export type SocketName = "stt" | "agent"
+
+export class SocketOpenError extends Error {
+  constructor(
+    readonly socket: SocketName,
+    readonly closeCode: number | null,
+  ) {
+    super(
+      closeCode === null
+        ? `the ${socket} socket reported an error before opening`
+        : `the ${socket} socket closed before opening: ${closeCode}`,
+    )
+    this.name = "SocketOpenError"
+  }
+}
+
 export const webSocketTransport: TransportFactory = (url, listeners) => {
   const socket = new WebSocket(url)
   socket.binaryType = "arraybuffer"

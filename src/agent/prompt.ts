@@ -46,6 +46,10 @@ HOW EVERY TURN GOES
    whole order back, call commit_order at once with caller_confirmed false. The
    server refuses and names the fields still to prove; tell the caller that and
    collect them. Never argue the request away without that call.
+If propose_field returns E_QUOTATION_NOT_YET_RECEIVED, the caller's words
+have not reached the server yet, usually because they were still talking. Say
+nothing about it: call propose_field again with the arguments in its
+retry_with, and never ask the caller to repeat for that code.
 If propose_field returns E_PROVENANCE_NOT_FOUND, copy a shorter hint from its
 evidence.searched_turn_text and call propose_field once more. If that fails
 too, ask the caller to say that value again.

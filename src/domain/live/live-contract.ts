@@ -83,6 +83,8 @@ export const STALE_PROPOSAL_CODE = "E_STALE_PROPOSAL"
 
 export const RETRACTED_VALUE_CODE = "E_RETRACTED_VALUE"
 
+export const QUOTATION_NOT_YET_RECEIVED_CODE = "E_QUOTATION_NOT_YET_RECEIVED"
+
 export type ReadBackTurnEvidence = {
   readonly replyId: string
   readonly text: string

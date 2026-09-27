@@ -58,7 +58,7 @@ export async function awaitCallerAnswer(input: {
 }
 
 export const DEFAULT_QUOTATION_WAIT: ConfirmationWait = Object.freeze({
-  timeoutMs: 8000,
+  timeoutMs: 12000,
   pollMs: 150,
 })
 

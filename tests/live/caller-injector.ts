@@ -49,16 +49,18 @@ export function createLineScheduler(
   let agentSaid = ""
   let carried = ""
   let answered = 0
-  function lastQuestion(text: string): string {
-    const questions = text.split(/(?<=[.?!])\s+/).filter((part) => part.trim().endsWith("?"))
+  const test = (pattern: string, text: string) => new RegExp(pattern, "i").test(text)
+  function lastQuestion(text: string, ask: string): string {
+    const questions = text
+      .split(/(?<=[.?!])\s+/)
+      .filter((part) => part.trim().endsWith("?") || test(ask, part))
     return questions[questions.length - 1] ?? text
   }
   function answer(said: string): string | null {
     if (responder === undefined || said.length === 0 || answered >= responder.maxLines) {
       return null
     }
-    const question = lastQuestion(said)
-    const test = (pattern: string, text: string) => new RegExp(pattern, "i").test(text)
+    const question = lastQuestion(said, responder.ask)
     const always = responder.rules.find(
       (rule) => rule.evenOnReadBack === true && test(rule.whenAgentAsks, said),
     )
@@ -66,7 +68,7 @@ export function createLineScheduler(
       return always.line
     }
     const asks = test(responder.ask, question)
-    if (!question.includes("?") || (test(responder.readBack, question) && !asks)) {
+    if (!(question.includes("?") || asks) || (test(responder.readBack, question) && !asks)) {
       return responder.fallback
     }
     const rule =
@@ -75,10 +77,7 @@ export function createLineScheduler(
     return rule?.line ?? responder.fallback
   }
   function matches(step: LineStep): boolean {
-    if (step.whenAgentSaid === undefined) {
-      return true
-    }
-    return new RegExp(step.whenAgentSaid, "i").test(agentSaid)
+    return step.whenAgentSaid === undefined || test(step.whenAgentSaid, agentSaid)
   }
   function take(step: LineStep): DueLine {
     const due = { line: step.line, delayMs: step.delayMs, step: index }

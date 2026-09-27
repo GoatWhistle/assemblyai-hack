@@ -85,7 +85,11 @@ no words, no `Provenance`; no `Provenance`, no `FieldCandidate`; no candidate, n
 the words that carry the value, and
 [`src/confirmation/provenance-match.ts`](../src/confirmation/provenance-match.ts) looks
 for that quotation among the words of the three most recent caller turns. If it is not
-there, `propose_field` answers `E_PROVENANCE_NOT_FOUND` and nothing reaches the gate.
+there, `propose_field` answers `E_PROVENANCE_NOT_FOUND` and nothing reaches the gate. The
+recognizer can close a long caller turn seconds after the agent has already called the tool, so
+the route first waits up to 12 s for the quoted words to arrive, and while no caller turn has
+arrived since the agent last spoke it answers `E_QUOTATION_NOT_YET_RECEIVED`, a request to retry,
+instead of a refusal.
 
 ### Thresholds compare against the minimum confidence over the span, never the mean
 
@@ -455,11 +459,12 @@ agent moves on with the write. A later
 it twice. Every other value comes back with `written_to_order: false` and is written only
 by the second `read_back` call.
 
-Before the gate runs, three refusals can answer instead:
+Before the gate runs, four answers can come back instead of a decision:
 
 | Code | When | What the agent is told |
 |---|---|---|
 | `E_PROVENANCE_NOT_FOUND` | the quotation matches none of the three most recent caller turns | the searched text, to copy a shorter hint, then to ask the caller again |
+| `E_QUOTATION_NOT_YET_RECEIVED` | the quotation is not found after a 12 s wait, the agent has spoken since the last caller turn, and fewer than two such answers were given for this field | to call `propose_field` again with the same arguments once the caller's turn arrives, without asking the caller to repeat |
 | `E_STALE_PROPOSAL` | the caller said something newer about this field after the quoted turn | to propose again from the latest statement |
 | `E_PLACEHOLDER_VALUE` | a patient name such as "unknown", "test patient" or "Jane Doe" | to ask for the real name; nothing is proposed |
 

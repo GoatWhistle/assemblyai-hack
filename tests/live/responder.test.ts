@@ -73,6 +73,28 @@ describe("the responder answers what the agent asked, not a fixed script", () =>
     expect(ask(scheduler, "")).toBeNull()
   })
 
+  it("hears a request without a question mark as a request, not as a read-back to agree to", () => {
+    const scheduler = createLineScheduler([], responderFor("clean"))
+    expect(
+      ask(
+        scheduler,
+        "I need to confirm the details of the prescription first. Please repeat the prescriber NPI, the DEA number, the drug name, the strength, and the dosage form.",
+      ),
+      "the commit-hold run of 27 September answered this line yes eighteen times",
+    ).toBe("npi")
+    expect(ask(scheduler, "Please give me the DEA number.")).toBe("dea")
+    expect(ask(scheduler, "Go ahead with the patient name.")).toBe("patient")
+  })
+
+  it("still agrees to a read-back and to a plain statement that asks for nothing", () => {
+    const scheduler = createLineScheduler([], responderFor("clean"))
+    expect(ask(scheduler, "I need to confirm the quantity: 30. Is that correct?")).toBe("yes")
+    expect(ask(scheduler, "Please repeat the route. Lisinopril ten milligrams. Correct?")).toBe(
+      "yes",
+    )
+    expect(ask(scheduler, "Got it, the prescriber NPI is 1234567893.")).toBe("yes")
+  })
+
   it("hears a question about the instructions as the sig, not the drug", () => {
     const scheduler = createLineScheduler([], responderFor("clean"))
     expect(ask(scheduler, "What are the instructions for the medication?")).toBe("sig-clean")

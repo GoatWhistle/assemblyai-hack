@@ -71,6 +71,7 @@ export const SessionFault = {
   SocketParamRefused: "socket_param_refused",
   CaptureFailed: "capture_failed",
   ConnectTimedOut: "connect_timed_out",
+  SocketUnreachable: "socket_unreachable",
 } as const
 
 export type SessionFault = (typeof SessionFault)[keyof typeof SessionFault]
@@ -173,6 +174,12 @@ export const FAULT_COPY: Readonly<Record<SessionFault, FaultCopy>> = Object.free
     title: "The line did not open",
     body: "Neither the token route nor the two sockets answered within 15 seconds, so the attempt was abandoned instead of spinning on. Nothing was recorded, and a socket that opens late is closed at once.",
     remedy: "Try again, or watch the replay, which needs no connection at all.",
+  },
+  [SessionFault.SocketUnreachable]: {
+    title: "The speech service could not be reached",
+    body: "Both short-lived tokens were issued, but the browser could not open its connection to AssemblyAI. The browser does not say whether the network blocked it or the service refused it. It failed before any audio was sent, so nothing was recorded, and a socket that did open was closed at once.",
+    remedy:
+      "Check the network, and whether a firewall, VPN or proxy blocks secure WebSocket (wss) connections to assemblyai.com, then start again: every start mints fresh tokens. The replay demonstration needs no connection.",
   },
   [SessionFault.SocketDropped]: {
     title: "A socket dropped",

@@ -3,7 +3,12 @@ import { guardSttQuery, guardSttUpdate } from "./param-guard"
 import type { SttBegin, SttMessage, SttTermination, SttTurn } from "./protocol"
 import { checkBeginModel } from "./stt-model"
 import { mintToken, STT_TOKEN_ROUTE, sttQueryParams, sttSocketUrl } from "./tokens"
-import { type Transport, type TransportFactory, webSocketTransport } from "./transport"
+import {
+  SocketOpenError,
+  type Transport,
+  type TransportFactory,
+  webSocketTransport,
+} from "./transport"
 
 const TERMINATION_TIMEOUT_MS = 4000
 
@@ -81,14 +86,14 @@ export class SttClient {
           this.releaseWaiters()
           if (!settled) {
             settled = true
-            reject(new Error(`the stt socket closed before opening: ${code}`))
+            reject(new SocketOpenError("stt", code))
           }
         },
         onError: (error) => {
           this.events.onError?.(error)
           if (!settled) {
             settled = true
-            reject(error instanceof Error ? error : new Error("stt socket error"))
+            reject(new SocketOpenError("stt", null))
           }
         },
       })

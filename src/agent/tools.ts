@@ -107,7 +107,7 @@ export function buildTools(
       type: "function",
       name: "propose_field",
       description:
-        "Propose a value for one order field. Call it once for every value the caller says, in the same turn; when one caller turn holds several values, call it once per value. It returns a candidate_id and a say_to_caller sentence. If written_to_order is true, an arithmetic validator proved the value and it is already written: say the sentence and follow after_this.next. Otherwise register the sentence with read_back, say it, and write the value with the second read_back call once the caller answers.",
+        "Propose a value for one order field. Call it once for every value the caller says, in the same turn; when one caller turn holds several values, call it once per value. It returns a candidate_id and a say_to_caller sentence. If written_to_order is true, an arithmetic validator proved the value and it is already written: say the sentence and follow after_this.next. Otherwise register the sentence with read_back, say it, and write the value with the second read_back call once the caller answers. If it returns E_QUOTATION_NOT_YET_RECEIVED, the caller's words have not reached the server yet: call propose_field again with the arguments in retry_with, and do not ask the caller to repeat.",
       parameters: {
         type: "object",
         properties: {
@@ -131,7 +131,7 @@ export function buildTools(
         additionalProperties: false,
       },
       execution_mode: "interactive",
-      timeout_seconds: 15,
+      timeout_seconds: 20,
       http: httpFor(baseUrl, "propose-field", secret, sessionId),
     },
     {

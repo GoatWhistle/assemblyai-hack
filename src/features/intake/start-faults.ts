@@ -7,6 +7,7 @@ import { BUDGET_EXHAUSTED_CODE, type BudgetStatus, SocketParamError } from "@/do
 import type { AgentClient } from "@/realtime/agent-client"
 import type { SttClient } from "@/realtime/stt-client"
 import { TokenMintError } from "@/realtime/tokens"
+import { SocketOpenError } from "@/realtime/transport"
 import type { FaultDetail } from "./session-options"
 import { SessionFault } from "./session-status"
 import { ConnectTimedOut } from "./session-timers"
@@ -28,6 +29,9 @@ export function faultForConnectError(error: unknown): SessionFault {
   }
   if (error instanceof ConnectTimedOut) {
     return SessionFault.ConnectTimedOut
+  }
+  if (error instanceof SocketOpenError) {
+    return SessionFault.SocketUnreachable
   }
   if (!(error instanceof TokenMintError)) {
     return SessionFault.TokenFailed
