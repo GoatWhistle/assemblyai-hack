@@ -35,6 +35,23 @@
   --select-line: var(--violet);
   --select-ink: var(--violet-deep);
 
+  --selection-surface: var(--violet-line);
+  --selection-ink: var(--carbon);
+  --caret: var(--violet);
+  --accent-native: var(--action-rest);
+  --autofill-surface: var(--violet-wash);
+  --autofill-ink: var(--carbon);
+  --tap-highlight: transparent;
+
+  --scrollbar-thumb: var(--pewter);
+  --scrollbar-thumb-hover: var(--violet-soft);
+  --scrollbar-thumb-active: var(--violet);
+  --scrollbar-track: transparent;
+  --scrollbar-size: 10px;
+  --scrollbar-inset: 2px;
+  --scrollbar-size-touch: 6px;
+  --scrollbar-inset-touch: 1px;
+
   --reason-threshold-ink: var(--asking);
   --reason-threshold-surface: var(--asking-wash);
   --reason-threshold-line: var(--asking-line);

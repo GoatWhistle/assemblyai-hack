@@ -21,6 +21,7 @@ import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
+import { pageMetadata } from "@/site/page-metadata"
 import { BENCHMARK_PAGE, METRICS_SECTIONS, OPERATIONS_PAGE } from "../docs-map"
 import styles from "./styles.module.css"
 
@@ -32,11 +33,12 @@ const DASH_RULE =
 
 const HELD_OUT_RULE = `Thresholds are chosen defaults, not tuned on any set: the drug-name threshold is ${THRESHOLDS.drugName.toFixed(2)} and the strength threshold ${THRESHOLDS.strength.toFixed(2)}, reasoned from the cost of an error before any audio existed, and no run searched for an optimum. The held-out set was drawn and sealed with its hypothesis written down first, then opened once.`
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Measurements",
   description:
     "What the pair rule catches beside what it costs, the shipped policy's measured rows and the held-out result, each with its command and set size.",
-}
+  path: "/metrics",
+})
 
 function strataSentence(): string {
   const [rare, mid, common] = HELD_OUT_ENTRIES.slice(1).map(

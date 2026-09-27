@@ -3,14 +3,16 @@ import Link from "next/link"
 import { WITNESS_BOUNDARY_NOTE } from "@/domain"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { pageMetadata } from "@/site/page-metadata"
 import { THREAT_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Threat model and receipts",
   description:
     "What the browser supplies, what the vendor's own transcript witnesses at finalize, what neither can prove, and how a sealed receipt is rechecked in the browser.",
-}
+  path: "/docs/threat-model",
+})
 
 const VERDICTS = [
   {

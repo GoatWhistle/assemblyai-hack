@@ -2,13 +2,15 @@ import type { Metadata } from "next"
 import { LIMITATIONS, Limits, limitationsIn } from "@/features/how-it-works/limits"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { pageMetadata } from "@/site/page-metadata"
 import { LIMITATIONS_SECTIONS } from "../../docs-map"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Limitations",
   description:
     "Everything Readback cannot prove, each entry with its status: measured, enforced by a check, assumed, or false and admitted.",
-}
+  path: "/docs/limitations",
+})
 
 export default function LimitationsPage() {
   return (

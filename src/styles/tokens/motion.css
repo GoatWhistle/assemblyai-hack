@@ -231,11 +231,6 @@
     animation-fill-mode: none !important;
   }
 
-  [data-motion="crossfade"] {
-    transition-duration: var(--reduced-fade) !important;
-    transition-delay: 0ms !important;
-  }
-
   @keyframes readback-fade-rise {
     from {
       opacity: 1;

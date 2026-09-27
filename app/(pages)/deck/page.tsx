@@ -1,16 +1,17 @@
 import type { Metadata } from "next"
 import { SLIDES, Slide } from "@/features/deck"
 import { PageShell } from "@/shared/ui/layout/page-shell"
+import { pageMetadata } from "@/site/page-metadata"
 import styles from "./styles.module.css"
 
 const MAIN_ID = "main"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Deck",
   description:
     "The submission slides for Readback, one slide per printed page. Every figure carries the command or document it came from.",
   robots: { index: false },
-}
+})
 
 export default function DeckPage() {
   return (

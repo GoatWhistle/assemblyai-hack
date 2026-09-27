@@ -97,6 +97,8 @@ const PAIRS = [
   ["action-ink", "surface-panel"],
   ["action-disabled-ink", "action-disabled-surface"],
   ["select-ink", "select-surface"],
+  ["selection-ink", "selection-surface"],
+  ["autofill-ink", "autofill-surface"],
   ["mic-idle-ink", "surface-panel"],
   ["mic-listening-ink", "surface-panel"],
   ["mic-speaking-ink", "surface-panel"],

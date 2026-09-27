@@ -3,14 +3,16 @@ import { GLOSSARY, glossaryAnchor, ISMP_SOURCE } from "@/features/how-it-works/g
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { ExternalLink } from "@/shared/ui/navigation/external-link"
+import { pageMetadata } from "@/site/page-metadata"
 import { GLOSSARY_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Glossary",
   description:
     "The terms Readback's pages use, from LASA and NDC to keyterms and provenance, and the exact clauses behind read-back.",
-}
+  path: "/docs/glossary",
+})
 
 export default function GlossaryPage() {
   return (

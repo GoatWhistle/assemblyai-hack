@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/site/page-metadata"
 import styles from "./styles.module.css"
 
 const MAIN_ID = "main"
@@ -10,11 +11,11 @@ const STAGED_LABEL = "staged example"
 
 const COVER_DISCLAIMER = "Technology demonstration, not a medical device. Synthetic data only."
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Cover",
   description: "The 1920 by 1080 cover image for the Readback submission.",
   robots: { index: false },
-}
+})
 
 export default function CoverPage() {
   return (
@@ -27,8 +28,9 @@ export default function CoverPage() {
           <p className={styles.wordmark}>Readback</p>
           <h1 className={styles.thesis}>{COVER_THESIS}</h1>
           <p className={styles.claim}>
-            High recognizer certainty does not protect against homophony. A drug name in a
-            published look-alike, sound-alike pair is asked again, even at certainty 1.00.
+            High recognizer certainty does not protect against names that sound alike. A drug
+            name in a published look-alike, sound-alike pair is asked again, even at certainty
+            1.00.
           </p>
         </div>
 

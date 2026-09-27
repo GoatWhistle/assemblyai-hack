@@ -87,6 +87,9 @@
         "app/**/route.ts",
         "app/**/not-found.tsx",
         "app/**/error.tsx",
+        "app/manifest.ts",
+        "app/robots.ts",
+        "app/sitemap.ts",
         "app/**/*.config.ts",
         "*.config.ts"
       ],

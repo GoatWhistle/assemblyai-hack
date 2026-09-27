@@ -14,16 +14,18 @@ import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
+import { pageMetadata } from "@/site/page-metadata"
 import { HOW_SECTIONS } from "../docs-map"
 import styles from "./styles.module.css"
 
 const SHOWN_LIMITS: readonly string[] = ["provenance", "self-correction", "lasa"]
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "How it works",
   description:
     "The gate that decides whether a spoken value may enter a prescription order: when it asks again, what counts as proof per field, an extended script, an attack console, and what the demonstration does not prove.",
-}
+  path: "/how-it-works",
+})
 
 export default function HowItWorksPage() {
   return (

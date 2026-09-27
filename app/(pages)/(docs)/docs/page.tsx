@@ -17,16 +17,18 @@ import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
 import { Tabs } from "@/shared/ui/navigation/tabs"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
+import { pageMetadata } from "@/site/page-metadata"
 import { DOCS_PAGES, OVERVIEW_SECTIONS, REPLAY_HUB } from "../docs-map"
 import styles from "./styles.module.css"
 
 const ISMP_COMMAND = "npx tsx scripts/measure/ismp-coverage.ts"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Docs",
   description:
     "What Readback is, why recognizer certainty cannot rule out a look-alike drug name, when the gate asks again, and what the pair rule catches beside what it costs.",
-}
+  path: "/docs",
+})
 
 function momentFor(code: ReasonCode) {
   return MOMENTS.find((moment) => moment.decision.reasonCode === code) ?? null

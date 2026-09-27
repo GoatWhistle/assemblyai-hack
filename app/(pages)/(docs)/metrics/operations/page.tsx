@@ -20,14 +20,16 @@ import { Command } from "@/shared/ui/data-display/command"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { ExternalLink } from "@/shared/ui/navigation/external-link"
+import { pageMetadata } from "@/site/page-metadata"
 import { OPERATIONS_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Cost and operations",
   description:
     "What an open call costs by the vendor's published rates, why no per-order figure is published yet, and the socket close codes counted from recorded sessions, each labelled as an observation.",
-}
+  path: "/metrics/operations",
+})
 
 const RATE_COLUMNS: readonly PanelColumn[] = [
   { key: "product", title: "Product", kind: "text" },

@@ -4,17 +4,19 @@ import { BENCHMARK_CAPTION, BenchmarkTable } from "@/features/metrics/benchmark-
 import { reportEntries } from "@/features/metrics/policy-figures"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { pageMetadata } from "@/site/page-metadata"
 import { BENCHMARK_AGREEMENT_NOTE } from "@/stats"
 import { BENCHMARK_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
 
 const AGREEMENT = `${BENCHMARK_AGREEMENT_NOTE.charAt(0).toUpperCase()}${BENCHMARK_AGREEMENT_NOTE.slice(1)}.`
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Benchmark",
   description:
     "Every recognizer and gate figure with its input, command and set size, and a dash where nothing was measured.",
-}
+  path: "/metrics/benchmark",
+})
 
 export default function BenchmarkPage() {
   const entries = benchmarkEntries()
