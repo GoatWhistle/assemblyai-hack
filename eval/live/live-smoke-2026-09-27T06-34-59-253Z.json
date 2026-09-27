@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-27T06:34:59.253Z",
+  "kind": "live_smoke",
+  "deployment": "https://readback-rx.vercel.app",
+  "sessionId": "bd56385b-4851-4aff-954d-ad63b1b3b49c",
+  "vendorSessionIds": [],
+  "actualModel": null,
+  "order": null,
+  "socketSeconds": {
+    "agent": 137.7,
+    "stt": 137.7
+  },
+  "costUsd": 0.1951,
+  "outcome": "failed",
+  "reason": "live smoke npi-groups: not observed: the ten-digit NPI is in the order; 1 caller lines played; last agent line: I am sorry, I could not find the name Maria Lopez, the DEA number DAB1234563, or the drug Lisinopril in what you said. Could you repeat those for me?; the page stopped the call: The line was closed after 90 seconds of silence Nobody spoke and the agent did not reply for 90 seconds. Both sockets bill for as long as they are open, so an idle line is closed rather than left running. What to do Start again when you are ready to dictate. Try again Watch the replay Technical reason Reported as idle_ended.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+  "boundaries": [
+    "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+    "provenance is computed in the browser and posted by it; the server did not hear the audio",
+    "the recognizer model is the one the browser reported from Begin, not one the server observed",
+    "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+  ]
+}

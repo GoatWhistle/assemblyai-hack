@@ -83,7 +83,7 @@ function main(): void {
         `attempts refused before any socket opened, so not billed: ${total.unbilledCount}\n`,
       )
     }
-    process.stdout.write(`total socket-open time: ${total.totalSeconds} s\n`)
+    process.stdout.write(`total socket-open time: ${Number(total.totalSeconds.toFixed(3))} s\n`)
     process.stdout.write("\n| Run | Command | Rate per hour | USD |\n|---|---|---|---|\n")
     for (const run of runs) {
       const cost = total.perRun.find((entry) => entry.runId === run.runId)
