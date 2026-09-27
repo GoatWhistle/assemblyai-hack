@@ -39,12 +39,15 @@
   .item {
     scroll-snap-align: start;
   }
+}
 
-  @supports (animation-timeline: view(inline)) {
+@supports (animation-timeline: view(inline)) {
+  @media screen and (max-width: 40rem) {
     .item {
-      animation: deck-focus auto var(--ease-constant) both;
+      animation-name: deck-focus;
+      animation-timing-function: var(--ease-constant);
+      animation-fill-mode: both;
       animation-timeline: view(inline);
-      animation-range: cover 0% cover 100%;
     }
   }
 }
