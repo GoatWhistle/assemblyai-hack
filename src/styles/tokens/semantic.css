@@ -97,6 +97,13 @@
   --mic-level-rest: var(--stone);
   --mic-level-lit: var(--violet);
   --mic-level-quiet: var(--stone);
+  --mic-ring-line: var(--violet-line);
+  --mic-ring-quiet: var(--linen);
+  --mic-ripple: var(--violet-soft);
+  --mic-hero: clamp(8.5rem, 4rem + 7vw, 14rem);
+  --mic-console: 7.5rem;
+  --mic-compact: 6rem;
+  --mic-size: var(--mic-hero);
 
   --meter-track: var(--vellum);
   --meter-fill: var(--graphite);
@@ -136,16 +143,22 @@
   --z-toast: 500;
   --z-tooltip: 600;
 
-  --rail-width: 20rem;
-  --content-max: 75rem;
-  --app-max: 120rem;
+  --bp-compact: 40rem;
+  --bp-medium: 56rem;
+  --bp-split: 62rem;
+  --bp-wide: 80rem;
+  --bp-vast: 120rem;
+
+  --shell-max: 160rem;
   --page-gutter: clamp(var(--space-4), 3.2vw, var(--space-8));
+  --shell-gap: clamp(var(--space-6), 2.6vw, var(--space-8));
+  --measure-reading: 70ch;
+
+  --rail-width: 20rem;
   --stage-width: clamp(20rem, 24vw, 26rem);
   --target-touch: 2.75rem;
 
-  --docs-max: 90rem;
-  --docs-sidebar: 14.5rem;
-  --docs-toc: 13rem;
-  --docs-main: 52rem;
+  --docs-sidebar: clamp(14.5rem, 12vw, 17rem);
+  --docs-toc: clamp(13rem, 10vw, 16rem);
   --docs-sticky-top: var(--space-5);
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { SLIDES, Slide } from "@/features/deck"
+import { PageShell } from "@/shared/ui/layout/page-shell"
 import styles from "./styles.module.css"
 
 const MAIN_ID = "main"
@@ -13,18 +14,26 @@ export const metadata: Metadata = {
 
 export default function DeckPage() {
   return (
-    <main className={styles.deck} id={MAIN_ID}>
-      <h1 className={styles.title}>Readback: the submission deck</h1>
-      <p className={styles.hint}>
-        Print to PDF to get one slide per page: landscape, no margins, background graphics on.
-      </p>
-      <ol className={styles.slides}>
-        {SLIDES.map((slide, index) => (
-          <li className={styles.item} key={slide.id}>
-            <Slide slide={slide} position={index + 1} total={SLIDES.length} />
-          </li>
-        ))}
-      </ol>
-    </main>
+    <>
+      <a className="skip-link" href={`#${MAIN_ID}`}>
+        Skip to the slides
+      </a>
+      <PageShell>
+        <main className={styles.deck} id={MAIN_ID}>
+          <h1 className={styles.title}>Readback: the submission deck</h1>
+          <p className={styles.hint}>
+            Print to PDF to get one slide per page: landscape, no margins, background graphics
+            on.
+          </p>
+          <ol className={styles.slides}>
+            {SLIDES.map((slide, index) => (
+              <li className={styles.item} key={slide.id}>
+                <Slide slide={slide} position={index + 1} total={SLIDES.length} />
+              </li>
+            ))}
+          </ol>
+        </main>
+      </PageShell>
+    </>
   )
 }

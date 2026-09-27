@@ -3,7 +3,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-4);
-  max-width: var(--content-max);
+  width: min(100% - 2 * var(--page-gutter), var(--shell-max) - 2 * var(--page-gutter));
   margin: var(--space-4) auto;
   padding: var(--space-3) var(--space-4);
   border: 1px dashed var(--line-strong);

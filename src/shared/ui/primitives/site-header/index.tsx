@@ -8,7 +8,7 @@ export type SiteSection = "call" | "replay" | "docs" | "order"
 type LegacySection = "home" | "live" | "how" | "compare" | "demo" | "metrics"
 
 export type SiteHeaderProps = {
-  readonly current: SiteSection | LegacySection
+  readonly current?: SiteSection | LegacySection
   readonly status?: ReactNode
 }
 
@@ -36,7 +36,7 @@ const SECTION_OF: Readonly<Record<SiteSection | LegacySection, SiteSection>> = {
 }
 
 export function SiteHeader({ current, status }: SiteHeaderProps) {
-  const section = SECTION_OF[current]
+  const section = current === undefined ? null : SECTION_OF[current]
   return (
     <header className={styles.header}>
       <Link className={styles.brand} href="/">

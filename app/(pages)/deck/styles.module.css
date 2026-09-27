@@ -1,9 +1,7 @@
 .deck {
   display: grid;
   gap: var(--space-5);
-  max-width: var(--content-max);
-  margin: 0 auto;
-  padding: var(--space-6) var(--space-5) var(--space-8);
+  padding: var(--space-5) 0 var(--space-8);
 }
 
 .title {
@@ -19,7 +17,14 @@
 
 .slides {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
+}
+
+@media screen and (min-width: 120rem) {
+  .slides {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .item {
