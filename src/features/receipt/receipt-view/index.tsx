@@ -9,6 +9,7 @@ import {
 } from "@/domain"
 import { FIELD_LABEL } from "@/features/intake/field-language"
 import { Timecode } from "@/shared/ui/data-display/timecode"
+import { DownloadIcon } from "@/shared/ui/icons"
 import { Button } from "@/shared/ui/primitives/button"
 import { verifyReceiptInBrowser } from "../verify-receipt"
 import { WitnessBadge } from "../witness-badge"
@@ -134,10 +135,12 @@ export function ReceiptView({ receipt, fhir, serverRecheck, source }: ReceiptVie
       )}
       <div className={styles.actions}>
         <Button onClick={() => download(`receipt-${receipt.orderId}.json`, receipt)}>
+          <DownloadIcon />
           Download receipt
         </Button>
         {fhir === null || fhir === undefined ? null : (
           <Button onClick={() => download(`fhir-${receipt.orderId}.json`, fhir)}>
+            <DownloadIcon />
             Download FHIR JSON
           </Button>
         )}

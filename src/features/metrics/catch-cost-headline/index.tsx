@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import type { BenchmarkRow } from "@/domain"
+import { Command } from "@/shared/ui/data-display/command"
 import { AbsentValue } from "../absent-value"
 import { FalseAskHeadline } from "../false-ask-headline"
 import type { FalseAskTally } from "../measured-figures"
@@ -32,21 +33,14 @@ function Method({
   command,
   n,
   input,
-  on,
 }: {
   readonly command: string
   readonly n: string
   readonly input: string
-  readonly on: string | null
 }) {
   return (
     <span className={styles.method}>
-      <code className={styles.code}>{command}</code> n = {n}, {input}
-      {on === null ? null : (
-        <>
-          , <time dateTime={on}>{on}</time>
-        </>
-      )}
+      <Command value={command} /> n = {n}, {input}
     </span>
   )
 }
@@ -57,7 +51,7 @@ function Figure({ value }: { readonly value: string | null | undefined }): React
 
 function Catch({ ab, compact }: { readonly ab: AbCatch | null; readonly compact: boolean }) {
   return (
-    <article className={styles.panel} data-headline="catch">
+    <article className={`${styles.panel} ${styles.catch}`} data-headline="catch">
       <h3 className={styles.kicker}>{CATCH_TITLE}</h3>
       <p className={styles.figure}>
         Without the pair rule, a reflex yes writes{" "}
@@ -75,12 +69,7 @@ function Catch({ ab, compact }: { readonly ab: AbCatch | null; readonly compact:
           {compact
             ? null
             : "Both arms read every drug name back and differ by the pair rule alone. How often a real caller answers a plain read-back by reflex is not measured. "}
-          <Method
-            command={ab.with.command}
-            n={String(ab.with.n)}
-            input="text candidates"
-            on={ab.with.measuredOn}
-          />
+          <Method command={ab.with.command} n={String(ab.with.n)} input="text candidates" />
         </p>
       )}
     </article>
@@ -92,7 +81,7 @@ function Catalogue({
   catalogue,
 }: Pick<CatchCostHeadlineProps, "confident" | "catalogue">) {
   return (
-    <article className={`${styles.panel} ${styles.wide}`} data-headline="catalogue">
+    <article className={`${styles.panel} ${styles.catalogue}`} data-headline="catalogue">
       <h3 className={styles.kicker}>{CATALOGUE_TITLE}</h3>
       <p className={styles.second}>
         The catalogue check refused{" "}
@@ -114,7 +103,6 @@ function Catalogue({
             command={confident.command}
             n={String(confident.n ?? "")}
             input="synthesised speech through the live recognizer"
-            on={confident.measuredOn}
           />
         )}
       </p>
@@ -122,10 +110,7 @@ function Catalogue({
   )
 }
 
-function Seconds({
-  tally,
-  contrastive,
-}: Pick<CatchCostHeadlineProps, "tally" | "contrastive">) {
+function Seconds({ tally }: Pick<CatchCostHeadlineProps, "tally">) {
   const cost = READ_BACK_COST
   return (
     <p className={styles.note} data-figure="seconds">
@@ -142,7 +127,6 @@ function Seconds({
           tally === null ? "not recorded" : `${tally.of} plain, ${tally.byPairRule} contrastive`
         }
         input="synthesised speech"
-        on={contrastive?.measuredOn ?? null}
       />
     </p>
   )
@@ -157,14 +141,16 @@ export function CatchCostHeadline({
   compact = false,
 }: CatchCostHeadlineProps) {
   return (
-    <div className={styles.pair}>
-      <Catch ab={ab} compact={compact} />
-      <article className={styles.panel} data-headline="cost">
-        <h3 className={styles.kicker}>{COST_TITLE}</h3>
-        <FalseAskHeadline tally={tally} contrastive={contrastive} compact={compact} />
-        {compact ? null : <Seconds tally={tally} contrastive={contrastive} />}
-      </article>
-      {compact ? null : <Catalogue confident={confident} catalogue={catalogue} />}
+    <div className={styles.frame}>
+      <div className={styles.pair}>
+        <Catch ab={ab} compact={compact} />
+        <article className={`${styles.panel} ${styles.cost}`} data-headline="cost">
+          <h3 className={styles.kicker}>{COST_TITLE}</h3>
+          <FalseAskHeadline tally={tally} contrastive={contrastive} compact={compact} />
+          {compact ? null : <Seconds tally={tally} />}
+        </article>
+        {compact ? null : <Catalogue confident={confident} catalogue={catalogue} />}
+      </div>
     </div>
   )
 }

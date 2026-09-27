@@ -1,19 +1,23 @@
-.limits {
-  display: grid;
+.frame {
+  container-type: inline-size;
+  min-width: 0;
   border: 1px solid var(--line-hairline);
   border-radius: var(--radius-md);
   background-color: var(--surface-panel);
+  overflow: clip;
+}
+
+.limits {
+  margin-top: -1px;
 }
 
 .limit {
   display: grid;
   gap: var(--space-2);
   padding: var(--space-4) var(--space-5);
-  scroll-margin-top: calc(var(--target-touch) + var(--space-5));
-}
-
-.limit + .limit {
   border-top: 1px solid var(--line-hairline);
+  scroll-margin-top: calc(var(--target-touch) + var(--space-5));
+  break-inside: avoid;
 }
 
 .title {
@@ -60,5 +64,19 @@
 @media (max-width: 40rem) {
   .limit {
     padding-inline: var(--space-4);
+  }
+}
+
+@container (width >= 56rem) {
+  .limits {
+    columns: 2;
+    column-gap: 0;
+    column-rule: 1px solid var(--line-hairline);
+  }
+}
+
+@container (width >= 96rem) {
+  .limits:has(> :nth-child(4)) {
+    columns: 3;
   }
 }

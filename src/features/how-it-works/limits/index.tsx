@@ -12,26 +12,28 @@ export type LimitsProps = {
 
 export function Limits({ entries = LIMITATIONS }: LimitsProps) {
   return (
-    <ul className={styles.limits}>
-      {entries.map((limit) => (
-        <li key={limit.id} id={`limit-${limit.id}`} className={styles.limit}>
-          <h3 className={styles.title}>{limit.title}</h3>
-          <p className={styles.status}>{limit.status}</p>
-          <p className={styles.body}>{limit.body}</p>
-          {limit.points === undefined ? null : (
-            <ul className={styles.points}>
-              {limit.points.map((point) => (
-                <li key={point}>{point}</li>
-              ))}
-            </ul>
-          )}
-          {limit.link === undefined ? null : (
-            <p className={styles.more}>
-              <Link href={limit.link.href}>{limit.link.label}</Link>
-            </p>
-          )}
-        </li>
-      ))}
-    </ul>
+    <div className={styles.frame}>
+      <ul className={styles.limits}>
+        {entries.map((limit) => (
+          <li key={limit.id} id={`limit-${limit.id}`} className={styles.limit}>
+            <h3 className={styles.title}>{limit.title}</h3>
+            <p className={styles.status}>{limit.status}</p>
+            <p className={styles.body}>{limit.body}</p>
+            {limit.points === undefined ? null : (
+              <ul className={styles.points}>
+                {limit.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            )}
+            {limit.link === undefined ? null : (
+              <p className={styles.more}>
+                <Link href={limit.link.href}>{limit.link.label}</Link>
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

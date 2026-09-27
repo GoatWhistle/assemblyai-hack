@@ -1,3 +1,8 @@
+.frame {
+  container-type: inline-size;
+  min-width: 0;
+}
+
 .reasons {
   display: grid;
   border: 1px solid var(--line-hairline);
@@ -86,5 +91,30 @@
     grid-template-columns: 1.25rem minmax(0, 1fr);
     gap: var(--space-3);
     padding: var(--space-4);
+  }
+}
+
+@container (width >= 60rem) {
+  .reasons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .reason + .reason {
+    border-top: 0;
+    border-left: 1px solid var(--line-hairline);
+  }
+
+  .reason:first-child {
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+  }
+
+  .reason:last-child {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .reason {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    padding: var(--space-5);
   }
 }

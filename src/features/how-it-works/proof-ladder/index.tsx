@@ -13,13 +13,15 @@ const SHOWN: readonly FieldName[] = [
 
 export function ProofLadder() {
   return (
-    <dl className={styles.rows}>
-      {SHOWN.map((field) => (
-        <div key={field} className={styles.row}>
-          <dt className={styles.field}>{FIELD_LABEL[field]}</dt>
-          <dd className={styles.note}>{FIELD_PROOF_NOTE[field]}</dd>
-        </div>
-      ))}
-    </dl>
+    <div className={styles.frame}>
+      <dl className={styles.rows}>
+        {SHOWN.map((field) => (
+          <div key={field} className={styles.row}>
+            <dt className={styles.field}>{FIELD_LABEL[field]}</dt>
+            <dd className={styles.note}>{FIELD_PROOF_NOTE[field]}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   )
 }

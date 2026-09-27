@@ -14,3 +14,28 @@
   font-family: var(--font-data);
   font-size: var(--text-sm);
 }
+
+.heldOut {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-5);
+}
+
+.reading {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+@container (width >= 72rem) {
+  .split {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--space-6);
+  }
+}

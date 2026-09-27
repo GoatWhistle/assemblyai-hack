@@ -1,3 +1,4 @@
+import { ExternalLink } from "@/shared/ui/navigation/external-link"
 import { Chip } from "@/shared/ui/primitives/chip"
 import { Panel } from "@/shared/ui/primitives/panel"
 import {
@@ -14,7 +15,6 @@ import {
   formatPerHour,
   formatUsd,
   PUBLISHED_RATES,
-  RATE_CHECKED_ON,
   RATE_SOURCE_URL,
 } from "../published-rate"
 import styles from "./styles.module.css"
@@ -25,12 +25,7 @@ export type RateEstimateProps = {
 
 export function RateEstimate({ estimate }: RateEstimateProps) {
   return (
-    <Panel
-      title={ESTIMATE_TITLE}
-      note={`rate checked ${RATE_CHECKED_ON}`}
-      padding="tight"
-      variant="flat"
-    >
+    <Panel title={ESTIMATE_TITLE} note="published rates" padding="tight" variant="flat">
       <output className={styles.reading} aria-live="polite">
         <span className={estimate === null ? styles.absent : styles.numeral}>
           {estimate === null ? "no elapsed time yet" : formatUsd(estimate.usd)}
@@ -68,9 +63,9 @@ export function RateEstimate({ estimate }: RateEstimateProps) {
       <p className={styles.method}>{METHOD_LINE}</p>
       <p className={styles.method}>{DRIFT_NOTE}</p>
       <p className={styles.source}>
-        <a className={styles.link} href={RATE_SOURCE_URL} rel="noreferrer noopener">
+        <ExternalLink className={styles.link} href={RATE_SOURCE_URL}>
           the price page these three rates come from
-        </a>
+        </ExternalLink>
       </p>
     </Panel>
   )

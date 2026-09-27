@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { LIMITATIONS, Limits, limitationsIn } from "@/features/how-it-works/limits"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
@@ -15,7 +14,6 @@ export default function LimitationsPage() {
   return (
     <>
       <DocHeader
-        trail={<Link href="/docs">Docs</Link>}
         title="Limitations"
         lede={`All ${LIMITATIONS.length} things this project cannot prove, stated before a reader finds them. Each carries its status: what is measured, what a machine check enforces, what is assumed, and what is false and admitted. The complete account, with the tests that pin each one, is docs/limitations.md in the repository.`}
       />

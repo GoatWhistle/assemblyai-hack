@@ -1,25 +1,37 @@
 .console {
-  padding: var(--space-1) var(--space-5) var(--space-5);
+  container-type: inline-size;
+  min-width: 0;
   border: 1px solid var(--line-hairline);
   border-radius: var(--radius-md);
   background-color: var(--surface-panel);
+  overflow: clip;
 }
 
 .attacks {
   display: grid;
+  gap: 1px;
+  background-color: var(--line-hairline);
 }
 
 .attack {
-  padding-block: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--surface-panel);
 }
 
-.attack + .attack {
-  border-top: 1px solid var(--line-hairline);
-}
-
-@media (max-width: 40rem) {
-  .console {
+@container (width < 36rem) {
+  .attack,
+  .tally {
     padding-inline: var(--space-4);
+  }
+}
+
+@container (width >= 60rem) {
+  .attacks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .attack:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
 
@@ -150,10 +162,9 @@
 }
 
 .tally {
-  margin: var(--space-5) 0 0;
-  padding-top: var(--space-4);
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--line-hairline);
-  max-width: var(--measure-prose);
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);

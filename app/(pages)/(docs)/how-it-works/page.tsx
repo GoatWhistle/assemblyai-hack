@@ -99,8 +99,12 @@ export default function HowItWorksPage() {
       >
         <Limits entries={LIMITATIONS.filter((entry) => SHOWN_LIMITS.includes(entry.id))} />
         <div className={styles.actions}>
-          <ActionLink href="/docs/limitations">{`All ${LIMITATIONS.length} limitations`}</ActionLink>
-          <ActionLink href="/docs/threat-model">Threat model and receipts</ActionLink>
+          <ActionLink href="/docs/limitations" icon="forward">
+            {`All ${LIMITATIONS.length} limitations`}
+          </ActionLink>
+          <ActionLink href="/docs/threat-model" icon="forward">
+            Threat model and receipts
+          </ActionLink>
         </div>
       </DocSection>
     </>

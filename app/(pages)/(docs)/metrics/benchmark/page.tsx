@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { benchmarkEntries } from "@/features/metrics/benchmark-row"
 import { BENCHMARK_CAPTION, BenchmarkTable } from "@/features/metrics/benchmark-table"
 import { reportEntries } from "@/features/metrics/policy-figures"
@@ -14,7 +13,7 @@ const AGREEMENT = `${BENCHMARK_AGREEMENT_NOTE.charAt(0).toUpperCase()}${BENCHMAR
 export const metadata: Metadata = {
   title: "Benchmark",
   description:
-    "Every recognizer and gate figure with its input, command, set size and date, and a dash where nothing was measured.",
+    "Every recognizer and gate figure with its input, command and set size, and a dash where nothing was measured.",
 }
 
 export default function BenchmarkPage() {
@@ -23,11 +22,7 @@ export default function BenchmarkPage() {
   const unmeasured = entries.filter((entry) => entry.row.value === null)
   return (
     <>
-      <DocHeader
-        trail={<Link href="/metrics">Measurements</Link>}
-        title="Benchmark"
-        lede={BENCHMARK_CAPTION}
-      />
+      <DocHeader title="Benchmark" lede={BENCHMARK_CAPTION} />
 
       <DocSection
         id={BENCHMARK_SECTIONS.measured.id}
@@ -37,7 +32,7 @@ export default function BenchmarkPage() {
         <BenchmarkTable
           entries={measured}
           label="Measured benchmark figures"
-          caption="Measured figures, each with its command, set size and date."
+          caption="Measured figures, each with its command and set size."
         />
       </DocSection>
 
@@ -72,8 +67,8 @@ export default function BenchmarkPage() {
             can read as confident while the words that matter are not, which is why the gate
             takes the minimum across the source words rather than the mean. It does not prove
             the pair rule, because low word confidence caught that error; the case the pair rule
-            exists for rests on our own four above-threshold errors. Observed 17 September 2026
-            and recorded in eval/REPORT.md; we did not reproduce the run.
+            exists for rests on our own four above-threshold errors. Recorded in eval/REPORT.md;
+            we did not reproduce the run.
           </p>
         </div>
       </DocSection>

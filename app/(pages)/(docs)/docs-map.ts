@@ -65,7 +65,7 @@ export const BENCHMARK_PAGE: DocsPage = Object.freeze({
   label: "Benchmark",
   title: "Benchmark",
   summary:
-    "Every recognizer and gate figure with its input, command, set size and date, including the ones not measured yet.",
+    "Every recognizer and gate figure with its input, command and set size, including the ones not measured yet.",
   sections: Object.values(BENCHMARK_SECTIONS),
 })
 

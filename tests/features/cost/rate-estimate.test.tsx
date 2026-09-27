@@ -190,7 +190,7 @@ describe("the counter reads as an estimate at a published rate and never as a bi
   it("links the price page rather than asking the reader to trust the number", () => {
     render(<RateEstimate estimate={estimateFromElapsed(60000)} />)
     const link = screen.getByRole("link", {
-      name: "the price page these three rates come from",
+      name: /^the price page these three rates come from/,
     })
     expect(
       link.getAttribute("href"),

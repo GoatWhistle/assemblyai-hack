@@ -1,12 +1,19 @@
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+  gap: var(--space-6);
   padding-block: var(--space-5) var(--space-8);
 }
 
 .page:focus {
   outline: none;
+}
+
+.intro {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
 .title {
@@ -23,4 +30,112 @@
   font-size: var(--text-base);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.checks {
+  display: grid;
+  max-width: var(--measure-prose);
+  margin: 0;
+  border-block: 1px solid var(--line-hairline);
+}
+
+.check {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-3);
+}
+
+.check + .check {
+  border-top: 1px solid var(--line-hairline);
+}
+
+.checkName {
+  font-family: var(--font-data);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.checkMeaning {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.more {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.work {
+  min-width: 0;
+}
+
+.detail {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.foot {
+  min-width: 0;
+  max-width: var(--measure-prose);
+}
+
+@media (pointer: coarse) {
+  .more a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-touch);
+  }
+}
+
+@media (max-width: 40rem) {
+  .check {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 62rem) {
+  .page {
+    grid-template-columns: minmax(20rem, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--shell-gap);
+    align-items: start;
+  }
+
+  .intro,
+  .detail,
+  .foot {
+    grid-column: 1;
+  }
+
+  .work {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    padding-top: var(--space-2);
+  }
+}
+
+@media (min-width: 120rem) {
+  .page {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  }
+}
+
+@media print {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .checks,
+  .more,
+  .foot {
+    display: none;
+  }
 }

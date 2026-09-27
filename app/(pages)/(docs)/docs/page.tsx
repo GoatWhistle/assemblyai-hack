@@ -101,7 +101,9 @@ export default function DocsOverviewPage() {
           <ActionLink href={REPLAY_ENTRY_HREF} tone="primary">
             {`Watch the ${REPLAY_LENGTH_LABEL} of a staged mishearing`}
           </ActionLink>
-          <ActionLink href="/compare">See all six moments</ActionLink>
+          <ActionLink href="/compare" icon="forward">
+            See all six moments
+          </ActionLink>
         </div>
       </DocSection>
 
@@ -137,10 +139,12 @@ export default function DocsOverviewPage() {
           compact
         />
         <div className={styles.actions}>
-          <ActionLink href="/metrics#headline">
+          <ActionLink href="/metrics#headline" icon="forward">
             Full figures and their cost in seconds
           </ActionLink>
-          <ActionLink href="/docs/limitations">What this cannot prove</ActionLink>
+          <ActionLink href="/docs/limitations" icon="forward">
+            What this cannot prove
+          </ActionLink>
         </div>
       </DocSection>
 

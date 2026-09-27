@@ -1,9 +1,28 @@
+import Link from "next/link"
 import { PageShell } from "@/shared/ui/layout/page-shell"
+import { Breadcrumbs } from "@/shared/ui/navigation/breadcrumbs"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
 import { OrderCheck } from "../order-check"
 import styles from "./styles.module.css"
 
 const MAIN_ID = "main"
+
+const RECOMPUTED: readonly { readonly check: string; readonly meaning: string }[] = [
+  {
+    check: "sha256",
+    meaning: "over the receipt's canonical JSON; one changed character reads TAMPERED",
+  },
+  { check: "NPI", meaning: "the Luhn check digit over 80840 and the first nine digits" },
+  { check: "DEA", meaning: "the mod-10 check digit over the seven digits" },
+  {
+    check: "Pair rule",
+    meaning: "a name on the published look-alike list was confirmed aloud, not by a yes",
+  },
+  {
+    check: "Witness",
+    meaning: "the vendor transcript's verdict beside each field, when the receipt carries one",
+  },
+]
 
 export type OrderPageViewProps = {
   readonly sessionId: string | null
@@ -17,15 +36,42 @@ export function OrderPageView({ sessionId }: OrderPageViewProps) {
       </a>
       <PageShell current="order">
         <main className={styles.page} id={MAIN_ID} tabIndex={-1}>
-          <h1 className={styles.title}>Order receipt</h1>
-          <p className={styles.lede}>
-            {sessionId === null ? "Choose a receipt file you downloaded after a call. " : null}
-            Everything below is recomputed in this browser, not taken from the server&rsquo;s
-            word: the sha256 over the receipt&rsquo;s canonical JSON, the NPI and DEA check
-            digits, and whether a name on a published look-alike list was confirmed aloud.
-          </p>
-          <OrderCheck sessionId={sessionId} />
-          <Disclaimer />
+          <div className={styles.intro}>
+            {sessionId === null ? null : (
+              <Breadcrumbs
+                trail={[{ href: "/order", label: "Receipts" }]}
+                current={`Order ${sessionId}`}
+              />
+            )}
+            <h1 className={styles.title}>Order receipt</h1>
+            <p className={styles.lede}>
+              {sessionId === null
+                ? "Choose a receipt file you downloaded after a call. "
+                : null}
+              Everything here is recomputed in this browser, not taken from the server&rsquo;s
+              word: the sha256 over the receipt&rsquo;s canonical JSON, the NPI and DEA check
+              digits, and whether a name on a published look-alike list was confirmed aloud.
+            </p>
+          </div>
+          <div className={styles.work}>
+            <OrderCheck sessionId={sessionId} />
+          </div>
+          <div className={styles.detail}>
+            <dl className={styles.checks} aria-label="What this page recomputes">
+              {RECOMPUTED.map((entry) => (
+                <div key={entry.check} className={styles.check}>
+                  <dt className={styles.checkName}>{entry.check}</dt>
+                  <dd className={styles.checkMeaning}>{entry.meaning}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className={styles.more}>
+              <Link href="/docs/threat-model#receipt">How a receipt is sealed</Link>
+            </p>
+          </div>
+          <div className={styles.foot}>
+            <Disclaimer />
+          </div>
         </main>
       </PageShell>
     </>

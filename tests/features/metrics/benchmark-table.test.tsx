@@ -94,14 +94,14 @@ describe("every benchmark row carries its method", () => {
 })
 
 describe("an unmeasured figure is a dash, never a zero", () => {
-  it("renders a planted unmeasured row as a labelled dash in value, n and date", () => {
+  it("renders a planted unmeasured row as a labelled dash in value and n", () => {
     render(<BenchmarkTable entries={[UNMEASURED]} />)
     const row = rowFor(UNMEASURED.id)
-    for (const column of ["value", "n", "measured"]) {
+    for (const column of ["value", "n"]) {
       expect(isDash(cell(row, column)), column).toBe(true)
     }
     expect(cell(row, "value").textContent).not.toContain("0")
-    expect(screen.getAllByLabelText(NOT_MEASURED_LABEL).length).toBeGreaterThanOrEqual(3)
+    expect(screen.getAllByLabelText(NOT_MEASURED_LABEL).length).toBeGreaterThanOrEqual(2)
   })
 
   it("publishes words re-said per order as a dash until a live order exists", () => {

@@ -14,7 +14,7 @@ import {
 export const CLOSE_CODE_REPORT_COMMAND = "npx tsx scripts/eer/report.ts eval/<set>"
 
 export const VENDOR_DOCUMENTS_NONE =
-  "AssemblyAI documents no WebSocket close codes at all, checked against the streaming API reference on 17 September 2026. Every meaning below is therefore an observation, and the source column says whose."
+  "AssemblyAI documents no WebSocket close codes at all: its streaming API reference lists none. Every meaning below is therefore an observation, and the source column says whose."
 
 export const ALERT_WORTHY_CODES: readonly number[] = Object.freeze([
   CloseCode.PolicyViolation,
@@ -25,7 +25,7 @@ export const ALERT_WORTHY_CODES: readonly number[] = Object.freeze([
 
 const SOURCES: Readonly<Record<number, string>> = Object.freeze({
   1000: "Measured by us",
-  1006: "Measured by us, once, in the 25 September stress run",
+  1006: "Measured by us, once, in the stress run",
   1008: "Measured by us: what the rate limiter actually sends",
   3006: "Another team's measurement, not reproduced by us",
   3007: "Vendor prose, not a close-code table",

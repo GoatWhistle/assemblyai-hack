@@ -153,7 +153,7 @@ describe("r1-A5-08: close codes read as observations, never as specification", (
       /\d+ sessions over \d+ runs made before the spend ledger existed, npx tsx scripts\/report\/live-run-count\.ts/,
     )
     expect(container.textContent).toMatch(
-      /\d+ sessions of the 25 September stress run, npx tsx scripts\/measure\/analyse-stress\.ts/,
+      /\d+ sessions of the stress run, npx tsx scripts\/measure\/analyse-stress\.ts/,
     )
   })
 })

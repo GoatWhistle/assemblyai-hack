@@ -1,3 +1,8 @@
+.frame {
+  container-type: inline-size;
+  min-width: 0;
+}
+
 .claims {
   display: grid;
   gap: var(--space-3);
@@ -54,6 +59,18 @@
   color: var(--text-primary);
 }
 
+.pair {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.aside {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
 .boundary {
   display: grid;
   gap: var(--space-2);
@@ -93,7 +110,7 @@
   }
 }
 
-@media (max-width: 40rem) {
+@container (width < 36rem) {
   .verdict {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-1);
@@ -102,5 +119,57 @@
 
   .boundary {
     padding-inline: var(--space-4);
+  }
+}
+
+@container (width >= 60rem) {
+  .claims {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    max-width: none;
+    padding: 0;
+    list-style: none;
+    border-block: 1px solid var(--line-hairline);
+  }
+
+  .claims li {
+    padding: var(--space-4) var(--space-5) var(--space-5);
+  }
+
+  .claims li:first-child {
+    padding-inline-start: 0;
+  }
+
+  .claims li + li {
+    border-left: 1px solid var(--line-hairline);
+  }
+
+  .claims strong {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+
+  .verdicts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .verdict {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .verdict + .verdict {
+    border-top: 0;
+    border-left: 1px solid var(--line-hairline);
+  }
+
+  .pair {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .boundary {
+    max-width: none;
   }
 }

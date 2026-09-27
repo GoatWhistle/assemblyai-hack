@@ -53,7 +53,7 @@ export const TOUR_STEPS: readonly TourStep[] = Object.freeze([
     seconds: 15,
     click: "Open the measurements.",
     expect:
-      "Every figure carries its input, command, n and date; what was not measured shows a dash, never a zero.",
+      "Every figure carries its input, command and n; what was not measured shows a dash, never a zero.",
     href: "/metrics",
     go: "Open the measurements",
     needsMicrophone: false,

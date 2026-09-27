@@ -1,3 +1,4 @@
+import { Command } from "@/shared/ui/data-display/command"
 import { AbsentValue } from "../absent-value"
 import { type BenchmarkEntry, INPUT_LABEL } from "../benchmark-row"
 import styles from "./styles.module.css"
@@ -35,12 +36,19 @@ export function BenchmarkTable({
         <caption>{caption}</caption>
         <thead className={styles.columns}>
           <tr>
-            <th scope="col">Figure</th>
-            <th scope="col">Value</th>
+            <th scope="col" className={styles.headFigure}>
+              Figure
+            </th>
+            <th scope="col" className={styles.headValue}>
+              Value
+            </th>
             <th scope="col">Input</th>
-            <th scope="col">Command</th>
-            <th scope="col">n</th>
-            <th scope="col">Measured</th>
+            <th scope="col" className={styles.headCommand}>
+              Command
+            </th>
+            <th scope="col" className={styles.headSet}>
+              n
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +67,7 @@ export function BenchmarkTable({
                 {INPUT_LABEL[entry.row.input]}
               </td>
               <td className={styles.commandCell} data-column="command">
-                <code className={styles.command}>{entry.row.command}</code>
+                <Command value={entry.row.command} />
               </td>
               <td
                 className={`${styles.number} ${styles.n}`}
@@ -69,13 +77,6 @@ export function BenchmarkTable({
                 {entry.row.n === null ? <AbsentValue /> : entry.row.n}
                 {compact || entry.setDescription === "" ? null : (
                   <span className={styles.set}>{entry.setDescription}</span>
-                )}
-              </td>
-              <td className={`${styles.number} ${styles.measured}`} data-column="measured">
-                {entry.row.measuredOn === null ? (
-                  <AbsentValue />
-                ) : (
-                  <time dateTime={entry.row.measuredOn}>{entry.row.measuredOn}</time>
                 )}
               </td>
             </tr>

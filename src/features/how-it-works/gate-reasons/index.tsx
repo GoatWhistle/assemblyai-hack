@@ -52,19 +52,21 @@ export const STANDING_READ_BACK_LINE = `${STANDING_FIELDS_LINE} The three reason
 
 export function GateReasons() {
   return (
-    <ol className={styles.reasons}>
-      {GATE_REASONS.map((reason, index) => (
-        <li key={reason.code} className={styles.reason} data-family={reason.family}>
-          <span className={styles.ordinal} aria-hidden="true">
-            {index + 1}
-          </span>
-          <div className={styles.text}>
-            <p className={styles.reasonTitle}>{reason.title}</p>
-            <code className={styles.code}>{reason.code}</code>
-            <p className={styles.reasonBody}>{reason.body}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <div className={styles.frame}>
+      <ol className={styles.reasons}>
+        {GATE_REASONS.map((reason, index) => (
+          <li key={reason.code} className={styles.reason} data-family={reason.family}>
+            <span className={styles.ordinal} aria-hidden="true">
+              {index + 1}
+            </span>
+            <div className={styles.text}>
+              <p className={styles.reasonTitle}>{reason.title}</p>
+              <code className={styles.code}>{reason.code}</code>
+              <p className={styles.reasonBody}>{reason.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
   )
 }

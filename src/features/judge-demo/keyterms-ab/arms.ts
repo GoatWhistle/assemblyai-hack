@@ -39,7 +39,7 @@ export const PHRASE_WINDOW = 2
 export const COMPETITOR_PROMPT_LINE = "always confirm the medication back"
 
 export const COMPETITOR_CITATION =
-  "Observed 16 September 2026 in a submission that carries a published pair member in its keyterms list while its system prompt says to always confirm the medication back. The read-back is there; the list makes it circular."
+  "Seen in a competing submission that carries a published pair member in its keyterms list while its system prompt says to always confirm the medication back. The read-back is there; the list makes it circular."
 
 export const CIRCULARITY =
   "Keyterms bias the recognizer toward exactly the strings listed. Put a pair member in the list and the recognizer returns that string more readily; the read-back then asks the caller to confirm the string the configuration suggested. The confirmation still happens, and it still proves nothing the configuration did not already assume. That is what makes the second arm invalid as a product option rather than merely worse."

@@ -98,7 +98,7 @@ export const HELD_OUT_ENTRIES: readonly BenchmarkEntry[] = Object.freeze([
     "26.7% [17.1%, 39.0%]",
     HELD_OUT_EER_SCRIPT,
     HELD_OUT_SIZE,
-    "Sixty names never measured before, drawn and sealed on 16 September and opened once. It sits beside 27.5% on the control corpus, so the recognizer's difficulty with rare names generalises to names it had never been measured on.",
+    "Sixty names never measured before, drawn and sealed before the run, then opened once. It sits beside 27.5% on the control corpus, so the recognizer's difficulty with rare names generalises to names it had never been measured on.",
   ),
   heldOutEntry(
     "rare",

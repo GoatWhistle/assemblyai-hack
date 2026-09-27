@@ -1,4 +1,5 @@
 import type { BenchmarkRow } from "@/domain"
+import { Command } from "@/shared/ui/data-display/command"
 import { AbsentValue } from "../absent-value"
 import { RAW_RUN_AGREEMENT_TEST } from "../benchmark-row"
 import type { FalseAskTally } from "../measured-figures"
@@ -28,16 +29,8 @@ function Method({
       {tally.byPairRule} the pair rule&rsquo;s contrastive question, because the name is on the
       ISMP list. With the pair rule switched off the threshold would take{" "}
       {tally.thresholdWithoutPairRule} of the {tally.of}. Recorded confidences from synthesised
-      speech through the live recognizer,{" "}
-      <code className={styles.inlineCode}>{tally.command}</code>, n = {tally.of}, recorded{" "}
-      {tally.measuredOn ?? "on an unrecorded date"}
-      {contrastive === null ? null : (
-        <>
-          , scored against the full 2023 ISMP list on{" "}
-          <time dateTime={contrastive.measuredOn ?? undefined}>{contrastive.measuredOn}</time>
-        </>
-      )}
-      .
+      speech through the live recognizer, <Command value={tally.command} />, n = {tally.of}
+      {contrastive === null ? null : ", scored against the full 2023 ISMP list"}.
     </>
   )
 }
@@ -104,11 +97,8 @@ export function FalseAskHeadline({
         <PairCost tally={tally} contrastive={contrastive} />
         {tally === null ? null : (
           <p className={styles.method}>
-            <code className={styles.inlineCode}>{tally.command}</code> n = {tally.of}, recorded{" "}
-            {tally.measuredOn ?? "on an unrecorded date"}
-            {contrastive === null
-              ? null
-              : `, scored against the 2023 ISMP list ${contrastive.measuredOn}`}
+            <Command value={tally.command} /> n = {tally.of}
+            {contrastive === null ? null : ", scored against the 2023 ISMP list"}
           </p>
         )}
       </div>
@@ -131,7 +121,7 @@ export function FalseAskHeadline({
       </p>
       <p className={styles.agreement}>
         Published totals match raw runs {"—"} a test fails if they disagree:{" "}
-        <code className={styles.inlineCode}>{RAW_RUN_AGREEMENT_TEST}</code>
+        <Command value={RAW_RUN_AGREEMENT_TEST} />
       </p>
     </div>
   )

@@ -1,8 +1,14 @@
-.steps {
-  display: grid;
+.frame {
+  container-type: inline-size;
+  min-width: 0;
   border: 1px solid var(--line-hairline);
   border-radius: var(--radius-md);
   background-color: var(--surface-panel);
+  overflow: clip;
+}
+
+.steps {
+  margin-top: -1px;
 }
 
 .step {
@@ -11,10 +17,8 @@
   align-items: start;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
-}
-
-.step + .step {
   border-top: 1px solid var(--line-hairline);
+  break-inside: avoid;
 }
 
 .ordinal {
@@ -63,5 +67,13 @@
     grid-template-columns: 1.25rem minmax(0, 1fr);
     gap: var(--space-2);
     padding-inline: var(--space-4);
+  }
+}
+
+@container (width >= 56rem) {
+  .steps {
+    columns: 2;
+    column-gap: 0;
+    column-rule: 1px solid var(--line-hairline);
   }
 }

@@ -127,7 +127,19 @@ export function OrderCheck({ sessionId }: OrderCheckProps) {
       {file === null ? null : (
         <ReceiptView receipt={file} fhir={null} serverRecheck={null} source="file" />
       )}
-      <div className={styles.upload}>
+      <div
+        className={
+          load.state === "none" && file === null
+            ? `${styles.upload} ${styles.alone}`
+            : styles.upload
+        }
+      >
+        {load.state === "none" && file === null ? (
+          <svg className={styles.glyph} viewBox="0 0 40 48" aria-hidden="true">
+            <path d="M6 3h28v42l-4.7-3-4.6 3-4.7-3-4.6 3-4.7-3L6 45z" />
+            <path d="M12 14h16M12 21h16M12 28h10" />
+          </svg>
+        ) : null}
         <label className={styles.pick} htmlFor={inputId}>
           {FILE_CHECK_LABEL}
         </label>

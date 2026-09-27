@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import {
   COMBINED_PER_HOUR_USD,
   COMBINED_PER_MINUTE_USD,
   PUBLISHED_RATES,
-  RATE_CHECKED_ON,
   RATE_SOURCE_URL,
 } from "@/features/cost/published-rate"
 import { BUSINESS_FIGURES } from "@/features/metrics/business-figures"
@@ -18,8 +16,10 @@ import {
   VENDOR_DOCUMENTS_NONE,
 } from "@/features/metrics/close-code-tally"
 import { type PanelColumn, PanelTable } from "@/features/metrics/panel-table"
+import { Command } from "@/shared/ui/data-display/command"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { ExternalLink } from "@/shared/ui/navigation/external-link"
 import { OPERATIONS_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
 
@@ -39,7 +39,6 @@ export default function OperationsPage() {
   return (
     <>
       <DocHeader
-        trail={<Link href="/metrics">Measurements</Link>}
         title="Cost and operations"
         lede="What an open call costs by the vendor's rates, what the gate would cost an order, and how the sockets closed. Every reading here is derived only from figures that carry a command."
       />
@@ -47,7 +46,7 @@ export default function OperationsPage() {
       <DocSection
         id={OPERATIONS_SECTIONS.rates.id}
         title="What an open call costs by the vendor's published rates"
-        lead={`Rates, not measurements: AssemblyAI bills on socket lifetime, and both sockets are open for the whole call. Read from the pricing page on ${RATE_CHECKED_ON}.`}
+        lead={`Rates, not measurements: AssemblyAI bills on socket lifetime, and both sockets are open for the whole call. Read from the vendor's pricing page.`}
       >
         <PanelTable
           label="Published rates"
@@ -56,9 +55,7 @@ export default function OperationsPage() {
               Together USD {COMBINED_PER_HOUR_USD.toFixed(2)} per hour, about USD{" "}
               {COMBINED_PER_MINUTE_USD.toFixed(3)} per minute of an open call: arithmetic over
               the rate table, not an invoice. Source:{" "}
-              <a href={RATE_SOURCE_URL} rel="noreferrer">
-                {RATE_SOURCE_URL}
-              </a>
+              <ExternalLink href={RATE_SOURCE_URL}>{RATE_SOURCE_URL}</ExternalLink>
             </>
           }
           columns={RATE_COLUMNS}
@@ -73,7 +70,7 @@ export default function OperationsPage() {
         />
         <p className={styles.note}>
           The total actually spent is derived from the run ledger by{" "}
-          <code className={styles.code}>make spend</code>, never from this table.
+          <Command value="make spend" />, never from this table.
         </p>
       </DocSection>
 
