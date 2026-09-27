@@ -176,6 +176,7 @@
   --z-toast: 500;
   --z-tooltip: 600;
 
+  --bp-narrow: 24rem;
   --bp-compact: 40rem;
   --bp-medium: 56rem;
   --bp-split: 62rem;

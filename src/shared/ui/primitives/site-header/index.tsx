@@ -2,9 +2,13 @@
 
 import Link from "next/link"
 import { type ReactNode, useEffect, useRef, useState } from "react"
+import { GitHubIcon } from "@/shared/ui/icons"
 import { useGlide } from "@/shared/ui/motion/use-glide"
+import { EXTERNAL_REL, NEW_TAB_NOTE } from "@/shared/ui/navigation/text-link"
 import { Wordmark } from "../wordmark"
 import styles from "./styles.module.css"
+
+export const REPOSITORY_URL = "https://github.com/GoatWhistle/assemblyai-hack"
 
 export type SiteSection = "call" | "replay" | "docs" | "order"
 
@@ -89,6 +93,11 @@ export function SiteHeader({ current, status }: SiteHeaderProps) {
       </Link>
 
       <SiteNav links={LINKS} section={section} />
+
+      <a className={styles.repo} href={REPOSITORY_URL} target="_blank" rel={EXTERNAL_REL}>
+        <GitHubIcon className={styles.repoMark} />
+        <span className="visually-hidden">{`Source code on GitHub ${NEW_TAB_NOTE}`}</span>
+      </a>
 
       {status === undefined ? null : <div className={styles.status}>{status}</div>}
     </header>

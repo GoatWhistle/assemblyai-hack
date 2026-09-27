@@ -97,6 +97,32 @@
   transition: clip-path var(--dur-slow) var(--ease-out-expo);
 }
 
+.repo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-touch);
+  min-width: var(--target-touch);
+  margin-inline-start: calc(var(--space-2) - var(--space-6));
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  transition: var(--transition-control);
+}
+
+.repo:hover {
+  background-color: var(--ink-a5);
+  color: var(--text-primary);
+}
+
+.repo:active {
+  background-color: var(--ink-a8);
+  scale: 0.96;
+}
+
+.repoMark {
+  flex: 0 0 auto;
+}
+
 .status {
   display: flex;
   align-items: center;
@@ -113,11 +139,12 @@
   }
 
   .name {
-    font-size: var(--text-lg);
+    font-size: var(--text-md);
   }
 
   .header {
-    gap: 0 var(--space-4);
+    flex-wrap: wrap;
+    gap: 0 var(--space-2);
     padding: var(--space-2) 0;
   }
 
@@ -133,6 +160,11 @@
     scrollbar-width: none;
   }
 
+  .repo {
+    order: 2;
+    margin-inline-start: 0;
+  }
+
   .status {
     order: 3;
     flex-basis: 100%;
@@ -141,6 +173,15 @@
   .link {
     flex: 0 0 auto;
     padding: 0 var(--space-2);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 24rem) {
+  .name {
+    position: absolute;
+    overflow: hidden;
+    clip-path: inset(50%);
     white-space: nowrap;
   }
 }
