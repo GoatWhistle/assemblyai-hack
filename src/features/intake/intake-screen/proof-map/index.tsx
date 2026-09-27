@@ -67,12 +67,12 @@ export function ProofMap() {
   const titleId = useId()
   return (
     <section className={styles.map} aria-labelledby={titleId}>
-      <header className={styles.head}>
+      <div className={styles.head}>
         <h2 id={titleId} className={styles.title}>
           {PROOF_MAP_TITLE}
         </h2>
         <p className={styles.lede}>{PROOF_MAP_LEDE}</p>
-      </header>
+      </div>
       <div className={styles.groups}>
         {KIND_ORDER.map((kind) => (
           <section key={kind} className={`${styles.group} ${styles[kind] ?? ""}`}>

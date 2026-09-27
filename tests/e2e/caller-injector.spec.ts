@@ -12,7 +12,7 @@ test("S4: the scripted caller is heard on the page's microphone track after repl
     route.fulfill({ contentType: "text/html", body: "<!doctype html><title>harness</title>" }),
   )
   const agent: { push: ((frame: object) => void) | null } = { push: null }
-  await page.routeWebSocket(/agents\.assemblyai\.com/, (socket) => {
+  await page.routeWebSocket(/agents(\.us)?\.assemblyai\.com/, (socket) => {
     agent.push = (frame) => socket.send(JSON.stringify(frame))
   })
   await page.addInitScript({
