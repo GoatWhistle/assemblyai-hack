@@ -58,6 +58,14 @@
   line-height: var(--leading-snug);
 }
 
+.row > .cell:nth-child(3) {
+  min-width: 9rem;
+}
+
+.row > .cell:nth-child(3) > :first-child {
+  white-space: nowrap;
+}
+
 .value {
   font-family: var(--font-data);
   font-size: var(--text-xs);
@@ -118,7 +126,7 @@
   background-color: var(--state-escalated-surface);
 }
 
-@container (max-width: 46rem) {
+@container (max-width: 51.5rem) {
   .head {
     display: none;
   }

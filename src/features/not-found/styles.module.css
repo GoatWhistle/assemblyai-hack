@@ -41,6 +41,22 @@
   color: var(--text-primary);
 }
 
+@media (min-width: 62rem) {
+  .page {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: var(--shell-gap);
+    align-content: start;
+    max-width: none;
+    padding-block: var(--space-8);
+  }
+
+  .directory {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: start;
+  }
+}
+
 @media (max-width: 40rem) {
   .page {
     padding-block: var(--space-5) var(--space-7);

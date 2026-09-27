@@ -138,22 +138,6 @@
   animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
 }
 
-.variant {
-  grid-area: 1 / 1;
-  display: grid;
-  align-content: start;
-  gap: var(--space-2);
-}
-
-.current {
-  opacity: 1;
-  visibility: visible;
-}
-
-.arm:not([data-tone="undecided"]) .current {
-  animation: var(--keyframes-settle) var(--dur-base) var(--ease-out-quart) both;
-}
-
 .outcomeValue {
   position: relative;
   justify-self: start;
@@ -167,6 +151,7 @@
 .current[data-tone="committed"] .outcomeValue,
 .current[data-tone="refused"] .outcomeValue {
   --land-y: -0.375rem;
+  --land-blur: 0px;
   animation: var(--keyframes-land) var(--dur-base) var(--ease-out-expo) both;
 }
 
@@ -197,11 +182,6 @@
 .variant {
   opacity: 0;
   visibility: hidden;
-  filter: blur(2px);
-  transition:
-    opacity var(--dur-fast) var(--ease-out-quart),
-    filter var(--dur-fast) var(--ease-out-quart),
-    visibility var(--dur-fast) step-end;
 }
 
 .outcomeBody {
@@ -210,12 +190,6 @@
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
   text-wrap: pretty;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .variant {
-    filter: none;
-  }
 }
 
 @media (min-width: 56rem) {

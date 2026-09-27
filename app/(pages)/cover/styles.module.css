@@ -173,3 +173,33 @@
   font-size: var(--text-lg);
   color: var(--text-muted);
 }
+
+@media screen and (max-width: 119.99rem) {
+  .canvas {
+    zoom: 0.74;
+  }
+}
+
+@media screen and (max-width: 88.75rem) {
+  .canvas {
+    zoom: 0.53;
+  }
+}
+
+@media screen and (max-width: 63.5rem) {
+  .canvas {
+    zoom: 0.39;
+  }
+}
+
+@media screen and (max-width: 46.75rem) {
+  .canvas {
+    zoom: 0.28;
+  }
+}
+
+@media screen and (max-width: 33.5rem) {
+  .canvas {
+    zoom: 0.18;
+  }
+}

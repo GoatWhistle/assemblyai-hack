@@ -67,7 +67,6 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
               className={entry === phase ? styles.current : styles.variant}
               aria-hidden={entry === phase ? undefined : true}
               data-tone={toneOf(gated, entry)}
-              data-motion="crossfade"
             >
               <p className={styles.outcomeValue}>{arm.value[entry]}</p>
               <p className={styles.outcomeBody}>{arm.body[entry]}</p>

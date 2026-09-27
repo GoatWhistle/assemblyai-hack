@@ -117,16 +117,16 @@ export function overruledNote(decision: GateDecision | null): string {
 export function confidenceRankNote(stance: FieldStance, aboveThreshold: boolean): string {
   if (stance === "lasa") {
     return aboveThreshold
-      ? "Reading order on this card: the published pair decides, and it decided against a recognizer that was above threshold."
-      : "Reading order on this card: the published pair decides; the recognizer was below threshold as well."
+      ? "The published pair decides this field, even though the recognizer was above threshold."
+      : "The published pair decides this field; the recognizer was below threshold as well."
   }
   if (stance === "confirmed") {
-    return "Reading order on this card: the validator proved the value exists, the caller's spoken confirmation settled it, and the recognizer's certainty came last."
+    return "The validator proved the value exists and the caller's spoken confirmation settled it; the recognizer's certainty ranks last."
   }
   if (stance === "accepted") {
-    return "Reading order on this card: the validator proved it first, and the recognizer agreed."
+    return "The validator proved it first; the recognizer agreed."
   }
-  return "Reading order on this card: proof comes first, the recognizer's own certainty second."
+  return "Proof decides first; the recognizer's own certainty comes second."
 }
 
 export type NameAnswerState = "pending" | "yes-refused" | "named"

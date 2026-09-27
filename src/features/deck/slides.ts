@@ -46,7 +46,7 @@ export const SLIDES: readonly DeckSlide[] = [
     id: "thesis",
     title: "The product thesis",
     body: [
-      "High recognizer confidence does not protect against homophony.",
+      "High recognizer confidence does not protect against two drug names that sound alike.",
       `So a drug name on the 2023 ISMP List of Confused Drug Names, ${ISMP_COUNT} pairs parsed from the published list, triggers a mandatory re-ask even at confidence 1.0.`,
       "The re-ask is contrastive: the agent names the drug it heard and every drug the list pairs with it, and only a spoken name answers it. A yes is not counted, and naming a partner corrects the value.",
       "This is not a threshold and not a heuristic. It is the order of the branches in the code: the pair check is read before the confidence check.",

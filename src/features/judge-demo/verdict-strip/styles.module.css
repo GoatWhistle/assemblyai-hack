@@ -96,11 +96,6 @@
 .variant {
   opacity: 0;
   visibility: hidden;
-  filter: blur(2px);
-  transition:
-    opacity var(--dur-fast) var(--ease-out-quart),
-    filter var(--dur-fast) var(--ease-out-quart),
-    visibility var(--dur-fast) step-end;
 }
 
 .verdict {
@@ -152,11 +147,5 @@
 
   .verdict {
     font-size: var(--text-base);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .variant {
-    filter: none;
   }
 }

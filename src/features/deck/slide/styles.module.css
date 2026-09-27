@@ -119,6 +119,11 @@
     font-size: var(--text-base);
   }
 
+  .paragraph,
+  .source {
+    overflow-wrap: anywhere;
+  }
+
   .source {
     padding-top: var(--space-2);
   }

@@ -35,7 +35,10 @@ export function Certainty({
     <div className={classes}>
       <p className={styles.label}>
         <span className={styles.who}>Recognizer said, of itself</span>
-        <span className={styles.reading}>{formatCertainty(minConfidence)} min over span</span>
+        <span className={styles.reading}>
+          <span className={styles.number}>{formatCertainty(minConfidence)}</span> on its least
+          certain word
+        </span>
       </p>
       <div
         className={styles.track}

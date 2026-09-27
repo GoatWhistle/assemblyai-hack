@@ -40,7 +40,7 @@ function Method({
 }) {
   return (
     <span className={styles.method}>
-      <Command value={command} /> n = {n}, {input}
+      <Command value={command} /> <span className={styles.size}>n = {n}</span>, {input}
     </span>
   )
 }

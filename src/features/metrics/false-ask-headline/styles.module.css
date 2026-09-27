@@ -83,6 +83,10 @@
   color: var(--reason-lasa-ink);
 }
 
+.size {
+  white-space: nowrap;
+}
+
 .method,
 .agreement {
   max-width: var(--measure-prose);

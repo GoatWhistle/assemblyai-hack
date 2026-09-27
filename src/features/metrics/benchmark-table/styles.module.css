@@ -70,6 +70,12 @@
   white-space: nowrap;
 }
 
+.noCommand {
+  font-size: var(--text-xs);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
 .number {
   font-family: var(--font-data);
   font-size: var(--text-xs);

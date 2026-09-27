@@ -127,6 +127,9 @@
     grid-row: 1 / span 2;
     position: sticky;
     top: var(--space-5);
+    max-height: calc(100dvh - var(--space-5) * 2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .live .alert,

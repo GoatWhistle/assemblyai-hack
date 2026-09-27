@@ -46,7 +46,6 @@ export function VerdictStrip({ phase }: VerdictStripProps) {
                   className={current ? styles.current : styles.variant}
                   aria-hidden={current ? undefined : true}
                   data-tone={line.tone}
-                  data-motion="crossfade"
                 >
                   <Verdict line={line} />
                   {line.code === null ? null : (

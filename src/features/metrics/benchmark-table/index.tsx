@@ -1,6 +1,7 @@
 import { Command } from "@/shared/ui/data-display/command"
 import { AbsentValue } from "../absent-value"
-import { type BenchmarkEntry, INPUT_LABEL } from "../benchmark-row"
+import { type BenchmarkEntry, INPUT_LABEL, NOT_MEASURED_LABEL } from "../benchmark-row"
+import { NO_COMMAND } from "../metric-definitions"
 import styles from "./styles.module.css"
 
 export const BENCHMARK_CAPTION =
@@ -12,6 +13,8 @@ export type BenchmarkTableProps = {
   readonly caption?: string
   readonly compact?: boolean
 }
+
+const NOT_A_COMMAND: ReadonlySet<string> = new Set([NO_COMMAND, NOT_MEASURED_LABEL])
 
 function sentenceCase(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
@@ -67,7 +70,11 @@ export function BenchmarkTable({
                 {INPUT_LABEL[entry.row.input]}
               </td>
               <td className={styles.commandCell} data-column="command">
-                <Command value={entry.row.command} />
+                {NOT_A_COMMAND.has(entry.row.command) ? (
+                  <span className={styles.noCommand}>{entry.row.command}</span>
+                ) : (
+                  <Command value={entry.row.command} />
+                )}
               </td>
               <td
                 className={`${styles.number} ${styles.n}`}

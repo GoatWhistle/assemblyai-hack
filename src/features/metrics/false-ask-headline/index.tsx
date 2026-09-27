@@ -29,7 +29,8 @@ function Method({
       {tally.byPairRule} the pair rule&rsquo;s contrastive question, because the name is on the
       ISMP list. With the pair rule switched off the threshold would take{" "}
       {tally.thresholdWithoutPairRule} of the {tally.of}. Recorded confidences from synthesised
-      speech through the live recognizer, <Command value={tally.command} />, n = {tally.of}
+      speech through the live recognizer, <Command value={tally.command} />,{" "}
+      <span className={styles.size}>n = {tally.of}</span>
       {contrastive === null ? null : ", scored against the full 2023 ISMP list"}.
     </>
   )
@@ -97,7 +98,8 @@ export function FalseAskHeadline({
         <PairCost tally={tally} contrastive={contrastive} />
         {tally === null ? null : (
           <p className={styles.method}>
-            <Command value={tally.command} /> n = {tally.of}
+            <Command value={tally.command} />{" "}
+            <span className={styles.size}>n = {tally.of}</span>
             {contrastive === null ? null : ", scored against the 2023 ISMP list"}
           </p>
         )}

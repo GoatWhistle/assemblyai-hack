@@ -6,6 +6,14 @@
   min-width: 0;
 }
 
+@container (min-width: 52rem) {
+  .rail {
+    max-height: calc(100dvh - var(--space-5) * 2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
 .progressList {
   display: grid;
   gap: 1px;

@@ -15,7 +15,7 @@
   flex-wrap: nowrap;
   gap: var(--space-1);
   margin: calc(-1 * var(--space-1));
-  padding: var(--space-1) var(--space-6) var(--space-1) var(--space-1);
+  padding: var(--space-1) calc(var(--space-6) * 2) var(--space-1) var(--space-1);
   list-style: none;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -23,7 +23,7 @@
   scrollbar-width: none;
   mask-image: linear-gradient(
     to right,
-    var(--surface-page) calc(100% - var(--space-6)),
+    var(--surface-page) calc(100% - var(--space-6) * 2),
     transparent
   );
 }

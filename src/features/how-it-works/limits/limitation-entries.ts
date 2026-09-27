@@ -8,7 +8,7 @@ const TRUST: readonly Limitation[] = [
     group: "trust",
     title: "Provenance is computed in the browser",
     status: "False against a hostile client, and stated as false",
-    body: "The browser holds the recognizer socket directly, so word timings and per-word certainties never pass through our server; the client posts them to an unauthenticated route. Anyone with DevTools can post arbitrary words, and the gate will accept a value carrying that provenance: it checks that a value traces to words the session reported, not that those words were spoken. The route enforces bounds instead of a secret: a validated session id and caps on words per turn, turns per session and concurrent sessions. Relaying audio through our own host would fix it and needs the always-on process we removed.",
+    body: "The browser holds the recognizer socket directly, so word timings and per-word certainties never pass through our server; the client posts them to an unauthenticated route. Anyone with DevTools can post arbitrary words, and the gate will accept a value carrying that provenance: it checks that a value traces to words the session reported, not that those words were spoken. The route enforces bounds instead of a secret: a validated session id and caps on words per turn, turns per session and concurrent sessions. Relaying audio through our own host would fix it, at the cost of an always-on process this design deliberately does without.",
     link: { href: "/docs/threat-model", label: "What the vendor witness adds" },
   },
   {

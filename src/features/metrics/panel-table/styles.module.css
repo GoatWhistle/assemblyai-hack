@@ -79,6 +79,12 @@
   min-width: 4.5rem;
 }
 
+@media (min-width: 40rem) and (max-width: 56rem) {
+  .table thead th {
+    top: calc(var(--target-touch) + var(--space-2) * 2);
+  }
+}
+
 @media (max-width: 40rem) {
   .table caption {
     padding-inline: var(--space-4);

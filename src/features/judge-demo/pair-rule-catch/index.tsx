@@ -22,8 +22,8 @@ export function PairRuleCatch({ without, shipped }: PairRuleCatchProps) {
       <p className={styles.method}>
         <Command value={shipped.command} />
         <span>
-          n = {shipped.n ?? "not recorded"} · {shipped.input} ·{" "}
-          {shipped.measuredOn ?? "undated"}
+          n = {shipped.n ?? "not recorded"},{" "}
+          {shipped.input === "text" ? "text candidates" : shipped.input}
         </span>
         <Link href={CATCH_FIGURES_HREF}>Full figures, and what the rule costs in seconds</Link>
       </p>

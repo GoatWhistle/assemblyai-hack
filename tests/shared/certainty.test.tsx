@@ -5,7 +5,8 @@ import { Certainty, formatCertainty, TICK_COUNT } from "@/shared/ui/data-display
 describe("Certainty presentation", () => {
   it("reads as a two-decimal certainty rather than a percentage score", () => {
     render(<Certainty minConfidence={0.92} threshold={0.95} />)
-    expect(screen.getByText(/0\.92 min over span/)).toBeDefined()
+    expect(screen.getByText("0.92")).toBeDefined()
+    expect(screen.getByText(/on its least certain word/)).toBeDefined()
     expect(formatCertainty(0.92)).toBe("0.92")
   })
 
@@ -16,7 +17,7 @@ describe("Certainty presentation", () => {
 
   it("says the number is the minimum over the span, not an average", () => {
     render(<Certainty minConfidence={0.42} threshold={0.95} />)
-    expect(screen.getByText(/min over span/)).toBeDefined()
+    expect(screen.getByText(/on its least certain word/)).toBeDefined()
   })
 
   it("describes the number's limit in the caveat by default", () => {
@@ -59,7 +60,7 @@ describe("Certainty presentation", () => {
 
   it("still shows the reading when outranked, rather than hiding the inconvenient number", () => {
     render(<Certainty minConfidence={1} threshold={0.95} overruled overruledBy="Outranked." />)
-    expect(screen.getByText(/1\.00 min over span/)).toBeDefined()
+    expect(screen.getByText("1.00")).toBeDefined()
   })
 
   it("handles the boundary values without breaking", () => {

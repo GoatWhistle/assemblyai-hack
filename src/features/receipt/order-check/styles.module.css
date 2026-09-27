@@ -98,6 +98,12 @@
   }
 }
 
+@media (min-width: 62rem) {
+  .alone {
+    min-height: clamp(calc(var(--space-8) * 3.5), 60dvh, 44rem);
+  }
+}
+
 @media (max-width: 40rem) {
   .upload {
     padding: var(--space-5) var(--space-4);
