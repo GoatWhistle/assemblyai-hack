@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import { useEffect } from "react"
 import { readReducedMotion } from "@/shared/ui/motion/use-reduced-motion"
+import { glideTo, glideTop } from "./glide-to"
 
 export const ARRIVAL_ATTRIBUTE = "data-arrival"
 
@@ -96,21 +97,6 @@ function focusQuietly(element: HTMLElement) {
   element.focus({ preventScroll: true })
 }
 
-export function glideScroll(): () => void {
-  const root = globalThis.document.documentElement
-  if (readReducedMotion()) {
-    return () => undefined
-  }
-  root.style.scrollBehavior = "smooth"
-  return () => {
-    root.style.removeProperty("scroll-behavior")
-  }
-}
-
-function halt() {
-  globalThis.window.scrollTo({ top: globalThis.scrollY, behavior: "instant" })
-}
-
 function targetIn(main: HTMLElement | null, id: string): HTMLElement | null {
   const target = globalThis.document.getElementById(id)
   if (main === null || target === null || target === main || !main.contains(target)) {
@@ -128,28 +114,41 @@ export function AnchorArrival({ mainId }: AnchorArrivalProps) {
 
   useEffect(() => {
     let cancel: () => void = () => undefined
-    let gliding = false
-    const arrive = (target: HTMLElement, focus: boolean, glide: boolean) => {
+    const settle = (element: HTMLElement, focus: boolean) => {
+      if (focus) {
+        focusQuietly(element)
+      }
+      return mark(element)
+    }
+    const land = (target: HTMLElement) => {
       cancel()
       const element = arrivalMark(target)
       let unmark: () => void = () => undefined
-      const release = glide ? glideScroll() : () => undefined
-      gliding = glide
       const stop = whenSettled(() => {
-        gliding = false
-        release()
-        if (focus) {
-          focusQuietly(element)
-        }
-        unmark = mark(element)
+        unmark = settle(element, false)
       })
       cancel = () => {
         stop()
-        release()
-        if (gliding) {
-          gliding = false
-          halt()
+        unmark()
+      }
+    }
+    const glide = (target: HTMLElement, id: string) => {
+      cancel()
+      const element = arrivalMark(target)
+      let unmark: () => void = () => undefined
+      const fragment = `#${encodeURIComponent(id)}`
+      if (globalThis.location.hash !== fragment) {
+        globalThis.history.pushState(globalThis.history.state, "", fragment)
+      }
+      const stop = glideTo(glideTop(target), (completed) => {
+        if (!completed) {
+          return
         }
+        globalThis.location.replace(fragment)
+        unmark = settle(element, true)
+      })
+      cancel = () => {
+        stop()
         unmark()
       }
     }
@@ -164,9 +163,11 @@ export function AnchorArrival({ mainId }: AnchorArrivalProps) {
       }
       const id = samePageFragment(anchor, globalThis.location)
       const target = id === null ? null : targetIn(document.getElementById(mainId), id)
-      if (target !== null) {
-        arrive(target, true, true)
+      if (target === null || id === null || readReducedMotion()) {
+        return
       }
+      event.preventDefault()
+      glide(target, id)
     }
 
     const hash = decodeURIComponent(globalThis.location.hash.slice(1))
@@ -175,7 +176,7 @@ export function AnchorArrival({ mainId }: AnchorArrivalProps) {
         ? targetIn(document.getElementById(mainId), hash)
         : null
     if (landed !== null) {
-      arrive(landed, false, false)
+      land(landed)
     }
 
     globalThis.window.addEventListener("click", onClick, { capture: true })
