@@ -50,19 +50,31 @@
 
 .titles {
   display: grid;
-  gap: var(--rhythm-tight);
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--rhythm-tight) var(--space-3);
 }
 
 .title {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: center;
-  gap: var(--rhythm-tight);
+  justify-items: start;
 }
 
 @media (max-width: 40rem) {
   .limit {
     padding-inline: var(--panel-pad-compact);
+  }
+
+  .titles {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--rhythm-stack);
+  }
+
+  .title {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--rhythm-tight);
   }
 }
 

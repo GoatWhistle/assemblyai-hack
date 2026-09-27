@@ -4,17 +4,54 @@
   min-width: 0;
 }
 
-.answer {
-  display: grid;
-  justify-items: start;
-  gap: var(--rhythm-tight);
+.frame {
+  container-type: inline-size;
   min-width: 0;
+}
+
+.attempts {
+  margin-top: -1px;
+}
+
+.attempt {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--rhythm-stack);
+  padding: var(--rhythm-group) var(--panel-pad);
+  border-top: 1px solid var(--panel-line);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+}
+
+.head {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.title {
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+.claims {
+  color: var(--text-secondary);
+}
+
+.act {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .refused,
 .written {
   display: grid;
-  gap: var(--rhythm-tight);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
   min-width: 0;
   animation: var(--keyframes-verdict) var(--dur-base) var(--ease-out-quart) both;
 }
@@ -34,25 +71,29 @@
 .line {
   display: grid;
   gap: var(--space-1);
-  color: var(--text-primary);
+  min-width: 0;
   text-wrap: pretty;
+}
+
+.label {
+  font-weight: var(--label-weight);
+  color: var(--text-muted);
+}
+
+.spoken {
+  color: var(--text-primary);
 }
 
 .machine {
   font-family: var(--font-data);
   font-size: var(--code-size-fixed);
   line-height: var(--meta-leading);
+  color: var(--text-primary);
   overflow-wrap: anywhere;
 }
 
-.label {
-  font-family: var(--font-ui);
-  font-size: var(--meta-size);
-  font-weight: var(--label-weight);
-  color: var(--text-muted);
-}
-
 .explains {
+  max-width: var(--measure-prose);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
@@ -63,4 +104,40 @@
   line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
+}
+
+@media (max-width: 40rem) {
+  .attempt {
+    padding-inline: var(--panel-pad-compact);
+  }
+}
+
+@container (width >= 40rem) {
+  .attempt {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--rhythm-group);
+  }
+
+  .act {
+    justify-content: flex-end;
+    align-self: start;
+  }
+
+  .refused,
+  .written {
+    grid-column: 1 / -1;
+    grid-template-columns: fit-content(11rem) minmax(0, 1fr);
+    column-gap: var(--rhythm-group);
+  }
+
+  .verdict,
+  .explains {
+    grid-column: 1 / -1;
+  }
+
+  .line {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+  }
 }

@@ -12,7 +12,6 @@ const COLUMNS: readonly TableColumn[] = [
   { key: "step", title: "Step", kind: "number", size: "fit" },
   { key: "action", title: "Do this", rowHeader: true },
   { key: "watch", title: WATCH_LABEL, kind: "muted", stack: "line" },
-  { key: "open", title: "Go", size: "fit", stack: "bare" },
 ]
 
 export function DemoScript() {
@@ -28,18 +27,21 @@ export function DemoScript() {
           action: (
             <span className={styles.action}>
               <span>{step.action}</span>
-              {step.needsMicrophone ? (
-                <StatusChip status="tag">{NEEDS_MICROPHONE}</StatusChip>
-              ) : null}
+              {step.href === null && !step.needsMicrophone ? null : (
+                <span className={styles.go}>
+                  {step.href === null || step.linkLabel === null ? null : (
+                    <ActionLink href={step.href} size="small">
+                      {step.linkLabel}
+                    </ActionLink>
+                  )}
+                  {step.needsMicrophone ? (
+                    <StatusChip status="tag">{NEEDS_MICROPHONE}</StatusChip>
+                  ) : null}
+                </span>
+              )}
             </span>
           ),
           watch: step.watchFor,
-          open:
-            step.href === null || step.linkLabel === null ? null : (
-              <ActionLink href={step.href} size="small">
-                {step.linkLabel}
-              </ActionLink>
-            ),
         },
       }))}
     />

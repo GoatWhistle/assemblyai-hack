@@ -3,3 +3,17 @@
   justify-items: start;
   gap: var(--rhythm-tight);
 }
+
+.go {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rhythm-tight);
+  padding-block-start: var(--space-1);
+  font-weight: var(--weight-regular);
+}
+
+.go > a {
+  white-space: nowrap;
+  text-wrap: nowrap;
+}

@@ -137,7 +137,7 @@ export function CatchCostHeadline({
 }: CatchCostHeadlineProps) {
   return (
     <div className={styles.frame}>
-      <div className={styles.pair}>
+      <div className={compact ? `${styles.pair} ${styles.compact}` : styles.pair}>
         <Catch ab={ab} compact={compact} />
         <div className={styles.cost} data-headline="cost">
           <Panel as="article">

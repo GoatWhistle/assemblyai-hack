@@ -84,12 +84,11 @@
 
 @media (min-width: 62rem) {
   .head {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-columns: var(--replay-split, minmax(0, 1.15fr) minmax(0, 1fr));
     grid-template-areas:
       "lead setup"
-      "notice setup";
-    grid-template-rows: auto 1fr;
-    column-gap: var(--shell-gap);
+      "notice notice";
+    column-gap: var(--rhythm-group);
   }
 
   .head > .lead {

@@ -17,7 +17,13 @@
   gap: var(--space-3);
   align-items: center;
   padding-block: var(--space-3);
+  min-width: 0;
   border-block-end: 1px solid var(--line-hairline);
+}
+
+.number,
+.text {
+  align-self: first baseline;
 }
 
 .number {
@@ -51,6 +57,20 @@
   font-size: var(--meta-size);
   line-height: var(--meta-leading);
   color: var(--text-secondary);
+}
+
+@media (min-width: 80rem) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--tour-rows, 3), auto);
+    grid-auto-flow: column;
+    column-gap: var(--shell-gap);
+    border-top: 0;
+  }
+
+  .step[data-column-start="true"] {
+    border-block-start: 1px solid var(--line-hairline);
+  }
 }
 
 @media (max-width: 40rem) {

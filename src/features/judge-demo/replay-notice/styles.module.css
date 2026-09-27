@@ -3,7 +3,13 @@
   gap: var(--rhythm-tight);
   align-content: start;
   min-width: 0;
-  max-width: var(--measure-prose);
+  container-type: inline-size;
+}
+
+.detail {
+  display: grid;
+  gap: var(--rhythm-tight) var(--shell-gap);
+  align-items: start;
 }
 
 .title {
@@ -39,4 +45,20 @@
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
+}
+
+.notice > :not(details),
+.detail > * {
+  max-width: var(--measure-prose);
+}
+
+@container (min-width: 56rem) {
+  .detail {
+    grid-template-columns: var(--replay-split, minmax(0, 1.15fr) minmax(0, 1fr));
+    column-gap: var(--rhythm-group);
+  }
+
+  .detail > :first-child {
+    grid-row: span 2;
+  }
 }

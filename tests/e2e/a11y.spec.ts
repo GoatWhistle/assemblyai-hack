@@ -132,6 +132,8 @@ test.describe("AU5: the judge path works from the keyboard alone, with focus alw
     await page.keyboard.press("Enter")
     await expect(page.getByRole("button", { name: /^pause$/i })).toBeFocused()
     await page.keyboard.press("Tab")
+    await expect(page.getByRole("button", { name: /^restart the replay$/i })).toBeFocused()
+    await page.keyboard.press("Tab")
     await expect(page.getByRole("button", { name: /^stop$/i })).toBeFocused()
     await page.keyboard.press("Enter")
     await expect(page.getByRole("button", { name: /play (again|the replay)/i })).toBeFocused()

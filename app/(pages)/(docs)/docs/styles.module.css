@@ -41,3 +41,9 @@
   display: grid;
   gap: var(--rhythm-tight);
 }
+
+@media (max-width: 40rem) {
+  .tabCode {
+    display: none;
+  }
+}

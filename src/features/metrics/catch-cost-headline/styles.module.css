@@ -29,8 +29,16 @@
   text-wrap: pretty;
 }
 
+.compact {
+  align-items: stretch;
+}
+
+.compact > * > * {
+  height: 100%;
+}
+
 @container (width >= 44rem) {
-  .pair {
+  .pair:not(.compact) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto 1fr;
     grid-template-areas:
@@ -38,21 +46,27 @@
       "catalogue cost";
   }
 
-  .catch {
+  .pair:not(.compact) .catch {
     grid-area: catch;
   }
 
-  .cost {
+  .pair:not(.compact) .cost {
     grid-area: cost;
   }
 
-  .catalogue {
+  .pair:not(.compact) .catalogue {
     grid-area: catalogue;
   }
 }
 
+@container (width >= 60rem) {
+  .compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @container (width >= 92rem) {
-  .pair {
+  .pair:not(.compact) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
     grid-template-rows: auto;
     grid-template-areas: "catch cost catalogue";

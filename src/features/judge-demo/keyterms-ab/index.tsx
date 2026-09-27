@@ -170,8 +170,10 @@ export function KeytermsAb() {
       </div>
 
       <Disclosure summary="Why the biased arm is invalid, not merely worse">
-        <p className={styles.circularity}>{CIRCULARITY}</p>
-        <p className={styles.cost}>{NO_MICROPHONE_NOTE}</p>
+        <div className={styles.why}>
+          <p className={styles.circularity}>{CIRCULARITY}</p>
+          <p className={styles.cost}>{NO_MICROPHONE_NOTE}</p>
+        </div>
       </Disclosure>
     </section>
   )

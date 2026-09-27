@@ -1,8 +1,10 @@
-import { useId } from "react"
+import { type CSSProperties, useId } from "react"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Heading } from "@/shared/ui/typography/heading"
 import styles from "./styles.module.css"
 import { TOUR_SECONDS, TOUR_STEPS } from "./tour-steps"
+
+const ROWS = Math.ceil(TOUR_STEPS.length / 2)
 
 export function JudgeTour() {
   const headingId = useId()
@@ -11,9 +13,9 @@ export function JudgeTour() {
       <Heading level={3} id={headingId}>
         The {TOUR_SECONDS}-second tour
       </Heading>
-      <ol className={styles.steps}>
+      <ol className={styles.steps} style={{ "--tour-rows": ROWS } as CSSProperties}>
         {TOUR_STEPS.map((step, index) => (
-          <li key={step.id} className={styles.step}>
+          <li key={step.id} className={styles.step} data-column-start={index % ROWS === 0}>
             <span className={styles.number} aria-hidden="true">
               {index + 1}
             </span>

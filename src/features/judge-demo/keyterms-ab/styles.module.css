@@ -17,12 +17,13 @@
 }
 
 .switcher {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
 }
 
 .arm {
+  flex: 0 1 auto;
   display: grid;
   gap: var(--rhythm-tight);
   justify-items: start;
@@ -174,6 +175,12 @@
   color: var(--text-secondary);
 }
 
+.why {
+  display: grid;
+  gap: var(--rhythm-tight) var(--shell-gap);
+  align-items: start;
+}
+
 .circularity {
   font-size: var(--body-size);
   font-weight: var(--label-weight);
@@ -192,9 +199,16 @@
 }
 
 @media (min-width: 62rem) {
-  .panel {
+  .panel,
+  .why {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: var(--shell-gap);
+  }
+}
+
+@media (max-width: 40rem) {
+  .arm {
+    flex-basis: 100%;
   }
 }
 

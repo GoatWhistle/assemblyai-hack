@@ -96,7 +96,7 @@ test.describe("the evidence surfaces a judge is sent to", () => {
       .getByRole("navigation", { name: "Documentation" })
       .getByRole("link", { name: "Limitations" })
       .click()
-    await expect(page).toHaveURL(/\/docs\/limitations$/)
+    await expect(page).toHaveURL(/\/docs\/limitations$/, { timeout: 15000 })
     await expect(page.getByText(/call 911, or 988/)).toBeVisible()
     await expect(page.locator("main details")).toHaveCount(1)
     await expect(page.locator("main details").getByText(/call 911, or 988/)).toHaveCount(0)

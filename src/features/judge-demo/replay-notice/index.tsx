@@ -25,9 +25,11 @@ export function ReplayNotice() {
       </p>
       <p className={styles.body}>{REPLAY_NOTICE_LINE}</p>
       <Disclosure summary="What is simulated, and why a replay exists">
-        <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
-        <p className={styles.body}>{REPLAY_NOTICE_CLOCK}</p>
-        <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
+        <div className={styles.detail}>
+          <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
+          <p className={styles.body}>{REPLAY_NOTICE_CLOCK}</p>
+          <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
+        </div>
       </Disclosure>
     </aside>
   )

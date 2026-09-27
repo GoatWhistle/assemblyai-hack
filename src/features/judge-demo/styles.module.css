@@ -87,7 +87,8 @@
 
 @media (min-width: 56rem) {
   .demo {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    --replay-split: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-columns: var(--replay-split);
     column-gap: var(--rhythm-group);
   }
 
@@ -115,11 +116,11 @@
     scroll-margin-top: var(--space-6);
   }
 
-  .decided {
+  .decided:has(> div > details[open]:not([data-closing])) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
   }
 
-  .decided > :first-child {
+  .decided:has(> div > details[open]:not([data-closing])) > :first-child {
     position: sticky;
     top: var(--space-5);
   }
@@ -127,10 +128,10 @@
 
 @media (min-width: 120rem) {
   .demo {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    --replay-split: minmax(0, 1.4fr) minmax(0, 1fr);
   }
 
-  .decided {
+  .decided:has(> div > details[open]:not([data-closing])) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   }
 }

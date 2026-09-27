@@ -20,6 +20,7 @@ import {
 import { LASA_CANDIDATE, LASA_DECISION } from "./scenario"
 import { settledCard } from "./settled-card"
 import styles from "./styles.module.css"
+import { useAnchoredToggle } from "./use-anchored-toggle"
 import { PLAY_CONTROL, useControlFocus } from "./use-control-focus"
 import { useReplayClock } from "./use-replay-clock"
 import { VerdictStrip } from "./verdict-strip"
@@ -49,6 +50,7 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
   const clock = useReplayClock(() => holdRef.current(PLAY_CONTROL))
   const { sessionMs, mode } = clock
   const { controls, hold } = useControlFocus(mode === "running")
+  const result = useAnchoredToggle<HTMLDivElement>()
 
   useEffect(() => {
     holdRef.current = hold
@@ -158,7 +160,10 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
       <div className={styles.captions}>
         <Captions lines={REPLAY_LINES} clockMs={sessionMs} voice={voice} />
       </div>
-      <div className={decided ? `${styles.result} ${styles.decided}` : styles.result}>
+      <div
+        ref={result}
+        className={decided ? `${styles.result} ${styles.decided}` : styles.result}
+      >
         {decided ? banner : null}
         <div
           className={readingBack ? styles.readingBack : styles.resting}

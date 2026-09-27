@@ -63,8 +63,8 @@
 
 .buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fill, minmax(min(26rem, 100%), 1fr));
+  gap: var(--space-2) var(--space-3);
   border: 0;
   padding: 0;
   margin: 0;
@@ -80,9 +80,11 @@
 }
 
 .button {
-  display: grid;
-  gap: var(--space-1);
-  justify-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
   text-align: left;
   min-height: var(--target-touch);
   padding: var(--space-3) var(--space-4);
@@ -112,6 +114,7 @@
 }
 
 .buttonLabel {
+  flex: 1 1 14rem;
   font-size: var(--label-size);
   font-weight: var(--label-weight);
   line-height: var(--leading-snug);
@@ -119,6 +122,7 @@
 }
 
 .buttonOutcome {
+  flex: 0 1 auto;
   font-size: var(--meta-size);
   color: var(--text-muted);
 }
@@ -165,7 +169,9 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
     column-gap: var(--shell-gap);
   }
+}
 
+@media (min-width: 80rem) and (min-height: 50rem) {
   .choose {
     position: sticky;
     top: calc(var(--target-touch) + var(--space-6));
