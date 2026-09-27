@@ -11,8 +11,7 @@
 }
 
 .replay,
-.section,
-.onward {
+.section {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   min-width: 0;
@@ -29,10 +28,6 @@
   gap: var(--rhythm-group);
 }
 
-.onward {
-  gap: var(--rhythm-stack);
-}
-
 .head {
   display: grid;
   gap: var(--rhythm-tight);
@@ -42,12 +37,6 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--rhythm-group);
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
 }
 
 @media (max-width: 40rem) {

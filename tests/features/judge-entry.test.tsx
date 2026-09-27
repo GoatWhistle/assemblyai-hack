@@ -106,8 +106,8 @@ describe("the replay is a first-class entry point that never reads as live", () 
       "the hero repeated the replay's own play control and the header's Call as two more buttons",
     ).not.toMatch(/ActionLink|REPLAY_ENTRY_HREF|CALL_HREF/)
     const demo = readFileSync("src/features/judge-demo/replay-controls/index.tsx", "utf8")
-    expect(demo, "the play control on the replay is the primary button").toContain(
-      '<Button tone="primary"',
+    expect(demo, "the play control on the replay is the primary button").toMatch(
+      /<Button\s+tone="primary"/,
     )
   })
 })

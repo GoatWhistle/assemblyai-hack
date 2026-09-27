@@ -21,8 +21,11 @@
   gap: var(--space-2);
 }
 
-.buttons > :first-child {
-  flex: 1 1 auto;
+.buttons > * {
+  flex: 0 0 auto;
+  min-width: var(--target-touch);
+  padding-inline: 0;
+  aspect-ratio: 1;
 }
 
 .glyph {
@@ -49,31 +52,6 @@
   font-size: var(--text-sm);
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
-}
-
-.mode {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-weight: var(--weight-semibold);
-  color: var(--text-primary);
-}
-
-.mode::before {
-  content: "";
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: var(--radius-pill);
-  background-color: var(--line-strong);
-  transition: background-color var(--dur-fast) var(--ease-out-quart);
-}
-
-.controls[data-mode="running"] .mode {
-  color: var(--action-ink);
-}
-
-.controls[data-mode="running"] .mode::before {
-  background-color: var(--action-rest);
 }
 
 .elapsed {
@@ -174,11 +152,6 @@
       "foot foot";
     row-gap: var(--space-3);
     padding: var(--panel-pad-compact) var(--panel-pad);
-  }
-
-  .buttons > :first-child {
-    flex: 0 0 auto;
-    min-width: 12.5rem;
   }
 
   .clock {

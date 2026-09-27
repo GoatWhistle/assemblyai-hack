@@ -74,6 +74,8 @@ test.describe("the replay controls keep focus on the control that was pressed", 
     await page.keyboard.press("Enter")
     await expect(page.getByRole("button", { name: "Pause" })).toBeFocused()
     await page.keyboard.press("Tab")
+    await expect(page.getByRole("button", { name: "Restart the replay" })).toBeFocused()
+    await page.keyboard.press("Tab")
     await expect(page.getByRole("button", { name: /^stop$/i })).toBeFocused()
     await page.keyboard.press("Enter")
     await expect(page.getByRole("button", { name: /play (again|the replay)/i })).toBeFocused()

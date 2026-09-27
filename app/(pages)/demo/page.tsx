@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { JudgeTour } from "@/features/how-it-works/judge-tour"
 import { JudgeDemo } from "@/features/judge-demo"
-import { CALL_HREF } from "@/features/judge-demo/entry-routes"
 import { InstantEntry } from "@/features/judge-demo/instant-entry"
 import { JudgeHero } from "@/features/judge-demo/judge-hero"
 import { KeytermsAb } from "@/features/judge-demo/keyterms-ab"
@@ -14,7 +13,6 @@ import { RECORDING_PUBLISHED } from "@/features/recorded-replay/published"
 import { RecordedSection } from "@/features/recorded-replay/recorded-section"
 import { PageShell } from "@/shared/ui/layout/page-shell"
 import { type TabItem, Tabs } from "@/shared/ui/navigation/tabs"
-import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { pageMetadata } from "@/site/page-metadata"
 import styles from "./styles.module.css"
@@ -27,7 +25,6 @@ const SCENARIOS_ID = "scenarios"
 const KEYTERMS_ID = "keyterms"
 const RECORDED_ID = "recorded"
 const MORE_TITLE_ID = "more-title"
-const ONWARD_TITLE_ID = "onward-title"
 
 const MORE: readonly TabItem[] = [
   {
@@ -36,9 +33,6 @@ const MORE: readonly TabItem[] = [
     panel: (
       <div className={styles.panel}>
         <SayThese />
-        <div className={styles.actions}>
-          <ActionLink href={CALL_HREF}>Try them on a live call</ActionLink>
-        </div>
       </div>
     ),
   },
@@ -101,28 +95,6 @@ export default async function DemoPage({ searchParams }: DemoProps) {
             </div>
             <Tabs label="More of the demonstration" items={MORE} defaultId={SAY_ID} anchored />
           </section>
-          <nav className={styles.onward} aria-labelledby={ONWARD_TITLE_ID}>
-            <Heading level={2} rank="block" id={ONWARD_TITLE_ID}>
-              Where to go next
-            </Heading>
-            <div className={styles.actions}>
-              <ActionLink href="/how-it-works" icon="forward">
-                How the gate works
-              </ActionLink>
-              <ActionLink href="/compare" icon="forward">
-                Compare with and without the gate
-              </ActionLink>
-              <ActionLink href="/metrics" icon="forward">
-                Read the measurements
-              </ActionLink>
-              <ActionLink href="/docs/limitations" icon="forward">
-                What this cannot prove
-              </ActionLink>
-              <ActionLink href="/docs/threat-model" icon="forward">
-                Threat model
-              </ActionLink>
-            </div>
-          </nav>
         </main>
       </PageShell>
     </>

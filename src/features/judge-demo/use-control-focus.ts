@@ -1,7 +1,7 @@
 import { type RefObject, useCallback, useEffect, useRef } from "react"
 
 export const PLAY_CONTROL = 0
-export const STOP_CONTROL = 1
+export const STOP_CONTROL = 2
 
 export type ControlFocus = {
   readonly controls: RefObject<HTMLDivElement | null>

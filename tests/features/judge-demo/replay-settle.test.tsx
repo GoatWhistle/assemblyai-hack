@@ -13,6 +13,7 @@ import {
   REPLAY_SECONDS,
   replaySeconds,
 } from "@/features/judge-demo/replay-clock"
+import { clockText } from "@/features/judge-demo/replay-controls"
 import { AB_GATE_SCRIPT, abCatch, READ_BACK_COST } from "@/features/metrics/report-figures"
 
 beforeEach(() => {
@@ -79,11 +80,10 @@ describe("r2-A1 A1r2-04: the replay's title and clock state the same length", ()
     expect(Math.round(Number.parseFloat(replaySeconds(REPLAY_LENGTH_MS)))).toBe(REPLAY_SECONDS)
     render(<JudgeDemo />)
     playTo(DEMO_DURATION_MS + 100)
-    expect(
-      screen.getByText(
-        `Replay ${replaySeconds(REPLAY_LENGTH_MS)} of ${replaySeconds(REPLAY_LENGTH_MS)}`,
-      ),
-    ).toBeTruthy()
+    expect(screen.getByText(clockText(REPLAY_LENGTH_MS, REPLAY_LENGTH_MS))).toBeTruthy()
+    expect(clockText(REPLAY_LENGTH_MS, REPLAY_LENGTH_MS)).toBe(
+      `${REPLAY_LENGTH_MS / 1000}/${REPLAY_LENGTH_MS / 1000} s`,
+    )
     expect(screen.getByText(/session clock 18\.6s \/ 18\.6s/)).toBeTruthy()
   })
 })

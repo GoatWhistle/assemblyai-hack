@@ -5,7 +5,6 @@ import {
   DEMO_DURATION_MS,
   REPLAY_FROM_MS,
   REPLAY_LENGTH_MS,
-  replaySeconds,
   sessionSeconds,
 } from "../replay-clock"
 import styles from "./styles.module.css"
@@ -24,21 +23,23 @@ const PRIMARY_GLYPH: Readonly<Record<ReplayMode, TransportGlyph>> = Object.freez
   rest: "play",
   running: "pause",
   paused: "play",
-  ended: "again",
+  ended: "play",
 })
 
-const MODE_LABEL: Readonly<Record<ReplayMode, string>> = Object.freeze({
-  rest: "Ready",
-  running: "Playing",
-  paused: "Paused",
-  ended: "Finished",
-})
+export const RESTART_LABEL = "Restart the replay"
+
+export const STOP_LABEL = "Stop"
+
+export function clockText(elapsedMs: number, totalMs: number): string {
+  return `${(elapsedMs / 1000).toFixed(1)}/${(totalMs / 1000).toFixed(1)} s`
+}
 
 export type ReplayControlsProps = {
   readonly mode: ReplayMode
   readonly sessionMs: number
   readonly controls: RefObject<HTMLDivElement | null>
   readonly onPrimary: () => void
+  readonly onRestart: () => void
   readonly onStop: () => void
 }
 
@@ -61,6 +62,7 @@ export function ReplayControls({
   sessionMs,
   controls,
   onPrimary,
+  onRestart,
   onStop,
 }: ReplayControlsProps) {
   const elapsed = Math.max(0, sessionMs - REPLAY_FROM_MS)
@@ -69,28 +71,35 @@ export function ReplayControls({
   return (
     <div className={styles.controls} data-mode={mode}>
       <div className={styles.buttons} ref={controls}>
-        <Button tone="primary" size="large" onClick={onPrimary}>
+        <Button
+          tone="primary"
+          size="large"
+          onClick={onPrimary}
+          aria-label={PRIMARY_LABEL[mode]}
+        >
           <span className={styles.glyph} key={PRIMARY_GLYPH[mode]}>
             <TransportIcon glyph={PRIMARY_GLYPH[mode]} />
           </span>
-          {PRIMARY_LABEL[mode]}
+        </Button>
+        <Button
+          size="large"
+          onClick={onRestart}
+          aria-label={RESTART_LABEL}
+          disabled={mode === "rest"}
+        >
+          <TransportIcon glyph="again" />
         </Button>
         <Button
           size="large"
           onClick={onStop}
+          aria-label={STOP_LABEL}
           disabled={mode !== "running" && mode !== "paused"}
         >
           <TransportIcon glyph="stop" />
-          Stop
         </Button>
       </div>
       <p className={styles.clock}>
-        <span className={styles.mode}>
-          {mode === "ended" && elapsed === 0 ? "Stopped" : MODE_LABEL[mode]}
-        </span>
-        <span className={styles.elapsed}>
-          Replay {replaySeconds(elapsed)} of {replaySeconds(REPLAY_LENGTH_MS)}
-        </span>
+        <span className={styles.elapsed}>{clockText(elapsed, REPLAY_LENGTH_MS)}</span>
       </p>
       <div className={styles.track} aria-hidden="true">
         <div className={styles.rail}>

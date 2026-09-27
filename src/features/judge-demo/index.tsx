@@ -74,6 +74,11 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
     play()
   }, [mode, play, clock.pause, clock.resume])
 
+  const restart = useCallback(() => {
+    speech.current?.stop()
+    play()
+  }, [play])
+
   const stop = useCallback(() => {
     hold(PLAY_CONTROL)
     speech.current?.stop()
@@ -136,6 +141,7 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1" }: JudgeDemoPr
           sessionMs={sessionMs}
           controls={controls}
           onPrimary={primary}
+          onRestart={restart}
           onStop={stop}
         />
       </div>
