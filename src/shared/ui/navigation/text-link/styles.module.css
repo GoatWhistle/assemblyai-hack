@@ -1,14 +1,10 @@
 .link {
-  padding-inline: var(--link-pad);
-  margin-inline: calc(var(--link-pad) * -1);
+  padding: var(--link-pad-block) var(--link-pad);
   border-radius: var(--radius-xs);
+  background-color: var(--link-rest);
   color: var(--link-ink);
   font-weight: var(--weight-medium);
-  text-decoration-line: underline;
-  text-decoration-color: var(--link-underline);
-  text-decoration-thickness: var(--link-rule);
-  text-underline-offset: var(--link-offset);
-  text-decoration-skip-ink: auto;
+  text-decoration: none;
   overflow-wrap: anywhere;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
@@ -18,7 +14,11 @@
 .link:hover {
   background-color: var(--link-fill);
   color: var(--link-ink-hover);
-  text-decoration-color: currentColor;
+}
+
+.link:focus-visible {
+  background-color: var(--link-fill);
+  color: var(--link-ink-hover);
 }
 
 .link:active {
@@ -32,17 +32,18 @@
 .badge {
   display: inline-grid;
   place-items: center;
-  width: 1.2em;
-  height: 1.2em;
-  margin-inline-start: 0.3em;
+  width: 1.15em;
+  height: 1.15em;
+  margin-inline-start: 0.28em;
   border-radius: var(--radius-pill);
-  background-color: var(--link-badge);
+  background-color: var(--surface-raised);
   color: var(--link-ink);
-  vertical-align: -0.22em;
+  vertical-align: -0.2em;
   transition: var(--transition-link);
 }
 
-.link:hover .badge {
+.link:hover .badge,
+.link:focus-visible .badge {
   background-color: var(--link-badge-hover);
   color: var(--link-badge-ink);
 }
@@ -72,8 +73,9 @@
 
 @media print {
   .link {
+    background-color: transparent;
     color: inherit;
-    text-decoration-color: currentColor;
+    text-decoration: underline;
   }
 
   .badge {

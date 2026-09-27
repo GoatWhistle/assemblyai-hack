@@ -102,12 +102,40 @@ describe("a link that ends a block", () => {
 })
 
 describe("an anchor written without the link system", () => {
-  it("still gets the designed treatment rather than a bare underline", () => {
+  it("still gets the designed treatment, a tinted chip rather than a bare underline", () => {
     const global = readFileSync("src/styles/global.css", "utf8")
     const rule = global.match(/a:not\(\[class\]\) \{([^}]*)\}/)?.[1] ?? ""
-    expect(rule).toContain("var(--link-underline)")
-    expect(rule).toContain("var(--link-rule)")
-    expect(global).toMatch(/a:not\(\[class\]\):hover \{[^}]*var\(--link-fill\)/)
+    expect(rule).toContain("var(--link-rest)")
+    expect(global).toMatch(/a:not\(\[class\]\):hover,[^{]*\{[^}]*var\(--link-fill\)/)
+    expect(global).toMatch(/(?:^|\n)a \{[^}]*text-decoration: none/)
+  })
+})
+
+describe("no link on the site is drawn as an underlined word", () => {
+  const linkSheets = [
+    "src/shared/ui/navigation/text-link/styles.module.css",
+    "src/shared/ui/navigation/more-link/styles.module.css",
+    "src/styles/global.css",
+  ]
+
+  it.each(linkSheets)("%s underlines nothing outside print", (sheet) => {
+    const source = readFileSync(sheet, "utf8").split("@media print")[0] ?? ""
+    expect(
+      source,
+      "a reader takes an underlined word for a raw link even with the arrow badge beside it",
+    ).not.toMatch(/text-decoration(?:-line)?:\s*underline|text-underline-offset/)
+  })
+
+  it("keeps a link inside a sentence visibly a link at rest, not only on hover", () => {
+    const sheet = readFileSync("src/shared/ui/navigation/text-link/styles.module.css", "utf8")
+    expect(sheet).toMatch(/\.link \{[^}]*background-color: var\(--link-rest\)/)
+    expect(sheet).toMatch(/\.link \{[^}]*box-decoration-break: clone/)
+  })
+
+  it("draws a link that ends a block as a bordered control that presses", () => {
+    const sheet = readFileSync("src/shared/ui/navigation/more-link/styles.module.css", "utf8")
+    expect(sheet).toMatch(/\.more \{[^}]*border: 1px solid var\(--link-line\)/)
+    expect(sheet).toMatch(/\.more:active \{[^}]*scale: 0\.97/)
   })
 })
 
