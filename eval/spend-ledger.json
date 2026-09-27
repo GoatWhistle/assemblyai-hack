@@ -574,6 +574,30 @@
       ],
       "openSeconds": 0,
       "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-27T05:31:21.106Z",
+      "at": "2026-09-27T05:31:21.106Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 11.4,
+      "outcome": "failed"
+    },
+    {
+      "runId": "make-live-smoke-2026-09-27T05:39:29.003Z",
+      "at": "2026-09-27T05:39:29.003Z",
+      "command": "make live-smoke",
+      "sockets": [
+        "agent",
+        "stt",
+        "medical"
+      ],
+      "openSeconds": 483,
+      "outcome": "failed"
     }
   ]
 }

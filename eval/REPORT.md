@@ -556,8 +556,8 @@ spoke.
 | `lasa-named` | hydromorphone is in the order, the order committed | 3 | 1 | 0 | **Committed**, `live_smoke-2026-09-26T15:06:54.756Z` |
 | `yeah-no` | the read-back was refused, not confirmed | 2 | 1 | 1 | **Completed**, `live_smoke-2026-09-26T19:43:57.004Z` |
 | `barge-in` | a reply ended interrupted after the barge-in | 2 | 1 | 1 | **Completed**, `live_smoke-2026-09-26T19:44:53.984Z` |
-| `npi-groups` | the ten-digit NPI is in the order | 1 | 0 | 2 | **Not observed** |
-| `commit-hold` | the early commit was refused in hold, the order committed | 1 | 0 | 1 | **Not observed** |
+| `npi-groups` | the ten-digit NPI is in the order | 2 | 0 | 2 | **Not observed** |
+| `commit-hold` | the early commit was refused in hold, the order committed | 2 | 0 | 1 | **Not observed** |
 
 The two committed orders, from their artefacts:
 
@@ -566,9 +566,15 @@ The two committed orders, from their artefacts:
 | `clean-order` | lisinopril 10 mg tablet | drug, strength, form, quantity, sig, patient name | NPI, DEA, route |
 | `lasa-named` | hydromorphone 2 mg/ml injection | drug, strength, form, route, quantity, sig, patient name | NPI, DEA |
 
-For `npi-groups` and `commit-hold`, the one billed attempt failed with its reason recorded, and
-the attempt after it was refused before any socket opened, because one client may spend at most
-half of the daily socket budget. Neither scenario has a passing run. Seven further billed
+For `npi-groups` and `commit-hold`, the first billed attempt of each failed with its reason
+recorded, and one further attempt was refused before any socket opened, because one client may
+spend at most half of the daily socket budget. On the second attempt of `npi-groups` both tokens
+were issued but the browser could not open either socket, and the page now names that fault
+`socket_unreachable` instead of a token failure. On the second attempt of `commit-hold` the hold
+refused the early `commitOrder` as intended, but the order never committed: the agent quoted the
+caller before the recognizer had closed the caller's turn, and the proposals were refused. The
+route now waits longer and answers `E_QUOTATION_NOT_YET_RECEIVED`, a request to retry, while the
+turn is still arriving. Neither scenario has a passing run. Seven further billed
 attempts, before the series in the table, reached no committed order; each is in
 `eval/live/runs.json` with its reason. Socket time for every live-smoke run is the harness wall
 clock across its sockets, an upper bound.
@@ -613,11 +619,11 @@ on 2026-09-17 against the vendor's pricing page (agent USD 4.50, STT USD 0.45, m
 per hour). It prints:
 
 ```
-recorded paid runs: 43
-runs that did not complete, still billed: 33
+recorded paid runs: 45
+runs that did not complete, still billed: 35
 attempts refused before any socket opened, so not billed: 5
-total socket-open time: 11250.468 s
-derived total: USD 12.6804
+total socket-open time: 11744.868 s
+derived total: USD 13.3807
 ```
 
 The figure is arithmetic over recorded seconds, not an invoice. By command:
@@ -626,7 +632,7 @@ The figure is arithmetic over recorded seconds, not an invoice. By command:
 |---|---|---|---|---|
 | `scripts/report/probe-stt.ts` | 2 | completed | 0.0023 | a recognizer token and socket check |
 | `scripts/measure/measure-eer.ts --set eval/stress` | 2 | 1 completed, 1 failed | 0.3127 | the stress set, two concurrent sweeps |
-| `make live-smoke` | 24 | 4 completed, 20 failed | 8.1592 | the scenario runs above; 5 more refused at 0 s |
+| `make live-smoke` | 26 | 4 completed, 22 failed | 8.8595 | the scenario runs above; 5 more refused at 0 s |
 | `scripts/report/probe-witness.ts` | 1 | completed | 0.0143 | one agent session whose vendor timeline is committed as `eval/fixtures/witness/timeline-recorded-shape.json` |
 | reconciliation from the vendor session list | 1 | failed | 0.0783 | agent seconds on the vendor's session list not itemised by another row |
 | ad-hoc `agent_not_found` diagnosis | 1 | failed | 0.0708 | scripted agent sockets |
@@ -638,7 +644,7 @@ The figure is arithmetic over recorded seconds, not an invoice. By command:
 Probe rows that used the agent socket alone are recorded at the three-socket rate, an upper
 bound.
 
-**Paid runs on record, artefacts plus ledger: 50.** The one figure a human verified against the
+**Paid runs on record, artefacts plus ledger: 52.** The one figure a human verified against the
 vendor is the account balance, USD 149.93 on 17 September, read off the AssemblyAI dashboard; no
 later reading is recorded, so no vendor-verified figure covers the ledger runs.
 

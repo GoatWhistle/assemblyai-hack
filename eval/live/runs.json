@@ -798,6 +798,44 @@
         "the recognizer model is the one the browser reported from Begin, not one the server observed",
         "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
       ]
+    },
+    {
+      "runId": "live_smoke-2026-09-27T05:31:21.106Z",
+      "recordedAt": "2026-09-27T05:31:21.106Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke npi-groups: not observed: the ten-digit NPI is in the order; 0 caller lines played; last agent line: none; the page stopped the call: A short-lived token could not be minted The browser never holds the API key; it asks our own route for a single-use token. That request did not return one. What to do Check that the server has its key configured, then start again to mint a fresh token. Try again Watch the replay Technical reason Reported as token_failed.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 11.4,
+      "costUsd": 0.0161,
+      "sessionIds": [
+        "96334c87-626c-4ef6-a366-c4d62ae02d18"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
+    },
+    {
+      "runId": "live_smoke-2026-09-27T05:39:29.003Z",
+      "recordedAt": "2026-09-27T05:39:29.003Z",
+      "kind": "live_smoke",
+      "command": "make live-smoke",
+      "outcome": "failed",
+      "reason": "live smoke commit-hold: not observed: the order committed; 23 caller lines played; last agent line: I need to confirm the details of the prescription first. Please repeat the prescriber NPI, the DEA number, the drug name, the strength, and the dosage form.; the page stopped the call: The line was closed after 90 seconds of silence Nobody spoke and the agent did not reply for 90 seconds. Both sockets bill for as long as they are open, so an idle line is closed rather than left running. What to do Start again when you are ready to dictate. Try again Watch the replay Technical reason Reported as idle_ended.; socket time is the harness wall clock, an upper bound; the receipt route answered 404",
+      "socketSeconds": 483,
+      "costUsd": 0.6842,
+      "sessionIds": [
+        "23ed3428-c981-4240-9ab9-759ff3767ae3"
+      ],
+      "boundaries": [
+        "the caller is synthesised speech, prepared lines injected into the page through WebAudio by an automated harness after each agent reply; no human spoke and no microphone was used",
+        "provenance is computed in the browser and posted by it; the server did not hear the audio",
+        "the recognizer model is the one the browser reported from Begin, not one the server observed",
+        "the deployment at readback-rx.vercel.app, so cold starts and session limits are those of that deployment on the day of the run, not a measurement of any other"
+      ]
     }
   ]
 }
