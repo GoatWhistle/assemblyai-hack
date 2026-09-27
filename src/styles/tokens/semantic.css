@@ -202,6 +202,7 @@
   --rail-width: 20rem;
   --stage-width: clamp(20rem, 24vw, 26rem);
   --hero-offset: 4.75rem;
+  --command-copy-slot: 1.25rem;
   --target-touch: 2.75rem;
 
   --docs-sidebar: clamp(14.5rem, 12vw, 17rem);

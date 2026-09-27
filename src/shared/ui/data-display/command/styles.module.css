@@ -3,12 +3,13 @@
   display: inline-flex;
   align-items: center;
   max-width: 100%;
+  margin-inline-end: var(--space-1);
   vertical-align: middle;
 }
 
 .code {
   min-width: 0;
-  padding: 0.125rem var(--space-2);
+  padding: 0.125rem calc(var(--space-2) + var(--command-copy-slot)) 0.125rem var(--space-2);
   border-radius: var(--radius-xs);
   background-color: var(--surface-sunken);
   font-family: var(--font-data);
@@ -21,10 +22,8 @@
 .command > .copy {
   position: absolute;
   top: 50%;
-  right: 0;
+  right: 0.125rem;
   translate: 0 -50%;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-popover);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease-out-quart);
@@ -35,4 +34,14 @@
 .command > .copy[data-state="failed"] {
   opacity: 1;
   pointer-events: auto;
+}
+
+.command > .copy button {
+  width: var(--command-copy-slot);
+  height: var(--command-copy-slot);
+}
+
+.command > .copy svg {
+  width: 0.75rem;
+  height: 0.75rem;
 }
