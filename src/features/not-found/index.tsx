@@ -5,6 +5,7 @@ import type { DocsPage } from "@/shared/ui/navigation/docs-tree"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
+import { Heading } from "@/shared/ui/typography/heading"
 import { MissingPath } from "./missing-path"
 import styles from "./styles.module.css"
 
@@ -44,7 +45,7 @@ export function NotFoundScreen() {
       <PageShell>
         <main className={styles.page} id={MAIN_ID}>
           <div className={styles.intro}>
-            <h1 className={styles.title}>There is no page at this address</h1>
+            <Heading level={1}>There is no page at this address</Heading>
             <p className={styles.lead}>
               <MissingPath /> Nothing was recorded and nothing was ordered. Watch the replay,
               start a call, or read how the check works.
@@ -62,9 +63,9 @@ export function NotFoundScreen() {
             </ActionLink>
           </nav>
           <section className={styles.directory} aria-labelledby={DIRECTORY_ID}>
-            <h2 className={styles.subtitle} id={DIRECTORY_ID}>
+            <Heading level={2} rank="block" id={DIRECTORY_ID}>
               Or go straight to a page
-            </h2>
+            </Heading>
             <PageDirectory pages={NOT_FOUND_DESTINATIONS} />
           </section>
           <Disclaimer />

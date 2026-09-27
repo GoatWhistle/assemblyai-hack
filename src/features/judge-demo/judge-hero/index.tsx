@@ -2,6 +2,7 @@ import { useId } from "react"
 import { THESIS_TITLE } from "@/features/intake/intake-screen/thesis"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
+import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { CALL_HREF, REPLAY_ENTRY_HREF } from "../entry-routes"
 import { REPLAY_LENGTH_LABEL } from "../replay-clock"
 import styles from "./styles.module.css"
@@ -29,14 +30,15 @@ export type JudgeHeroProps = {
 
 export function JudgeHero({ headingLevel = "h1", autoplaying = false }: JudgeHeroProps) {
   const headingId = useId()
-  const Heading = headingLevel
   return (
     <section className={styles.hero} aria-labelledby={headingId}>
       <div className={styles.lead}>
-        <Heading className={styles.title} id={headingId}>
-          {THESIS_TITLE}
-        </Heading>
-        <p className={styles.claim}>{HERO_CLAIM}</p>
+        <div className={styles.title}>
+          <Heading level={headingLevel === "h1" ? 1 : 2} id={headingId}>
+            {THESIS_TITLE}
+          </Heading>
+        </div>
+        <Lede rank="page">{HERO_CLAIM}</Lede>
         <Disclosure summary="The mechanism and the business case">
           <p className={styles.body}>{HERO_BODY}</p>
           <ul className={styles.parties}>

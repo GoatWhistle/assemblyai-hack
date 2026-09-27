@@ -7,7 +7,7 @@
   margin: var(--space-4) auto;
   padding: var(--space-3) var(--space-4);
   border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--panel-radius);
   background-color: var(--surface-sunken);
 }
 

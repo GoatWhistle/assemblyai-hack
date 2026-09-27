@@ -1,9 +1,13 @@
 import type { Metadata } from "next"
 import { WITNESS_BOUNDARY_NOTE } from "@/domain"
+import { Code } from "@/shared/ui/data-display/code"
+import { Method } from "@/shared/ui/data-display/method"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { MoreLink } from "@/shared/ui/navigation/more-link"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
+import { Panel } from "@/shared/ui/primitives/panel"
 import { pageMetadata } from "@/site/page-metadata"
 import { THREAT_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
@@ -33,6 +37,39 @@ const VERDICTS = [
   },
 ] as const
 
+const CLAIMS = [
+  {
+    key: "stops",
+    aspect: "What it stops",
+    answer:
+      "A recognizer quietly mishearing a drug name, which is the failure the product exists for.",
+  },
+  {
+    key: "does-not-stop",
+    aspect: "What it does not stop",
+    answer:
+      "A caller with DevTools posting invented words. Forging your own transcript deceives only yourself, and the gate is not built against that adversary.",
+  },
+  {
+    key: "relay",
+    aspect: "Why not relay the audio",
+    answer:
+      "It needs an always-on host, the process this design removed to fit the platform. The trade: we hold finer-grained evidence, per word, that a hostile client could fabricate; a relaying design holds coarser-grained evidence that a hostile client could not.",
+  },
+] as const
+
+const CLAIM_COLUMNS: readonly TableColumn[] = [
+  { key: "aspect", title: "Question", rowHeader: true },
+  { key: "answer", title: "Answer", kind: "muted", stack: "bare" },
+]
+
+const VERDICT_COLUMNS: readonly TableColumn[] = [
+  { key: "verdict", title: "Verdict", rowHeader: true },
+  { key: "meaning", title: "What it means", kind: "muted", stack: "bare" },
+]
+
+const WITNESS_PROBE = "npx tsx scripts/report/probe-witness.ts"
+
 function sentence(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`
 }
@@ -50,25 +87,14 @@ export default function ThreatModelPage() {
         title="The browser supplies the provenance, so a hostile client can forge it"
         lead="The browser holds the recognizer socket directly, so the words, their millisecond timings and their per-word certainties never pass through our server. The client posts them, and the gate checks that a value traces to words the session reported, not that anyone spoke them."
       >
-        <div className={styles.frame}>
-          <ul className={styles.claims}>
-            <li>
-              <strong>What it stops:</strong> a recognizer quietly mishearing a drug name, which
-              is the failure the product exists for.
-            </li>
-            <li>
-              <strong>What it does not stop:</strong> a caller with DevTools posting invented
-              words. Forging your own transcript deceives only yourself, and the gate is not
-              built against that adversary.
-            </li>
-            <li>
-              <strong>Why not relay the audio:</strong> it needs an always-on host, the process
-              this design removed to fit the platform. The trade: we hold finer-grained
-              evidence, per word, that a hostile client could fabricate; a relaying design holds
-              coarser-grained evidence that a hostile client could not.
-            </li>
-          </ul>
-        </div>
+        <Table
+          label="What browser-supplied provenance stops, and what it does not"
+          columns={CLAIM_COLUMNS}
+          rows={CLAIMS.map((claim) => ({
+            key: claim.key,
+            cells: { aspect: claim.aspect, answer: claim.answer },
+          }))}
+        />
         <p className={styles.more}>
           <MoreLink href="/docs/limitations#limit-provenance">
             The limitation at full strength
@@ -79,26 +105,26 @@ export default function ThreatModelPage() {
       <DocSection
         id={THREAT_SECTIONS.witness.id}
         title="The vendor witness is a second channel the browser cannot write"
-        lead="At finalize the server fetches, with its own key, the transcript AssemblyAI's own recognizer produced on the agent socket, and seals one verdict per field into the receipt. Forging provenance now means forging the vendor's record too."
+        lead="At finalize the server fetches the caller transcript AssemblyAI's own recognizer produced on the agent socket and seals one verdict per field into the receipt, so forging provenance means forging the vendor's record too."
       >
-        <div className={styles.frame}>
-          <dl className={styles.verdicts}>
-            {VERDICTS.map((entry) => (
-              <div key={entry.verdict} className={styles.verdict}>
-                <dt>
-                  <code className={styles.code}>{entry.verdict}</code>
-                </dt>
-                <dd>{entry.meaning}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+        <Table
+          label="The three witness verdicts"
+          columns={VERDICT_COLUMNS}
+          rows={VERDICTS.map((entry) => ({
+            key: entry.verdict,
+            cells: { verdict: <Code>{entry.verdict}</Code>, meaning: entry.meaning },
+          }))}
+        />
         <div className={styles.frame}>
           <div className={styles.pair}>
-            <blockquote className={styles.boundary}>
-              <p>{sentence(WITNESS_BOUNDARY_NOTE)}</p>
-              <footer>WITNESS_BOUNDARY_NOTE, the sentence every sealed receipt carries</footer>
-            </blockquote>
+            <Panel as="aside" tone="tinted">
+              <blockquote className={styles.boundary}>
+                <p>{sentence(WITNESS_BOUNDARY_NOTE)}</p>
+                <footer>
+                  <Code>WITNESS_BOUNDARY_NOTE</Code>, the sentence every sealed receipt carries
+                </footer>
+              </blockquote>
+            </Panel>
             <div className={styles.aside}>
               <p className={styles.prose}>
                 It also arrives too late to block anything: the timeline appears seconds after
@@ -107,9 +133,10 @@ export default function ThreatModelPage() {
                 latency stays a browser measurement.
               </p>
               <p className={styles.source}>
-                <span className={styles.sourceLabel}>Source</span> the session list and each
-                session&rsquo;s timeline artifact on AssemblyAI&rsquo;s agents API, read with
-                the server&rsquo;s key. scripts/report/probe-witness.ts measures the delay.
+                <Method
+                  command={WITNESS_PROBE}
+                  set="measures the delay over the session list and each session's timeline artifact on AssemblyAI's agents API, read with the server's key"
+                />
               </p>
             </div>
           </div>

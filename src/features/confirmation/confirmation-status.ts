@@ -1,5 +1,5 @@
 import { type ConfirmationEvidence, ConfirmationReason } from "@/domain"
-import type { ChipTone } from "@/shared/ui/primitives/chip"
+import type { Status } from "@/shared/ui/primitives/status-chip"
 
 export const ConfirmationStatus = {
   ConfirmedAloud: "CONFIRMED_ALOUD",
@@ -41,11 +41,11 @@ export const CONFIRMATION_STATUS_LABEL: Readonly<Record<ConfirmationStatus, stri
     NO_ANSWER: "No usable answer yet",
   })
 
-export const CONFIRMATION_STATUS_TONE: Readonly<Record<ConfirmationStatus, ChipTone>> =
+export const CONFIRMATION_CHIP_STATUS: Readonly<Record<ConfirmationStatus, Status>> =
   Object.freeze({
-    CONFIRMED_ALOUD: "accepted",
+    CONFIRMED_ALOUD: "written",
     CORRECTED: "asking",
-    REFUSED: "escalated",
-    NAME_REQUIRED: "lasa",
-    NO_ANSWER: "neutral",
+    REFUSED: "alert",
+    NAME_REQUIRED: "pair",
+    NO_ANSWER: "pending",
   })

@@ -43,12 +43,12 @@
 
 .alert {
   margin: 0;
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--state-escalated-line);
-  border-radius: var(--radius-md);
-  background-color: var(--state-escalated-surface);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  padding: var(--space-3) var(--panel-pad-compact);
+  border: 1px solid var(--panel-alert-line);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-alert-surface);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-primary);
 }
 
@@ -159,7 +159,7 @@
 }
 
 .hint {
-  font-size: var(--text-sm);
+  font-size: var(--meta-size);
   font-weight: var(--weight-regular);
   color: var(--text-muted);
 }

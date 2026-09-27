@@ -128,11 +128,11 @@ describe("close codes are counted, not asserted", () => {
     expect(closeCodeCounts().length).toBeGreaterThan(0)
   })
 
-  it("renders one row per observed code", () => {
+  it("renders one row per observed code, the code heading its row", () => {
     render(<OperationsPage />)
     for (const row of closeCodeRows()) {
       const cells = screen
-        .getAllByRole("cell")
+        .getAllByRole("rowheader")
         .filter((cell) => cell.textContent?.startsWith(String(row.code)))
       expect(cells.length, `${row.code}`).toBe(1)
     }

@@ -10,8 +10,8 @@
   gap: var(--space-2) var(--space-5);
   padding: var(--space-3);
   border: 1px solid var(--line-divider);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-panel);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-surface);
   box-shadow: var(--shadow-raise);
 }
 
@@ -173,8 +173,7 @@
       "track track"
       "foot foot";
     row-gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    border-radius: var(--radius-lg);
+    padding: var(--panel-pad-compact) var(--panel-pad);
   }
 
   .buttons > :first-child {

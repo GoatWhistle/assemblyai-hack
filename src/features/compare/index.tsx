@@ -1,4 +1,7 @@
-import { Chip, type ChipTone } from "@/shared/ui/primitives/chip"
+import type { ReactNode } from "react"
+import { Code } from "@/shared/ui/data-display/code"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
+import { type Status, StatusChip } from "@/shared/ui/primitives/status-chip"
 import { formatCertainty, GateVerdict, MOMENTS, type Moment } from "./moments"
 import styles from "./styles.module.css"
 
@@ -18,7 +21,7 @@ export const COLUMN = {
   withoutGate: "Threshold and validators only",
 } as const
 
-const COLUMN_COUNT = Object.keys(COLUMN).length
+export const MOMENT_COLUMN = "Moment"
 
 export const ALSO_ASKS = "Also asks:"
 
@@ -31,106 +34,82 @@ export function partnersNote(partners: readonly string[]): string {
 export const SOURCE_NOTE =
   "These candidates are synthesised from the documented message shapes, not recorded from a live call. The verdicts are not: every one of them is computed by decide() from the gate package, over the real field policy table."
 
-export function verdictTone(moment: Moment): ChipTone {
+export function verdictStatus(moment: Moment): Status {
   if (moment.verdict === GateVerdict.Pass) {
-    return "accepted"
+    return "written"
   }
   if (moment.verdict === GateVerdict.Refused) {
-    return "validator"
+    return "refused"
   }
-  return moment.pairOutranksCertainty ? "lasa" : "asking"
+  return moment.pairOutranksCertainty ? "pair" : "asking"
 }
 
-function outcomeClass(moment: Moment): string | undefined {
-  if (!moment.withoutGateWrites) {
-    return styles.value
-  }
-  return moment.verdict === GateVerdict.Pass ? styles.written : styles.slipped
-}
-
-export function WithoutGate({
-  moment,
-  className,
-}: {
-  readonly moment: Moment
-  readonly className: string | undefined
-}) {
+export function WithoutGate({ moment }: { readonly moment: Moment }) {
   if (moment.withoutGateWrites) {
-    return <span className={className}>{moment.withoutGateText}</span>
+    return (
+      <StatusChip status={moment.verdict === GateVerdict.Pass ? "written" : "alert"}>
+        {moment.withoutGateText}
+      </StatusChip>
+    )
   }
   return (
-    <span className={styles.also}>
-      {ALSO_ASKS} <code className={styles.code}>{moment.withoutGate.reasonCode}</code>
+    <span className={styles.stack}>
+      <span className={styles.muted}>{ALSO_ASKS}</span>
+      <Code>{moment.withoutGate.reasonCode}</Code>
     </span>
   )
 }
 
-function MomentGroup({ moment }: { readonly moment: Moment }) {
+function withNote(value: ReactNode, note: string | null): ReactNode {
+  if (note === null) {
+    return value
+  }
   return (
-    <tbody className={styles.group}>
-      <tr>
-        <th scope="rowgroup" colSpan={COLUMN_COUNT} className={styles.moment}>
-          {moment.title}
-        </th>
-      </tr>
-      <MomentCells moment={moment} />
-    </tbody>
+    <span className={styles.stack}>
+      <span>{value}</span>
+      <span className={styles.note}>{note}</span>
+    </span>
   )
 }
 
-function MomentCells({ moment }: { readonly moment: Moment }) {
-  return (
-    <tr className={styles.row} data-moment={moment.id}>
-      <td className={styles.cell} data-label={COLUMN.said}>
-        <span className={styles.value}>{moment.said}</span>
-      </td>
-      <td className={styles.cell} data-label={COLUMN.heard}>
-        <span className={styles.value}>{moment.heard}</span>
-        {moment.partners.length === 0 ? null : (
-          <span className={styles.note} data-partners={moment.partners.length}>
-            {partnersNote(moment.partners)}
-          </span>
-        )}
-      </td>
-      <td className={styles.cell} data-label={COLUMN.certainty}>
-        <span className={moment.pairOutranksCertainty ? styles.outranked : styles.value}>
-          {formatCertainty(moment.certainty)}
-        </span>
-        {moment.pairOutranksCertainty ? (
-          <span className={styles.note}>{PAIR_OUTRANKS_NOTE}</span>
-        ) : null}
-      </td>
-      <td className={styles.cell} data-label={COLUMN.verdict}>
-        <span className={styles.verdict}>
-          <Chip tone={verdictTone(moment)}>{moment.verdict}</Chip>
-          <code className={styles.code}>{moment.decision.reasonCode}</code>
-        </span>
-      </td>
-      <td className={styles.cell} data-label={COLUMN.withoutGate}>
-        <WithoutGate moment={moment} className={outcomeClass(moment)} />
-      </td>
-    </tr>
-  )
+export const MOMENT_COLUMNS: readonly TableColumn[] = [
+  { key: "said", title: COLUMN.said },
+  { key: "heard", title: COLUMN.heard },
+  { key: "certainty", title: COLUMN.certainty },
+  { key: "verdict", title: COLUMN.verdict },
+  { key: "withoutGate", title: COLUMN.withoutGate },
+]
+
+export function momentCells(moment: Moment): Readonly<Record<string, ReactNode>> {
+  return {
+    said: moment.said,
+    heard: withNote(
+      moment.heard,
+      moment.partners.length === 0 ? null : partnersNote(moment.partners),
+    ),
+    certainty: withNote(
+      <span className={styles.certainty}>{formatCertainty(moment.certainty)}</span>,
+      moment.pairOutranksCertainty ? PAIR_OUTRANKS_NOTE : null,
+    ),
+    verdict: (
+      <span className={styles.stack}>
+        <StatusChip status={verdictStatus(moment)}>{moment.verdict}</StatusChip>
+        <Code>{moment.decision.reasonCode}</Code>
+      </span>
+    ),
+    withoutGate: <WithoutGate moment={moment} />,
+  }
 }
 
 export function Compare() {
   return (
-    <div className={styles.frame}>
-      <table className={styles.table}>
-        <caption className="visually-hidden">{COMPARE_TITLE}</caption>
-        <thead className={styles.head}>
-          <tr>
-            {Object.values(COLUMN).map((label) => (
-              <th key={label} scope="col" className={styles.columnHead}>
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        {MOMENTS.map((moment) => (
-          <MomentGroup key={moment.id} moment={moment} />
-        ))}
-      </table>
-    </div>
+    <Table
+      label={COMPARE_TITLE}
+      columns={[{ key: "moment", title: MOMENT_COLUMN, rowHeader: true }, ...MOMENT_COLUMNS]}
+      rows={MOMENTS.map((moment) => ({
+        key: moment.id,
+        cells: { moment: moment.title, ...momentCells(moment) },
+      }))}
+    />
   )
 }

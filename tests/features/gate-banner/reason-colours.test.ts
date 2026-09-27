@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { ReasonCode } from "@/domain"
-import { describeReason, SEVERITY_TONE } from "@/features/gate-banner/reason-language"
+import { describeReason, SEVERITY_STATUS } from "@/features/gate-banner/reason-language"
+import { STATUS_TONE } from "@/shared/ui/primitives/status-chip"
 
 const SEMANTIC = readFileSync("src/styles/tokens/semantic.css", "utf8")
 
@@ -23,7 +24,7 @@ describe("A3-07: the three reasons to re-ask are never painted alike", () => {
       ReasonCode.LowConfidence,
       ReasonCode.ValidatorChecksum,
       ReasonCode.LasaHit,
-    ].map((code) => SEVERITY_TONE[describeReason(code).severity])
+    ].map((code) => STATUS_TONE[SEVERITY_STATUS[describeReason(code).severity]])
     expect(new Set(tones).size).toBe(3)
   })
 
@@ -34,7 +35,7 @@ describe("A3-07: the three reasons to re-ask are never painted alike", () => {
       ReasonCode.ValidatorCatalog,
       ReasonCode.ValidatorCombo,
     ]) {
-      expect(SEVERITY_TONE[describeReason(code).severity]).toBe("validator")
+      expect(STATUS_TONE[SEVERITY_STATUS[describeReason(code).severity]]).toBe("validator")
     }
     for (const part of ["ink", "surface", "line"]) {
       expect(

@@ -44,13 +44,34 @@ describe("r1-A5-06: every limitation in docs/limitations.md has a visible entry 
     }
   })
 
-  it("renders every entry as visible text with its status, not behind a disclosure", () => {
+  it("renders every entry's title, status and body as visible text, never behind a disclosure", () => {
     const { container } = render(<LimitationsPage />)
-    expect(container.querySelector("details")).toBeNull()
     for (const entry of LIMITATIONS) {
       const item = container.querySelector(`#limit-${entry.id}`)
       expect(item?.textContent, entry.id).toContain(entry.status)
       expect(item?.textContent, entry.id).toContain(entry.title)
+      expect(item?.textContent, entry.id).toContain(entry.body)
+      const hidden = [...(item?.querySelectorAll("details") ?? [])]
+        .map((details) => details.textContent ?? "")
+        .join(" ")
+      for (const visible of [entry.title, entry.status, entry.body]) {
+        expect(hidden.includes(visible), `${entry.id}: "${visible}" sits in a disclosure`).toBe(
+          false,
+        )
+      }
+    }
+  })
+
+  it("folds only a long list of points behind a named disclosure, and keeps every point", () => {
+    const { container } = render(<LimitationsPage />)
+    const folded = LIMITATIONS.filter((entry) => entry.pointsLabel !== undefined)
+    expect(container.querySelectorAll("details")).toHaveLength(folded.length)
+    for (const entry of folded) {
+      const details = container.querySelector(`#limit-${entry.id} details`)
+      expect(details?.textContent).toContain(entry.pointsLabel)
+      for (const point of entry.points ?? []) {
+        expect(details?.textContent).toContain(point)
+      }
     }
   })
 

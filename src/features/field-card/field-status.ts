@@ -6,7 +6,7 @@ import {
   type GateDecision,
   ReasonCode,
 } from "@/domain"
-import type { ChipTone } from "@/shared/ui/primitives/chip"
+import type { Status } from "@/shared/ui/primitives/status-chip"
 
 export type FieldStance =
   | "proposed"
@@ -29,15 +29,15 @@ export const STANCE_LABEL: Readonly<Record<FieldStance, string>> = Object.freeze
   aborted: "Left blank and flagged",
 })
 
-export const STANCE_CHIP: Readonly<Record<FieldStance, ChipTone>> = Object.freeze({
-  proposed: "neutral",
+export const STANCE_STATUS: Readonly<Record<FieldStance, Status>> = Object.freeze({
+  proposed: "pending",
   asking: "asking",
-  refused: "validator",
-  lasa: "lasa",
-  accepted: "accepted",
-  confirmed: "accepted",
-  escalated: "escalated",
-  aborted: "aborted",
+  refused: "refused",
+  lasa: "pair",
+  accepted: "written",
+  confirmed: "written",
+  escalated: "alert",
+  aborted: "inactive",
 })
 
 export type ValueMark = "written" | "heldLasa" | "heldAsking" | "heldRefused"

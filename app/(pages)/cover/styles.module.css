@@ -52,7 +52,7 @@
   align-self: center;
   display: grid;
   padding: var(--space-7);
-  border-radius: var(--radius-lg);
+  border-radius: var(--panel-radius);
   background-color: var(--surface-panel);
   box-shadow: var(--hairline), var(--shadow-float);
 }

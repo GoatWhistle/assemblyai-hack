@@ -192,7 +192,6 @@ export function IntakeScreen({
         {telemetry === undefined ? null : (
           <div className={styles.technical}>
             <Disclosure
-              tone="framed"
               summary={
                 <span className={styles.summary}>
                   <span>Technical details</span>

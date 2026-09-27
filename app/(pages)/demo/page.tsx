@@ -15,6 +15,7 @@ import { PageShell } from "@/shared/ui/layout/page-shell"
 import { type TabItem, Tabs } from "@/shared/ui/navigation/tabs"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
 import { Disclaimer } from "@/shared/ui/states/disclaimer"
+import { Heading } from "@/shared/ui/typography/heading"
 import { pageMetadata } from "@/site/page-metadata"
 import styles from "./styles.module.css"
 
@@ -47,7 +48,7 @@ const MORE: readonly TabItem[] = [
     label: RECORDING_PUBLISHED ? "Recorded audio" : "Recorded audio (none yet)",
     panel: (
       <div className={styles.panel}>
-        <h2 className={styles.heading}>Recorded audio</h2>
+        <Heading level={2}>Recorded audio</Heading>
         <RecordedSection published={RECORDING_PUBLISHED} />
       </div>
     ),

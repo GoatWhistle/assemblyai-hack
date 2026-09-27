@@ -1,5 +1,5 @@
 import type { FieldName, FieldWitnessVerdict, OrderWitness } from "@/domain"
-import { Chip, type ChipTone } from "@/shared/ui/primitives/chip"
+import { type Status, StatusChip } from "@/shared/ui/primitives/status-chip"
 
 export const WITNESS_LABEL: Readonly<Record<FieldWitnessVerdict, string>> = Object.freeze({
   witnessed: "heard by AssemblyAI too",
@@ -7,10 +7,10 @@ export const WITNESS_LABEL: Readonly<Record<FieldWitnessVerdict, string>> = Obje
   unavailable: "vendor record unavailable",
 })
 
-const WITNESS_TONE: Readonly<Record<FieldWitnessVerdict, ChipTone>> = Object.freeze({
-  witnessed: "plain",
+const WITNESS_STATUS: Readonly<Record<FieldWitnessVerdict, Status>> = Object.freeze({
+  witnessed: "tag",
   not_witnessed: "pending",
-  unavailable: "neutral",
+  unavailable: "inactive",
 })
 
 const VERDICTS: readonly string[] = Object.keys(WITNESS_LABEL)
@@ -66,8 +66,8 @@ export function WitnessBadge({ witness, field }: WitnessBadgeProps) {
   const entry = witness?.fields.find((candidate) => candidate.field === field)
   const detail = entry?.detail ?? witness?.unavailableReason ?? undefined
   return (
-    <Chip tone={WITNESS_TONE[verdict]} title={detail}>
+    <StatusChip status={WITNESS_STATUS[verdict]} title={detail}>
       {WITNESS_LABEL[verdict]}
-    </Chip>
+    </StatusChip>
   )
 }

@@ -9,8 +9,8 @@ import type {
   SpanSelection,
   TranscriptEntry,
 } from "@/features/transcript-view/transcript-entry"
-import { Chip } from "@/shared/ui/primitives/chip"
 import { Panel } from "@/shared/ui/primitives/panel"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { FIELD_LABEL } from "../field-language"
 import styles from "./styles.module.css"
 
@@ -63,9 +63,9 @@ export function IntakeRail({
                 onClick={() => onSelectCandidate(candidate)}
               >
                 <span className={styles.progressName}>{FIELD_LABEL[candidate.field]}</span>
-                <Chip tone={candidate.lasa.hit ? "lasa" : "plain"}>
+                <StatusChip status={candidate.lasa.hit ? "pair" : "tag"}>
                   {candidate.lasa.hit ? "pair" : `att ${candidate.attempt}`}
-                </Chip>
+                </StatusChip>
               </button>
             ))
           )}

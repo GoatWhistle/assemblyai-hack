@@ -49,7 +49,7 @@ describe("a name with several listed partners shows every one of them", () => {
     const { container } = render(<Compare />)
     for (const moment of paired) {
       expect(moment.partners).toEqual(moment.candidate.lasa.confusableWith)
-      const row = container.querySelector(`tr[data-moment="${moment.id}"]`)
+      const row = container.querySelector(`tr[data-row="${moment.id}"]`)
       expect(row?.textContent).toContain(partnersNote(moment.partners))
     }
   })

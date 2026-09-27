@@ -1,25 +1,19 @@
 .page {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--rhythm-section-compact);
   max-width: 56rem;
-  padding-block: var(--space-7) var(--space-8);
+  padding-block: var(--rhythm-section) var(--rhythm-page-end);
 }
 
 .intro {
   display: grid;
-  gap: var(--space-3);
-}
-
-.title {
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-semibold);
-  color: var(--text-primary);
-  text-wrap: balance;
+  gap: var(--rhythm-tight);
 }
 
 .lead {
-  max-width: 60ch;
-  font-size: var(--text-md);
+  max-width: var(--measure-prose);
+  font-size: var(--lede-page-size);
+  line-height: var(--lede-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
@@ -32,13 +26,7 @@
 
 .directory {
   display: grid;
-  gap: var(--space-3);
-}
-
-.subtitle {
-  font-size: var(--text-md);
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
+  gap: var(--rhythm-stack);
 }
 
 @media (min-width: 62rem) {
@@ -47,7 +35,6 @@
     column-gap: var(--shell-gap);
     align-content: start;
     max-width: none;
-    padding-block: var(--space-8);
   }
 
   .directory {
@@ -59,10 +46,10 @@
 
 @media (max-width: 40rem) {
   .page {
-    padding-block: var(--space-5) var(--space-7);
+    padding-block: var(--rhythm-group) var(--rhythm-section);
   }
 
-  .title {
-    font-size: var(--text-xl);
+  .lead {
+    font-size: var(--lede-section-size);
   }
 }

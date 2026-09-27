@@ -1,10 +1,10 @@
 .title {
   margin: 0 auto;
   max-width: 18ch;
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-regular);
-  letter-spacing: var(--track-display);
-  line-height: var(--leading-tight);
+  font-size: var(--title-page-size-compact);
+  font-weight: var(--title-page-weight);
+  letter-spacing: var(--title-page-track);
+  line-height: var(--title-page-leading);
   color: var(--text-primary);
   text-align: center;
   text-wrap: balance;
@@ -13,8 +13,8 @@
 .promise {
   margin: 0 auto;
   max-width: 56ch;
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  font-size: var(--lede-section-size);
+  line-height: var(--lede-leading);
   letter-spacing: var(--track-tight);
   color: var(--text-muted);
   text-align: center;
@@ -24,11 +24,11 @@
 @media (min-width: 40rem) {
   .title {
     max-width: 22ch;
-    font-size: var(--text-3xl);
+    font-size: var(--title-page-size);
   }
 
   .promise {
-    font-size: var(--text-md);
+    font-size: var(--lede-page-size);
   }
 }
 
@@ -41,28 +41,28 @@
 
   .title {
     max-width: 14ch;
-    font-size: var(--text-2xl);
+    font-size: var(--title-page-size-compact);
   }
 
   .promise {
     max-width: 40ch;
-    font-size: var(--text-base);
+    font-size: var(--lede-section-size);
   }
 }
 
 @media (min-width: 110rem) {
   .title {
-    font-size: var(--text-3xl);
+    font-size: var(--title-page-size);
   }
 
   .promise {
     max-width: 44ch;
-    font-size: var(--text-md);
+    font-size: var(--lede-page-size);
   }
 }
 
 @media (max-height: 40rem) and (min-width: 40rem) {
   .title {
-    font-size: var(--text-2xl);
+    font-size: var(--title-page-size-compact);
   }
 }

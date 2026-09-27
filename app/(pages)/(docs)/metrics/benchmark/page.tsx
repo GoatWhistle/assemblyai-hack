@@ -4,6 +4,7 @@ import { BENCHMARK_CAPTION, BenchmarkTable } from "@/features/metrics/benchmark-
 import { reportEntries } from "@/features/metrics/policy-figures"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
+import { Panel } from "@/shared/ui/primitives/panel"
 import { pageMetadata } from "@/site/page-metadata"
 import { BENCHMARK_AGREEMENT_NOTE } from "@/stats"
 import { BENCHMARK_SECTIONS } from "../../docs-map"
@@ -60,8 +61,12 @@ export default function BenchmarkPage() {
           label="Further report figures"
           caption="Checksum audits, calibration, rarity and human-voice rows the server publishes beside the shipped policy."
         />
-        <div className={styles.independent}>
-          <p className={styles.title}>Independent: another team measured the same effect</p>
+        <Panel
+          as="aside"
+          tone="tinted"
+          title="Independent: another team measured the same effect"
+          headingLevel={3}
+        >
           <p className={styles.body}>
             A competing submission published a live run in which the recognizer returned a
             three-word homophone of a two-word business name. The word-level confidences on the
@@ -72,7 +77,7 @@ export default function BenchmarkPage() {
             exists for rests on our own four above-threshold errors. Recorded in eval/REPORT.md;
             we did not reproduce the run.
           </p>
-        </div>
+        </Panel>
       </DocSection>
     </>
   )

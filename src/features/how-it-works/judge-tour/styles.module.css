@@ -1,22 +1,14 @@
 .tour {
   display: grid;
-  gap: var(--space-3);
-}
-
-.heading {
-  margin: 0;
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-heading);
-  color: var(--text-primary);
+  gap: var(--rhythm-group);
 }
 
 .steps {
   display: grid;
-  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
+  border-top: 1px solid var(--line-hairline);
 }
 
 .step {
@@ -24,13 +16,14 @@
   grid-template-columns: 2rem minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
-  padding: var(--space-3);
+  padding-block: var(--space-3);
   border-block-end: 1px solid var(--line-hairline);
 }
 
 .number {
-  font-family: var(--font-data);
-  font-size: var(--text-lg);
+  font-size: var(--title-block-size);
+  font-weight: var(--label-weight);
+  font-variant-numeric: tabular-nums;
   color: var(--text-muted);
 }
 
@@ -41,22 +34,22 @@
 
 .click {
   margin: 0;
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
   color: var(--text-primary);
 }
 
 .seconds {
-  font-size: var(--text-sm);
+  font-size: var(--meta-size);
   font-weight: var(--weight-regular);
   color: var(--text-secondary);
 }
 
 .expect {
   margin: 0;
-  max-width: 70ch;
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  max-width: var(--measure-prose);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
 }
 

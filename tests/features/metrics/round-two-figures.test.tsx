@@ -103,9 +103,10 @@ describe("r2-A5 N3: the close-code tally is the whole count, not a subset", () =
 
   it("renders the 1008 and 1006 counts beside their commands", () => {
     const { container } = render(<OperationsPage />)
-    const table = container.querySelector("[aria-label='Socket close codes']")
-    expect(table?.textContent).toContain(LIVE_RUN_COUNT_COMMAND)
-    expect(table?.textContent).toContain(STRESS_COMMAND)
+    const section = container.querySelector("section#close-codes")
+    expect(section?.textContent).toContain(LIVE_RUN_COUNT_COMMAND)
+    expect(section?.textContent).toContain(STRESS_COMMAND)
+    const table = section?.querySelector("[aria-label='Socket close codes']")
     const cells = [...(table?.querySelectorAll("td") ?? [])].map((cell) => cell.textContent)
     expect(cells).toContain(String(rowFor(1008).count))
     expect(cells).toContain(String(rowFor(1008).beforeLedger))

@@ -2,7 +2,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-bottom: var(--space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .filter {
@@ -12,15 +15,15 @@
   border-radius: var(--radius-pill);
   background-color: var(--surface-panel);
   color: var(--text-secondary);
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   cursor: pointer;
   transition: var(--transition-control);
 }
 
 .filter:hover {
-  border-color: var(--action-ink);
-  color: var(--action-ink);
+  border-color: var(--select-line);
+  color: var(--select-ink);
 }
 
 .filter:focus-visible {
@@ -29,42 +32,26 @@
 }
 
 .active {
-  border-color: var(--action-ink);
-  background-color: var(--action-quiet);
-  color: var(--action-ink);
-  font-weight: var(--weight-semibold);
+  border-color: var(--select-line);
+  background-color: var(--select-surface);
+  color: var(--select-ink);
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-sm);
+.rejected {
+  display: grid;
+  gap: var(--rhythm-stack);
+  min-width: 0;
 }
 
-.table th {
-  text-align: left;
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-semibold);
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--rhythm-tight) var(--rhythm-stack);
+}
+
+.note {
+  font-size: var(--meta-size);
   color: var(--text-muted);
-  border-bottom: 1px solid var(--line-strong);
-}
-
-.table td {
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--line-hairline);
-  color: var(--text-primary);
-  vertical-align: top;
-}
-
-.utterance {
-  max-width: var(--measure-prose);
-  line-height: var(--leading-relaxed);
-}
-
-@media (max-width: 34rem) {
-  .table {
-    display: block;
-    overflow-x: auto;
-  }
 }

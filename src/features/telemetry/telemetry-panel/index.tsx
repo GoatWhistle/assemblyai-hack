@@ -6,7 +6,7 @@ import { PHASE_TECHNICAL, type SessionPhase } from "@/features/intake/session-st
 import type { LatencySummary } from "@/features/latency/latency-recorder"
 import type { TappedFrame } from "@/realtime/frame-tap"
 import { useDetailsMotion } from "@/shared/ui/motion/use-details-motion"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { ACTIVITY_LABEL, ACTIVITY_WORD, agentActivityOf } from "../agent-activity"
 import type { DecisionCounts } from "../decision-counts"
 import { DecisionLog } from "../decision-log"
@@ -51,7 +51,9 @@ export function TelemetryPanel({
   return (
     <section className={styles.panel} aria-label="Telemetry">
       <div className={styles.status}>
-        <Chip tone={mode.kind === "live" ? "pending" : "plain"}>{modeLabel(mode)}</Chip>
+        <StatusChip status={mode.kind === "live" ? "pending" : "tag"}>
+          {modeLabel(mode)}
+        </StatusChip>
         <output className={styles.activity} aria-live="polite">
           <span className={styles.activityWord}>{ACTIVITY_WORD[activity]}</span>
           <span className={styles.activityNote}>{ACTIVITY_LABEL[activity]}</span>

@@ -2,7 +2,10 @@
 
 import { useCallback, useState } from "react"
 import { ConfirmationMode } from "@/domain"
+import { Code } from "@/shared/ui/data-display/code"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
 import { Button } from "@/shared/ui/primitives/button"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { ATTACKS, type AttackId, type AttackOutcome, runAttack } from "./attacks"
 import styles from "./styles.module.css"
 
@@ -12,34 +15,44 @@ type OutcomeOutputProps = {
   readonly attempt: number
 }
 
+const COLUMNS: readonly TableColumn[] = [
+  { key: "attempt", title: "Attempt", rowHeader: true },
+  { key: "claims", title: "What it claims", kind: "muted", stack: "bare" },
+  { key: "answer", title: "The gate's answer", stack: "bare" },
+]
+
+function Labelled({ label, children }: { readonly label: string; readonly children: string }) {
+  return (
+    <span className={styles.line}>
+      <span className={styles.label}>{label}</span>
+      {children}
+    </span>
+  )
+}
+
 function OutcomeOutput({ outcome, explains, attempt }: OutcomeOutputProps) {
   return (
     <output key={attempt} className={outcome.written ? styles.written : styles.refused}>
-      <p className={styles.verdict}>
-        {outcome.written ? "written" : "refused"}
-        {outcome.reasonCode === null ? null : (
-          <code className={styles.code}>{outcome.reasonCode}</code>
-        )}
-      </p>
+      <span className={styles.verdict}>
+        <StatusChip status={outcome.written ? "alert" : "refused"}>
+          {outcome.written ? "written" : "refused"}
+        </StatusChip>
+        {outcome.reasonCode === null ? null : <Code>{outcome.reasonCode}</Code>}
+      </span>
       {outcome.refusal === null ? null : (
-        <p className={styles.refusal}>
-          <span className={styles.askedLabel}>what the gate itself raised, verbatim</span>
-          {outcome.refusal}
-        </p>
+        <span className={styles.machine}>
+          <Labelled label="what the gate itself raised, verbatim">{outcome.refusal}</Labelled>
+        </span>
       )}
       {outcome.askedFor === undefined ? null : (
-        <p className={styles.asked}>
-          <span className={styles.askedLabel}>what the agent asks instead</span>
-          {outcome.askedFor}
-        </p>
+        <Labelled label="what the agent asks instead">{outcome.askedFor}</Labelled>
       )}
       {outcome.ruleCited === undefined ? null : (
-        <p className={styles.cited}>
-          <span className={styles.askedLabel}>the rule this comes from</span>
-          {outcome.ruleCited}
-        </p>
+        <span className={styles.machine}>
+          <Labelled label="the rule this comes from">{outcome.ruleCited}</Labelled>
+        </span>
       )}
-      <p className={styles.explains}>{explains}</p>
+      <span className={styles.explains}>{explains}</span>
     </output>
   )
 }
@@ -59,31 +72,34 @@ export function AttackConsole() {
 
   return (
     <div className={styles.console}>
-      <ol className={styles.attacks}>
-        {ATTACKS.map((attack) => {
+      <Table
+        label="Attempts to write a value the gate did not prove"
+        columns={COLUMNS}
+        rows={ATTACKS.map((attack) => {
           const outcome = outcomes.get(attack.id)
-          return (
-            <li key={attack.id} className={styles.attack}>
-              <div className={styles.head}>
-                <p className={styles.attackTitle}>{attack.title}</p>
-                <Button size="small" onClick={() => mount(attack.id)}>
-                  {outcome === undefined ? "Attempt the write" : "Attempt again"}
-                </Button>
-              </div>
-              <p className={styles.asks}>{attack.asks}</p>
-
-              {outcome === undefined ? null : (
-                <OutcomeOutput
-                  outcome={outcome}
-                  explains={attack.explains}
-                  attempt={attempts.get(attack.id) ?? 0}
-                />
-              )}
-            </li>
-          )
+          return {
+            key: attack.id,
+            cells: {
+              attempt: attack.title,
+              claims: attack.asks,
+              answer: (
+                <span className={styles.answer}>
+                  <Button size="small" onClick={() => mount(attack.id)}>
+                    {outcome === undefined ? "Attempt the write" : "Attempt again"}
+                  </Button>
+                  {outcome === undefined ? null : (
+                    <OutcomeOutput
+                      outcome={outcome}
+                      explains={attack.explains}
+                      attempt={attempts.get(attack.id) ?? 0}
+                    />
+                  )}
+                </span>
+              ),
+            },
+          }
         })}
-      </ol>
-
+      />
       {tried === 0 ? null : (
         <p className={styles.tally}>
           {tried} {tried === 1 ? "attempt" : "attempts"}, {written} written. The order can only

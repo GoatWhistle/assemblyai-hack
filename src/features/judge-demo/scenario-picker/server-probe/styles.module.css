@@ -1,19 +1,17 @@
 .running {
   display: block;
-  padding: var(--space-4);
+  padding: var(--panel-pad-compact);
   border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
+  border-radius: var(--panel-radius);
+  font-size: var(--meta-size);
   color: var(--text-secondary);
 }
 
 .detail {
   display: grid;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-sunken);
+  gap: var(--rhythm-tight);
+  padding-block: var(--rhythm-stack);
+  border-block: 1px solid var(--line-hairline);
 }
 
 .heard {
@@ -24,21 +22,20 @@
 }
 
 .heardTerm {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
 .heardValue {
-  font-family: var(--font-data);
-  font-size: var(--text-sm);
+  font-size: var(--body-size);
   color: var(--text-primary);
   overflow-wrap: anywhere;
 }
 
 .why {
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   max-width: var(--measure-prose);
   text-wrap: pretty;

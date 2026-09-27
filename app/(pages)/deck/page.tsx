@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { SLIDES, Slide } from "@/features/deck"
 import { PageShell } from "@/shared/ui/layout/page-shell"
+import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { pageMetadata } from "@/site/page-metadata"
 import styles from "./styles.module.css"
 
@@ -21,11 +22,13 @@ export default function DeckPage() {
       </a>
       <PageShell>
         <main className={styles.deck} id={MAIN_ID}>
-          <h1 className={styles.title}>Readback: the submission deck</h1>
-          <p className={styles.hint}>
-            Print to PDF to get one slide per page: landscape, no margins, background graphics
-            on.
-          </p>
+          <div className={styles.head}>
+            <Heading level={1}>Readback: the submission deck</Heading>
+            <Lede rank="page">
+              Print to PDF to get one slide per page: landscape, no margins, background graphics
+              on.
+            </Lede>
+          </div>
           <ol className={styles.slides}>
             {SLIDES.map((slide, index) => (
               <li className={styles.item} key={slide.id}>

@@ -4,11 +4,11 @@
   --arm-line: var(--line-divider);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-  padding: var(--space-5);
-  border: 2px solid var(--arm-line);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-panel);
+  gap: var(--rhythm-stack);
+  padding: var(--panel-pad);
+  border: 1px solid var(--arm-line);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-surface);
   overflow: hidden;
   transition: border-color var(--dur-slow) var(--ease-out-quart);
   transition-delay: calc(var(--arm, 0) * var(--stagger-arm));
@@ -48,19 +48,13 @@
 
 .armHead {
   display: grid;
-  gap: var(--space-1);
-}
-
-.armTitle {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
+  gap: var(--rhythm-tight);
 }
 
 .armNote {
-  max-width: 70ch;
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  max-width: var(--measure-prose);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
@@ -69,7 +63,7 @@
   display: grid;
   gap: var(--space-3) var(--space-6);
   align-content: start;
-  padding-top: var(--space-4);
+  padding-top: var(--rhythm-stack);
   border-top: 1px solid var(--line-hairline);
 }
 
@@ -81,29 +75,29 @@
 }
 
 .saidWho {
-  font-size: var(--text-sm);
+  font-size: var(--meta-size);
   color: var(--text-muted);
 }
 
 .saidText {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
 }
 
 .reasonCode {
   font-family: var(--font-data);
-  font-size: var(--text-2xs);
+  font-size: var(--code-size-fixed);
   letter-spacing: var(--track-normal);
-  color: var(--text-faint);
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 
 .outcome {
   display: grid;
   gap: var(--space-2);
-  margin: 0 calc(-1 * var(--space-5)) calc(-1 * var(--space-5));
-  padding: var(--space-4) var(--space-5) var(--space-5);
+  margin: 0 calc(-1 * var(--panel-pad)) calc(-1 * var(--panel-pad));
+  padding: var(--rhythm-stack) var(--panel-pad) var(--panel-pad);
   border-top: 1px solid var(--arm-line);
   background-color: var(--arm-surface);
   transition:
@@ -113,7 +107,8 @@
 }
 
 .outcomeLabel {
-  font-size: var(--text-sm);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
@@ -141,10 +136,10 @@
 .outcomeValue {
   position: relative;
   justify-self: start;
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  line-height: var(--leading-tight);
+  font-size: var(--figure-size);
+  font-weight: var(--figure-weight);
+  letter-spacing: var(--figure-track);
+  line-height: var(--figure-leading);
   color: var(--arm-ink);
 }
 
@@ -185,9 +180,9 @@
 }
 
 .outcomeBody {
-  max-width: 70ch;
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  max-width: var(--measure-prose);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   text-wrap: pretty;
 }

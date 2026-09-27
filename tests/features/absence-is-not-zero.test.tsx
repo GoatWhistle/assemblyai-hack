@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { FieldName, GateAction, type GateDecision, ReasonCode } from "@/domain"
-import { RefusalCounter } from "@/features/gate-ledger/refusal-counter"
+import { NOT_OBSERVED, RefusalCounter } from "@/features/gate-ledger/refusal-counter"
 import {
   countFor,
   NOTHING_OBSERVED,
@@ -11,44 +11,62 @@ import {
 import { IntakeRail } from "@/features/intake/intake-rail"
 import { confidenceFigures, errorRateFigures } from "@/features/metrics/measured-figures"
 import { initialContext } from "@/features/read-back/read-back-machine"
-import { Counted, NOT_OBSERVED } from "@/shared/ui/data-display/counted"
+import { Figure, FigureGroup } from "@/shared/ui/data-display/figure"
 
 const ABSENCE_NOTE = "Nothing has been observed, so this is absence rather than a clean run."
 
-describe("Counted keeps a measured zero apart from an unmeasured absence", () => {
+describe("a figure keeps a measured zero apart from an unmeasured absence", () => {
   it("renders a measured zero as the digit zero", () => {
-    render(<Counted count={0} label="blocked values" absenceNote={ABSENCE_NOTE} />)
+    render(
+      <FigureGroup>
+        <Figure label="blocked values" value={0} absentLabel={NOT_OBSERVED} />
+      </FigureGroup>,
+    )
     expect(
       screen.getByText("0"),
       "a real zero must be published: hiding it makes the cost side of the gate invisible",
     ).toBeDefined()
-    expect(screen.queryByText(NOT_OBSERVED)).toBeNull()
+    expect(screen.queryByRole("img", { name: NOT_OBSERVED })).toBeNull()
   })
 
-  it("renders an absent count as words, never as a digit", () => {
-    render(<Counted count={null} label="blocked values" absenceNote={ABSENCE_NOTE} />)
+  it("renders an absent count as a labelled dash, never as a digit", () => {
+    render(
+      <FigureGroup>
+        <Figure label="blocked values" value={null} absentLabel={NOT_OBSERVED} />
+      </FigureGroup>,
+    )
     expect(
-      screen.getByText(NOT_OBSERVED),
+      screen.getByRole("img", { name: NOT_OBSERVED }),
       "absence rendered as zero is the bug that has bitten this project three times",
     ).toBeDefined()
     expect(screen.queryByText("0")).toBeNull()
   })
 
   it("explains what the absence means, since a blank invites the wrong reading", () => {
-    render(<Counted count={null} label="blocked values" absenceNote={ABSENCE_NOTE} />)
+    render(
+      <FigureGroup>
+        <Figure label="blocked values" value={null} note={ABSENCE_NOTE} />
+      </FigureGroup>,
+    )
     expect(screen.getByText(ABSENCE_NOTE)).toBeDefined()
   })
 
   it("prints the denominator for a measured count and suppresses it for an absent one", () => {
     const { unmount } = render(
-      <Counted count={2} of={7} label="blocked values" absenceNote={ABSENCE_NOTE} />,
+      <FigureGroup>
+        <Figure label="blocked values" value={2} interval="of 7" />
+      </FigureGroup>,
     )
     expect(
       screen.getByText(/of 7/),
       "a figure carries the size of the set it came from",
     ).toBeDefined()
     unmount()
-    render(<Counted count={null} of={7} label="blocked values" absenceNote={ABSENCE_NOTE} />)
+    render(
+      <FigureGroup>
+        <Figure label="blocked values" value={null} interval="of 7" />
+      </FigureGroup>,
+    )
     expect(
       screen.queryByText(/of 7/),
       "a denominator beside an unobserved count implies a measurement that never ran",

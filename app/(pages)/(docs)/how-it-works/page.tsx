@@ -6,7 +6,7 @@ import {
   SCRIPT_STEPS,
 } from "@/features/how-it-works/demo-script/script-steps"
 import { GateReasons, STANDING_FIELDS_LINE } from "@/features/how-it-works/gate-reasons"
-import { LIMITATIONS, Limits } from "@/features/how-it-works/limits"
+import { LIMITATIONS, LimitTitles } from "@/features/how-it-works/limits"
 import { ProofLadder } from "@/features/how-it-works/proof-ladder"
 import { CALL_HREF, REPLAY_ENTRY_HREF } from "@/features/judge-demo/entry-routes"
 import { REPLAY_LENGTH_LABEL } from "@/features/judge-demo/replay-clock"
@@ -97,9 +97,9 @@ export default function HowItWorksPage() {
       <DocSection
         id={HOW_SECTIONS.limits.id}
         title="What this does not prove"
-        lead="Three of the limits closest to this page, stated here rather than left to be discovered. A demonstration that hides its own boundary is the failure this product argues against."
+        lead="The three limits closest to this page, each stated in full on the limitations page. A demonstration that hides its own boundary is the failure this product argues against."
       >
-        <Limits entries={LIMITATIONS.filter((entry) => SHOWN_LIMITS.includes(entry.id))} />
+        <LimitTitles entries={LIMITATIONS.filter((entry) => SHOWN_LIMITS.includes(entry.id))} />
         <div className={styles.actions}>
           <ActionLink href="/docs/limitations" icon="forward">
             {`All ${LIMITATIONS.length} limitations`}

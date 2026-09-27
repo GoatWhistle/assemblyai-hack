@@ -8,7 +8,7 @@ import { Captions } from "@/features/judge-demo/replay-voice/captions"
 import { highlightedField } from "@/features/judge-demo/replay-voice/replay-script"
 import { modeLabel } from "@/features/telemetry/session-mode"
 import { Button } from "@/shared/ui/primitives/button"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { playRecording, type RecordedPlayback } from "../recorded-audio"
 import { durationOf, recordedLines, stateAt } from "../recorded-lines"
 import styles from "./styles.module.css"
@@ -73,9 +73,9 @@ export function RecordedPlayer({ recording, play = playRecording }: RecordedPlay
   return (
     <section className={styles.player} aria-label="Recorded live session">
       <div className={styles.head}>
-        <Chip tone="plain">
+        <StatusChip status="tag">
           {modeLabel({ kind: "replay", recordedOn: date, source: "live" })}
-        </Chip>
+        </StatusChip>
         <Button tone="primary" onClick={start} disabled={running}>
           Play the recorded call
         </Button>

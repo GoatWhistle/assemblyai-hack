@@ -1,5 +1,7 @@
 import { FIELD_POLICIES, FieldName, ReasonCode } from "@/domain"
 import { FIELD_LABEL } from "@/features/intake/field-language"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
+import { type Status, StatusChip } from "@/shared/ui/primitives/status-chip"
 import styles from "./styles.module.css"
 
 export type GateReason = {
@@ -50,23 +52,36 @@ export const STANDING_FIELDS_LINE = `${STANDING.length} fields are always read b
 
 export const STANDING_READ_BACK_LINE = `${STANDING_FIELDS_LINE} The three reasons below change which question is asked, and only the third will not take a yes for an answer.`
 
+const REASON_STATUS: Readonly<Record<GateReason["family"], Status>> = {
+  threshold: "asking",
+  validator: "refused",
+  lasa: "pair",
+}
+
+const COLUMNS: readonly TableColumn[] = [
+  { key: "reason", title: "Reason", rowHeader: true },
+  { key: "code", title: "Reason code", kind: "code", size: "fit" },
+  { key: "body", title: "What it means", kind: "muted", stack: "bare" },
+]
+
 export function GateReasons() {
   return (
-    <div className={styles.frame}>
-      <ol className={styles.reasons}>
-        {GATE_REASONS.map((reason, index) => (
-          <li key={reason.code} className={styles.reason} data-family={reason.family}>
-            <span className={styles.ordinal} aria-hidden="true">
-              {index + 1}
+    <Table
+      label="Three reasons to ask again"
+      columns={COLUMNS}
+      rows={GATE_REASONS.map((reason) => ({
+        key: reason.code,
+        cells: {
+          reason: (
+            <span className={styles.reason}>
+              <StatusChip status={REASON_STATUS[reason.family]}>{reason.label}</StatusChip>
+              <span>{reason.title}</span>
             </span>
-            <div className={styles.text}>
-              <p className={styles.reasonTitle}>{reason.title}</p>
-              <code className={styles.code}>{reason.code}</code>
-              <p className={styles.reasonBody}>{reason.body}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </div>
+          ),
+          code: reason.code,
+          body: reason.body,
+        },
+      }))}
+    />
   )
 }

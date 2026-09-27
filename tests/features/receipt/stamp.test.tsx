@@ -63,7 +63,7 @@ describe("the receipt check lands as a stamp", () => {
   it("keeps the stamp still on paper and times it from a collapsing token", () => {
     const sheet = readFileSync("src/features/receipt/receipt-view/styles.module.css", "utf8")
     const print = sheet.slice(sheet.indexOf("@media print"))
-    expect(print).toMatch(/\.stamped,\s*\.check\s*\{\s*animation: none;/)
+    expect(print).toMatch(/\.stamped,\s*\.checks tbody tr\s*\{\s*animation: none;/)
     expect(sheet).toMatch(/animation: stamp var\(--dur-slow\)/)
   })
 })

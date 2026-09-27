@@ -1,9 +1,11 @@
 "use client"
 
 import { type KeyboardEvent as ReactKeyboardEvent, useId, useRef, useState } from "react"
-import { Counted } from "@/shared/ui/data-display/counted"
+import { Figure, FigureGroup } from "@/shared/ui/data-display/figure"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { Panel } from "@/shared/ui/primitives/panel"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
+import { Heading, Lede } from "@/shared/ui/typography/heading"
 import {
   CIRCULARITY,
   COMPETITOR_CITATION,
@@ -24,6 +26,8 @@ import {
 import styles from "./styles.module.css"
 
 export * from "./arms"
+
+export const ABSENT_COUNT = "not observed yet"
 
 export function KeytermsAb() {
   const [selected, setSelected] = useState<KeytermsArmId>("shipped")
@@ -49,10 +53,10 @@ export function KeytermsAb() {
   return (
     <section className={styles.block} aria-labelledby={titleId}>
       <header className={styles.head}>
-        <h2 className={styles.title} id={titleId}>
+        <Heading level={2} id={titleId}>
           {KEYTERMS_AB_TITLE}
-        </h2>
-        <p className={styles.lede}>{KEYTERMS_AB_SUMMARY}</p>
+        </Heading>
+        <Lede>{KEYTERMS_AB_SUMMARY}</Lede>
         <Disclosure summary="Where this A/B comes from">
           <p className={styles.lede}>{KEYTERMS_AB_LEDE}</p>
         </Disclosure>
@@ -82,9 +86,9 @@ export function KeytermsAb() {
               <span className={styles.armTitle}>{entry.title}</span>
               <span className={styles.armTag}>
                 {entry.runnable ? (
-                  <Chip tone="accepted">shipped and measured</Chip>
+                  <StatusChip status="written">shipped and measured</StatusChip>
                 ) : (
-                  <Chip tone="plain">described, never run</Chip>
+                  <StatusChip status="tag">described, never run</StatusChip>
                 )}
               </span>
             </button>
@@ -108,23 +112,25 @@ export function KeytermsAb() {
               </li>
             ))}
           </ul>
-          <div className={styles.readings}>
-            <Counted
-              count={arm.runnable ? arm.termCount : null}
+          <FigureGroup label="Keyterms counts">
+            <Figure
+              figureKey="terms"
+              value={arm.runnable ? arm.termCount : null}
               label={
                 arm.runnable
-                  ? "terms in the list this deployment sends"
-                  : "terms in a list this deployment will not send"
+                  ? "Terms in the list this deployment sends"
+                  : "Terms in a list this deployment will not send"
               }
-              absenceNote={WHY_NO_NUMBER}
+              absentLabel={ABSENT_COUNT}
+              note={arm.runnable ? undefined : WHY_NO_NUMBER}
             />
-            <Counted
-              count={arm.lasaTermsPresent.length}
-              label="of those terms sit on the published pair table"
-              absenceNote={WHY_NO_NUMBER}
+            <Figure
+              figureKey="pair-terms"
+              value={arm.lasaTermsPresent.length}
+              label="Of those terms sit on the published pair table"
               tone={arm.lasaTermsPresent.length === 0 ? "neutral" : "lasa"}
             />
-          </div>
+          </FigureGroup>
           <p className={styles.measured}>{KEYTERMS_COUNT_SOURCE}</p>
           {arm.lasaTermsPresent.length === 0 ? null : (
             <p className={styles.leaked}>
@@ -149,14 +155,16 @@ export function KeytermsAb() {
           {arm.runnable ? (
             <p className={styles.measured}>{MEASURED_ARM_NOTE}</p>
           ) : (
-            <div className={styles.refusal}>
-              <p className={styles.refusalTitle}>Why this arm has no switch</p>
-              <p className={styles.refusalBody}>{arm.whyNotRunnable}</p>
-              <p className={styles.refusalBody}>
-                The prompt that travels with it reads{" "}
-                <q className={styles.quote}>{COMPETITOR_PROMPT_LINE}</q>. {COMPETITOR_CITATION}
-              </p>
-            </div>
+            <Panel title="Why this arm has no switch" tone="alert" headingLevel={3} as="div">
+              <div className={styles.refusal}>
+                <p className={styles.refusalBody}>{arm.whyNotRunnable}</p>
+                <p className={styles.refusalBody}>
+                  The prompt that travels with it reads{" "}
+                  <q className={styles.quote}>{COMPETITOR_PROMPT_LINE}</q>.{" "}
+                  {COMPETITOR_CITATION}
+                </p>
+              </div>
+            </Panel>
           )}
         </div>
       </div>

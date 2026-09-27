@@ -7,7 +7,26 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: var(--space-4);
+  gap: var(--rhythm-stack);
+}
+
+.catch,
+.cost,
+.catalogue {
+  min-width: 0;
+}
+
+.body {
+  display: grid;
+  gap: var(--rhythm-stack);
+}
+
+.note {
+  max-width: var(--measure-prose);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-secondary);
+  text-wrap: pretty;
 }
 
 @container (width >= 44rem) {
@@ -37,79 +56,5 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
     grid-template-rows: auto;
     grid-template-areas: "catch cost catalogue";
-  }
-}
-
-.panel {
-  display: grid;
-  align-content: start;
-  gap: var(--space-4);
-  padding: var(--space-5);
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-panel);
-  min-width: 0;
-}
-
-.kicker {
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
-  font-weight: var(--weight-medium);
-  color: var(--text-muted);
-}
-
-.figure {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-medium);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-tight);
-  line-height: var(--leading-snug);
-  color: var(--text-primary);
-  text-wrap: balance;
-}
-
-.figure strong,
-.second strong {
-  font-weight: var(--weight-semibold);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.second {
-  max-width: var(--measure-prose);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-primary);
-  text-wrap: pretty;
-}
-
-.note {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  text-wrap: pretty;
-}
-
-.note strong {
-  font-weight: var(--weight-semibold);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-
-.code {
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  padding: 0.0625rem var(--space-2);
-  border: 1px solid var(--line-divider);
-  border-radius: var(--radius-sm);
-  background-color: var(--surface-sunken);
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-@media (max-width: 40rem) {
-  .panel {
-    padding: var(--space-4);
   }
 }

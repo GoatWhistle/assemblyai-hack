@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react"
+import { Heading } from "@/shared/ui/typography/heading"
 import { DECISION_AT_MS, type DemoArm, type DemoPhase } from "../demo-arms"
 import styles from "./styles.module.css"
 
@@ -21,7 +22,6 @@ function toneOf(gated: boolean, phase: DemoPhase): string {
 }
 
 export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
-  const Heading = headingLevel
   const gated = arm.id === "pair-rule"
   const asked = phase !== "resting"
   return (
@@ -32,7 +32,9 @@ export function DemoArmPanel({ arm, phase, headingLevel }: DemoArmPanelProps) {
       aria-label={arm.title}
     >
       <header className={styles.armHead}>
-        <Heading className={styles.armTitle}>{arm.title}</Heading>
+        <Heading level={headingLevel === "h2" ? 2 : 3} rank="block">
+          {arm.title}
+        </Heading>
         <p className={styles.armNote}>{arm.note}</p>
       </header>
       <div className={styles.said}>

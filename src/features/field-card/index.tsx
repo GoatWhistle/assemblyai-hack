@@ -12,8 +12,8 @@ import { ConfirmationReceipt } from "@/features/confirmation/confirmation-receip
 import { Certainty } from "@/shared/ui/data-display/certainty"
 import { VerdictBlock } from "@/shared/ui/data-display/verdict-block"
 import { TRACE_CAP, WordSpanStrip } from "@/shared/ui/data-display/word-span-strip"
-import { Chip } from "@/shared/ui/primitives/chip"
-import { describeReason, SEVERITY_TONE } from "../gate-banner/reason-language"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
+import { describeReason, SEVERITY_STATUS } from "../gate-banner/reason-language"
 import { CRITICALITY_LABEL, FIELD_LABEL, FIELD_PROOF_NOTE } from "../intake/field-language"
 import { AnswerWait } from "./answer-wait"
 import { FieldHistory } from "./field-history"
@@ -23,9 +23,9 @@ import {
   isConfidenceOverruled,
   nameAnswerState,
   overruledNote,
-  STANCE_CHIP,
   STANCE_LABEL,
   STANCE_MARK,
+  STANCE_STATUS,
   stanceOf,
   type ValueMark,
 } from "./field-status"
@@ -78,6 +78,7 @@ export type FieldCardProps = {
   readonly awaitingSinceMs?: number | null
   readonly decisions?: ReadonlyMap<string, GateDecision>
   readonly onListen?: ListenHandler
+  readonly explainedBeside?: boolean
 }
 
 const REPEATS_STANCE: Readonly<Record<FieldStance, readonly string[]>> = Object.freeze({
@@ -91,6 +92,24 @@ const REPEATS_STANCE: Readonly<Record<FieldStance, readonly string[]>> = Object.
   aborted: [],
 })
 
+function DecisionNote({ decision }: { readonly decision: GateDecision | null }) {
+  if (decision === null) {
+    return null
+  }
+  const reason = describeReason(decision.reasonCode)
+  return (
+    <div className={styles.decision}>
+      <div className={styles.decisionHead}>
+        <StatusChip status={SEVERITY_STATUS[reason.severity]} code>
+          {decision.reasonCode}
+        </StatusChip>
+        <span className={styles.columnLabel}>{reason.headline}</span>
+      </div>
+      <p className={styles.decisionText}>{reason.because}</p>
+    </div>
+  )
+}
+
 export function FieldCard({
   candidate,
   decision,
@@ -101,6 +120,7 @@ export function FieldCard({
   awaitingSinceMs = null,
   decisions,
   onListen,
+  explainedBeside = false,
 }: FieldCardProps) {
   const policy = policyFor(candidate.field)
   const stance = stanceOf(candidate, decision, evidence)
@@ -132,20 +152,20 @@ export function FieldCard({
         <div className={styles.identity}>
           <p className={styles.name}>
             <span>{FIELD_LABEL[candidate.field]}</span>
-            <Chip tone="plain">{CRITICALITY_LABEL[policy.criticality]}</Chip>
+            <StatusChip status="tag">{CRITICALITY_LABEL[policy.criticality]}</StatusChip>
             <span>attempt {candidate.attempt}</span>
           </p>
           <p className={valueClass(mark, candidate.normalizedValue === null)}>{displayValue}</p>
           <p className={styles.raw}>{heardLine(candidate.rawValue, corrected)}</p>
         </div>
         <div className={styles.statuses}>
-          <Chip tone={STANCE_CHIP[stance]}>{STANCE_LABEL[stance]}</Chip>
+          <StatusChip status={STANCE_STATUS[stance]}>{STANCE_LABEL[stance]}</StatusChip>
           {sourceBadges(candidate, evidence)
             .filter((entry) => !REPEATS_STANCE[stance].includes(entry.id))
             .map((entry) => (
-              <Chip key={entry.id} tone={entry.tone}>
+              <StatusChip key={entry.id} status={entry.status}>
                 {entry.label}
-              </Chip>
+              </StatusChip>
             ))}
         </div>
       </header>
@@ -164,6 +184,7 @@ export function FieldCard({
           minConfidence={minConfidence}
           threshold={policy.autoAcceptThreshold}
           nameState={nameAnswerState(evidence)}
+          compact={explainedBeside}
         />
       ) : null}
 
@@ -216,19 +237,7 @@ export function FieldCard({
         {...(decisions === undefined ? {} : { decisions })}
       />
 
-      {decision === null ? null : (
-        <div className={styles.decision}>
-          <div className={styles.decisionHead}>
-            <Chip tone={SEVERITY_TONE[describeReason(decision.reasonCode).severity]} monospace>
-              {decision.reasonCode}
-            </Chip>
-            <span className={styles.columnLabel}>
-              {describeReason(decision.reasonCode).headline}
-            </span>
-          </div>
-          <p className={styles.decisionText}>{describeReason(decision.reasonCode).because}</p>
-        </div>
-      )}
+      <DecisionNote decision={explainedBeside ? null : decision} />
     </article>
   )
 }

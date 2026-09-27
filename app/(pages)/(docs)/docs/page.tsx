@@ -11,12 +11,14 @@ import { CatchCostHeadline, headlineTitle } from "@/features/metrics/catch-cost-
 import { falseAskTally } from "@/features/metrics/measured-figures"
 import { shippedPolicyEntries } from "@/features/metrics/policy-figures"
 import { abCatch, contrastiveShareRow } from "@/features/metrics/report-figures"
+import { Code } from "@/shared/ui/data-display/code"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { PageDirectory } from "@/shared/ui/navigation/page-directory"
 import { Tabs } from "@/shared/ui/navigation/tabs"
 import { TextLink } from "@/shared/ui/navigation/text-link"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
+import { Heading } from "@/shared/ui/typography/heading"
 import { pageMetadata } from "@/site/page-metadata"
 import { DOCS_PAGES, OVERVIEW_SECTIONS } from "../docs-map"
 import styles from "./styles.module.css"
@@ -43,13 +45,17 @@ function reasonTabs() {
       label: (
         <span className={styles.tabLabel}>
           <span>{reason.label}</span>
-          <code className={styles.tabCode}>{reason.code}</code>
+          <span className={styles.tabCode}>
+            <Code>{reason.code}</Code>
+          </span>
         </span>
       ),
       panel: (
         <div className={styles.reason}>
-          <p className={styles.reasonTitle}>{reason.title}</p>
-          <p className={styles.reasonBody}>{reason.body}</p>
+          <div className={styles.reasonHead}>
+            <Heading level={3}>{reason.title}</Heading>
+            <p className={styles.note}>{reason.body}</p>
+          </div>
           {moment === null ? null : <MomentStrip moment={moment} />}
         </div>
       ),
@@ -90,11 +96,6 @@ export default function DocsOverviewPage() {
         }
       >
         {pairMoment === null ? null : <MomentStrip moment={pairMoment} />}
-        <p className={styles.note}>
-          The last column is the plainest baseline: a threshold and the validators, with no
-          read-back at all. The measured catch below compares a stricter one, the same gate with
-          only the pair rule switched off, which still reads the name back.
-        </p>
         <p className={styles.prose}>
           So a drug name on the published ISMP List of Confused Drug Names triggers a mandatory
           re-ask even at certainty 1.00, and the re-ask is contrastive: the agent names both
@@ -117,10 +118,6 @@ export default function DocsOverviewPage() {
         lead={STANDING_READ_BACK_LINE}
       >
         <Tabs label="Three reasons to ask again" items={reasonTabs()} />
-        <p className={styles.note}>
-          The last column of each strip runs the same candidate with the pair rule and the
-          standing read-back switched off, leaving a confidence threshold and the validators.
-        </p>
       </DocSection>
 
       <DocSection

@@ -1,39 +1,47 @@
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { SCRIPT_STEPS } from "./script-steps"
 import styles from "./styles.module.css"
 
 export const WATCH_LABEL = "What to watch"
 
+export const NEEDS_MICROPHONE = "needs a microphone"
+
+const COLUMNS: readonly TableColumn[] = [
+  { key: "step", title: "Step", kind: "number", size: "fit" },
+  { key: "action", title: "Do this", rowHeader: true },
+  { key: "watch", title: WATCH_LABEL, kind: "muted", stack: "line" },
+  { key: "open", title: "Go", size: "fit", stack: "bare" },
+]
+
 export function DemoScript() {
   return (
-    <div className={styles.frame}>
-      <ol className={styles.steps}>
-        {SCRIPT_STEPS.map((step, index) => (
-          <li key={step.id} id={`step-${step.id}`} className={styles.step}>
-            <span className={styles.ordinal} aria-hidden="true">
-              {index + 1}
+    <Table
+      label="An extended script"
+      columns={COLUMNS}
+      rows={SCRIPT_STEPS.map((step, index) => ({
+        key: step.id,
+        id: `step-${step.id}`,
+        cells: {
+          step: index + 1,
+          action: (
+            <span className={styles.action}>
+              <span>{step.action}</span>
+              {step.needsMicrophone ? (
+                <StatusChip status="tag">{NEEDS_MICROPHONE}</StatusChip>
+              ) : null}
             </span>
-            <div className={styles.content}>
-              <h3 className={styles.action}>
-                {step.action}
-                {step.needsMicrophone ? <Chip>needs a microphone</Chip> : null}
-              </h3>
-              <p className={styles.watch}>
-                <span className={styles.watchLabel}>{WATCH_LABEL}</span>
-                {step.watchFor}
-              </p>
-              {step.href === null || step.linkLabel === null ? null : (
-                <div>
-                  <ActionLink href={step.href} size="small">
-                    {step.linkLabel}
-                  </ActionLink>
-                </div>
-              )}
-            </div>
-          </li>
-        ))}
-      </ol>
-    </div>
+          ),
+          watch: step.watchFor,
+          open:
+            step.href === null || step.linkLabel === null ? null : (
+              <ActionLink href={step.href} size="small">
+                {step.linkLabel}
+              </ActionLink>
+            ),
+        },
+      }))}
+    />
   )
 }

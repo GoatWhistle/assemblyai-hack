@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
-  padding-bottom: var(--space-8);
+  padding-bottom: var(--rhythm-page-end);
 }
 
 .nav {
@@ -21,7 +21,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
-  gap: var(--space-7);
+  gap: var(--rhythm-section);
   min-width: 0;
 }
 
@@ -91,7 +91,13 @@
 
 @media (max-width: 40rem) {
   .main {
-    gap: var(--space-6);
+    gap: var(--rhythm-section-compact);
+  }
+}
+
+@media (min-width: 40rem) and (width < 56rem) {
+  .main {
+    --table-sticky-top: var(--table-sticky-top-docs-nav);
   }
 }
 

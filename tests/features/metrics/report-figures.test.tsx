@@ -150,10 +150,10 @@ describe("r1-A5-08: close codes read as observations, never as specification", (
     const { container } = render(<OperationsPage />)
     expect(container.textContent).toContain("npx tsx scripts/eer/report.ts eval/<set>")
     expect(container.textContent).toMatch(
-      /\d+ sessions over \d+ runs made before the spend ledger existed, npx tsx scripts\/report\/live-run-count\.ts/,
+      /npx tsx scripts\/report\/live-run-count\.ts\s*n = \d+, sessions of \d+ runs made before the spend ledger existed/,
     )
     expect(container.textContent).toMatch(
-      /\d+ sessions of the stress run, npx tsx scripts\/measure\/analyse-stress\.ts/,
+      /npx tsx scripts\/measure\/analyse-stress\.ts\s*n = \d+, sessions of the stress run/,
     )
   })
 })

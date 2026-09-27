@@ -5,6 +5,8 @@ import { FieldCard } from "@/features/field-card"
 import { GateBanner } from "@/features/gate-banner"
 import { REDUCED_MOTION_QUERY } from "@/shared/ui/motion/use-reduced-motion"
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
+import { Panel } from "@/shared/ui/primitives/panel"
+import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { DemoArmPanel } from "./demo-arm"
 import {
   DECISION_AT_MS,
@@ -50,7 +52,6 @@ export type JudgeDemoProps = {
 }
 
 export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: JudgeDemoProps) {
-  const Heading = headingLevel
   const autoplayed = useRef(false)
   const speech = useRef<SpeechTrack | null>(null)
   const [voice, setVoice] = useState<"synthesised" | "silent" | "muted">("muted")
@@ -126,33 +127,44 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
       : null
 
   const ArmHeading = headingLevel === "h1" ? "h2" : "h3"
-  const title = (
-    <Heading className={headingLevel === "h1" ? styles.title : styles.sectionTitle}>
-      {REPLAY_TITLE}
-    </Heading>
+  const decided = reached || confirmed !== null
+  const banner = (
+    <GateBanner
+      decision={reached ? LASA_DECISION : null}
+      candidate={LASA_CANDIDATE}
+      confirmed={confirmed}
+      live={false}
+    />
   )
+  const title = <Heading level={headingLevel === "h1" ? 1 : 2}>{REPLAY_TITLE}</Heading>
   const lede = (
-    <p className={styles.body}>
+    <Lede>
       One synthesised session through the whole pipeline. The two panels differ by one flag, the
       pair rule: both read the drug name back, and only one needs the name as the answer. The
       clock starts {sessionSeconds(REPLAY_FROM_MS)} into the session, so it matches the word
       timecodes.
-    </p>
+    </Lede>
   )
   const context = (
     <div className={styles.context}>
-      <div className={styles.truth}>
-        <p className={styles.truthLabel}>Ground truth for this replay</p>
-        <p className={styles.truthText}>
-          The human said {SPOKEN_TRUTH}. The recognizer heard {RECOGNIZED_AS} and reported{" "}
-          {RECOGNIZER_CERTAINTY.toFixed(2)} certainty.
-        </p>
-        <p className={styles.truthNote}>
-          Both drugs exist, both pass a catalogue lookup, and both are opioid pain medicines
-          dosed differently, which is why a swap between them is dangerous.
-        </p>
-      </div>
-      <ReplayNotice />
+      <Panel
+        title="Ground truth for this replay"
+        tone="tinted"
+        headingLevel={headingLevel === "h1" ? 2 : 3}
+        as="div"
+      >
+        <div className={styles.truth}>
+          <p className={styles.truthText}>
+            The human said {SPOKEN_TRUTH}. The recognizer heard {RECOGNIZED_AS} and reported{" "}
+            {RECOGNIZER_CERTAINTY.toFixed(2)} certainty.
+          </p>
+          <p className={styles.truthNote}>
+            Both drugs exist, both pass a catalogue lookup, and both are opioid pain medicines
+            dosed differently, which is why a swap between them is dangerous.
+          </p>
+        </div>
+      </Panel>
+      <ReplayNotice headingLevel={headingLevel === "h1" ? 2 : 3} />
     </div>
   )
 
@@ -194,13 +206,8 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
         <Captions lines={REPLAY_LINES} clockMs={sessionMs} voice={voice} />
       </div>
       {figure}
-      <div className={styles.result}>
-        <GateBanner
-          decision={reached ? LASA_DECISION : null}
-          candidate={LASA_CANDIDATE}
-          confirmed={confirmed}
-          live={false}
-        />
+      <div className={decided ? `${styles.result} ${styles.decided}` : styles.result}>
+        {decided ? banner : null}
         <div
           className={readingBack ? styles.readingBack : styles.resting}
           data-reading-back={readingBack}
@@ -216,6 +223,7 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
               </>
             }
           >
+            {decided ? null : banner}
             <FieldCard
               key={card.candidate.candidateId}
               candidate={card.candidate}
@@ -223,6 +231,7 @@ export function JudgeDemo({ autoplay = false, headingLevel = "h1", figure }: Jud
               siblings={card.siblings}
               evidence={card.evidence}
               decisions={card.decisions}
+              explainedBeside={decided}
             />
           </Disclosure>
         </div>

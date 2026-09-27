@@ -1,6 +1,6 @@
 "use client"
 
-import { type CSSProperties, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import {
   type OrderReceipt,
   type ReceiptRecheck,
@@ -8,9 +8,11 @@ import {
   WITNESS_BOUNDARY_NOTE,
 } from "@/domain"
 import { FIELD_LABEL } from "@/features/intake/field-language"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
 import { Timecode } from "@/shared/ui/data-display/timecode"
 import { DownloadIcon } from "@/shared/ui/icons"
 import { Button } from "@/shared/ui/primitives/button"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { verifyReceiptInBrowser } from "../verify-receipt"
 import { WitnessBadge } from "../witness-badge"
 import styles from "./styles.module.css"
@@ -20,6 +22,29 @@ export type ReceiptViewProps = {
   readonly fhir: unknown
   readonly serverRecheck: ReceiptRecheck | null
   readonly source: "server" | "file"
+}
+
+const CHECK_COLUMNS: readonly TableColumn[] = [
+  { key: "check", title: "Check", size: "fit" },
+  { key: "result", title: "Result", size: "fit" },
+  { key: "detail", title: "What was recomputed", kind: "muted" },
+]
+
+const FIELD_COLUMNS: readonly TableColumn[] = [
+  { key: "field", title: "Field", rowHeader: true, size: "fit" },
+  { key: "value", title: "Value" },
+  { key: "mode", title: "Proved by" },
+  { key: "spoken", title: "Spoken at", size: "fit" },
+]
+
+const WITNESS_COLUMN: TableColumn = { key: "witness", title: "Vendor transcript", size: "fit" }
+
+function Result({ passed }: { readonly passed: boolean }) {
+  return passed ? (
+    <StatusChip status="written">passed</StatusChip>
+  ) : (
+    <StatusChip status="alert">failed</StatusChip>
+  )
 }
 
 function download(name: string, value: unknown): void {
@@ -71,26 +96,32 @@ export function ReceiptView({ receipt, fhir, serverRecheck, source }: ReceiptVie
           rechecked in this browser: sha256, NPI, DEA and the published pairs
         </span>
       </output>
-      <ul className={styles.checks}>
-        {(verification?.checks ?? []).map((entry, index) => (
-          <li
-            key={`${entry.field}-${entry.check}`}
-            className={styles.check}
-            style={{ "--i": Math.min(index, 8) } as CSSProperties}
-          >
-            <code className={styles.code}>{entry.check}</code>
-            <span>{entry.passed ? "passed" : "failed"}</span>
-            <span className={styles.detail}>{entry.detail}</span>
-          </li>
-        ))}
-        {catalogue.map((entry) => (
-          <li key={`server-${entry.field}`} className={styles.check}>
-            <code className={styles.code}>catalog, on the server</code>
-            <span>{entry.passed ? "passed" : "failed"}</span>
-            <span className={styles.detail}>{entry.detail}</span>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.checks}>
+        <Table
+          label="Checks recomputed in this browser"
+          columns={CHECK_COLUMNS}
+          rows={[
+            ...(verification?.checks ?? []).map((entry) => ({
+              key: `${entry.field}-${entry.check}`,
+              tone: entry.passed ? ("normal" as const) : ("alert" as const),
+              cells: {
+                check: <code className={styles.code}>{entry.check}</code>,
+                result: <Result passed={entry.passed} />,
+                detail: entry.detail,
+              },
+            })),
+            ...catalogue.map((entry) => ({
+              key: `server-${entry.field}`,
+              tone: entry.passed ? ("normal" as const) : ("alert" as const),
+              cells: {
+                check: <code className={styles.code}>catalog, on the server</code>,
+                result: <Result passed={entry.passed} />,
+                detail: entry.detail,
+              },
+            })),
+          ]}
+        />
+      </div>
       <dl className={styles.facts}>
         <div>
           <dt>Reference</dt>
@@ -113,35 +144,25 @@ export function ReceiptView({ receipt, fhir, serverRecheck, source }: ReceiptVie
           <dd className={styles.mono}>{receipt.sha256}</dd>
         </div>
       </dl>
-      <table className={styles.fields}>
-        <caption className={styles.caption}>Fields, with the words each came from</caption>
-        <thead>
-          <tr>
-            <th scope="col">Field</th>
-            <th scope="col">Value</th>
-            <th scope="col">Proved by</th>
-            <th scope="col">Spoken at</th>
-            {receipt.witness === undefined ? null : <th scope="col">Vendor transcript</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {receipt.fields.map((field) => (
-            <tr key={field.field}>
-              <th scope="row">{FIELD_LABEL[field.field] ?? field.field}</th>
-              <td>{String(field.value)}</td>
-              <td>{field.confirmationMode}</td>
-              <td>
-                <Timecode startMs={field.provenance.startMs} endMs={field.provenance.endMs} />
-              </td>
-              {receipt.witness === undefined ? null : (
-                <td>
-                  <WitnessBadge witness={receipt.witness} field={field.field} />
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        label="Order fields"
+        caption="Fields, with the words each came from"
+        columns={
+          receipt.witness === undefined ? FIELD_COLUMNS : [...FIELD_COLUMNS, WITNESS_COLUMN]
+        }
+        rows={receipt.fields.map((field) => ({
+          key: field.field,
+          cells: {
+            field: FIELD_LABEL[field.field] ?? field.field,
+            value: String(field.value),
+            mode: <code className={styles.code}>{field.confirmationMode}</code>,
+            spoken: (
+              <Timecode startMs={field.provenance.startMs} endMs={field.provenance.endMs} />
+            ),
+            witness: <WitnessBadge witness={receipt.witness} field={field.field} />,
+          },
+        }))}
+      />
       {receipt.witness === undefined ? null : (
         <p className={styles.caption}>{WITNESS_BOUNDARY_NOTE}.</p>
       )}

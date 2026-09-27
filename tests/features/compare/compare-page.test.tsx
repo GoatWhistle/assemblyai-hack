@@ -18,11 +18,11 @@ import { DISCLAIMER_TITLE } from "@/shared/ui/states/disclaimer"
 vi.mock("next/navigation", () => ({ usePathname: () => "/compare" }))
 
 function rows(container: HTMLElement): HTMLTableRowElement[] {
-  return [...container.querySelectorAll<HTMLTableRowElement>("tbody tr[data-moment]")]
+  return [...container.querySelectorAll<HTMLTableRowElement>("tbody tr[data-row]")]
 }
 
 function rowFor(container: HTMLElement, id: string): HTMLTableRowElement {
-  const row = container.querySelector<HTMLTableRowElement>(`tbody tr[data-moment="${id}"]`)
+  const row = container.querySelector<HTMLTableRowElement>(`tbody tr[data-row="${id}"]`)
   if (row === null) {
     throw new Error(`no row for ${id}`)
   }
@@ -34,6 +34,13 @@ describe("the compare page", () => {
     const { container } = render(<ComparePage />)
     expect(MOMENTS.length).toBe(6)
     expect(rows(container).length).toBe(6)
+  })
+
+  it("heads every row with its moment, so a stacked row still says which moment it is", () => {
+    const { container } = render(<ComparePage />)
+    expect(
+      rows(container).map((row) => row.querySelector("th[scope=row]")?.textContent),
+    ).toEqual(MOMENTS.map((moment) => moment.title))
   })
 
   it("carries metadata, and the docs layout around it carries the site header and the disclaimer", () => {

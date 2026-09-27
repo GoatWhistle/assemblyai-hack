@@ -173,6 +173,6 @@ describe("the counter renders for a judge watching a live session", () => {
       screen.queryAllByText("0"),
       "a zero here would claim the gate ran and refused nothing",
     ).toHaveLength(0)
-    expect(screen.getAllByText(/not observed yet/).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole("img", { name: /not observed yet/ }).length).toBeGreaterThan(0)
   })
 })

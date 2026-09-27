@@ -1,6 +1,7 @@
+import { Figure, FigureGroup } from "@/shared/ui/data-display/figure"
 import { MoreLink } from "@/shared/ui/navigation/more-link"
-import { Chip } from "@/shared/ui/primitives/chip"
 import { Panel } from "@/shared/ui/primitives/panel"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import {
   ABSENCE_NOTE,
   DRIFT_NOTE,
@@ -27,15 +28,19 @@ export function RateEstimate({ estimate }: RateEstimateProps) {
   return (
     <Panel title={ESTIMATE_TITLE} note="published rates" padding="tight" variant="flat">
       <output className={styles.reading} aria-live="polite">
-        <span className={estimate === null ? styles.absent : styles.numeral}>
-          {estimate === null ? "no elapsed time yet" : formatUsd(estimate.usd)}
-        </span>
-        <span className={styles.readingLabel}>{READING_LABEL}</span>
-        {estimate === null ? <span className={styles.note}>{ABSENCE_NOTE}</span> : null}
+        <FigureGroup>
+          <Figure
+            figureKey="estimate"
+            label={READING_LABEL}
+            value={estimate === null ? null : formatUsd(estimate.usd)}
+            absentLabel="no elapsed time yet"
+            note={estimate === null ? ABSENCE_NOTE : undefined}
+          />
+        </FigureGroup>
       </output>
 
       <p className={styles.denial}>
-        <Chip tone="plain">not a bill</Chip>
+        <StatusChip status="tag">not a bill</StatusChip>
         <span>{NOT_A_BILL}</span>
       </p>
 

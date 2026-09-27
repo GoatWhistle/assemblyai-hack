@@ -1,8 +1,8 @@
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-6);
-  padding-bottom: var(--space-7);
+  gap: var(--rhythm-section);
+  padding-bottom: var(--rhythm-page-end);
 }
 
 .page :where(a, button, summary, input, [tabindex]) {
@@ -13,29 +13,21 @@
 .replay {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
+  gap: var(--rhythm-stack);
   scroll-margin-top: var(--space-5);
 }
 
 .more {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  padding-top: var(--space-6);
+  padding-top: var(--rhythm-rule);
   border-top: 1px solid var(--line-hairline);
 }
 
 .panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
-}
-
-.heading {
-  margin: 0;
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-heading);
-  color: var(--text-primary);
+  gap: var(--rhythm-group);
 }
 
 .actions,
@@ -46,17 +38,12 @@
 }
 
 .onward {
-  padding-top: var(--space-5);
+  padding-top: var(--rhythm-rule);
   border-top: 1px solid var(--line-hairline);
 }
 
 @media (max-width: 40rem) {
   .page {
-    gap: var(--space-5);
-    padding-bottom: var(--space-6);
-  }
-
-  .more {
-    padding-top: var(--space-5);
+    gap: var(--rhythm-section-compact);
   }
 }

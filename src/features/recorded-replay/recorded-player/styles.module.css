@@ -20,8 +20,8 @@
 .reading {
   margin: 0;
   padding: var(--space-2) var(--space-3);
-  border: 2px solid var(--select-line);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--select-line);
+  border-radius: var(--panel-radius);
   background-color: var(--select-surface);
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);

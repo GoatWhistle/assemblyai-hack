@@ -7,7 +7,7 @@ import {
 } from "@/features/cost/published-rate"
 import { BUSINESS_FIGURES } from "@/features/metrics/business-figures"
 import { BusinessReading } from "@/features/metrics/business-reading"
-import { CloseCodeTable } from "@/features/metrics/close-code-table"
+import { CloseCodeMethods, CloseCodeTable } from "@/features/metrics/close-code-table"
 import {
   alertWorthyList,
   closeCodeRows,
@@ -15,8 +15,8 @@ import {
   unobservedCodeRows,
   VENDOR_DOCUMENTS_NONE,
 } from "@/features/metrics/close-code-tally"
-import { type PanelColumn, PanelTable } from "@/features/metrics/panel-table"
-import { Command } from "@/shared/ui/data-display/command"
+import { Method } from "@/shared/ui/data-display/method"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { TextLink } from "@/shared/ui/navigation/text-link"
@@ -31,10 +31,10 @@ export const metadata: Metadata = pageMetadata({
   path: "/metrics/operations",
 })
 
-const RATE_COLUMNS: readonly PanelColumn[] = [
-  { key: "product", title: "Product", kind: "text" },
-  { key: "why", title: "What it covers", kind: "muted" },
-  { key: "rate", title: "Rate", kind: "count" },
+const RATE_COLUMNS: readonly TableColumn[] = [
+  { key: "product", title: "Product", rowHeader: true },
+  { key: "why", title: "What it covers", kind: "muted", stack: "bare" },
+  { key: "rate", title: "Rate", kind: "number" },
 ]
 
 export default function OperationsPage() {
@@ -50,7 +50,7 @@ export default function OperationsPage() {
         title="What an open call costs by the vendor's published rates"
         lead={`Rates, not measurements: AssemblyAI bills on socket lifetime, and both sockets are open for the whole call. Read from the vendor's pricing page.`}
       >
-        <PanelTable
+        <Table
           label="Published rates"
           caption={
             <>
@@ -71,8 +71,8 @@ export default function OperationsPage() {
           }))}
         />
         <p className={styles.note}>
-          The total actually spent is derived from the run ledger by{" "}
-          <Command value="make spend" />, never from this table.
+          The total actually spent is derived from the run ledger, never from this table:{" "}
+          <Method command="make spend" />
         </p>
       </DocSection>
 
@@ -89,17 +89,13 @@ export default function OperationsPage() {
         title="How the sockets closed: observations, not specification"
         lead={VENDOR_DOCUMENTS_NONE}
       >
+        <CloseCodeMethods scope={closeCodeScope()} />
         <CloseCodeTable
           rows={closeCodeRows()}
           unobserved={unobservedCodeRows()}
           scope={closeCodeScope()}
           alertWorthy={alertWorthyList()}
         />
-        <p className={styles.note}>
-          Billing runs on socket lifetime rather than audio volume, so a close is counted from
-          the recorded files rather than asserted. None of these codes may be read as the
-          vendor&rsquo;s specification.
-        </p>
       </DocSection>
     </>
   )

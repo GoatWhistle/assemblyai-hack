@@ -4,7 +4,8 @@ import { useId, useState } from "react"
 import { GateAction } from "@/domain"
 import { FieldCard } from "@/features/field-card"
 import { GateBanner } from "@/features/gate-banner"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
+import { Heading } from "@/shared/ui/typography/heading"
 import {
   DEFAULT_SCENARIO_ID,
   isProbeId,
@@ -64,18 +65,18 @@ export function ScenarioPicker() {
       <div className={styles.choose}>
         <header className={styles.head}>
           <div className={styles.headTop}>
-            <h2 className={styles.title} id={titleId}>
+            <Heading level={2} id={titleId}>
               {SCENARIO_PICKER_TITLE}
-            </h2>
+            </Heading>
             <p className={styles.current} aria-live="polite">
               <span className={styles.currentLabel}>{SCENARIO_HEADER_LABEL}</span>
               <span className={styles.currentName}>{scenario.label}</span>
               {decision === null ? (
                 <ServerRunChip state={server.state} />
               ) : (
-                <Chip tone={refuses ? "lasa" : "accepted"} monospace>
+                <StatusChip status={refuses ? "pair" : "written"} code>
                   {decision.reasonCode}
-                </Chip>
+                </StatusChip>
               )}
             </p>
           </div>
@@ -143,7 +144,12 @@ export function ScenarioPicker() {
             </div>
 
             <GateBanner decision={decision} />
-            <FieldCard key={scenario.id} candidate={scenario.candidate} decision={decision} />
+            <FieldCard
+              key={scenario.id}
+              candidate={scenario.candidate}
+              decision={decision}
+              explainedBeside
+            />
           </>
         )}
       </div>

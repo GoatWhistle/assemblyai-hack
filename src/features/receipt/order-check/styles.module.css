@@ -1,7 +1,7 @@
 .check {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+  gap: var(--rhythm-group);
 }
 
 .status {
@@ -27,10 +27,10 @@
   display: grid;
   justify-items: start;
   gap: var(--space-3);
-  padding: var(--space-6);
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-sunken);
+  padding: var(--panel-pad);
+  border: 1px solid var(--panel-tinted-line);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-tinted-surface);
 }
 
 .glyph {
@@ -76,8 +76,8 @@
 .hint {
   margin: 0;
   max-width: var(--measure-prose);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
 }
 
@@ -106,12 +106,6 @@
 @media (min-width: 62rem) {
   .alone {
     min-height: clamp(calc(var(--space-8) * 3.5), 60dvh, 44rem);
-  }
-}
-
-@media (max-width: 40rem) {
-  .upload {
-    padding: var(--space-5) var(--space-4);
   }
 }
 

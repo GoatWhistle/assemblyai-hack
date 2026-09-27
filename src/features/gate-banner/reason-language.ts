@@ -1,5 +1,5 @@
 import { GateAction, ReasonCode } from "@/domain"
-import type { ChipTone } from "@/shared/ui/primitives/chip"
+import type { Status } from "@/shared/ui/primitives/status-chip"
 
 export type ReasonSeverity =
   | "accepted"
@@ -9,13 +9,13 @@ export type ReasonSeverity =
   | "escalated"
   | "aborted"
 
-export const SEVERITY_TONE: Readonly<Record<ReasonSeverity, ChipTone>> = Object.freeze({
-  accepted: "accepted",
+export const SEVERITY_STATUS: Readonly<Record<ReasonSeverity, Status>> = Object.freeze({
+  accepted: "written",
   asking: "asking",
-  refused: "validator",
-  lasa: "lasa",
-  escalated: "escalated",
-  aborted: "aborted",
+  refused: "refused",
+  lasa: "pair",
+  escalated: "alert",
+  aborted: "inactive",
 })
 
 export type ReasonLanguage = {

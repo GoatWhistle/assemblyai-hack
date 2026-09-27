@@ -1,9 +1,9 @@
 import type { ConfirmationEvidence } from "@/domain"
 import { Timecode } from "@/shared/ui/data-display/timecode"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import {
+  CONFIRMATION_CHIP_STATUS,
   CONFIRMATION_STATUS_LABEL,
-  CONFIRMATION_STATUS_TONE,
   confirmationStatusOf,
 } from "../confirmation-status"
 import styles from "./styles.module.css"
@@ -20,7 +20,9 @@ export function ConfirmationReceipt({ evidence }: ConfirmationReceiptProps) {
   return (
     <div className={styles.receipt}>
       <p className={styles.head}>
-        <Chip tone={CONFIRMATION_STATUS_TONE[status]}>{CONFIRMATION_STATUS_LABEL[status]}</Chip>
+        <StatusChip status={CONFIRMATION_CHIP_STATUS[status]}>
+          {CONFIRMATION_STATUS_LABEL[status]}
+        </StatusChip>
         <code className={styles.code} data-status={status}>
           {evidence.reasonCode}
         </code>

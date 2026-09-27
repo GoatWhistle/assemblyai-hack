@@ -108,7 +108,9 @@ test.describe("r2: the docs chrome", () => {
     const table = page.getByRole("region", { name: "Socket close codes" })
     await expect(table.getByRole("row", { name: /^1008/ })).toBeVisible()
     await expect(table.getByRole("row", { name: /^1006/ })).toBeVisible()
-    await expect(table.getByText("npx tsx scripts/report/live-run-count.ts")).toBeVisible()
+    await expect(
+      page.locator("section#close-codes").getByText("npx tsx scripts/report/live-run-count.ts"),
+    ).toBeVisible()
   })
 
   test("owner r3: the docs sidebar lists the docs and nothing else", async ({ page }) => {

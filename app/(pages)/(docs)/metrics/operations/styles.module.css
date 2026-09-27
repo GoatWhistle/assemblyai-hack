@@ -1,7 +1,7 @@
 .note {
   max-width: var(--measure-prose);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
 }

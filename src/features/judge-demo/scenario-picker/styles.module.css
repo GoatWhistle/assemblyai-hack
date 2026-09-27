@@ -1,20 +1,20 @@
 .block {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--rhythm-group);
   align-items: start;
 }
 
 .choose,
 .shown {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--rhythm-stack);
   min-width: 0;
   animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
 }
 
 .head {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--rhythm-tight);
 }
 
 .headTop {
@@ -26,24 +26,17 @@
   border-bottom: 1px solid var(--line-divider);
 }
 
-.title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  color: var(--text-primary);
-}
-
 .current {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
+  gap: var(--rhythm-tight);
+  font-size: var(--meta-size);
 }
 
 .currentLabel {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
@@ -53,16 +46,16 @@
 }
 
 .headerNote {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
 }
 
 .lede {
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-muted);
   max-width: var(--measure-prose);
   text-wrap: pretty;
@@ -81,8 +74,8 @@
 .legend {
   grid-column: 1 / -1;
   padding: 0;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
@@ -94,14 +87,14 @@
   min-height: var(--target-touch);
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-panel);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-surface);
   cursor: pointer;
   transition: var(--transition-control);
 }
 
 .button:hover {
-  border-color: var(--action-rest);
+  border-color: var(--select-line);
 }
 
 .button:active {
@@ -114,20 +107,19 @@
 }
 
 .buttonActive {
-  border-color: var(--action-rest);
-  border-width: 2px;
+  border-color: var(--select-line);
   background-color: var(--select-surface);
 }
 
 .buttonLabel {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   line-height: var(--leading-snug);
   color: var(--text-primary);
 }
 
 .buttonOutcome {
-  font-size: var(--text-sm);
+  font-size: var(--meta-size);
   color: var(--text-muted);
 }
 
@@ -137,11 +129,9 @@
 
 .detail {
   display: grid;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-sunken);
+  gap: var(--rhythm-tight);
+  padding-block: var(--rhythm-stack);
+  border-block: 1px solid var(--line-hairline);
 }
 
 .heard {
@@ -152,20 +142,19 @@
 }
 
 .heardTerm {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
 .heardValue {
-  font-family: var(--font-data);
-  font-size: var(--text-sm);
+  font-size: var(--body-size);
   color: var(--text-primary);
 }
 
 .why {
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   max-width: var(--measure-prose);
   text-wrap: pretty;

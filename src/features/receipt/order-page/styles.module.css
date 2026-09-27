@@ -1,8 +1,8 @@
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-6);
-  padding-block: var(--space-5) var(--space-8);
+  gap: var(--rhythm-section);
+  padding-block: var(--rhythm-group) var(--rhythm-page-end);
 }
 
 .page:focus {
@@ -12,25 +12,8 @@
 .intro {
   display: grid;
   align-content: start;
-  gap: var(--space-4);
+  gap: var(--rhythm-tight);
   min-width: 0;
-}
-
-.title {
-  margin: 0;
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--track-display);
-  color: var(--text-primary);
-}
-
-.lede {
-  margin: 0;
-  max-width: var(--measure-prose);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  text-wrap: pretty;
 }
 
 .checks {
@@ -53,23 +36,22 @@
 }
 
 .checkName {
-  font-family: var(--font-data);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-primary);
 }
 
 .checkMeaning {
   margin: 0;
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
 
 .more {
   margin: 0;
-  font-size: var(--text-sm);
+  font-size: var(--meta-size);
 }
 
 .work {
@@ -78,7 +60,7 @@
 
 .detail {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--rhythm-stack);
   min-width: 0;
 }
 

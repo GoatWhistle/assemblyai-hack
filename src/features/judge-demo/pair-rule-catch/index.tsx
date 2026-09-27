@@ -1,5 +1,5 @@
 import type { BenchmarkRow } from "@/domain"
-import { Command } from "@/shared/ui/data-display/command"
+import { Method } from "@/shared/ui/data-display/method"
 import { MoreLink } from "@/shared/ui/navigation/more-link"
 import styles from "./styles.module.css"
 
@@ -20,11 +20,11 @@ export function PairRuleCatch({ without, shipped }: PairRuleCatchProps) {
         with it.
       </p>
       <p className={styles.method}>
-        <Command value={shipped.command} />
-        <span>
-          n = {shipped.n ?? "not recorded"},{" "}
-          {shipped.input === "text" ? "text candidates" : shipped.input}
-        </span>
+        <Method
+          command={shipped.command}
+          n={shipped.n ?? "not recorded"}
+          set={shipped.input === "text" ? "text candidates" : shipped.input}
+        />
         <MoreLink href={CATCH_FIGURES_HREF}>
           Full figures, and what the rule costs in seconds
         </MoreLink>

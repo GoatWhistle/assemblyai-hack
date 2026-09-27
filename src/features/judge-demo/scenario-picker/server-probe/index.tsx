@@ -1,6 +1,6 @@
 import { type EvidenceValue, GateAction } from "@/domain"
 import { GateBanner } from "@/features/gate-banner"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { ErrorState } from "@/shared/ui/states/error-state"
 import type { ServerProbe } from "../scenarios"
 import type { ServerRunState } from "../server-run"
@@ -33,15 +33,15 @@ export function ServerRunChip({ state }: { readonly state: ServerRunState }) {
   if (state.phase === "done") {
     const refuses = state.result.decision.action !== GateAction.Accept
     return (
-      <Chip tone={refuses ? "lasa" : "accepted"} monospace>
+      <StatusChip status={refuses ? "pair" : "written"} code>
         {state.result.reasonCode}
-      </Chip>
+      </StatusChip>
     )
   }
   if (state.phase === "failed") {
-    return <Chip tone="escalated">{`no verdict, ${failureCode(state)}`}</Chip>
+    return <StatusChip status="alert">{`no verdict, ${failureCode(state)}`}</StatusChip>
   }
-  return <Chip tone="pending">waiting for the server</Chip>
+  return <StatusChip status="pending">waiting for the server</StatusChip>
 }
 
 export function ServerProbePanel({

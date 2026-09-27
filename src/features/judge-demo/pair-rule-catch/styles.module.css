@@ -1,7 +1,7 @@
 .catch {
   display: grid;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  gap: var(--rhythm-tight);
+  padding-block: var(--rhythm-stack);
   border-top: 1px solid var(--line-hairline);
   border-bottom: 1px solid var(--line-hairline);
 }
@@ -9,8 +9,8 @@
 .figure {
   margin: 0;
   max-width: var(--measure-prose);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   text-wrap: pretty;
 }
@@ -26,6 +26,4 @@
   align-items: center;
   gap: var(--space-1) var(--space-3);
   margin: 0;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
 }

@@ -1,4 +1,5 @@
-import { Command } from "@/shared/ui/data-display/command"
+import { Method } from "@/shared/ui/data-display/method"
+import { Table, type TableColumn, type TableRow } from "@/shared/ui/data-display/table"
 import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import {
   CLOSE_CODE_REPORT_COMMAND,
@@ -6,7 +7,6 @@ import {
   type UnobservedCode,
 } from "../close-code-tally"
 import type { CloseCodeTally } from "../metric-definitions"
-import { type PanelColumn, type PanelRow, PanelTable } from "../panel-table"
 import styles from "./styles.module.css"
 
 export const NOT_SEEN = "not seen"
@@ -18,63 +18,65 @@ export type CloseCodeTableProps = {
   readonly alertWorthy: string
 }
 
-function columnsFor(scope: CloseCodeScope): readonly PanelColumn[] {
+function columnsFor(scope: CloseCodeScope): readonly TableColumn[] {
   return [
-    { key: "code", title: "Code", kind: "code" },
-    { key: "meaning", title: "Observed meaning", kind: "text" },
+    { key: "code", title: "Code", rowHeader: true, size: "fit" },
+    { key: "meaning", title: "Observed meaning", stack: "bare" },
     { key: "source", title: "Source", kind: "muted" },
     {
       key: "before",
       title: `Before the ledger, ${scope.beforeLedgerRuns} runs`,
-      kind: "count",
+      kind: "number",
     },
-    { key: "stress", title: "Stress run", kind: "count" },
-    { key: "all", title: "All", kind: "count" },
+    { key: "stress", title: "Stress run", kind: "number" },
+    { key: "all", title: "All", kind: "number" },
   ]
 }
 
 function codeCell(code: number, alertWorthy: boolean) {
   return (
-    <>
+    <span className={styles.code}>
       {code}
-      {alertWorthy ? (
-        <>
-          {" "}
-          <StatusChip status="alert">alert</StatusChip>
-        </>
-      ) : null}
-    </>
+      {alertWorthy ? <StatusChip status="alert">alert</StatusChip> : null}
+    </span>
   )
 }
 
 function meaningCell(label: string, meaning: string) {
   return (
     <>
-      <span className={styles.label}>{label}</span>
-      <span className={styles.meaning}> {meaning}</span>
+      <span className={styles.label}>{label}</span>{" "}
+      <span className={styles.meaning}>{meaning}</span>
     </>
   )
 }
 
-function Caption({ scope, alertWorthy }: Pick<CloseCodeTableProps, "scope" | "alertWorthy">) {
+export function CloseCodeMethods({ scope }: { readonly scope: CloseCodeScope }) {
   return (
-    <>
-      Every session with a recorded close. {scope.beforeLedgerSessions} sessions over{" "}
-      {scope.beforeLedgerRuns} runs made before the spend ledger existed,{" "}
-      <Command value={scope.beforeLedgerCommand} />; {scope.fromReportSessions} of them come
-      from eval/REPORT.md&rsquo;s own account of two runs that left no file, which is weaker
-      evidence. {scope.stressSessions} sessions of the stress run,{" "}
-      <Command value={scope.stressCommand} />. The live smoke runs keep no close code per
-      session and are not counted. <Command value={CLOSE_CODE_REPORT_COMMAND} /> prints the
-      close codes of one run. {alertWorthy} are alert-worthy on the first occurrence, because
-      billing runs on socket lifetime rather than audio volume. A run containing any 1008 is a
-      rate-limit artefact and is not scored.
-    </>
+    <ul className={styles.methods} aria-label="Where the close-code counts come from">
+      <li>
+        <Method
+          command={scope.beforeLedgerCommand}
+          n={scope.beforeLedgerSessions}
+          set={`sessions of ${scope.beforeLedgerRuns} runs made before the spend ledger existed; ${scope.fromReportSessions} of them come from eval/REPORT.md's own account of two runs that left no file, which is weaker evidence`}
+        />
+      </li>
+      <li>
+        <Method
+          command={scope.stressCommand}
+          n={scope.stressSessions}
+          set="sessions of the stress run"
+        />
+      </li>
+      <li>
+        <Method command={CLOSE_CODE_REPORT_COMMAND} set="the close codes of one run" />
+      </li>
+    </ul>
   )
 }
 
 export function CloseCodeTable({ rows, unobserved, scope, alertWorthy }: CloseCodeTableProps) {
-  const observed: PanelRow[] = rows.map((row) => ({
+  const observed: TableRow[] = rows.map((row) => ({
     key: String(row.code),
     cells: {
       code: codeCell(row.code, row.alertWorthy),
@@ -85,8 +87,9 @@ export function CloseCodeTable({ rows, unobserved, scope, alertWorthy }: CloseCo
       all: row.count,
     },
   }))
-  const unseen: PanelRow[] = unobserved.map((row) => ({
+  const unseen: TableRow[] = unobserved.map((row) => ({
     key: String(row.code),
+    tone: "muted",
     cells: {
       code: codeCell(row.code, row.alertWorthy),
       meaning: meaningCell(row.label, row.meaning),
@@ -97,9 +100,9 @@ export function CloseCodeTable({ rows, unobserved, scope, alertWorthy }: CloseCo
     },
   }))
   return (
-    <PanelTable
+    <Table
       label="Socket close codes"
-      caption={<Caption scope={scope} alertWorthy={alertWorthy} />}
+      caption={`Every session with a recorded close, except the live smoke runs, which keep none per session; ${alertWorthy} are alert-worthy on the first occurrence because billing runs on socket lifetime, and a run containing any 1008 is not scored.`}
       columns={columnsFor(scope)}
       rows={[...observed, ...unseen]}
     />

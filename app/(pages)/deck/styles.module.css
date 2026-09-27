@@ -1,18 +1,12 @@
 .deck {
   display: grid;
-  gap: var(--space-5);
-  padding: var(--space-5) 0 var(--space-8);
+  gap: var(--rhythm-section-compact);
+  padding: var(--rhythm-group) 0 var(--rhythm-page-end);
 }
 
-.title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  color: var(--text-primary);
-}
-
-.hint {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
+.head {
+  display: grid;
+  gap: var(--rhythm-tight);
 }
 
 .slides {
@@ -79,7 +73,7 @@
 }
 
 .item {
-  border-radius: var(--radius-md);
+  border-radius: var(--panel-radius);
   box-shadow: var(--hairline), var(--shadow-raise);
   overflow: hidden;
 }
@@ -98,8 +92,7 @@
     background-color: var(--surface-panel);
   }
 
-  .title,
-  .hint {
+  .head {
     display: none;
   }
 

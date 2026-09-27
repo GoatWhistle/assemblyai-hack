@@ -1,4 +1,6 @@
 import { Disclosure } from "@/shared/ui/navigation/disclosure"
+import { Panel } from "@/shared/ui/primitives/panel"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import styles from "./styles.module.css"
 
 export const REPLAY_NOTICE_TITLE = "Simulated session, not a live call"
@@ -12,18 +14,28 @@ export const REPLAY_NOTICE_INSURANCE =
 export const REPLAY_NOTICE_LINE =
   "No microphone is open and nothing is sent to AssemblyAI. The gate and the pair table deciding here are the shipped ones."
 
-export function ReplayNotice() {
+export type ReplayNoticeProps = {
+  readonly headingLevel?: 2 | 3
+}
+
+export function ReplayNotice({ headingLevel = 3 }: ReplayNoticeProps) {
   return (
     <aside className={styles.notice} aria-label={REPLAY_NOTICE_TITLE}>
-      <p className={styles.title}>
-        <span className={styles.tag}>replay</span>
-        {REPLAY_NOTICE_TITLE}
-      </p>
-      <p className={styles.body}>{REPLAY_NOTICE_LINE}</p>
-      <Disclosure summary="What is simulated, and why a replay exists">
-        <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
-        <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
-      </Disclosure>
+      <Panel
+        title={REPLAY_NOTICE_TITLE}
+        note={<StatusChip status="tag">replay</StatusChip>}
+        tone="tinted"
+        headingLevel={headingLevel}
+        as="div"
+      >
+        <div className={styles.content}>
+          <p className={styles.body}>{REPLAY_NOTICE_LINE}</p>
+          <Disclosure summary="What is simulated, and why a replay exists">
+            <p className={styles.body}>{REPLAY_NOTICE_BODY}</p>
+            <p className={styles.insurance}>{REPLAY_NOTICE_INSURANCE}</p>
+          </Disclosure>
+        </div>
+      </Panel>
     </aside>
   )
 }
@@ -34,7 +46,7 @@ export const REPLAY_TAG_LINE =
 export function ReplayTag() {
   return (
     <p className={styles.title}>
-      <span className={styles.tag}>replay</span>
+      <StatusChip status="tag">replay</StatusChip>
       <span className={styles.tagLine}>{REPLAY_TAG_LINE}</span>
     </p>
   )

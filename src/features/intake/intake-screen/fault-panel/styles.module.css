@@ -3,23 +3,24 @@
   gap: var(--space-3);
   width: 100%;
   max-width: var(--measure-prose);
-  padding: var(--space-5);
-  border: 1px solid var(--state-escalated-line);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-panel);
+  padding: var(--panel-pad);
+  border: 1px solid var(--panel-alert-line);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-surface);
   text-align: start;
   animation: var(--keyframes-flag) var(--dur-base) var(--ease-out-quart) both;
 }
 
 .paused {
-  border-color: var(--line-divider);
+  border-color: var(--panel-line);
   animation: none;
 }
 
 .title {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-snug);
+  font-size: var(--title-block-size);
+  font-weight: var(--title-block-weight);
+  letter-spacing: var(--title-block-track);
+  line-height: var(--title-block-leading);
   color: var(--mic-blocked-ink);
 }
 

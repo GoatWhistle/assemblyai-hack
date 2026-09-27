@@ -79,8 +79,8 @@ test.describe("the evidence surfaces a judge is sent to", () => {
     page,
   }) => {
     await page.goto("/compare")
-    await expect(page.locator("tbody tr[data-moment]")).toHaveCount(6)
-    await expect(page.locator('th[scope="rowgroup"]')).toHaveCount(6)
+    await expect(page.locator("tbody tr[data-row]")).toHaveCount(6)
+    await expect(page.locator('tbody th[scope="row"]')).toHaveCount(6)
     await expect(page.getByText("E_LASA_HIT").first()).toBeVisible()
   })
 
@@ -96,7 +96,9 @@ test.describe("the evidence surfaces a judge is sent to", () => {
       .click()
     await expect(page).toHaveURL(/\/docs\/limitations$/)
     await expect(page.getByText(/call 911, or 988/)).toBeVisible()
-    await expect(page.locator("main details")).toHaveCount(0)
+    await expect(page.locator("main details")).toHaveCount(1)
+    await expect(page.locator("main details").getByText(/call 911, or 988/)).toHaveCount(0)
+    await expect(page.locator("main details summary")).toHaveText("The ten open weaknesses")
   })
 
   test("the threat model quotes the witness boundary and links the receipt checker", async ({

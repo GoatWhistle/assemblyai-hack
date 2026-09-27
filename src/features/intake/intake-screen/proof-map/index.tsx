@@ -1,5 +1,6 @@
 import { useId } from "react"
 import { Criticality, type FieldName, type FieldPolicy, policyFor } from "@/domain"
+import { Heading, Lede } from "@/shared/ui/typography/heading"
 import { FIELD_LABEL, FIELD_PROOF_NOTE, INTAKE_ORDER } from "../../field-language"
 import styles from "./styles.module.css"
 
@@ -68,18 +69,18 @@ export function ProofMap() {
   return (
     <section className={styles.map} aria-labelledby={titleId}>
       <div className={styles.head}>
-        <h2 id={titleId} className={styles.title}>
+        <Heading level={2} id={titleId}>
           {PROOF_MAP_TITLE}
-        </h2>
-        <p className={styles.lede}>{PROOF_MAP_LEDE}</p>
+        </Heading>
+        <Lede>{PROOF_MAP_LEDE}</Lede>
       </div>
       <div className={styles.groups}>
         {KIND_ORDER.map((kind) => (
           <section key={kind} className={`${styles.group} ${styles[kind] ?? ""}`}>
-            <h3 className={styles.groupTitle}>
+            <div className={styles.groupTitle}>
               <span className={styles.mark} aria-hidden="true" />
-              {PROOF_GROUP[kind].title}
-            </h3>
+              <Heading level={3}>{PROOF_GROUP[kind].title}</Heading>
+            </div>
             <p className={styles.groupDetail}>{PROOF_GROUP[kind].detail}</p>
             <dl className={styles.fields}>
               {fieldsOf(kind).map((field) => (

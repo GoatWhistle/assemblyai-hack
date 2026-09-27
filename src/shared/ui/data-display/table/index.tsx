@@ -1,9 +1,11 @@
 import type { ReactNode } from "react"
 import styles from "./styles.module.css"
 
-export type TableColumnKind = "text" | "number" | "figure" | "code" | "muted"
+export type TableColumnKind = "text" | "number" | "figure" | "code" | "command" | "muted"
 
 export type TableColumnSize = "auto" | "fit" | "fill"
+
+export type TableColumnStack = "pair" | "line" | "bare"
 
 export type TableColumn = {
   readonly key: string
@@ -11,6 +13,7 @@ export type TableColumn = {
   readonly kind?: TableColumnKind
   readonly size?: TableColumnSize
   readonly rowHeader?: boolean
+  readonly stack?: TableColumnStack
 }
 
 export type TableRowTone = "normal" | "muted" | "emphasis" | "alert"
@@ -19,6 +22,7 @@ export type TableRow = {
   readonly key: string
   readonly cells: Readonly<Record<string, ReactNode>>
   readonly tone?: TableRowTone
+  readonly id?: string
 }
 
 export type TableProps = {
@@ -35,6 +39,7 @@ const KIND_CLASS: Readonly<Record<TableColumnKind, string | undefined>> = {
   number: styles.number,
   figure: styles.figure,
   code: styles.code,
+  command: styles.command,
   muted: styles.muted,
 }
 
@@ -42,6 +47,12 @@ const SIZE_CLASS: Readonly<Record<TableColumnSize, string | undefined>> = {
   auto: undefined,
   fit: styles.fit,
   fill: styles.fill,
+}
+
+const STACK_CLASS: Readonly<Record<TableColumnStack, string | undefined>> = {
+  pair: undefined,
+  line: styles.line,
+  bare: styles.bare,
 }
 
 const TONE_CLASS: Readonly<Record<TableRowTone, string | undefined>> = {
@@ -71,6 +82,7 @@ function Cell({
   const className = join(
     KIND_CLASS[kind],
     SIZE_CLASS[column.size ?? "auto"],
+    STACK_CLASS[column.stack ?? "pair"],
     column.rowHeader === true && styles.rowHeader,
   )
   if (column.rowHeader === true) {
@@ -112,6 +124,7 @@ export function Table({ label, caption, columns, rows }: TableProps) {
           {rows.map((row) => (
             <tr
               key={row.key}
+              id={row.id}
               data-row={row.key}
               data-tone={row.tone ?? "normal"}
               className={TONE_CLASS[row.tone ?? "normal"]}

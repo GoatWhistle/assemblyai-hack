@@ -1,7 +1,7 @@
 import type { LasaRisk } from "@/domain"
 import { LASA_NOT_AN_ACCUSATION } from "@/features/gate-banner/hypothesis-language"
 import { TextLink } from "@/shared/ui/navigation/text-link"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import type { NameAnswerState } from "../field-status"
 import styles from "./styles.module.css"
 
@@ -26,6 +26,7 @@ export type LasaOverrideProps = {
   readonly minConfidence: number
   readonly threshold: number
   readonly nameState?: NameAnswerState
+  readonly compact?: boolean
 }
 
 export function LasaOverride({
@@ -33,31 +34,34 @@ export function LasaOverride({
   minConfidence,
   threshold,
   nameState = "pending",
+  compact = false,
 }: LasaOverrideProps) {
   const aboveThreshold = minConfidence >= threshold
   return (
     <div className={styles.override}>
       <p className={styles.overrideHead}>
-        <Chip tone="lasa" glyph="?">
-          Look-alike pair
-        </Chip>
+        <StatusChip status="pair">Look-alike pair</StatusChip>
         <span>{NAME_HEAD[nameState]}</span>
       </p>
-      <p className={styles.overrideBody}>{NAME_BODY[nameState]}</p>
-      <p className={styles.overrideBody}>
-        {aboveThreshold
-          ? `The recognizer reported ${minConfidence.toFixed(2)} certainty, at or above this field's ${threshold.toFixed(2)} threshold, and that does not settle which name was spoken. Certainty describes the acoustics it received, not which of the listed similar-sounding medicines the caller chose. ${nameState === "named" ? "The published list is why it was written only after the caller said the name." : "The published list is why the value is asked about instead of written."}`
-          : `The recognizer reported ${minConfidence.toFixed(2)} certainty, below this field's ${threshold.toFixed(2)} threshold. Even at 1.00 this value would still be confirmed: the name sits on a published list of confused names, and no number resolves which of them was said.`}
-      </p>
-      <p className={styles.overrideBody}>{LASA_NOT_AN_ACCUSATION}</p>
+      {compact ? null : (
+        <>
+          <p className={styles.overrideBody}>{NAME_BODY[nameState]}</p>
+          <p className={styles.overrideBody}>
+            {aboveThreshold
+              ? `The recognizer reported ${minConfidence.toFixed(2)} certainty, at or above this field's ${threshold.toFixed(2)} threshold, and that does not settle which name was spoken. Certainty describes the acoustics it received, not which of the listed similar-sounding medicines the caller chose. ${nameState === "named" ? "The published list is why it was written only after the caller said the name." : "The published list is why the value is asked about instead of written."}`
+              : `The recognizer reported ${minConfidence.toFixed(2)} certainty, below this field's ${threshold.toFixed(2)} threshold. Even at 1.00 this value would still be confirmed: the name sits on a published list of confused names, and no number resolves which of them was said.`}
+          </p>
+          <p className={styles.overrideBody}>{LASA_NOT_AN_ACCUSATION}</p>
+        </>
+      )}
       <div className={styles.alternatives}>
         <span className={styles.altLabel}>Heard as</span>
-        <Chip tone="lasa">{lasa.matchedTerm ?? "unknown"}</Chip>
+        <StatusChip status="pair">{lasa.matchedTerm ?? "unknown"}</StatusChip>
         <span className={styles.altLabel}>confusable with</span>
         {lasa.confusableWith.map((name) => (
-          <Chip key={name} tone="plain">
+          <StatusChip key={name} status="tag">
             {name}
-          </Chip>
+          </StatusChip>
         ))}
       </div>
       <p className={styles.source}>

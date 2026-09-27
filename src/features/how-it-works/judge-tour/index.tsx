@@ -1,5 +1,6 @@
 import { useId } from "react"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
+import { Heading } from "@/shared/ui/typography/heading"
 import styles from "./styles.module.css"
 import { TOUR_SECONDS, TOUR_STEPS } from "./tour-steps"
 
@@ -7,9 +8,9 @@ export function JudgeTour() {
   const headingId = useId()
   return (
     <section className={styles.tour} aria-labelledby={headingId}>
-      <h2 className={styles.heading} id={headingId}>
+      <Heading level={2} id={headingId}>
         The {TOUR_SECONDS}-second tour
-      </h2>
+      </Heading>
       <ol className={styles.steps}>
         {TOUR_STEPS.map((step, index) => (
           <li key={step.id} className={styles.step}>

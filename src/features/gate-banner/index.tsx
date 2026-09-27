@@ -5,7 +5,7 @@ import {
   type GateDecision,
   ReasonCode,
 } from "@/domain"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import { FIELD_LABEL } from "../intake/field-language"
 import { ContrastQuestion, spokenChoice } from "./contrast-question"
 import { stanceFor } from "./hypothesis-language"
@@ -13,7 +13,7 @@ import {
   ACTION_LANGUAGE,
   describeReason,
   type ReasonSeverity,
-  SEVERITY_TONE,
+  SEVERITY_STATUS,
 } from "./reason-language"
 import { ReasonStance } from "./reason-stance"
 import { RECOVERY_STEP } from "./recovery-language"
@@ -46,10 +46,10 @@ export function ConfirmedBanner({ evidence, candidate, asked = null }: Confirmed
     >
       <div className={styles.top}>
         <p className={styles.headline}>{CONFIRMED_HEADLINE}</p>
-        <Chip tone="accepted" monospace>
+        <StatusChip status="written" code>
           {evidence.reasonCode}
-        </Chip>
-        <Chip tone="plain">{FIELD_LABEL[candidate.field]}</Chip>
+        </StatusChip>
+        <StatusChip status="tag">{FIELD_LABEL[candidate.field]}</StatusChip>
       </div>
       <p className={styles.because}>
         The caller said {value} aloud, so {value} is the value in the order. A yes would have
@@ -149,11 +149,11 @@ export function GateBanner({
         {signature === null ? null : <SignatureLine signature={signature} />}
         <div className={styles.top}>
           <p className={styles.headline}>{reason.headline}</p>
-          <Chip tone={SEVERITY_TONE[reason.severity]} monospace>
+          <StatusChip status={SEVERITY_STATUS[reason.severity]} code>
             {reason.code}
-          </Chip>
-          <Chip tone="plain">{ACTION_LANGUAGE[decision.action]}</Chip>
-          <Chip tone="plain">{FIELD_LABEL[decision.field]}</Chip>
+          </StatusChip>
+          <StatusChip status="tag">{ACTION_LANGUAGE[decision.action]}</StatusChip>
+          <StatusChip status="tag">{FIELD_LABEL[decision.field]}</StatusChip>
         </div>
         <p className={styles.because}>{reason.because}</p>
         {contrastive ? <ContrastQuestion candidates={signature.candidates} /> : null}

@@ -1,103 +1,12 @@
-.frame {
-  container-type: inline-size;
-  min-width: 0;
-  border: 1px solid var(--line-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-panel);
-  overflow: clip;
-}
-
-.terms {
-  margin-top: -1px;
-}
-
-.entry {
-  display: grid;
-  grid-template-columns: 13rem minmax(0, 1fr);
-  gap: var(--space-2) var(--space-4);
-  align-items: baseline;
-  padding: var(--space-3) var(--space-5);
-  border-top: 1px solid var(--line-hairline);
-  scroll-margin-top: calc(var(--target-touch) + var(--space-5));
-  break-inside: avoid;
-}
-
-.entry:target {
-  background-color: var(--select-surface);
-}
-
-.term {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
-}
-
 .expansion {
   font-weight: var(--weight-regular);
   color: var(--text-muted);
 }
 
-.definition,
 .note {
   max-width: var(--measure-prose);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
-}
-
-.shelf {
-  container-type: inline-size;
-  min-width: 0;
-}
-
-.citations {
-  display: grid;
-  gap: var(--space-4);
-  max-width: var(--measure-prose);
-  padding-inline-start: var(--space-5);
-  list-style: disc;
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-}
-
-.citations strong {
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
-}
-
-.digest {
-  font-family: var(--font-data);
-  font-size: var(--text-2xs);
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-@container (width < 36rem) {
-  .entry {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1);
-    padding-inline: var(--space-4);
-  }
-}
-
-@container (width >= 64rem) {
-  .terms {
-    columns: 2;
-    column-gap: 0;
-    column-rule: 1px solid var(--line-hairline);
-  }
-
-  .entry {
-    grid-template-columns: 11rem minmax(0, 1fr);
-  }
-}
-
-@container (width >= 60rem) {
-  .citations {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-5) var(--space-7);
-    max-width: none;
-  }
 }

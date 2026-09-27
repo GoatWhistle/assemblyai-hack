@@ -65,34 +65,34 @@
   color: var(--text-primary);
 }
 
-.table .number {
-  text-align: end;
-  font-variant-numeric: tabular-nums;
+.table :is(.number, .figure, .command, .fit) {
   white-space: nowrap;
 }
 
-.table tbody .number {
+.table :is(.number, .figure) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table tbody :is(.number, .figure) {
   font-weight: var(--label-weight);
-}
-
-.table .figure {
-  text-align: end;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 .table tbody .figure {
   font-size: var(--body-size);
-  font-weight: var(--label-weight);
 }
 
-.table .code {
+.table tbody .code {
   font-family: var(--font-data);
   font-size: var(--code-size-fixed);
 }
 
 .table .muted {
   color: var(--text-secondary);
+}
+
+.table tbody tr[id] {
+  scroll-margin-top: calc(var(--table-sticky-top) + var(--target-touch) + var(--space-5));
 }
 
 .table .fit {
@@ -105,12 +105,7 @@
 
 .value {
   min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.number .value,
-.figure .value {
-  overflow-wrap: normal;
+  overflow-wrap: break-word;
 }
 
 .table .mutedRow > * {
@@ -135,9 +130,7 @@
     white-space: nowrap;
   }
 
-  .table,
-  .table tbody,
-  .caption {
+  :is(.table, .table tbody, .caption) {
     display: block;
   }
 
@@ -149,16 +142,8 @@
     padding: var(--table-cell-block) var(--panel-pad-compact);
   }
 
-  .table tbody th,
-  .table tbody td,
-  .table tr > :first-child,
-  .table tr > :last-child {
+  .table :is(tbody th, tbody td, tr > :first-child, tr > :last-child) {
     padding: 0;
-  }
-
-  .table tbody th {
-    display: block;
-    flex: 1 1 100%;
   }
 
   .table tbody td {
@@ -173,12 +158,27 @@
   .table tbody td::before {
     content: attr(data-label);
     flex: none;
+    font-family: var(--font-ui);
+    font-size: var(--meta-size);
     color: var(--table-head-ink);
   }
 
-  .table tbody .fit,
-  .table tbody .fill {
+  .table tbody :is(.fit, .fill, .command) {
     width: auto;
+    white-space: normal;
+  }
+
+  .table tbody :is(th, .line, .bare) {
+    display: block;
+    flex: 1 1 100%;
+  }
+
+  .table tbody .line::before {
+    display: block;
+  }
+
+  .table tbody .bare::before {
+    content: none;
   }
 
   .caption {
@@ -196,9 +196,7 @@
     white-space: nowrap;
   }
 
-  [data-density="dense"] .table,
-  [data-density="dense"] .table tbody,
-  [data-density="dense"] .caption {
+  [data-density="dense"] :is(.table, .table tbody, .caption) {
     display: block;
   }
 
@@ -210,16 +208,8 @@
     padding: var(--table-cell-block) var(--panel-pad-compact);
   }
 
-  [data-density="dense"] .table tbody th,
-  [data-density="dense"] .table tbody td,
-  [data-density="dense"] .table tr > :first-child,
-  [data-density="dense"] .table tr > :last-child {
+  [data-density="dense"] .table :is(tbody th, tbody td, tr > :first-child, tr > :last-child) {
     padding: 0;
-  }
-
-  [data-density="dense"] .table tbody th {
-    display: block;
-    flex: 1 1 100%;
   }
 
   [data-density="dense"] .table tbody td {
@@ -234,11 +224,26 @@
   [data-density="dense"] .table tbody td::before {
     content: attr(data-label);
     flex: none;
+    font-family: var(--font-ui);
+    font-size: var(--meta-size);
     color: var(--table-head-ink);
   }
 
-  [data-density="dense"] .table tbody .fit,
-  [data-density="dense"] .table tbody .fill {
+  [data-density="dense"] .table tbody :is(.fit, .fill, .command) {
     width: auto;
+    white-space: normal;
+  }
+
+  [data-density="dense"] .table tbody :is(th, .line, .bare) {
+    display: block;
+    flex: 1 1 100%;
+  }
+
+  [data-density="dense"] .table tbody .line::before {
+    display: block;
+  }
+
+  [data-density="dense"] .table tbody .bare::before {
+    content: none;
   }
 }

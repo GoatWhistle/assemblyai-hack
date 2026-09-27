@@ -1,6 +1,6 @@
 import { FieldName } from "@/domain"
 import { FIELD_LABEL, FIELD_PROOF_NOTE } from "@/features/intake/field-language"
-import styles from "./styles.module.css"
+import { Table, type TableColumn } from "@/shared/ui/data-display/table"
 
 const SHOWN: readonly FieldName[] = [
   FieldName.PrescriberNpi,
@@ -11,17 +11,20 @@ const SHOWN: readonly FieldName[] = [
   FieldName.PatientName,
 ]
 
+const COLUMNS: readonly TableColumn[] = [
+  { key: "field", title: "Field", rowHeader: true },
+  { key: "proof", title: "What proves it", kind: "muted", stack: "bare" },
+]
+
 export function ProofLadder() {
   return (
-    <div className={styles.frame}>
-      <dl className={styles.rows}>
-        {SHOWN.map((field) => (
-          <div key={field} className={styles.row}>
-            <dt className={styles.field}>{FIELD_LABEL[field]}</dt>
-            <dd className={styles.note}>{FIELD_PROOF_NOTE[field]}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
+    <Table
+      label="What counts as proof, per field"
+      columns={COLUMNS}
+      rows={SHOWN.map((field) => ({
+        key: field,
+        cells: { field: FIELD_LABEL[field], proof: FIELD_PROOF_NOTE[field] },
+      }))}
+    />
   )
 }

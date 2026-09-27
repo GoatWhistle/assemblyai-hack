@@ -1,28 +1,17 @@
 .block {
   display: grid;
-  gap: var(--space-4);
-  padding: var(--space-5);
-  border: 1px solid var(--line-divider);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-panel);
+  gap: var(--rhythm-group);
 }
 
 .head {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--rhythm-tight);
   max-width: var(--measure-prose);
 }
 
-.title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  color: var(--text-primary);
-}
-
 .lede {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   text-wrap: pretty;
 }
@@ -35,20 +24,20 @@
 
 .arm {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--rhythm-tight);
   justify-items: start;
   text-align: left;
   min-height: var(--target-touch);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--panel-pad-compact);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-sunken);
+  border-radius: var(--panel-radius);
+  background-color: var(--panel-surface);
   cursor: pointer;
   transition: var(--transition-control);
 }
 
 .arm:hover {
-  border-color: var(--action-rest);
+  border-color: var(--select-line);
 }
 
 .arm:active {
@@ -61,14 +50,13 @@
 }
 
 .armActive {
-  border-color: var(--action-rest);
-  border-width: 2px;
+  border-color: var(--select-line);
   background-color: var(--select-surface);
 }
 
 .armTitle {
-  font-size: var(--text-base);
-  font-weight: var(--weight-medium);
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
   line-height: var(--leading-snug);
   color: var(--text-primary);
 }
@@ -79,8 +67,8 @@
 
 .panel {
   display: grid;
-  gap: var(--space-4);
-  padding-top: var(--space-4);
+  gap: var(--rhythm-group);
+  padding-top: var(--rhythm-group);
   border-top: 1px solid var(--line-hairline);
   animation: var(--keyframes-fade-rise) var(--dur-base) var(--ease-out-quart);
 }
@@ -88,14 +76,14 @@
 .listBlock,
 .explain {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--rhythm-stack);
   align-content: start;
   min-width: 0;
 }
 
 .listLabel {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
@@ -112,7 +100,7 @@
 
 .termText {
   font-family: var(--font-data);
-  font-size: var(--text-2xs);
+  font-size: var(--code-size-fixed);
   padding: var(--space-1) var(--space-2);
   border: 1px solid var(--line-hairline);
   border-radius: var(--radius-xs);
@@ -120,26 +108,19 @@
   color: var(--text-secondary);
 }
 
-.readings {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
-  gap: var(--space-4);
-  align-items: start;
-}
-
 .leaked {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--state-lasa-ink);
 }
 
 .leakedTerm {
   font-family: var(--font-data);
-  font-size: var(--text-2xs);
+  font-size: var(--code-size-fixed);
   padding: var(--space-1) var(--space-2);
   border: 1px solid var(--state-lasa-line);
   border-radius: var(--radius-xs);
@@ -149,26 +130,26 @@
 
 .effects {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--rhythm-tight);
   max-width: var(--measure-prose);
 }
 
 .effectTerm {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   color: var(--text-muted);
 }
 
 .effectBody {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   text-wrap: pretty;
 }
 
 .measured {
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-secondary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
@@ -176,23 +157,12 @@
 
 .refusal {
   display: grid;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border: 1px solid var(--state-escalated-line);
-  border-radius: var(--radius-md);
-  background-color: var(--state-escalated-surface);
-}
-
-.refusalTitle {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
-  color: var(--state-escalated-ink);
+  gap: var(--rhythm-tight);
 }
 
 .refusalBody {
-  font-size: var(--text-xs);
-  line-height: var(--leading-relaxed);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
   color: var(--text-primary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
@@ -200,41 +170,31 @@
 
 .quote {
   font-family: var(--font-data);
-  font-size: var(--text-sm);
+  font-size: var(--code-size);
   color: var(--text-secondary);
 }
 
 .circularity {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
 }
 
 .cost {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  color: var(--text-faint);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-muted);
   max-width: var(--measure-prose);
   text-wrap: pretty;
 }
 
 @media (min-width: 62rem) {
-  .block {
-    padding: var(--space-6);
-  }
-
   .panel {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: var(--shell-gap);
-  }
-}
-
-@media (max-width: 40rem) {
-  .block {
-    padding: var(--space-4);
   }
 }
 

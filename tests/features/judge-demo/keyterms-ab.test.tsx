@@ -177,7 +177,7 @@ describe("what the page tells a reader", () => {
       screen.getByText(WHY_NO_NUMBER),
       "the biased arm has never been measured, and printing a number there would be exactly the invented figure the project forbids",
     ).toBeDefined()
-    expect(screen.getAllByText(/not observed yet/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole("img", { name: /not observed yet/i }).length).toBeGreaterThan(0)
   })
 
   it("leaves room for a one-off diagnostic instead of promising the arm is never measured", () => {

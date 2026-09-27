@@ -1,9 +1,21 @@
+.code {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rhythm-tight);
+  font-variant-numeric: tabular-nums;
+}
+
 .label {
-  font-weight: var(--weight-medium);
+  font-weight: var(--label-weight);
   color: var(--text-primary);
 }
 
 .meaning {
   color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
+}
+
+.methods {
+  display: grid;
+  gap: var(--space-1);
 }

@@ -1,7 +1,7 @@
 .override {
   display: grid;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-5);
+  gap: var(--rhythm-tight);
+  padding: var(--panel-pad-compact) var(--panel-pad);
   background-color: var(--state-lasa-surface);
   border-bottom: 1px solid var(--state-lasa-line);
   animation: var(--keyframes-verdict-emphatic) var(--dur-base) var(--ease-out-expo) both;
@@ -11,16 +11,17 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-md);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--track-tight);
+  gap: var(--rhythm-tight);
+  font-size: var(--title-block-size);
+  font-weight: var(--title-block-weight);
+  letter-spacing: var(--title-block-track);
+  line-height: var(--title-block-leading);
   color: var(--state-lasa-ink);
 }
 
 .overrideBody {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   max-width: var(--measure-prose);
   text-wrap: pretty;
@@ -47,13 +48,13 @@
 }
 
 .altLabel {
-  font-size: var(--text-xs);
+  font-size: var(--meta-size);
   color: var(--text-secondary);
 }
 
 .source {
   font-family: var(--font-data);
-  font-size: var(--text-2xs);
+  font-size: var(--code-size-fixed);
   color: var(--text-secondary);
   overflow-wrap: anywhere;
 }

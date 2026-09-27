@@ -3,7 +3,8 @@ import { ConfirmationReceipt } from "@/features/confirmation/confirmation-receip
 import { FIELD_LABEL } from "@/features/intake/field-language"
 import { WitnessBadge } from "@/features/receipt/witness-badge"
 import { ActionLink } from "@/shared/ui/primitives/action-link"
-import { Chip } from "@/shared/ui/primitives/chip"
+import { Panel } from "@/shared/ui/primitives/panel"
+import { StatusChip } from "@/shared/ui/primitives/status-chip"
 import type { LiveOrderSnapshot } from "../live-snapshot"
 import type { OrderGroups, SummaryRow } from "../order-groups"
 import styles from "./styles.module.css"
@@ -66,7 +67,7 @@ function CommitState({ groups, snapshot }: OrderPanelProps) {
         <span>
           Reference <strong className={styles.reference}>{snapshot.referenceNumber}</strong>
         </span>
-        <Chip tone="pending">{AWAITING_VERIFICATION}</Chip>
+        <StatusChip status="pending">{AWAITING_VERIFICATION}</StatusChip>
       </output>
     )
   }
@@ -105,42 +106,49 @@ export function OrderPanel({
 }: OrderPanelProps) {
   const refusals = snapshot?.commitRefusals ?? []
   return (
-    <section className={styles.panel} aria-label="Order summary">
-      <h2 className={styles.title}>The order, as the pharmacist receives it</h2>
-      <CommitState groups={groups} snapshot={snapshot} />
-      {groups.committed && sessionId !== null ? (
-        <ActionLink href={`/order/${encodeURIComponent(sessionId)}`}>
-          Open the receipt, rechecked in your browser
-        </ActionLink>
-      ) : null}
-      {refusals.length === 0 ? null : (
-        <ul className={styles.refusals}>
-          {refusals.map((refusal) => (
-            <li key={`${refusal.atMs}-${refusal.reasonCode}`}>
-              The hold refused commitOrder before the write at {clockOf(refusal.atMs)}:{" "}
-              {fieldList(refusal.missing)} not proved. <code>{refusal.reasonCode}</code>
-            </li>
-          ))}
-        </ul>
-      )}
-      {groups.stopped.length === 0 ? null : (
-        <div className={styles.group}>
-          <h3 className={styles.groupTitle}>Stopped by the gate</h3>
-          <Rows rows={groups.stopped} empty="" />
+    <section className={styles.summary} aria-label="Order summary">
+      <Panel title="The order, as the pharmacist receives it" as="div">
+        <div className={styles.panel}>
+          <CommitState groups={groups} snapshot={snapshot} />
+          {groups.committed && sessionId !== null ? (
+            <ActionLink href={`/order/${encodeURIComponent(sessionId)}`}>
+              Open the receipt, rechecked in your browser
+            </ActionLink>
+          ) : null}
+          {refusals.length === 0 ? null : (
+            <ul className={styles.refusals}>
+              {refusals.map((refusal) => (
+                <li key={`${refusal.atMs}-${refusal.reasonCode}`}>
+                  The hold refused commitOrder before the write at {clockOf(refusal.atMs)}:{" "}
+                  {fieldList(refusal.missing)} not proved. <code>{refusal.reasonCode}</code>
+                </li>
+              ))}
+            </ul>
+          )}
+          {groups.stopped.length === 0 ? null : (
+            <div className={styles.group}>
+              <h3 className={styles.groupTitle}>Stopped by the gate</h3>
+              <Rows rows={groups.stopped} empty="" />
+            </div>
+          )}
+          <div className={styles.group}>
+            <h3 className={styles.groupTitle}>Proved by arithmetic or the catalogue</h3>
+            <Rows witness={witness} rows={groups.proved} empty="Nothing proved this way yet." />
+          </div>
+          <div className={styles.group}>
+            <h3 className={styles.groupTitle}>Confirmed aloud</h3>
+            <Rows
+              witness={witness}
+              rows={groups.confirmed}
+              empty="Nothing confirmed aloud yet."
+            />
+          </div>
+          <div className={styles.group}>
+            <h3 className={styles.groupTitle}>Not resolved</h3>
+            <Rows rows={groups.unresolved} empty="Nothing is left unresolved." />
+          </div>
         </div>
-      )}
-      <div className={styles.group}>
-        <h3 className={styles.groupTitle}>Proved by arithmetic or the catalogue</h3>
-        <Rows witness={witness} rows={groups.proved} empty="Nothing proved this way yet." />
-      </div>
-      <div className={styles.group}>
-        <h3 className={styles.groupTitle}>Confirmed aloud</h3>
-        <Rows witness={witness} rows={groups.confirmed} empty="Nothing confirmed aloud yet." />
-      </div>
-      <div className={styles.group}>
-        <h3 className={styles.groupTitle}>Not resolved</h3>
-        <Rows rows={groups.unresolved} empty="Nothing is left unresolved." />
-      </div>
+      </Panel>
     </section>
   )
 }

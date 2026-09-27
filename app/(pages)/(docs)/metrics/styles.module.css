@@ -1,18 +1,21 @@
 .prose {
   max-width: var(--measure-prose);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
   color: var(--text-primary);
   text-wrap: pretty;
 }
 
 .prose strong {
-  font-weight: var(--weight-medium);
+  font-weight: var(--label-weight);
 }
 
-.code {
-  font-family: var(--font-data);
-  font-size: var(--text-sm);
+.method {
+  max-width: var(--measure-prose);
+  font-size: var(--meta-size);
+  line-height: var(--meta-leading);
+  color: var(--text-secondary);
+  text-wrap: pretty;
 }
 
 .heldOut {
@@ -24,18 +27,18 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: var(--space-5);
+  gap: var(--rhythm-group);
 }
 
 .reading {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--rhythm-stack);
   min-width: 0;
 }
 
 @container (width >= 72rem) {
   .split {
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    gap: var(--space-6);
+    gap: var(--rhythm-section-compact);
   }
 }

@@ -21,7 +21,7 @@ const COLUMNS: readonly TableColumn[] = [
   { key: "figure", title: "Figure", rowHeader: true, size: "fill" },
   { key: "value", title: "Value", kind: "figure" },
   { key: "input", title: "Input", kind: "muted", size: "fit" },
-  { key: "command", title: "Command" },
+  { key: "command", title: "Command", kind: "command" },
   { key: "n", title: "n", kind: "number" },
 ]
 
@@ -29,7 +29,24 @@ function sentenceCase(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
 }
 
-function rowFor(entry: BenchmarkEntry, compact: boolean): TableRow {
+function sentencesOf(text: string): readonly string[] {
+  return text.split(/(?<=\.)\s+/).filter((sentence) => sentence !== "")
+}
+
+export function unrepeatedMeaning(
+  entry: BenchmarkEntry,
+  previous: BenchmarkEntry | undefined,
+): string {
+  if (previous === undefined) {
+    return entry.meaning
+  }
+  const said = new Set(sentencesOf(previous.meaning))
+  return sentencesOf(entry.meaning)
+    .filter((sentence) => !said.has(sentence))
+    .join(" ")
+}
+
+function rowFor(entry: BenchmarkEntry, meaning: string, compact: boolean): TableRow {
   return {
     key: entry.id,
     tone: entry.row.value !== null && entry.tone === "alert" ? "alert" : "normal",
@@ -37,9 +54,7 @@ function rowFor(entry: BenchmarkEntry, compact: boolean): TableRow {
       figure: (
         <>
           <span className={styles.name}>{sentenceCase(entry.row.figure)}</span>
-          {compact || entry.meaning === "" ? null : (
-            <span className={styles.meaning}>{entry.meaning}</span>
-          )}
+          {compact || meaning === "" ? null : <span className={styles.meaning}>{meaning}</span>}
         </>
       ),
       value: entry.row.value === null ? <AbsentValue /> : entry.row.value,
@@ -72,7 +87,9 @@ export function BenchmarkTable({
       label={label}
       caption={caption}
       columns={COLUMNS}
-      rows={entries.map((entry) => rowFor(entry, compact))}
+      rows={entries.map((entry, index) =>
+        rowFor(entry, unrepeatedMeaning(entry, entries[index - 1]), compact),
+      )}
     />
   )
 }
