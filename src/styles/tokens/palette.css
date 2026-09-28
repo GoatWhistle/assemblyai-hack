@@ -42,4 +42,8 @@
   --ink-a5: oklch(12% 0.006 282 / 0.05);
   --ink-a8: oklch(12% 0.006 282 / 0.08);
   --ink-a12: oklch(12% 0.006 282 / 0.12);
+  --paper-a10: oklch(100% 0 90 / 0.1);
+  --paper-a18: oklch(100% 0 90 / 0.18);
+  --paper-a86: oklch(100% 0 90 / 0.86);
+  --violet-night: oklch(34% 0.17 282);
 }

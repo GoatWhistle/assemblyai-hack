@@ -208,4 +208,12 @@
   --docs-sidebar: clamp(14.5rem, 12vw, 17rem);
   --docs-toc: clamp(13rem, 10vw, 16rem);
   --docs-sticky-top: var(--space-5);
+
+  --cover-ground: var(--violet);
+  --cover-ground-edge: var(--violet-night);
+  --cover-ink: var(--paper);
+  --cover-ink-soft: var(--paper-a86);
+  --cover-ring: var(--paper-a18);
+  --cover-ring-faint: var(--paper-a10);
+  --cover-lift: 0 40px 120px var(--violet-night);
 }

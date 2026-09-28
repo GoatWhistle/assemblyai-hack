@@ -10,10 +10,11 @@ describe("the submission cover", () => {
   it("names the product and states the thesis", () => {
     render(<CoverPage />)
     expect(screen.getByText("Readback")).toBeTruthy()
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Certain. Still wrong.")
     expect(
-      screen.getByRole("heading", { level: 1 }).textContent,
+      screen.getByText("A voice agent that proves it did not mishear."),
       "the cover is the first thing a judge sees; without the thesis it is a logo, not an argument",
-    ).toMatch(/proves it did not mishear/)
+    ).toBeTruthy()
   })
 
   it("shows a certain recognizer overridden by the gate with both candidates", () => {
