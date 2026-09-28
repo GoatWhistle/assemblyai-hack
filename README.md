@@ -35,10 +35,9 @@
   <img src="https://img.shields.io/badge/language-TypeScript-5c48db?style=flat-square&labelColor=16161d" alt="TypeScript"/>
 </p>
 
-<!-- SCREENSHOT docs/images/call-page.png: the call page at 1440 wide, idle. Left: the
-     title, the microphone and the three example lines. Right: the proof map, "What each
-     field must pass before it is written", with its four groups. This is the first thing a
-     visitor sees, so it goes directly under the badges, full width. -->
+<p align="center">
+  <a href="https://readback-rx.vercel.app/"><img src="docs/images/call-page.png" alt="The call page: the promise on the left, the microphone in the centre, three example lines to say on the right" width="900"/></a>
+</p>
 
 ---
 
@@ -131,10 +130,13 @@ the server fetches the vendor's own transcript and marks each field `witnessed` 
 the receipt, a second channel the browser cannot forge, described in the
 [security model](docs/security.md).
 
-<!-- SCREENSHOT docs/images/field-card.png: one field card mid-call. The recognizer heard
-     "morphine" at certainty 1.00, above the 0.95 threshold, and the card still asks for the
-     name because morphine and hydromorphone are an ISMP pair. Shows certainty beside the
-     re-ask without reading as a contradiction. Place beside or under the diagram. -->
+<p align="center">
+  <img src="docs/images/field-card.png" alt="The field card for the drug name: the look-alike pair that settled it, the correction from morphine to hydromorphone, the catalogue verdict and the recognizer's certainty ranked last" width="560"/>
+</p>
+
+<p align="center"><sub>One field card from the replay. The drug name sits in a published pair, so the caller's
+spoken name settled it; the recognizer's certainty sits beside the verdict and is marked as not
+what decides.</sub></p>
 
 ## See it in two minutes
 
@@ -151,13 +153,19 @@ No clone, no key and no microphone for the first four steps.
 What each step proves, why each attack fails and where every judging criterion is answered
 are set out in the [guide for judges](docs/for-judges.md).
 
-<!-- SCREENSHOT docs/images/replay-two-arms.png: the replay at its decision moment, both
-     panels visible. Left, pair rule on: RE-ASK, E_LASA_HIT, "Hydromorphone or Morphine?".
-     Right, pair rule off: plain read-back accepted and morphine ordered. This is the
-     whole argument of the replay in one frame. -->
+<p align="center">
+  <a href="https://readback-rx.vercel.app/demo?autoplay=1"><img src="docs/images/replay-two-arms.png" alt="The replay finished: with the pair rule on, hydromorphone is written after the caller names it; with only the pair rule off, a yes confirms morphine and morphine is ordered" width="900"/></a>
+</p>
 
-<!-- SCREENSHOT docs/images/receipt.png: /order/[id] for a committed order, re-checked in
-     the browser: hash, NPI, DEA and the pair rule VALID, with the witness verdict per field. -->
+<p align="center"><sub>Step 1, the replay. The same synthesised session through the shipped gate twice, differing
+by one flag.</sub></p>
+
+<p align="center">
+  <img src="docs/images/receipt.png" alt="An order receipt rechecked in the browser: VALID, with the digest, DEA, NPI and catalogue checks passed" width="900"/>
+</p>
+
+<p align="center"><sub>The receipt of a production call placed by the synthesised-caller smoke harness, rechecked in
+the browser: the sha256, the DEA and NPI check digits and the catalogue.</sub></p>
 
 ## What is measured
 

@@ -123,6 +123,13 @@ Refills:       0 (a Schedule II product may not be refilled)
 | Confirmation | the caller's answer to the read-back, or the validator for an arithmetic-proved value | what was confirmed, and by which words |
 | LASA risk | membership in a pair on the ISMP list | forces the contrastive question below |
 
+<p align="center">
+  <img src="images/field-card.png" alt="The field card for the drug name from the replay: settled by a spoken name, corrected from morphine to hydromorphone, proved by the catalogue, with the recognizer's certainty ranked last" width="560"/>
+</p>
+
+<p align="center"><sub>Every element above on one field card, from the replay: the value, its words and timecodes,
+the confidence, the catalogue verdict, the spoken confirmation and the pair that forced it.</sub></p>
+
 ### Three reasons the agent must re-ask
 
 This is code, not a prompt. The function that writes a field accepts only a `ConfirmedValue`,

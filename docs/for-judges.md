@@ -44,13 +44,30 @@ button instead of the microphone.
 | 5 | Open [/metrics](https://readback-rx.vercel.app/metrics) | Every number carries its command and set size, and the cost of the rule sits beside its catches | Nothing is published without a method |
 | 6 | Start a call on [/](https://readback-rx.vercel.app/) and say "Hydromorphone, two milligrams" | The agent names hydromorphone and every drug the list pairs with it, spelling the start of each, and asks for a name; a "yes" writes nothing | The same rule, live, on the production deployment |
 
-<!-- SCREENSHOT docs/images/replay-decision.png: the replay's decision frame, banner RE-ASK
-     E_LASA_HIT at certainty 1.00 with "Hydromorphone or Morphine?" -->
+<p align="center">
+  <a href="https://readback-rx.vercel.app/demo?autoplay=1"><img src="images/replay-two-arms.png" alt="The replay finished: pair rule on writes hydromorphone after the caller names it; pair rule off confirms morphine on a yes and orders it" width="900"/></a>
+</p>
+
+<p align="center"><sub>Steps 1 and 2: the replay once it has finished, both panels decided by the same gate function.</sub></p>
 
 In step 2 the pair-rule panel also states what a reflex "yes" would have produced: a refusal
 code and nothing written. In step 6 the question is long because hydromorphone has five
 partners on the ISMP list (morphine, buprenorphine, hydralazine, hydroxyzine, oxymorphone),
 and every one is named.
+
+<p align="center">
+  <a href="https://readback-rx.vercel.app/compare"><img src="images/compare.png" alt="The compare page: said, heard, certainty, the gate's verdict and what a threshold with the validators alone would write, one moment per row" width="900"/></a>
+</p>
+
+<p align="center"><sub>Step 3: <code>/compare</code>. At certainty 1.00 the gate asks again, while the threshold and
+validators alone write the wrong drug.</sub></p>
+
+<p align="center">
+  <a href="https://readback-rx.vercel.app/metrics"><img src="images/metrics.png" alt="The measurements page: 20 of 20 pair mishearings written without the pair rule and 0 of 20 with it, beside the 21 of 59 correct names the rule puts to a longer question" width="900"/></a>
+</p>
+
+<p align="center"><sub>Step 5: <code>/metrics</code>. The catch and its cost at equal weight, each with its command and
+set size.</sub></p>
 
 **What the replay is.** Its socket messages are synthesised in the vendor's documented
 shapes, so it demonstrates the gate's decisions, not the recognizer's behaviour. The gate,
@@ -65,6 +82,12 @@ sockets over synthesised speech.
 Seven attempts to get a value past the gate. Each button builds a real candidate, runs the
 real decision function and calls the only constructor that can write a field:
 
+<p align="center">
+  <a href="https://readback-rx.vercel.app/how-it-works#attack"><img src="images/attack-console.png" alt="The attack console after three attempts, each refused with the reason code and the message the gate raised, verbatim" width="720"/></a>
+</p>
+
+<p align="center"><sub>The first three attempts, run. The refusal under each is the string the gate raised.</sub></p>
+
 | Attempt | Why it fails |
 |---|---|
 | Lower the confidence threshold to zero | The pair check is read **before** the threshold, so a listed name is asked about at any confidence. This is the quickest way to falsify the central claim, so it is first |
@@ -76,6 +99,13 @@ real decision function and calls the only constructor that can write a field:
 | Order a medicine whose name is one vowel away from a real one | The name is absent from the catalogue, and the refusal names the real medicine sharing its consonants so the caller can correct it in one turn |
 
 ## What can you try with a microphone?
+
+<p align="center">
+  <a href="https://readback-rx.vercel.app/"><img src="images/call-page.png" alt="The call page: the promise on the left, the microphone in the centre, three example lines to say on the right" width="900"/></a>
+</p>
+
+<p align="center"><sub>The call page. Each example line shows which fields it fills; the microphone opens a live
+call on the production deployment.</sub></p>
 
 - **Interrupt the agent mid-sentence.** Playback stops at once. Nothing reaches the
   recognizer from the first audio of a reply until the reply ends, and a turn that matches

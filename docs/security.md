@@ -186,6 +186,14 @@ A browser that forges its turns cannot also write the vendor's record. The bound
   synthesised speech to both sockets passes.
 - The timeline carries turn-level text and confidence, not word-level timings.
 
+<p align="center">
+  <img src="images/receipt-witness.png" alt="Receipt fields from a production call, each with its proof and timecodes; every field shown but the route is heard by AssemblyAI too" width="560"/>
+</p>
+
+<p align="center"><sub>The fields of a committed order on <code>/order/[id]</code>, from a production call placed by
+the synthesised-caller smoke harness. The route was confirmed by read-back but is marked not in
+the vendor's transcript: the witness reports that, it does not hide it.</sub></p>
+
 ## Headers and content security policy
 
 Set in [`next.config.ts`](../next.config.ts).

@@ -45,7 +45,8 @@ route through the live product, and every page below is one link from it.
 | [Limitations](limitations.md) | Everything the project cannot prove, at full strength: a hostile client, synthesised evidence, list coverage, chosen thresholds, open security gaps, regulatory status |
 | [Cost and budget](cost-and-budget.md) | The vendor's rates, what caps the spend, which commands bill, what a forgotten tab costs, and how spend is reported from the ledger |
 
-`docs/brand/` holds the wordmark shown in the project README.
+`docs/brand/` holds the wordmark shown in the project README, and `docs/images/` the
+screenshots of the deployment, taken at 1440 by 900.
 
 ---
 
