@@ -12,7 +12,7 @@ import {
 } from "./public-figure-anchor"
 
 const README: PublicDocument = "README.md"
-const DECK: PublicDocument = "src/features/deck/slides.ts"
+const DECK: PublicDocument = "src/features/deck/invariant-slide/index.tsx"
 const EVIDENCE: PublicDocument = "docs/evidence.md"
 const LIMITATIONS: PublicDocument = "docs/limitations.md"
 const SECURITY: PublicDocument = "docs/security.md"
@@ -79,9 +79,9 @@ export const STRUCTURAL_ANCHORS: readonly Anchor[] = [
   ...[DECK].map(
     (document): Anchor => ({
       document,
-      locate: /(\d+ of \d+)(?=\.|\s+gate\s+mutations)/,
+      locate: /value: "(\d+ \/ \d+)"/,
       source: MUTATIONS,
-      reproduce: (evidence) => `${mutationCount(evidence)} of ${mutationCount(evidence)}`,
+      reproduce: (evidence) => `${mutationCount(evidence)} / ${mutationCount(evidence)}`,
     }),
   ),
   {

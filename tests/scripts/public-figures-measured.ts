@@ -7,35 +7,22 @@ import {
   percent,
 } from "./public-figure-anchor"
 
-const EER = "npx tsx scripts/eer/report.ts eval/control"
 const COVERAGE = "npx tsx scripts/measure/coverage-matrix.ts"
 const AB_GATE = "npx tsx scripts/measure/ab-gate.ts"
-const RUNS = "npx tsx scripts/report/live-run-count.ts"
 const CHECKSUMS = "npx tsx scripts/measure/audit-checksums.ts 200"
-const CENSUS = "npx tsx scripts/measure/schedule-census.ts"
 const ISMP = "npx tsx scripts/measure/ismp-coverage.ts"
 
-const DECK: PublicDocument = "src/features/deck/slides.ts"
 const README: PublicDocument = "README.md"
 const EVIDENCE: PublicDocument = "docs/evidence.md"
 
 const NPI_ROW = /\| NPI[^|]*\| \d+ \| (\d+)\/(\d+) = [^|]*\| (\d+)\/(\d+) = /
 const DEA_ROW = /\| DEA[^|]*\| \d+ \| (\d+)\/(\d+) = [^|]*\| (\d+)\/(\d+) = /
-const DISCARDED_RUN = /\| not kept: overwritten[^|]*\| [^|]* \| (\d+) \| (\d+) \| (\d+) \|/
-const CATALOGUE_ROW = /\| catalogue absence \| (\d+)\/(\d+) \| (\d+)\/(\d+) \|/
-const PAIR_ROW = /\| pair rule, contrastive read-back \| (\d+)\/(\d+) \| (\d+)\/(\d+) \|/
-const ASKED_ALL = /correct drug names the shipped gate asks about: (\d+)\/(\d+)/
 const ASKED_SPLIT =
   /correct drug names the shipped gate asks about: (\d+)\/(\d+): (\d+) by the standing read-back, (\d+) by the threshold, (\d+) by the pair rule/
 const ISMP_SIZE =
   /distinct pairs in the full list: (\d+);[\s\S]*?distinct names the product rule checks: (\d+)/
 const ISMP_CATALOGUE = /catalogue drugs carrying a name on the list[^:]*: (\d+) of (\d+)/
 const REFLEX_ROW = /\| (?:without the pair rule|shipped)[^|]*\| \d+ \| (\d+)\/(\d+) \|/g
-
-function mishearing(said: string): (output: string) => string {
-  return (output) =>
-    capture(output, new RegExp(`${said} -> \\S+ at confidence ([\\d.]+)`))[0] ?? ""
-}
 
 function row(pattern: RegExp): (output: string) => string {
   return (output) => capture(output, pattern).join(" | ")
@@ -46,14 +33,6 @@ function reflexWrites(output: string): string {
   const shipped = rows[0]
   const without = rows[1]
   return `${without?.[1] ?? ""} | ${without?.[2] ?? ""} | ${shipped?.[1] ?? ""}`
-}
-
-function discardedRate(output: string): string {
-  return percent(integer(output, DISCARDED_RUN, 2), integer(output, DISCARDED_RUN, 0))
-}
-
-function discardedCloses(output: string): string {
-  return `${integer(output, DISCARDED_RUN, 2)} | ${integer(output, DISCARDED_RUN, 1)}`
 }
 
 function deaMissRate(output: string): string {
@@ -70,80 +49,7 @@ function mutationTotal(separator: string): (output: string) => string {
   }
 }
 
-function recordedSet(output: string): string {
-  const [utterances, errors] = capture(
-    output,
-    /over (\d+) recorded utterances: (\d+) recognizer errors/,
-  )
-  return `${utterances} recorded utterances, ${errors} recognition errors`
-}
-
-const ON_THE_DECK: readonly (readonly [RegExp, string, (output: string) => string])[] = [
-  [
-    /(\d+) utterances, rare names chosen/,
-    EER,
-    (output) => String(integer(output, /: (\d+) utterances/)),
-  ],
-  [
-    /Said vinorelbine, heard venorelbine, confidence (\d+\.\d+)/,
-    EER,
-    mishearing("vinorelbine"),
-  ],
-  [
-    /Said glycopyrronium, heard glycopyrrhonium, confidence (\d+\.\d+)/,
-    EER,
-    mishearing("glycopyrronium"),
-  ],
-  [
-    /Entity Error Rate ([\d.]+% \[[\d.]+%, [\d.]+%\])/,
-    EER,
-    (output) => capture(output, /\*\*([\d.]+% \[[\d.]+%, [\d.]+%\])\*\*/)[0] ?? "",
-  ],
-  [/(\d+ recorded utterances, \d+ recognition errors)/, COVERAGE, recordedSet],
-  [
-    /Absence from the catalogue: (\d+) of (\d+) errors caught, (\d+) of (\d+) correct values asked/,
-    COVERAGE,
-    row(CATALOGUE_ROW),
-  ],
-  [
-    /Pair rule: (\d+) of (\d+) errors caught, (\d+) of (\d+) correct values given a contrastive question/,
-    COVERAGE,
-    row(PAIR_ROW),
-  ],
-  [
-    /Correct drug names asked about by the shipped gate: (\d+) of (\d+)/,
-    COVERAGE,
-    row(ASKED_ALL),
-  ],
-  [
-    /Without the pair rule a reflex yes writes (\d+) of (\d+) pair mishearings; with it, (\d+)/,
-    AB_GATE,
-    reflexWrites,
-  ],
-  [
-    /make ab-gate, (\d+) candidates/,
-    AB_GATE,
-    (output) => String(integer(output, /corpus: (\d+) candidates/)),
-  ],
-  [/EER of ([\d.]+%)/, RUNS, discardedRate],
-  [
-    /all (\d+) failures closed with code 1008, all (\d+) successes with 1000/,
-    RUNS,
-    discardedCloses,
-  ],
-  [/false by ([\d.]+%) for DEA/, CHECKSUMS, deaMissRate],
-  [/(?<!\d[ ,]?|\d of )(\d[\d,]*\d) mutations/, CHECKSUMS, mutationTotal(",")],
-  [
-    /sat in the data for (\d+) drugs/,
-    CENSUS,
-    (output) => String(integer(output, /: (\d+) of \d+ drugs carry deaSchedule/)),
-  ],
-]
-
 export const MEASURED_ANCHORS: readonly Anchor[] = [
-  ...ON_THE_DECK.flatMap(([locate, source, reproduce]) =>
-    [DECK].map((document): Anchor => ({ document, locate, source, reproduce })),
-  ),
   ...[README, EVIDENCE].flatMap((document): readonly Anchor[] => [
     {
       document,
