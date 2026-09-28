@@ -1,0 +1,108 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.8cqi;
+  height: 100%;
+}
+
+.card {
+  --tone-ink: var(--state-accepted-ink);
+  --tone-surface: var(--state-accepted-surface);
+  --tone-line: var(--state-accepted-line);
+
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 1.2cqi;
+  padding: 2.4cqi;
+  border-radius: var(--radius-xl);
+  background-color: var(--surface-panel);
+  box-shadow: inset 0 0 0 1px var(--line-hairline);
+}
+
+.catalogue {
+  --tone-ink: var(--reason-validator-ink);
+  --tone-surface: var(--reason-validator-surface);
+  --tone-line: var(--reason-validator-line);
+}
+
+.voice {
+  --tone-ink: var(--reason-threshold-ink);
+  --tone-surface: var(--reason-threshold-surface);
+  --tone-line: var(--reason-threshold-line);
+}
+
+.arithmetic {
+  --tone-ink: var(--state-accepted-ink);
+}
+
+.kind {
+  justify-self: start;
+  padding: 0.25cqi 0.9cqi;
+  border-radius: var(--radius-lg);
+  background-color: var(--tone-surface);
+  box-shadow: inset 0 0 0 1px var(--tone-line);
+  font-size: 1.05cqi;
+  color: var(--tone-ink);
+}
+
+.fields {
+  font-size: 2.4cqi;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--track-heading);
+}
+
+.sample {
+  align-self: center;
+  justify-self: start;
+  padding: 1cqi 1.3cqi;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-sunken);
+  font-family: var(--font-data);
+  font-size: 1.7cqi;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.check {
+  margin-left: 0.2cqi;
+  padding: 0 0.3cqi;
+  border-radius: var(--radius-xs);
+  background-color: var(--tone-ink);
+  color: var(--text-on-accent);
+}
+
+.figure {
+  align-self: end;
+  display: grid;
+  gap: 0.5cqi;
+}
+
+.value {
+  font-size: 5cqi;
+  font-weight: var(--weight-medium);
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--tone-ink);
+}
+
+.catalogue .value,
+.voice .value {
+  font-size: 4cqi;
+}
+
+.label {
+  font-size: 1.35cqi;
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.spoken {
+  padding-top: 1.2cqi;
+  box-shadow: inset 0 1px 0 var(--line-hairline);
+  font-size: 1.4cqi;
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}

@@ -1,3 +1,4 @@
+import { Wordmark } from "@/shared/ui/primitives/wordmark"
 import type { DeckSlide } from "../slides"
 import styles from "./styles.module.css"
 
@@ -7,34 +8,62 @@ type SlideProps = {
   readonly total: number
 }
 
+function twoDigits(value: number): string {
+  return String(value).padStart(2, "0")
+}
+
+function classesFor(slide: DeckSlide): string {
+  return [
+    styles.slide,
+    slide.tone === "violet" ? styles.violet : "",
+    slide.hero ? styles.heroSlide : "",
+  ]
+    .join(" ")
+    .trim()
+}
+
 export function Slide({ slide, position, total }: SlideProps) {
   const headingId = `slide-${slide.id}`
-  const opening = position === 1
+  const Body = slide.body
+  const numbered = position !== 1 && position !== total
+  if (slide.cover) {
+    return (
+      <section className={classesFor(slide)} aria-labelledby={headingId}>
+        <div className={styles.coverFrame}>
+          <h2 className={styles.coverName} id={headingId}>
+            {slide.title}
+          </h2>
+          <Body />
+        </div>
+      </section>
+    )
+  }
   return (
-    <section
-      className={opening ? `${styles.slide} ${styles.opening}` : styles.slide}
-      aria-labelledby={headingId}
-    >
+    <section className={classesFor(slide)} aria-labelledby={headingId}>
       <div className={styles.frame}>
-        <header className={styles.top}>
-          <span className={styles.brand}>Readback</span>
-          <span className={styles.count}>
-            {position} / {total}
+        {slide.hero ? (
+          <header className={styles.lockup}>
+            <Wordmark size={96} />
+            Readback
+          </header>
+        ) : (
+          <span className={styles.mark} aria-hidden="true">
+            <Wordmark size={32} />
           </span>
-        </header>
+        )}
         <h2 className={styles.title} id={headingId}>
           {slide.title}
         </h2>
         <div className={styles.body}>
-          {slide.body.map((paragraph) => (
-            <p className={styles.paragraph} key={paragraph}>
-              {paragraph}
-            </p>
-          ))}
+          <Body />
         </div>
-        {slide.source === undefined ? null : (
-          <p className={styles.source}>Source: {slide.source}</p>
-        )}
+        <footer className={styles.foot}>
+          {numbered ? (
+            <span className={styles.count} data-slide-count="">
+              {twoDigits(position)} / {twoDigits(total)}
+            </span>
+          ) : null}
+        </footer>
       </div>
     </section>
   )

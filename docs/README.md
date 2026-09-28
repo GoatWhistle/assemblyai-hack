@@ -46,7 +46,8 @@ route through the live product, and every page below is one link from it.
 | [Cost and budget](cost-and-budget.md) | The vendor's rates, what caps the spend, which commands bill, what a forgotten tab costs, and how spend is reported from the ledger |
 
 `docs/brand/` holds the wordmark shown in the project README, and `docs/images/` the
-screenshots of the deployment, each taken in a window 1440 wide so all share one scale.
+screenshots of the deployment, each taken in a window 1440 wide so all share one scale. `docs/submission/`
+holds the cover image and the slide deck as PDF, both rendered from `/cover` and `/deck`.
 
 ---
 

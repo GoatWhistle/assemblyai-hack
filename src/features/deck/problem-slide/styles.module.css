@@ -1,0 +1,93 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 7cqi;
+  align-items: end;
+  height: 100%;
+  padding-bottom: 1cqi;
+}
+
+.figure {
+  display: grid;
+  gap: 1.4cqi;
+  align-content: end;
+}
+
+.value {
+  font-size: 10cqi;
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  color: var(--verdict-refused-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  max-width: 20ch;
+  font-size: 1.8cqi;
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+}
+
+.chart {
+  display: grid;
+  gap: 2cqi;
+  align-content: end;
+}
+
+.caption {
+  font-size: 1.4cqi;
+  color: var(--text-muted);
+}
+
+.turns {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.8cqi;
+  align-items: end;
+  height: 24cqi;
+}
+
+.turn {
+  --clean: 0;
+
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 0.7cqi;
+  height: 100%;
+}
+
+.bar {
+  position: relative;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: auto 0 0;
+  height: calc(var(--clean) * 100%);
+  border-radius: var(--radius-md);
+  background-color: var(--action-rest);
+}
+
+.last .fill {
+  background-color: var(--verdict-refused-ink);
+}
+
+.share {
+  font-family: var(--font-data);
+  font-size: 1.7cqi;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.last .share {
+  color: var(--verdict-refused-ink);
+}
+
+.turnLabel {
+  font-size: 1.15cqi;
+  color: var(--text-muted);
+}

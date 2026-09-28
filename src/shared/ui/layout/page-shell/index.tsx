@@ -6,14 +6,15 @@ import styles from "./styles.module.css"
 export type PageShellProps = {
   readonly current?: SiteHeaderProps["current"]
   readonly children: ReactNode
+  readonly printDisclaimer?: boolean
 }
 
-export function PageShell({ current, children }: PageShellProps) {
+export function PageShell({ current, children, printDisclaimer = true }: PageShellProps) {
   return (
     <div className={styles.shell}>
       <SiteHeader current={current} />
       {children}
-      <PrintDisclaimer />
+      {printDisclaimer ? <PrintDisclaimer /> : null}
     </div>
   )
 }

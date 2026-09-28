@@ -20,7 +20,7 @@ export default function DeckPage() {
       <a className="skip-link" href={`#${MAIN_ID}`}>
         Skip to the slides
       </a>
-      <PageShell>
+      <PageShell printDisclaimer={false}>
         <main className={styles.deck} id={MAIN_ID}>
           <div className={styles.head}>
             <Heading level={1}>Readback: the submission deck</Heading>

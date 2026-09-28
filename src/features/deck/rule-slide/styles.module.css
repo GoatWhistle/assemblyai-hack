@@ -1,0 +1,129 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr);
+  gap: 7cqi;
+  align-items: center;
+  height: 100%;
+}
+
+.ladder {
+  display: grid;
+  gap: 1.1cqi;
+}
+
+.step {
+  --tone-ink: var(--text-primary);
+  --tone-surface: var(--surface-sunken);
+  --tone-line: var(--line-hairline);
+
+  display: grid;
+  grid-template-columns: 3cqi minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1.6cqi;
+  align-items: center;
+  padding: 1.4cqi 2cqi;
+  border-radius: var(--radius-lg);
+  background-color: var(--tone-surface);
+  box-shadow: inset 0 0 0 1px var(--tone-line);
+}
+
+.validator {
+  --tone-ink: var(--reason-validator-ink);
+  --tone-surface: var(--reason-validator-surface);
+  --tone-line: var(--reason-validator-line);
+}
+
+.lasa {
+  --tone-ink: var(--reason-lasa-ink);
+  --tone-surface: var(--reason-lasa-surface);
+  --tone-line: var(--reason-lasa-line);
+
+  padding-block: 2cqi;
+  box-shadow:
+    inset 0 0 0 2px var(--tone-line),
+    var(--shadow-float);
+}
+
+.threshold,
+.policy {
+  --tone-ink: var(--reason-threshold-ink);
+  --tone-surface: var(--reason-threshold-surface);
+  --tone-line: var(--reason-threshold-line);
+}
+
+.pass {
+  --tone-ink: var(--state-accepted-ink);
+  --tone-surface: var(--state-accepted-surface);
+  --tone-line: var(--state-accepted-line);
+}
+
+.index {
+  font-family: var(--font-data);
+  font-size: 1.8cqi;
+  color: var(--tone-ink);
+}
+
+.when {
+  font-size: 1.6cqi;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+.outcome {
+  font-size: 1.45cqi;
+  line-height: var(--leading-snug);
+  color: var(--tone-ink);
+}
+
+.lasa .when {
+  font-size: 1.9cqi;
+}
+
+.lasa .outcome {
+  font-size: 1.6cqi;
+}
+
+.side {
+  display: grid;
+  gap: 4cqi;
+}
+
+.figure {
+  display: grid;
+  gap: 0.4cqi;
+  padding-top: 1.2cqi;
+  box-shadow: inset 0 1px 0 var(--line-hairline);
+}
+
+.value {
+  font-size: 5.4cqi;
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--reason-lasa-ink);
+}
+
+.caption {
+  font-size: 1.45cqi;
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.share {
+  --share: 0%;
+
+  display: block;
+  height: 1cqi;
+  border-radius: var(--radius-lg);
+  background-color: var(--reason-lasa-surface);
+  overflow: hidden;
+}
+
+.shareFill {
+  display: block;
+  width: var(--share);
+  height: 100%;
+  border-radius: var(--radius-lg);
+  background-color: var(--reason-lasa-ink);
+}

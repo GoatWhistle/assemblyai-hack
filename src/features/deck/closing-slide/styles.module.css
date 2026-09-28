@@ -1,0 +1,61 @@
+.layout {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 2cqi;
+  height: 100%;
+}
+
+.links {
+  align-self: end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.35fr);
+  gap: 1.4cqi;
+}
+
+.link {
+  display: grid;
+  gap: 0.8cqi;
+  padding: 2cqi;
+  border-radius: var(--radius-xl);
+  background-color: var(--cover-ink);
+  color: var(--text-primary);
+}
+
+.label {
+  font-size: 1.25cqi;
+  color: var(--text-muted);
+}
+
+.href {
+  font-family: var(--font-data);
+  font-size: 1.35cqi;
+  color: var(--action-ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.rings {
+  position: absolute;
+  top: 0;
+  left: 84%;
+  z-index: -1;
+  width: 54cqi;
+  height: 54cqi;
+  translate: -50% -62%;
+  max-width: none;
+  fill: none;
+  stroke-width: 2;
+}
+
+.ringNear {
+  stroke: var(--cover-ring);
+}
+
+.ringFar {
+  stroke: var(--cover-ring-faint);
+}
+
+.disclaimer {
+  font-size: 1.2cqi;
+  color: var(--cover-ink-soft);
+}

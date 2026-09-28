@@ -1,0 +1,64 @@
+.tagline {
+  max-width: 22ch;
+  font-size: 3.4cqi;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--track-heading);
+  color: var(--cover-ink-soft);
+  text-wrap: balance;
+}
+
+.event {
+  justify-self: start;
+  margin-top: 1.6cqi;
+  padding: 0.5cqi 1.2cqi;
+  border: 1px solid var(--cover-ring);
+  border-radius: var(--radius-lg);
+  font-size: 1.2cqi;
+  color: var(--cover-ink);
+}
+
+.orb {
+  position: absolute;
+  top: 50%;
+  left: 74%;
+  z-index: -1;
+  display: grid;
+  place-items: center;
+  translate: -50% -50%;
+}
+
+.rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60cqi;
+  height: 60cqi;
+  translate: -50% -50%;
+  max-width: none;
+  fill: none;
+  stroke-width: 2;
+}
+
+.ringNear {
+  stroke: var(--cover-ring);
+}
+
+.ringFar {
+  stroke: var(--cover-ring-faint);
+}
+
+.disc {
+  display: grid;
+  place-items: center;
+  width: 19cqi;
+  height: 19cqi;
+  border-radius: var(--radius-round);
+  background-color: var(--cover-ink);
+  box-shadow: var(--cover-lift);
+  color: var(--cover-ground);
+}
+
+.disc svg {
+  width: 8.5cqi;
+  height: auto;
+}

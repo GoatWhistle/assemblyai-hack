@@ -4,8 +4,8 @@ import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { ConfirmationReason, PAIR_RULE_FLAG } from "@/domain"
 import { SLIDES } from "@/features/deck"
+import { ABSENT, ISMP_FIGURES } from "@/features/deck/figures"
 import { DEMO_ARMS } from "@/features/judge-demo/demo-arms"
-import { LASA_PAIRS } from "@/lasa"
 
 afterEach(() => {
   cleanup()
@@ -14,25 +14,57 @@ afterEach(() => {
 const RETIRED_MODEL = /(^|[^\w-])universal-3-pro([^\w-]|$)/i
 const UNMEASURED_PAIR_TARGET = /(^|[^\w.])240([^\w.]|$)/
 
-function slideText(slide: (typeof SLIDES)[number]): string {
-  return [slide.title, ...slide.body, slide.source ?? ""].join("\n")
+const SLIDE_SECTIONS = 'section[aria-labelledby^="slide-"]'
+
+function renderedSlides(): Map<string, string> {
+  const { container } = render(<DeckPage />)
+  const texts = new Map<string, string>()
+  for (const section of container.querySelectorAll(SLIDE_SECTIONS)) {
+    const id = section.getAttribute("aria-labelledby")?.replace(/^slide-/, "") ?? ""
+    const clone = section.cloneNode(true) as HTMLElement
+    for (const count of clone.querySelectorAll("[data-slide-count]")) {
+      count.remove()
+    }
+    texts.set(id, clone.textContent ?? "")
+  }
+  return texts
 }
 
 describe("the printable deck", () => {
-  it("renders every slide from the data in order, each with its title", () => {
-    render(<DeckPage />)
+  it("renders every slide in order, each with its title", () => {
+    const { container } = render(<DeckPage />)
     const headings = screen.getAllByRole("heading", { level: 2 })
     expect(headings.map((heading) => heading.textContent)).toEqual(
       SLIDES.map((slide) => slide.title),
     )
-    const sections = screen.getAllByRole("region")
-    expect(sections).toHaveLength(SLIDES.length)
+    expect(container.querySelectorAll(SLIDE_SECTIONS)).toHaveLength(SLIDES.length)
   })
 
-  it("prints each slide's source beside its figures", () => {
+  it("keeps the deck between ten and twelve slides, opening and closing on the brand field", () => {
+    expect(SLIDES.length).toBeGreaterThanOrEqual(10)
+    expect(SLIDES.length).toBeLessThanOrEqual(12)
+    expect(SLIDES[0]?.tone).toBe("violet")
+    expect(SLIDES.at(-1)?.tone).toBe("violet")
+  })
+
+  it("numbers every slide between the title and the close as position over total", () => {
+    const { container } = render(<DeckPage />)
+    const counts = [...container.querySelectorAll("[data-slide-count]")].map(
+      (node) => node.textContent,
+    )
+    const total = String(SLIDES.length).padStart(2, "0")
+    expect(
+      counts,
+      "the title and closing slides carry no number; every slide between shows its position",
+    ).toEqual(
+      SLIDES.slice(1, -1).map((_, index) => `${String(index + 2).padStart(2, "0")} / ${total}`),
+    )
+  })
+
+  it("keeps each figure's source in the deck data rather than printing it on the slide", () => {
     render(<DeckPage />)
-    const sourced = SLIDES.filter((slide) => slide.source !== undefined)
-    expect(screen.getAllByText(/^Source: /)).toHaveLength(sourced.length)
+    expect(screen.queryAllByText(/^Source: /)).toHaveLength(0)
+    expect(SLIDES.filter((slide) => slide.source !== undefined).length).toBeGreaterThan(0)
   })
 
   it("gives slides unique ids so print pages cannot collide", () => {
@@ -46,10 +78,9 @@ describe("the printable deck", () => {
 
 describe("the deck is honest about its numbers", () => {
   it("carries no digit on a slide that names no source", () => {
+    const texts = renderedSlides()
     const unsourced = SLIDES.filter(
-      (slide) =>
-        /\d/.test([slide.title, ...slide.body].join(" ")) &&
-        (slide.source === undefined || slide.source.trim() === ""),
+      (slide) => /\d/.test(texts.get(slide.id) ?? "") && slide.source === undefined,
     ).map((slide) => slide.id)
     expect(
       unsourced,
@@ -58,12 +89,12 @@ describe("the deck is honest about its numbers", () => {
   })
 
   it("never quotes the unmeasured pair target or the retired model", () => {
-    const offending = SLIDES.filter(
-      (slide) =>
-        UNMEASURED_PAIR_TARGET.test(slideText(slide)) || RETIRED_MODEL.test(slideText(slide)),
-    ).map((slide) => slide.id)
+    const texts = renderedSlides()
+    const offending = [...texts].filter(
+      ([, text]) => UNMEASURED_PAIR_TARGET.test(text) || RETIRED_MODEL.test(text),
+    )
     expect(
-      offending,
+      offending.map(([id]) => id),
       "about 240 pairs was a design target never measured, and universal-3-pro was retired on 2 September 2026",
     ).toEqual([])
   })
@@ -75,9 +106,22 @@ describe("the deck is honest about its numbers", () => {
     expect(RETIRED_MODEL.test(text)).toBe(false)
   })
 
-  it("states the pair count from the curated table rather than from memory", () => {
-    const limits = SLIDES.find((slide) => slide.id === "limitations")
-    expect(limits?.body.join(" ")).toContain(`${LASA_PAIRS.length} curated pairs`)
+  it("states the ISMP pair count from the measured row rather than from memory", () => {
+    const rule = renderedSlides().get("rule") ?? ""
+    expect(rule).toContain(ISMP_FIGURES.pairs)
+    expect(ISMP_FIGURES.pairs).not.toBe(ABSENT)
+  })
+
+  it("closes on the medical disclaimer, since the printed deck carries no page footer", () => {
+    const closing = renderedSlides().get(SLIDES.at(-1)?.id ?? "") ?? ""
+    expect(closing).toContain("not a medical device")
+    expect(closing).toContain("Synthetic data only")
+  })
+
+  it("marks the staged mishearing as staged where the certainty is read", () => {
+    const failure = renderedSlides().get("failure") ?? ""
+    expect(failure).toContain("staged example")
+    expect(failure).toContain("certainty 1.00")
   })
 
   it("the guards themselves catch what they exist to catch", () => {
@@ -89,19 +133,19 @@ describe("the deck is honest about its numbers", () => {
 })
 
 describe("the demo slide describes the arms the replay actually runs", () => {
-  const demo = SLIDES.find((slide) => slide.id === "demo")
-  const text = demo === undefined ? "" : slideText(demo)
-
-  it("quotes each arm's own agent line, not a paraphrase", () => {
+  it("quotes each arm's own agent line and answer, not a paraphrase", () => {
+    const text = renderedSlides().get("demo") ?? ""
     for (const arm of DEMO_ARMS) {
       const question = arm.agentLine.includes("Which:")
         ? arm.agentLine.slice(arm.agentLine.indexOf("Which:"))
         : arm.agentLine
       expect(text).toContain(question)
+      expect(text).toContain(arm.answer.callerSaid)
     }
   })
 
   it("names the single flag the arms differ by and calls the case synthesised", () => {
+    const text = renderedSlides().get("demo") ?? ""
     expect(text).toContain(`one policy flag, ${PAIR_RULE_FLAG}`)
     expect(text).toContain("synthesised")
     expect(text).toContain(ConfirmationReason.LasaNamedAnswerRequired)
