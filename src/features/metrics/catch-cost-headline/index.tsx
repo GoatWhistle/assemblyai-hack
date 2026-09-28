@@ -139,6 +139,7 @@ export function CatchCostHeadline({
     <div className={styles.frame}>
       <div className={compact ? `${styles.pair} ${styles.compact}` : styles.pair}>
         <Catch ab={ab} compact={compact} />
+        {compact ? null : <Catalogue confident={confident} catalogue={catalogue} />}
         <div className={styles.cost} data-headline="cost">
           <Panel as="article">
             <div className={styles.body}>
@@ -149,7 +150,6 @@ export function CatchCostHeadline({
             </div>
           </Panel>
         </div>
-        {compact ? null : <Catalogue confident={confident} catalogue={catalogue} />}
       </div>
     </div>
   )

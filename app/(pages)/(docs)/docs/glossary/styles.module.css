@@ -10,3 +10,15 @@
   color: var(--text-secondary);
   text-wrap: pretty;
 }
+
+.terms {
+  min-width: 0;
+}
+
+.terms tr:target {
+  background-color: var(--select-surface);
+}
+
+.terms tr:target th {
+  color: var(--select-ink);
+}

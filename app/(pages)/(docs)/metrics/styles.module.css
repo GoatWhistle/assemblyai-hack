@@ -20,25 +20,44 @@
 
 .heldOut {
   container-type: inline-size;
-  min-width: 0;
-}
-
-.split {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  gap: var(--rhythm-group);
-}
-
-.reading {
   display: grid;
   gap: var(--rhythm-stack);
   min-width: 0;
 }
 
-@container (width >= 72rem) {
-  .split {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+.finding {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--rhythm-group);
+  padding-block-end: var(--rhythm-tight);
+}
+
+.claim,
+.chart {
+  display: grid;
+  gap: var(--rhythm-stack);
+  min-width: 0;
+}
+
+.chart {
+  gap: var(--rhythm-tight);
+}
+
+@container (width >= 48rem) {
+  .finding {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     gap: var(--rhythm-section-compact);
+  }
+}
+
+@container table (width >= 72rem) {
+  .heldOut td[data-column="command"] {
+    white-space: normal;
+  }
+
+  .heldOut td[data-column="command"] > span {
+    display: block;
+    min-width: 20rem;
   }
 }

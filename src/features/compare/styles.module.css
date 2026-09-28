@@ -33,3 +33,41 @@
     overflow-wrap: anywhere;
   }
 }
+
+.moments {
+  min-width: 0;
+}
+
+@container table (40rem <= width < 72rem) {
+  .moments tbody tr[data-row] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: var(--space-5);
+    row-gap: var(--space-4);
+  }
+
+  .moments tbody td[data-column] {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    row-gap: var(--space-1);
+  }
+
+  .moments tbody td[data-column="said"] {
+    grid-column: 1 / 3;
+  }
+
+  .moments tbody td[data-column="heard"] {
+    grid-column: 3 / 5;
+  }
+
+  .moments tbody td[data-column="certainty"] {
+    grid-column: 5 / 7;
+  }
+
+  .moments tbody td[data-column="verdict"] {
+    grid-column: 1 / 3;
+  }
+
+  .moments tbody td[data-column="withoutGate"] {
+    grid-column: 3 / 7;
+  }
+}

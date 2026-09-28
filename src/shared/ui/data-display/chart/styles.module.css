@@ -88,14 +88,16 @@
 
 .bars {
   display: grid;
-  gap: var(--rhythm-tight);
+  grid-template-columns: minmax(8rem, 2fr) minmax(6rem, 3fr) auto;
+  column-gap: var(--space-3);
+  row-gap: var(--rhythm-tight);
 }
 
 .bar {
   display: grid;
-  grid-template-columns: minmax(8rem, 2fr) minmax(6rem, 3fr) auto;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: center;
-  gap: var(--space-3);
   font-size: var(--meta-size);
   line-height: var(--leading-snug);
 }
@@ -138,7 +140,7 @@
     border-radius: var(--radius-sm);
   }
 
-  .bar {
+  .bars {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 

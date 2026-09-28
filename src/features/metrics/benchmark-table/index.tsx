@@ -18,13 +18,16 @@ export type BenchmarkTableProps = {
 
 const NOT_A_COMMAND: ReadonlySet<string> = new Set([NO_COMMAND, NOT_MEASURED_LABEL])
 
-const COLUMNS: readonly TableColumn[] = [
-  { key: "figure", title: "Figure", rowHeader: true, size: "fill" },
-  { key: "value", title: "Value", kind: "figure" },
-  { key: "input", title: "Input", kind: "muted", size: "fit" },
-  { key: "command", title: "Command", kind: "command" },
-  { key: "n", title: "n", kind: "number" },
-]
+function columnsFor(entries: readonly BenchmarkEntry[]): readonly TableColumn[] {
+  const allAbsent = entries.every((entry) => entry.row.value === null)
+  return [
+    { key: "figure", title: "Figure", rowHeader: true, size: "fill" },
+    { key: "value", title: "Value", kind: allAbsent ? "number" : "figure" },
+    { key: "input", title: "Input", kind: "muted", size: "fit" },
+    { key: "command", title: "Command", kind: "command" },
+    { key: "n", title: "n", kind: "number", stack: "wide" },
+  ]
+}
 
 function sentenceCase(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
@@ -101,7 +104,7 @@ export function BenchmarkTable({
     <Table
       label={label}
       caption={caption}
-      columns={COLUMNS}
+      columns={columnsFor(entries)}
       rows={entries.map((entry, index) =>
         rowFor(entry, unrepeatedMeaning(entry, entries[index - 1]), compact),
       )}

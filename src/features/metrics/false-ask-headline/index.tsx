@@ -109,8 +109,11 @@ export function FalseAskHeadline({
     <div className={styles.headline}>
       <PairCost tally={tally} contrastive={contrastive} />
       <p className={styles.policy} data-headline="false-asks">
-        {HEADLINE_POLICY} {tally === null ? dash : tally.asked} of{" "}
-        {tally === null ? dash : tally.of}.
+        {HEADLINE_POLICY}{" "}
+        <span className={styles.count}>
+          {tally === null ? dash : tally.asked} of {tally === null ? dash : tally.of}
+        </span>
+        .
       </p>
       {tally === null ? (
         <p className={styles.method}>

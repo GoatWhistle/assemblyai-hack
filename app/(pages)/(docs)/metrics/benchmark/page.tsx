@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { benchmarkEntries } from "@/features/metrics/benchmark-row"
 import { BENCHMARK_CAPTION, BenchmarkTable } from "@/features/metrics/benchmark-table"
 import { reportEntries } from "@/features/metrics/policy-figures"
+import { Code } from "@/shared/ui/data-display/code"
 import { DocHeader } from "@/shared/ui/navigation/doc-header"
 import { DocSection } from "@/shared/ui/navigation/doc-section"
 import { Panel } from "@/shared/ui/primitives/panel"
@@ -11,6 +12,20 @@ import { BENCHMARK_SECTIONS } from "../../docs-map"
 import styles from "./styles.module.css"
 
 const AGREEMENT = `${BENCHMARK_AGREEMENT_NOTE.charAt(0).toUpperCase()}${BENCHMARK_AGREEMENT_NOTE.slice(1)}.`
+
+const MACHINE_TEXT = /(tests\/\S+\.ts|eval\/REPORT\.md|make \w+)/
+
+function withMachineText(text: string) {
+  return text.split(MACHINE_TEXT).map((part, index) =>
+    index % 2 === 1 ? (
+      <Code key={part} breakable>
+        {part}
+      </Code>
+    ) : part === "" ? null : (
+      part
+    ),
+  )
+}
 
 export const metadata: Metadata = pageMetadata({
   title: "Benchmark",
@@ -54,7 +69,7 @@ export default function BenchmarkPage() {
       <DocSection
         id={BENCHMARK_SECTIONS.report.id}
         title="Checksums, calibration and rarity"
-        lead={AGREEMENT}
+        lead={withMachineText(AGREEMENT)}
       >
         <BenchmarkTable
           entries={reportEntries()}
@@ -74,8 +89,8 @@ export default function BenchmarkPage() {
             can read as confident while the words that matter are not, which is why the gate
             takes the minimum across the source words rather than the mean. It does not prove
             the pair rule, because low word confidence caught that error; the case the pair rule
-            exists for rests on our own four above-threshold errors. Recorded in eval/REPORT.md;
-            we did not reproduce the run.
+            exists for rests on our own four above-threshold errors. Recorded in{" "}
+            <Code>eval/REPORT.md</Code>; we did not reproduce the run.
           </p>
         </Panel>
       </DocSection>

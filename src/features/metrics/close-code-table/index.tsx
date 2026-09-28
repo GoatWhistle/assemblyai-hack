@@ -11,6 +11,8 @@ import styles from "./styles.module.css"
 
 export const NOT_SEEN = "not seen"
 
+export const UNOBSERVED_LABEL = "Close codes never observed"
+
 export type CloseCodeTableProps = {
   readonly rows: readonly CloseCodeTally[]
   readonly unobserved: readonly UnobservedCode[]
@@ -18,11 +20,15 @@ export type CloseCodeTableProps = {
   readonly alertWorthy: string
 }
 
+const DESCRIBED_COLUMNS: readonly TableColumn[] = [
+  { key: "code", title: "Code", rowHeader: true, size: "fit" },
+  { key: "meaning", title: "Observed meaning", stack: "bare" },
+  { key: "source", title: "Source", kind: "muted" },
+]
+
 function columnsFor(scope: CloseCodeScope): readonly TableColumn[] {
   return [
-    { key: "code", title: "Code", rowHeader: true, size: "fit" },
-    { key: "meaning", title: "Observed meaning", stack: "bare" },
-    { key: "source", title: "Source", kind: "muted" },
+    ...DESCRIBED_COLUMNS,
     {
       key: "before",
       title: `Before the ledger, ${scope.beforeLedgerRuns} runs`,
@@ -89,22 +95,28 @@ export function CloseCodeTable({ rows, unobserved, scope, alertWorthy }: CloseCo
   }))
   const unseen: TableRow[] = unobserved.map((row) => ({
     key: String(row.code),
-    tone: "muted",
     cells: {
       code: codeCell(row.code, row.alertWorthy),
       meaning: meaningCell(row.label, row.meaning),
       source: row.source,
-      before: NOT_SEEN,
-      stress: NOT_SEEN,
-      all: NOT_SEEN,
     },
   }))
   return (
-    <Table
-      label="Socket close codes"
-      caption={`Every session with a recorded close, except the live smoke runs, which keep none per session; ${alertWorthy} are alert-worthy on the first occurrence because billing runs on socket lifetime, and a run containing any 1008 is not scored.`}
-      columns={columnsFor(scope)}
-      rows={[...observed, ...unseen]}
-    />
+    <>
+      <Table
+        label="Socket close codes"
+        caption={`Every session with a recorded close, except the live smoke runs, which keep none per session; ${alertWorthy} are alert-worthy on the first occurrence because billing runs on socket lifetime, and a run containing any 1008 is not scored.`}
+        columns={columnsFor(scope)}
+        rows={observed}
+      />
+      {unseen.length === 0 ? null : (
+        <Table
+          label={UNOBSERVED_LABEL}
+          caption={`Named by vendor prose or by another team and ${NOT_SEEN} in any recorded session here, so none of them carries a count.`}
+          columns={DESCRIBED_COLUMNS}
+          rows={unseen}
+        />
+      )}
+    </>
   )
 }

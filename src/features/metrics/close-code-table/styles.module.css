@@ -1,6 +1,6 @@
 .code {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--rhythm-tight);
   font-variant-numeric: tabular-nums;
@@ -17,5 +17,8 @@
 
 .methods {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--rhythm-tight);
+  max-width: calc(var(--measure-prose) + var(--measure-narrow));
+  font-size: var(--meta-size);
+  text-wrap: pretty;
 }

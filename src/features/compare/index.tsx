@@ -103,13 +103,15 @@ export function momentCells(moment: Moment): Readonly<Record<string, ReactNode>>
 
 export function Compare() {
   return (
-    <Table
-      label={COMPARE_TITLE}
-      columns={[{ key: "moment", title: MOMENT_COLUMN, rowHeader: true }, ...MOMENT_COLUMNS]}
-      rows={MOMENTS.map((moment) => ({
-        key: moment.id,
-        cells: { moment: moment.title, ...momentCells(moment) },
-      }))}
-    />
+    <div className={styles.moments}>
+      <Table
+        label={COMPARE_TITLE}
+        columns={[{ key: "moment", title: MOMENT_COLUMN, rowHeader: true }, ...MOMENT_COLUMNS]}
+        rows={MOMENTS.map((moment) => ({
+          key: moment.id,
+          cells: { moment: moment.title, ...momentCells(moment) },
+        }))}
+      />
+    </div>
   )
 }

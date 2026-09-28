@@ -1,9 +1,8 @@
 .pager {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--line-hairline);
+  margin-top: var(--rhythm-rule);
 }
 
 .link {
@@ -71,17 +70,21 @@
   }
 }
 
-@media (min-width: 40rem) {
-  .pager {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.previous {
+  grid-column: 1;
+}
+
+.next {
+  grid-column: 2;
+}
+
+@media (max-width: 40rem) {
+  .link {
+    padding: var(--space-3) var(--space-4);
   }
 
-  .previous {
-    grid-column: 1;
-  }
-
-  .next {
-    grid-column: 2;
+  .label {
+    font-size: var(--text-base);
   }
 }
 

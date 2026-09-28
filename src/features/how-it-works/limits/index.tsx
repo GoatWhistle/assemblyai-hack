@@ -34,17 +34,14 @@ function Points({ limit }: { readonly limit: Limitation }) {
   if (limit.points === undefined) {
     return null
   }
-  const list = (
-    <ul className={styles.points}>
-      {limit.points.map((point) => (
-        <li key={point}>{point}</li>
-      ))}
-    </ul>
-  )
-  return limit.pointsLabel === undefined ? (
-    list
-  ) : (
-    <Disclosure summary={limit.pointsLabel}>{list}</Disclosure>
+  const items = limit.points.map((point) => <li key={point}>{point}</li>)
+  if (limit.pointsLabel === undefined) {
+    return <ul className={styles.points}>{items}</ul>
+  }
+  return (
+    <Disclosure summary={limit.pointsLabel}>
+      <ol className={`${styles.points} ${styles.counted}`}>{items}</ol>
+    </Disclosure>
   )
 }
 
@@ -59,13 +56,15 @@ function Entry({ limit }: { readonly limit: Limitation }) {
           {limit.status === label ? null : <span>{limit.status}</span>}
         </p>
       </div>
-      <p className={styles.body}>{limit.body}</p>
-      <Points limit={limit} />
-      {limit.link === undefined ? null : (
-        <p className={styles.body}>
-          <MoreLink href={limit.link.href}>{limit.link.label}</MoreLink>
-        </p>
-      )}
+      <div className={styles.detail}>
+        <p className={styles.body}>{limit.body}</p>
+        <Points limit={limit} />
+        {limit.link === undefined ? null : (
+          <p className={styles.body}>
+            <MoreLink href={limit.link.href}>{limit.link.label}</MoreLink>
+          </p>
+        )}
+      </div>
     </li>
   )
 }

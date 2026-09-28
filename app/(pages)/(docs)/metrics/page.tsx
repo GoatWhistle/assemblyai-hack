@@ -85,7 +85,7 @@ export default function MetricsPage() {
       <DocSection
         id={METRICS_SECTIONS.headline.id}
         title={headlineTitle(ab, tally)}
-        lead="The catch and its cost, side by side and at equal weight, and each mechanism with its own number. Showing only one of the two would make the metric one-sided."
+        lead="The catch and its cost at equal weight, and each mechanism with its own number. Showing only one of the two would make the metric one-sided."
       >
         <CatchCostHeadline
           ab={ab}
@@ -116,18 +116,20 @@ export default function MetricsPage() {
         lead={HELD_OUT_RULE}
       >
         <div className={styles.heldOut}>
-          <div className={styles.split}>
-            <BenchmarkTable
-              entries={HELD_OUT_ENTRIES}
-              label="Held-out figures"
-              caption="The held-out run, as the report publishes it, each row with the command that reprints it from the recorded file."
-            />
-            <div className={styles.reading}>
+          <div className={styles.finding}>
+            <div className={styles.claim}>
               <p className={styles.prose}>
                 <strong>The pre-registered hypothesis did not replicate.</strong> It predicted
                 that rarer names fail more, with intervals clear of each other; the three strata
                 overlap, and the result is published as a negative one rather than dropped.
               </p>
+              <p className={styles.prose}>
+                <strong>What replicated is the overall error rate:</strong>{" "}
+                {replication.heldOutRate} on the held-out set against {replication.controlRate}{" "}
+                on the control corpus.
+              </p>
+            </div>
+            <div className={styles.chart}>
               <CompareBars
                 label="Entity error rate on the held-out set, by stratum"
                 bars={strataBars()}
@@ -139,34 +141,34 @@ export default function MetricsPage() {
                   set="three rarity strata of eval/heldout"
                 />
               </p>
-              <p className={styles.prose}>
-                <strong>What replicated is the overall error rate:</strong>{" "}
-                {replication.heldOutRate} on the held-out set against {replication.controlRate}{" "}
-                on the control corpus.
-              </p>
-              <Disclosure
-                summary={`The ${replication.aboveThreshold} errors at or above the threshold`}
-              >
-                <p className={styles.method}>
-                  Of the {replication.errors} held-out errors, {replication.aboveThreshold} sat
-                  at or above the {THRESHOLDS.drugName.toFixed(2)} threshold. Two are typos our
-                  own sampler drew from the FDA file (<Names names={HELD_OUT_TYPOS} />
-                  ), so the recognizer was scored wrong for hearing the real word; the other
-                  two, <Names names={HELD_OUT_GENUINE_ABOVE_THRESHOLD} />, are genuine
-                  recognizer errors that a threshold alone would have passed.{" "}
-                  <Command value={HELD_OUT_EER_SCRIPT} /> prints all {replication.errors}.
-                  Without the two typo items the rate is {replication.withoutTyposRate}, n ={" "}
-                  {replication.withoutTyposN}; both figures are published, because choosing the
-                  flattering one after seeing them is what the seal exists to prevent.
-                </p>
-              </Disclosure>
-              <p className={styles.method}>
-                The gate&rsquo;s own catch and false-ask rates on the held-out set are not
-                scored yet; they read as dashes under{" "}
-                <TextLink href="/metrics/benchmark#unmeasured">Not measured yet</TextLink>.
-              </p>
             </div>
           </div>
+          <BenchmarkTable
+            entries={HELD_OUT_ENTRIES}
+            label="Held-out figures"
+            caption="The held-out run, as the report publishes it, each row with the command that reprints it from the recorded file."
+          />
+          <Disclosure
+            summary={`The ${replication.aboveThreshold} errors at or above the threshold`}
+          >
+            <p className={styles.method}>
+              Of the {replication.errors} held-out errors, {replication.aboveThreshold} sat at
+              or above the {THRESHOLDS.drugName.toFixed(2)} threshold. Two are typos our own
+              sampler drew from the FDA file (<Names names={HELD_OUT_TYPOS} />
+              ), so the recognizer was scored wrong for hearing the real word; the other two,{" "}
+              <Names names={HELD_OUT_GENUINE_ABOVE_THRESHOLD} />, are genuine recognizer errors
+              that a threshold alone would have passed. <Command value={HELD_OUT_EER_SCRIPT} />{" "}
+              prints all {replication.errors}. Without the two typo items the rate is{" "}
+              {replication.withoutTyposRate}, n = {replication.withoutTyposN}; both figures are
+              published, because choosing the flattering one after seeing them is what the seal
+              exists to prevent.
+            </p>
+          </Disclosure>
+          <p className={styles.method}>
+            The gate&rsquo;s own catch and false-ask rates on the held-out set are not scored
+            yet; they read as dashes under{" "}
+            <TextLink href="/metrics/benchmark#unmeasured">Not measured yet</TextLink>.
+          </p>
         </div>
       </DocSection>
 

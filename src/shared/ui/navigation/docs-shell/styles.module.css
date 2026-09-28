@@ -38,7 +38,7 @@
   width: fit-content;
 }
 
-.main [data-arrival]::before {
+.main [data-arrival]:not(tr)::before {
   content: "";
   position: absolute;
   inset: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
@@ -47,6 +47,17 @@
   background-color: var(--select-surface);
   pointer-events: none;
   animation: var(--keyframes-arrival) var(--dur-arrival) var(--ease-out-quart) both;
+}
+
+.main tr[data-arrival] {
+  animation: row-arrival var(--dur-arrival) var(--ease-out-quart) both;
+}
+
+@keyframes row-arrival {
+  from,
+  60% {
+    background-color: var(--select-surface);
+  }
 }
 
 .toc {
@@ -64,7 +75,7 @@
   .nav {
     z-index: auto;
     margin-inline: 0;
-    padding: var(--space-5) 0 0;
+    padding: var(--space-3) 0 0;
     top: var(--docs-sticky-top);
     align-self: start;
     max-height: calc(100dvh - 2 * var(--docs-sticky-top));
@@ -102,7 +113,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .main [data-arrival]::before {
+  .main [data-arrival]:not(tr)::before {
     animation: none;
+  }
+
+  .main tr[data-arrival] {
+    animation: none;
+    background-color: var(--select-surface);
   }
 }

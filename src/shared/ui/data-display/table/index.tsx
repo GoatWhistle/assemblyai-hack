@@ -5,7 +5,7 @@ export type TableColumnKind = "text" | "number" | "figure" | "code" | "command" 
 
 export type TableColumnSize = "auto" | "fit" | "fill"
 
-export type TableColumnStack = "pair" | "line" | "bare"
+export type TableColumnStack = "pair" | "line" | "bare" | "wide"
 
 export type TableColumn = {
   readonly key: string
@@ -53,6 +53,7 @@ const STACK_CLASS: Readonly<Record<TableColumnStack, string | undefined>> = {
   pair: undefined,
   line: styles.line,
   bare: styles.bare,
+  wide: styles.wide,
 }
 
 const TONE_CLASS: Readonly<Record<TableRowTone, string | undefined>> = {

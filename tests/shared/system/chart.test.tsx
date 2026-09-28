@@ -63,6 +63,13 @@ describe("CompareBars", () => {
     expect(shareOf(30, 20)).toBe(1)
   })
 
+  it("gives every bar the same track column, so no value's width shortens another bar's scale", () => {
+    expect(SHEET).toMatch(
+      /\.bars \{[^}]*grid-template-columns: minmax\(8rem, 2fr\) minmax\(6rem, 3fr\) auto;/,
+    )
+    expect(SHEET).toMatch(/\.bar \{[^}]*grid-template-columns: subgrid;/)
+  })
+
   it("scales with a transform and colours only from semantic chart roles", () => {
     expect(SHEET).toMatch(/transform: scaleX\(var\(--share, 0\)\)/)
     expect(SHEET).not.toMatch(/var\(--(violet|plum|verified|asking|refused)[a-z-]*\)/)

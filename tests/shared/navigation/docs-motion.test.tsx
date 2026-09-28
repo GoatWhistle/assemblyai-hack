@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { act, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { GLIDE_READY_ATTRIBUTE, placeMarker } from "@/shared/ui/motion/use-glide"
@@ -165,5 +166,15 @@ describe("the active marker glides instead of jumping", () => {
     const nav = screen.getByRole("navigation", { name: "On this page" })
     expect(nav.querySelector('[aria-hidden="true"]')).not.toBeNull()
     expect(nav.querySelectorAll("a")).toHaveLength(2)
+  })
+
+  it("marks a landed table row by tinting the row, never by adding a box that would become a cell", () => {
+    const sheet = readFileSync("src/shared/ui/navigation/docs-shell/styles.module.css", "utf8")
+    expect(sheet).toMatch(/\.main \[data-arrival\]:not\(tr\)::before \{\s*content: "";/)
+    expect(sheet).not.toMatch(/\.main \[data-arrival\]::before/)
+    expect(sheet).toMatch(/\.main tr\[data-arrival\] \{\s*animation: row-arrival/)
+    expect(sheet).toMatch(
+      /prefers-reduced-motion: reduce[\s\S]*\.main tr\[data-arrival\] \{[^}]*background-color: var\(--select-surface\);/,
+    )
   })
 })

@@ -44,9 +44,13 @@
   color: var(--text-muted);
 }
 
-@container (width >= 60rem) {
+@container (width >= 46rem) {
   .pair {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--rhythm-section-compact);
+  }
+
+  .aside {
+    padding-block-start: var(--panel-pad);
   }
 }

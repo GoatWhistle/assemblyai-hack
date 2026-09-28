@@ -12,6 +12,10 @@
   text-wrap: pretty;
 }
 
+.count {
+  white-space: nowrap;
+}
+
 .method {
   max-width: var(--measure-prose);
   font-size: var(--meta-size);

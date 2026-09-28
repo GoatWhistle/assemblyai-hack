@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import type { ReactNode } from "react"
 import { GLOSSARY, glossaryAnchor, ISMP_SOURCE } from "@/features/how-it-works/glossary/terms"
 import { Code } from "@/shared/ui/data-display/code"
 import { Table, type TableColumn } from "@/shared/ui/data-display/table"
@@ -54,6 +55,20 @@ const CITATIONS = [
   },
 ] as const
 
+const REASON_CODE = /(?<![A-Za-z])([ACE]_[A-Z_]*)/
+
+function withCodes(text: string): ReactNode {
+  return text.split(REASON_CODE).map((part, index) =>
+    index % 2 === 1 ? (
+      <Code key={`${index}-${part}`} breakable>
+        {part}
+      </Code>
+    ) : (
+      part
+    ),
+  )
+}
+
 export default function GlossaryPage() {
   return (
     <>
@@ -66,25 +81,27 @@ export default function GlossaryPage() {
         id={GLOSSARY_SECTIONS.terms.id}
         title="Terms, in the order a reader meets them"
       >
-        <Table
-          label="Terms"
-          columns={TERM_COLUMNS}
-          rows={GLOSSARY.map((entry) => ({
-            key: entry.term,
-            id: glossaryAnchor(entry.term),
-            cells: {
-              term: (
-                <>
-                  {entry.term}
-                  {entry.expansion === null ? null : (
-                    <span className={styles.expansion}> ({entry.expansion})</span>
-                  )}
-                </>
-              ),
-              definition: entry.definition,
-            },
-          }))}
-        />
+        <div className={styles.terms}>
+          <Table
+            label="Terms"
+            columns={TERM_COLUMNS}
+            rows={GLOSSARY.map((entry) => ({
+              key: entry.term,
+              id: glossaryAnchor(entry.term),
+              cells: {
+                term: (
+                  <>
+                    {entry.term}
+                    {entry.expansion === null ? null : (
+                      <span className={styles.expansion}> ({withCodes(entry.expansion)})</span>
+                    )}
+                  </>
+                ),
+                definition: withCodes(entry.definition),
+              },
+            }))}
+          />
+        </div>
       </DocSection>
 
       <DocSection

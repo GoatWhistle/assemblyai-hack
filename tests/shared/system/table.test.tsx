@@ -75,4 +75,48 @@ describe("Table", () => {
     expect(SHEET).toMatch(/\.head th \{[^}]*position: sticky;/)
     expect(SHEET).not.toMatch(/overflow-x:\s*(auto|scroll)/)
   })
+
+  it("caps a cell's text at the reading measure, so a wide docs column never runs a line past it", () => {
+    expect(SHEET).toMatch(
+      /\.value \{[^}]*display: block;[^}]*max-width: var\(--measure-reading\);/,
+    )
+  })
+
+  it("lays a dense row out as fields side by side between 40 and 72rem, and keeps the other layouts", () => {
+    const [, mid = ""] = SHEET.split("@container table (40rem <= width < 72rem)")
+    expect(mid).toMatch(
+      /:where\(\[data-density="dense"\]\) \.table tbody tr \{[^}]*grid-template-columns: repeat\(auto-fill, minmax\(11rem, 1fr\)\);/,
+    )
+    expect(mid, "an ordinary field puts its label above its value in its own track").toMatch(
+      /td:where\(:not\(\.line, \.bare, \.figure\)\) \{[^}]*grid-column: auto;[^}]*grid-template-columns: minmax\(0, 1fr\);[^}]*row-gap: var\(--space-1\);/,
+    )
+    expect(mid).toMatch(/td\.wide \{\s*grid-column: span 2;/)
+    expect(mid, "a command keeps a whole line rather than breaking inside a word").toMatch(
+      /td\.command \{\s*grid-column: 1 \/ -1;/,
+    )
+    expect(
+      mid,
+      "no layout switch moves, so under 40rem and the full table are untouched",
+    ).not.toMatch(/--stack-/)
+    expect(SHEET).toMatch(/\.table tbody th,\s*\.table tbody td \{\s*grid-column: 1 \/ -1;/)
+  })
+
+  it("offers a wide stacked field as a column option", () => {
+    const { container } = render(
+      <Table
+        label="Figures"
+        columns={[
+          { key: "figure", title: "Figure", rowHeader: true },
+          { key: "n", title: "n", kind: "number", stack: "wide" },
+          { key: "input", title: "Input" },
+        ]}
+        rows={[{ key: "a", cells: { figure: "A", n: "40", input: "TTS" } }]}
+      />,
+    )
+    const n = container.querySelector('td[data-column="n"]')
+    const input = container.querySelector('td[data-column="input"]')
+    expect(n?.className.split(" ").length).toBeGreaterThan(
+      input?.className.split(" ").length ?? 0,
+    )
+  })
 })

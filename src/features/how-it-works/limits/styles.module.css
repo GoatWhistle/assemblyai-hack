@@ -14,12 +14,20 @@
   padding: var(--rhythm-group) var(--panel-pad);
   border-top: 1px solid var(--panel-line);
   scroll-margin-top: calc(var(--target-touch) + var(--space-5));
-  break-inside: avoid;
 }
 
 .head {
   display: grid;
+  align-content: start;
   gap: var(--rhythm-tight);
+  min-width: 0;
+}
+
+.detail {
+  display: grid;
+  align-content: start;
+  gap: var(--rhythm-stack);
+  min-width: 0;
 }
 
 .status {
@@ -46,6 +54,21 @@
   gap: var(--space-1);
   padding-inline-start: var(--space-5);
   list-style: disc;
+}
+
+.counted {
+  gap: var(--rhythm-tight);
+  padding-inline-start: var(--space-6);
+  list-style: decimal;
+}
+
+.counted > li {
+  padding-inline-start: var(--space-1);
+}
+
+.counted > li::marker {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .titles {
@@ -78,10 +101,13 @@
   }
 }
 
-@container (width >= 56rem) {
-  .limits {
-    columns: 2;
-    column-gap: 0;
-    column-rule: 1px solid var(--panel-line);
+@container (width >= 46rem) {
+  .limit {
+    grid-template-columns: minmax(12rem, 2fr) minmax(0, 3fr);
+    column-gap: var(--rhythm-section-compact);
+  }
+
+  .detail :is(.body, .points) {
+    max-width: var(--measure-reading);
   }
 }

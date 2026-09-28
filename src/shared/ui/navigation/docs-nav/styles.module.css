@@ -206,6 +206,13 @@
   display: grid;
 }
 
+@media (min-width: 40rem) {
+  .panel {
+    right: auto;
+    width: min(100%, 24rem);
+  }
+}
+
 @media (min-width: 56rem) {
   .toggle {
     display: none;
@@ -213,6 +220,7 @@
 
   .panel {
     position: static;
+    width: auto;
     max-height: none;
     overflow: visible;
     padding: 0;

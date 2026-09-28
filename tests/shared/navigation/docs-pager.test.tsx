@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { render, screen, within } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { DocsPager, PAGER_LABEL } from "@/shared/ui/navigation/docs-pager"
@@ -20,6 +21,8 @@ const PAGES: readonly DocsPage[] = [
   page("/two", "Second page"),
   page("/three", "Third page"),
 ]
+
+const SHEET = readFileSync("src/shared/ui/navigation/docs-pager/styles.module.css", "utf8")
 
 function pager() {
   return screen.getByRole("navigation", { name: PAGER_LABEL })
@@ -73,5 +76,14 @@ describe("the docs pager", () => {
         .getAllByRole("link")
         .map((link) => link.getAttribute("rel")),
     ).toEqual(["prev"])
+  })
+
+  it("keeps previous on the left and next on the right at every width, apart from the content by space, not a rule", () => {
+    expect(SHEET).toMatch(
+      /\.pager \{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);[^}]*margin-top: var\(--rhythm-rule\);/,
+    )
+    expect(SHEET).not.toMatch(/\.pager \{[^}]*border-top/)
+    expect(SHEET).toMatch(/\.previous \{\s*grid-column: 1;/)
+    expect(SHEET).toMatch(/\.next \{\s*grid-column: 2;/)
   })
 })

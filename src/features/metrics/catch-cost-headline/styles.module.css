@@ -37,38 +37,23 @@
   height: 100%;
 }
 
-@container (width >= 44rem) {
-  .pair:not(.compact) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "catch cost"
-      "catalogue cost";
-  }
-
-  .pair:not(.compact) .catch {
-    grid-area: catch;
-  }
-
-  .pair:not(.compact) .cost {
-    grid-area: cost;
-  }
-
-  .pair:not(.compact) .catalogue {
-    grid-area: catalogue;
-  }
-}
-
 @container (width >= 60rem) {
   .compact {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@container (width >= 92rem) {
+@container (width >= 64rem) {
   .pair:not(.compact) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
-    grid-template-rows: auto;
-    grid-template-areas: "catch cost catalogue";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .pair:not(.compact) :is(.catch, .catalogue) > * {
+    height: 100%;
+  }
+
+  .pair:not(.compact) .cost {
+    grid-column: 1 / -1;
   }
 }

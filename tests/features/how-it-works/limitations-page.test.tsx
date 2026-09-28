@@ -72,6 +72,7 @@ describe("r1-A5-06: every limitation in docs/limitations.md has a visible entry 
       for (const point of entry.points ?? []) {
         expect(details?.textContent).toContain(point)
       }
+      expect(details?.querySelectorAll("ol > li")).toHaveLength(entry.points?.length ?? 0)
     }
   })
 
