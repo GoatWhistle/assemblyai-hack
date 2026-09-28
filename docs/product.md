@@ -124,11 +124,11 @@ Refills:       0 (a Schedule II product may not be refilled)
 | LASA risk | membership in a pair on the ISMP list | forces the contrastive question below |
 
 <p align="center">
-  <img src="images/field-card.png" alt="The field card for the drug name from the replay: settled by a spoken name, corrected from morphine to hydromorphone, proved by the catalogue, with the recognizer's certainty ranked last" width="560"/>
+  <img src="images/field-card.png" alt="What each arm of the replay ordered, and below it the field card for the drug name: confirmed aloud by the caller, and settled by a spoken name because the drug sits in a published look-alike pair" width="900"/>
 </p>
 
-<p align="center"><sub>Every element above on one field card, from the replay: the value, its words and timecodes,
-the confidence, the catalogue verdict, the spoken confirmation and the pair that forced it.</sub></p>
+<p align="center"><sub>The field card from the replay: the value, the words and timecodes it came from, the
+read-back, the caller's answer and the ISMP pair that made a spoken name the only answer.</sub></p>
 
 ### Three reasons the agent must re-ask
 

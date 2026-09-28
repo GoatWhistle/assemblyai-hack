@@ -131,12 +131,11 @@ the receipt, a second channel the browser cannot forge, described in the
 [security model](docs/security.md).
 
 <p align="center">
-  <img src="docs/images/field-card.png" alt="The field card for the drug name: the look-alike pair that settled it, the correction from morphine to hydromorphone, the catalogue verdict and the recognizer's certainty ranked last" width="560"/>
+  <img src="docs/images/field-card.png" alt="What each arm of the replay ordered, and below it the field card for the drug name: confirmed aloud by the caller, and settled by a spoken name because the drug sits in a published look-alike pair" width="900"/>
 </p>
 
-<p align="center"><sub>One field card from the replay. The drug name sits in a published pair, so the caller's
-spoken name settled it; the recognizer's certainty sits beside the verdict and is marked as not
-what decides.</sub></p>
+<p align="center"><sub>The field card from the replay, under what each arm ordered: the words and timecodes behind
+the value, the read-back, the caller's answer and the published pair that required a spoken name.</sub></p>
 
 ## See it in two minutes
 

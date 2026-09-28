@@ -83,10 +83,10 @@ Seven attempts to get a value past the gate. Each button builds a real candidate
 real decision function and calls the only constructor that can write a field:
 
 <p align="center">
-  <a href="https://readback-rx.vercel.app/how-it-works#attack"><img src="images/attack-console.png" alt="The attack console after three attempts, each refused with the reason code and the message the gate raised, verbatim" width="720"/></a>
+  <a href="https://readback-rx.vercel.app/how-it-works#attack"><img src="images/attack-console.png" alt="The attack console after two attempts, each refused with the reason code and the message the gate raised, verbatim" width="900"/></a>
 </p>
 
-<p align="center"><sub>The first three attempts, run. The refusal under each is the string the gate raised.</sub></p>
+<p align="center"><sub>The first two attempts, run. The refusal under each is the string the gate raised.</sub></p>
 
 | Attempt | Why it fails |
 |---|---|

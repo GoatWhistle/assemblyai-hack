@@ -187,12 +187,13 @@ A browser that forges its turns cannot also write the vendor's record. The bound
 - The timeline carries turn-level text and confidence, not word-level timings.
 
 <p align="center">
-  <img src="images/receipt-witness.png" alt="Receipt fields from a production call, each with its proof and timecodes; every field shown but the route is heard by AssemblyAI too" width="560"/>
+  <img src="images/receipt.png" alt="An order receipt rechecked in the browser: VALID, the digest, DEA, NPI and catalogue checks passed, and the first field marked heard by AssemblyAI too" width="900"/>
 </p>
 
-<p align="center"><sub>The fields of a committed order on <code>/order/[id]</code>, from a production call placed by
-the synthesised-caller smoke harness. The route was confirmed by read-back but is marked not in
-the vendor's transcript: the witness reports that, it does not hide it.</sub></p>
+<p align="center"><sub>A committed order on <code>/order/[id]</code>, from a production call placed by the
+synthesised-caller smoke harness. Each field below the checks carries its witness verdict; in
+this order the route is marked not in the vendor's transcript, and the page shows that rather
+than hiding it.</sub></p>
 
 ## Headers and content security policy
 
