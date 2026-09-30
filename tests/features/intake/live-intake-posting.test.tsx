@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { JITTER_LEAD_S } from "@/audio/playback"
 import { AGENT_SAMPLE_RATE } from "@/audio/resample"
 import type { MemoryTransport } from "@/realtime/transport"
 
@@ -154,7 +155,7 @@ describe("P0-2: the product posts the agent's read-back with how much of it was 
       agent.deliverJson({ type: "reply.done", status: "completed" })
     })
     expect(posted, "a reply still playing has not been heard yet").toEqual([])
-    live.clock.now = 1
+    live.clock.now = 1 + JITTER_LEAD_S
     await advance(200)
     expect(posted).toEqual([
       {
@@ -184,7 +185,7 @@ describe("P0-2: the product posts the agent's read-back with how much of it was 
         interrupted: true,
       })
     })
-    live.clock.now = 0.7
+    live.clock.now = 0.7 + JITTER_LEAD_S
     await act(async () => {
       agent.deliverJson({ type: "input.speech.started" })
       agent.deliverJson({ type: "reply.done", status: "interrupted" })

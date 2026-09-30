@@ -3,7 +3,7 @@ import { AGENT_SAMPLE_RATE, decodeBase64, pcm16ToFloat } from "./resample"
 
 const SETTLE_POLL_MS = 100
 const SETTLE_GRACE_MS = 2000
-const JITTER_LEAD_S = 0.15
+export const JITTER_LEAD_S = 0.1
 
 export type PlaybackHandle = {
   enqueue: (base64: string) => void

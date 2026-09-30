@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { createPlayback } from "@/audio/playback"
+import { createPlayback, JITTER_LEAD_S } from "@/audio/playback"
 import { createReplyClock } from "@/audio/reply-clock"
 import { AGENT_SAMPLE_RATE } from "@/audio/resample"
 
@@ -62,7 +62,7 @@ describe("playback settles a reply on the playback clock", () => {
     playback.beginReply()
     playback.enqueue(frameOfSeconds(1))
     playback.enqueue(frameOfSeconds(1))
-    context.currentTime = 0.6
+    context.currentTime = 0.6 + JITTER_LEAD_S
     const settled = playback.settleReply()
     playback.flush()
     await expect(settled).resolves.toEqual({ playedMs: 600, durationMs: 2000 })
@@ -73,7 +73,7 @@ describe("playback settles a reply on the playback clock", () => {
     const playback = createPlayback(context as unknown as AudioContext)
     playback.beginReply()
     playback.enqueue(frameOfSeconds(0.5))
-    context.currentTime = 0.5
+    context.currentTime = 0.5 + JITTER_LEAD_S
     await expect(playback.settleReply()).resolves.toEqual({ playedMs: 500, durationMs: 500 })
   })
 })
