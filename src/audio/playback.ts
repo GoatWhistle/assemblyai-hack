@@ -3,6 +3,7 @@ import { AGENT_SAMPLE_RATE, decodeBase64, pcm16ToFloat } from "./resample"
 
 const SETTLE_POLL_MS = 100
 const SETTLE_GRACE_MS = 2000
+const JITTER_LEAD_S = 0.15
 
 export type PlaybackHandle = {
   enqueue: (base64: string) => void
@@ -85,7 +86,8 @@ export function createPlayback(context: AudioContext): PlaybackHandle {
       const node = context.createBufferSource()
       node.buffer = buffer
       node.connect(context.destination)
-      const startAt = Math.max(cursor, context.currentTime)
+      const startAt =
+        cursor > context.currentTime ? cursor : context.currentTime + JITTER_LEAD_S
       node.onended = () => drop(node)
       node.start(startAt)
       cursor = startAt + seconds
